@@ -1,0 +1,223 @@
+:root {
+    --pasig-blue: #0038A8;
+    --pasig-red: #CE1126;
+    --sidebar-width: 260px;
+    --topbar-height: 64px;
+}
+
+body {
+    background-color: #f8f9fa;
+    font-family: 'Inter', sans-serif;
+}
+
+#wrapper {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Sidebar Styles */
+#sidebar-wrapper {
+    min-width: var(--sidebar-width);
+    max-width: var(--sidebar-width);
+    background-color: var(--pasig-blue);
+    color: white;
+    border-right: 1px solid var(--pasig-red);
+    display: flex;
+    flex-direction: column;
+    transition: margin 0.25s ease-out;
+}
+
+.sidebar-heading {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--pasig-red);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.sidebar-logo {
+    width: 32px;
+    height: 32px;
+    background-color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--pasig-blue);
+}
+
+.sidebar-title h2 {
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.sidebar-title p {
+    font-size: 0.75rem;
+    opacity: 0.7;
+    margin: 0;
+}
+
+.list-group-item {
+    background-color: transparent;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    margin-right: 16px;
+    border-radius: 0 50px 50px 0;
+}
+
+.list-group-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.list-group-item.active {
+    background-color: var(--pasig-red);
+    color: white;
+    font-weight: 600;
+}
+
+.list-group-item i {
+    width: 16px;
+    text-align: center;
+}
+
+.sidebar-menu-label {
+    padding: 1rem 1.5rem 0.5rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    opacity: 0.7;
+    font-weight: 600;
+}
+
+/* Topbar Styles */
+#page-content-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.topbar {
+    height: var(--topbar-height);
+    background-color: white;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.5rem;
+}
+
+.search-wrapper {
+    position: relative;
+    max-width: 400px;
+    width: 100%;
+}
+
+.search-wrapper i {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+}
+
+.search-wrapper input {
+    padding-left: 35px;
+    border-radius: 6px;
+    border: 1px solid #e5e7eb;
+    font-size: 0.9rem;
+}
+
+.topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.btn-icon {
+    background: transparent;
+    border: none;
+    position: relative;
+    padding: 0.5rem;
+    color: #4b5563;
+}
+
+.btn-icon:hover {
+    background-color: #f3f4f6;
+    border-radius: 50%;
+}
+
+.notification-dot {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 8px;
+    height: 8px;
+    background-color: var(--pasig-red);
+    border-radius: 50%;
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+    background-color: #f8f9fa;
+}
+
+/* Card Overrides for Shadcn look */
+.card {
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    border-radius: 0.5rem;
+}
+
+.card-header {
+    background-color: white;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 1.5rem;
+}
+
+.card-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.table th {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: #6b7280;
+    font-weight: 600;
+    padding: 0.75rem 1rem;
+    background-color: #f9fafb;
+}
+
+.table td {
+    padding: 0.75rem 1rem;
+    vertical-align: middle;
+    color: #111827;
+    font-size: 0.875rem;
+}
+
+.btn-success-custom {
+    background-color: #22c55e;
+    border-color: #22c55e;
+    color: white;
+}
+
+.btn-success-custom:hover {
+    background-color: #16a34a;
+    border-color: #16a34a;
+    color: white;
+}

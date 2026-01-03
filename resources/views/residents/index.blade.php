@@ -1,0 +1,106 @@
+@extends('layouts.app')
+
+@section('title', 'Residents')
+
+@section('content')
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h4 fw-bold text-dark mb-1">Resident Management</h1>
+        <p class="text-muted mb-0">Manage and view all resident records</p>
+    </div>
+    <a href="{{ route('residents.create') }}" class="btn btn-primary d-flex align-items-center gap-1" style="background-color: #0038A8; border-color: #0038A8; padding: 0.5rem 1rem; font-size: 0.95rem;">
+        <i class="bi bi-plus-lg"></i> Add
+    </a>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white py-1 border-bottom-0">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-1">
+            <h6 class="card-title mb-0 fw-bold small" style="font-size: 0.8rem;">Resident Records</h6>
+                    <div class="d-flex gap-1 flex-wrap">
+                <form method="GET" action="{{ route('residents.index') }}" class="d-flex gap-1">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text bg-white border-end-0" style="font-size: 0.8rem;">
+                            <i class="bi bi-search text-muted"></i>
+                        </span>
+                        <input type="text" name="search" class="form-control form-control-sm border-start-0 ps-0" placeholder="Search..." value="{{ request('search') }}" style="width: 150px; font-size: 0.8rem;">
+                        <button class="btn btn-light btn-sm border" type="submit" style="font-size: 0.75rem;">Search</button>
+                    </div>
+                </form>
+                <button class="btn btn-light btn-sm border" style="font-size: 0.75rem;"><i class="bi bi-funnel"></i></button>
+                <button class="btn btn-light btn-sm border" style="font-size: 0.75rem;"><i class="bi bi-download"></i></button>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0" style="font-size: 0.75rem;">
+                <thead class="bg-light">
+                    <tr>
+                        <th class="border-0 text-secondary text-uppercase fw-bold ps-2" style="font-size: 0.65rem;">Name</th>
+                        <th class="border-0 text-secondary text-uppercase fw-bold" style="font-size: 0.65rem;">Address</th>
+                        <th class="border-0 text-secondary text-uppercase fw-bold" style="font-size: 0.65rem;">Contact</th>
+                        <th class="border-0 text-secondary text-uppercase fw-bold" style="font-size: 0.65rem;">Email</th>
+                        <th class="border-0 text-secondary text-uppercase fw-bold" style="font-size: 0.65rem;">DOB</th>
+                        <th class="border-0 text-secondary text-uppercase fw-bold" style="font-size: 0.65rem;">Age</th>
+                        <th class="border-0 text-secondary text-uppercase fw-bold" style="font-size: 0.65rem;">Gender</th>
+                        <th class="border-0 text-secondary text-uppercase fw-bold" style="font-size: 0.65rem;">Status</th>
+                        <th class="border-0 text-secondary text-uppercase fw-bold text-end pe-2" style="font-size: 0.65rem;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($residents as $resident)
+                    <tr style="font-size: 0.75rem;">
+                        <td class="ps-2">
+                            <div class="fw-medium text-dark" style="font-size: 0.75rem;">{{ $resident['first_name'] }} {{ substr($resident['last_name'], 0, 1) }}.</div>
+                        </td>
+                        <td class="text-muted" style="max-width: 150px; font-size: 0.7rem;">
+                            {{ isset($resident['address']) && !empty($resident['address']) ? $resident['address'] : '-' }}
+                        </td>
+                        <td style="font-size: 0.7rem;">{{ substr($resident['contact_number'], 0, 10) ?? '-' }}</td>
+                        <td style="font-size: 0.7rem;">{{ $resident['email'] ? substr($resident['email'], 0, 18) . '...' : '-' }}</td>
+                        <td style="font-size: 0.7rem;">{{ \Carbon\Carbon::parse($resident['birth_date'])->format('m/d/Y') }}</td>
+                        <td style="font-size: 0.7rem;">{{ \Carbon\Carbon::parse($resident['birth_date'])->age }}</td>
+                        <td style="font-size: 0.7rem;">{{ substr($resident['gender'], 0, 1) }}</td>
+                        <td style="font-size: 0.7rem;">{{ $resident['civil_status'] }}</td>
+                        <td class="text-end pe-2">
+                            <div class="dropdown">
+                                <button class="btn btn-light btn-sm border dropdown-toggle" type="button" data-bs-toggle="dropdown" style="font-size: 0.65rem; padding: 0.2rem 0.4rem;">
+                                    <i class="bi bi-three-dots-vertical"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" href="{{ route('residents.show', $resident['id']) }}" style="font-size: 0.75rem;">View Details</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('residents.edit', $resident['id']) }}" style="font-size: 0.75rem;">Edit Record</a></li>
+                                    <li><hr class="dropdown-divider m-1"></li>
+                                    <li>
+                                        <form action="{{ route('residents.destroy', $resident['id']) }}" method="POST" onsubmit="return confirm('Are you sure?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="dropdown-item text-danger" style="font-size: 0.75rem;">Delete</button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="9" class="text-center py-2 text-muted">
+                            <i class="bi bi-people" style="font-size: 1.5rem; opacity: 0.5;"></i>
+                            <p class="mt-1 small" style="font-size: 0.75rem;">No residents found.</p>
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+    @if($residents->hasPages())
+    <div class="card-footer bg-white border-top-0 py-2">
+        <div style="font-size: 0.875rem;">
+            {{ $residents->links('pagination::bootstrap-5') }}
+        </div>
+    </div>
+    @endif
+</div>
+@endsection

@@ -1,0 +1,17 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+    
+    # If it's a real file, serve it
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule ^ - [L]
+    
+    # Map static files to public directory
+    RewriteRule ^(css|js|images|fonts)/(.*)$ public/$1/$2 [L]
+    
+    # Map /storage to storage/app/public
+    RewriteRule ^storage/(.*)$ storage/app/public/$1 [L]
+    
+    # Route everything else to public/index.php
+    RewriteRule ^(.*)$ public/index.php [QSA,L]
+</IfModule>

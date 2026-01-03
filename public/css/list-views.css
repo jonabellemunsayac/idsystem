@@ -1,0 +1,334 @@
+/* List Views Professional Styling */
+
+/* Page Headers */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 32px;
+}
+
+.page-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0 0 8px 0;
+    letter-spacing: -0.5px;
+}
+
+.page-subtitle {
+    color: #6b7280;
+    margin: 0;
+    font-size: 14px;
+}
+
+/* Search Cards */
+.search-card {
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 24px;
+}
+
+.search-card .form-label {
+    font-weight: 500;
+    font-size: 13px;
+    color: #1f2937;
+}
+
+.search-card .form-control {
+    border-radius: 6px;
+    border: 1px solid #e5e7eb;
+    padding: 10px 14px;
+    font-size: 14px;
+    transition: border-color 0.2s;
+}
+
+.search-card .form-control:focus {
+    border-color: #0038A8;
+    box-shadow: 0 0 0 3px rgba(0, 56, 168, 0.1);
+}
+
+/* Table Cards */
+.table-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.table {
+    margin: 0;
+}
+
+.table thead th {
+    background-color: #f3f4f6;
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    padding: 16px;
+    border: none;
+    color: #374151;
+}
+
+.table tbody td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #e5e7eb;
+    vertical-align: middle;
+}
+
+.table tbody tr:hover {
+    background-color: #f9fafb;
+}
+
+/* Status Badges */
+.status-badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 4px;
+    text-transform: uppercase;
+}
+
+.status-pending {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.status-confirmed {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.status-cancelled {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+.status-active {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.status-inactive {
+    background-color: #e5e7eb;
+    color: #374151;
+}
+
+.id-number {
+    background-color: #f3f4f6;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.action-btn {
+    padding: 6px 10px;
+    font-size: 12px;
+    border-radius: 6px;
+}
+
+.empty-state {
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.empty-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.status-active {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.status-cancelled,
+.status-inactive {
+    background-color: #e5e7eb;
+    color: #374151;
+}
+
+.status-danger {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+/* ID/Code Formatting */
+.cert-id,
+.id-number {
+    background-color: #f3f4f6;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    color: #374151;
+}
+
+/* Action Buttons */
+.action-btn {
+    padding: 6px 10px;
+    font-size: 12px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.2s;
+}
+
+.action-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* Empty State */
+.empty-state {
+    padding: 60px 20px;
+    text-align: center;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.empty-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.empty-state h5 {
+    color: #1f2937;
+    margin: 0;
+    font-weight: 600;
+}
+
+.empty-state p {
+    color: #6b7280;
+    margin: 8px 0;
+    font-size: 14px;
+}
+
+/* Clan Grid */
+.clans-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+.clan-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.clan-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+.clan-card-header {
+    background: linear-gradient(135deg, #0038A8 0%, #002d7a 100%);
+    padding: 24px;
+    color: white;
+}
+
+.clan-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 4px 0;
+}
+
+.clan-description {
+    font-size: 13px;
+    color: #e0e0ff;
+    margin: 0;
+    opacity: 0.9;
+}
+
+.clan-card-body {
+    padding: 24px;
+}
+
+.clan-text {
+    color: #6b7280;
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 16px;
+}
+
+.clan-actions {
+    display: flex;
+    gap: 8px;
+}
+
+/* Responsive Tables */
+@media (max-width: 768px) {
+    .table {
+        font-size: 13px;
+    }
+
+    .table thead th,
+    .table tbody td {
+        padding: 10px 8px;
+    }
+
+    .action-btn {
+        padding: 4px 8px;
+        font-size: 11px;
+    }
+
+    .page-header {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .clans-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Standard Page Header and Button Styles */
+.btn-primary {
+    background-color: #0038A8;
+    border-color: #0038A8;
+    padding: 0.5rem 1rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.btn-primary:hover {
+    background-color: #002a7d;
+    border-color: #002a7d;
+}
+
+.btn-primary:active {
+    background-color: #001a4d;
+    border-color: #001a4d;
+}
+
+/* Consistent Page Header Styling */
+.page-header-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0 0 0.5rem 0;
+}
+
+.page-header-subtitle {
+    color: #6b7280;
+    margin: 0;
+    font-size: 0.875rem;
+}
+
+

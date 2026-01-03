@@ -1,0 +1,17 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Clan extends Model
+{
+    protected $fillable = [
+        'clan_name',
+        'head_of_family',
+        'address',
+        'contact_number',
+        'email',
+        'notes',
+    ];
+}
