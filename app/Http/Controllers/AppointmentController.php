@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Appointment;
+use App\Models\Certificate;
 use App\Models\Resident;
 use Illuminate\Http\Request;
 
@@ -45,9 +46,40 @@ class AppointmentController extends Controller
                 'resident_name' => $apt->resident->first_name . ' ' . $apt->resident->last_name,
             ]);
 
+        // Fetch certificate requests for the certificates tab
+        $certificates = Certificate::with('resident')
+            ->orderBy('created_at', 'desc')
+            ->paginate(3)
+            ->through(fn($cert) => [
+                'id' => $cert->id,
+                'resident_id' => $cert->resident_id,
+                'resident_name' => $cert->resident->first_name . ' ' . $cert->resident->last_name,
+                'type' => $cert->type,
+                'status' => $cert->status,
+                'reference_number' => $cert->reference_number,
+                'purpose' => $cert->purpose,
+                'approved_date' => $cert->approved_date,
+                'released_date' => $cert->released_date,
+                'created_at' => $cert->created_at,
+            ])
+            ->withQueryString();
+
+        // Get all certificates for calendar display (not paginated)
+        $allCertificates = Certificate::with('resident')
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map(fn($cert) => [
+                'id' => $cert->id,
+                'created_date' => $cert->created_at,
+                'reference_number' => $cert->reference_number,
+                'resident_name' => $cert->resident->first_name . ' ' . $cert->resident->last_name,
+            ]);
+
         return view('appointments.index', [
             'appointments' => $appointments,
-            'allAppointments' => $allAppointments
+            'allAppointments' => $allAppointments,
+            'certificates' => $certificates,
+            'allCertificates' => $allCertificates
         ]);
     }
 
@@ -97,6 +129,8 @@ class AppointmentController extends Controller
                 'resident_id' => $appointment->resident_id,
                 'resident_name' => $appointment->resident->first_name . ' ' . $appointment->resident->last_name,
                 'appointment_date' => $appointment->scheduled_time,
+                'reference_number' => $appointment->reference_number,
+                'purpose' => $appointment->purpose ?? 'Certificate Request',
                 'status' => $appointment->status,
                 'notes' => $appointment->notes,
                 'created_at' => $appointment->created_at,

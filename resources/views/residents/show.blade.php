@@ -71,9 +71,10 @@
             </div>
         </div>
 
-        <!-- Details Card -->
+        <!-- Details and Tabs Card -->
         <div class="col-md-9">
-            <div class="card border-0 shadow-sm">
+            <!-- Personal Information Card -->
+            <div class="card border-0 shadow-sm mb-4">
                 <div class="card-header border-bottom py-2">
                     <h5 class="fw-bold mb-0" style="font-size: 0.95rem;">Personal Information</h5>
                 </div>
@@ -187,6 +188,118 @@
                         </div>
                     </div>
                     @endif
+                </div>
+            </div>
+
+            <!-- Tabs for Blotter Record and Request History -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-2 bg-light rounded">
+                    <ul class="nav nav-pills nav-fill" role="tablist" style="gap: 0.5rem;">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active fw-bold text-dark bg-white shadow-sm py-2" id="blotter-tab" data-bs-toggle="tab" data-bs-target="#blotter" type="button" role="tab" aria-selected="true">Blotter Record</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link text-muted py-2" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button" role="tab" aria-selected="false">Request History</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tab Content -->
+            <div class="tab-content" id="residentTabContent" style="margin-top: 1rem;">
+                <!-- Blotter Record Tab -->
+                <div class="tab-pane fade show active" id="blotter" role="tabpanel" aria-labelledby="blotter-tab">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white border-0 py-3 px-4 d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bi bi-file-text text-primary fs-5"></i>
+                                <h5 class="fw-bold mb-0 text-dark">Blotter Records</h5>
+                            </div>
+                            <span class="text-muted">Total: 0</span>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="text-center text-muted py-5">
+                                <i class="bi bi-inbox fs-1 text-muted mb-2 d-block"></i>
+                                <p class="mb-0">No blotter records found.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Request History Tab -->
+                <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white border-0 py-3 px-4 d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bi bi-clock-history text-primary fs-5"></i>
+                                <h5 class="fw-bold mb-0 text-dark">Request History</h5>
+                            </div>
+                            <span class="text-muted">Total: 0</span>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="d-flex flex-column gap-3">
+                                <!-- Sample Request Record -->
+                                <div class="card border rounded-3 p-3">
+                                    <div class="d-flex justify-content-between align-items-start gap-3">
+                                        <div style="flex: 1;">
+                                            <div class="d-flex align-items-center gap-2 mb-2">
+                                                <h6 class="fw-bold mb-0 text-dark fs-6">Certificate of Residency</h6>
+                                                <span class="badge bg-success rounded-pill px-3">Approved</span>
+                                            </div>
+                                            <div class="d-flex align-items-center gap-2 text-muted mb-1">
+                                                <i class="bi bi-file-earmark"></i>
+                                                <span>Request Type: Certificate</span>
+                                            </div>
+                                            <div class="d-flex align-items-center gap-2 text-muted mb-1">
+                                                <i class="bi bi-calendar"></i>
+                                                <span>Requested: Jan 04, 2026</span>
+                                            </div>
+                                            <div class="d-flex align-items-center gap-2 text-muted">
+                                                <i class="bi bi-check-circle"></i>
+                                                <span>Approved: Jan 04, 2026</span>
+                                            </div>
+                                            <div class="text-primary mt-2 small">
+                                                Ref: CERT_RES_010426_01
+                                            </div>
+                                        </div>
+                                        <div class="d-flex flex-column gap-2" style="white-space: nowrap;">
+                                            <button class="btn btn-outline-secondary btn-sm">View</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Sample Request Record 2 -->
+                                <div class="card border rounded-3 p-3">
+                                    <div class="d-flex justify-content-between align-items-start gap-3">
+                                        <div style="flex: 1;">
+                                            <div class="d-flex align-items-center gap-2 mb-2">
+                                                <h6 class="fw-bold mb-0 text-dark fs-6">Barangay Clearance</h6>
+                                                <span class="badge bg-warning text-dark rounded-pill px-3">Pending</span>
+                                            </div>
+                                            <div class="d-flex align-items-center gap-2 text-muted mb-1">
+                                                <i class="bi bi-file-earmark"></i>
+                                                <span>Request Type: Clearance</span>
+                                            </div>
+                                            <div class="d-flex align-items-center gap-2 text-muted mb-1">
+                                                <i class="bi bi-calendar"></i>
+                                                <span>Requested: Jan 03, 2026</span>
+                                            </div>
+                                            <div class="d-flex align-items-center gap-2 text-muted">
+                                                <i class="bi bi-hourglass-split"></i>
+                                                <span>Awaiting Approval</span>
+                                            </div>
+                                            <div class="text-primary mt-2 small">
+                                                Ref: CLR_BAR_010326_02
+                                            </div>
+                                        </div>
+                                        <div class="d-flex flex-column gap-2" style="white-space: nowrap;">
+                                            <button class="btn btn-outline-secondary btn-sm">View</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

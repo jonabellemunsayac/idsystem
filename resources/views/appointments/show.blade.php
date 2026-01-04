@@ -19,24 +19,24 @@
                 </div>
 
                 <div class="col-md-6 mb-3">
-                    <p><strong>Date & Time:</strong></p>
-                    <p>{{ \Carbon\Carbon::parse($appointment['appointment_date'])->format('M d, Y H:i A') }}</p>
+                    <p><strong>Status:</strong></p>
+                    <p>
+                        <span class="badge bg-{{ $appointment['status'] === 'confirmed' || $appointment['status'] === 'approved' ? 'success' : ($appointment['status'] === 'pending' ? 'warning' : 'danger') }}">
+                            {{ ucfirst($appointment['status']) }}
+                        </span>
+                    </p>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-6 mb-3">
-                    <p><strong>Status:</strong></p>
-                    <p>
-                        <span class="badge bg-{{ $appointment['status'] === 'confirmed' ? 'success' : ($appointment['status'] === 'pending' ? 'warning' : 'danger') }}">
-                            {{ ucfirst($appointment['status']) }}
-                        </span>
-                    </p>
+                    <p><strong>Date & Time:</strong></p>
+                    <p>{{ \Carbon\Carbon::parse($appointment['appointment_date'])->format('M d, Y H:i A') }}</p>
                 </div>
 
                 <div class="col-md-6 mb-3">
-                    <p><strong>Created:</strong></p>
-                    <p>{{ \Carbon\Carbon::parse($appointment['created_at'])->format('M d, Y H:i A') }}</p>
+                    <p><strong>Purpose:</strong></p>
+                    <p>{{ $appointment['purpose'] }}</p>
                 </div>
             </div>
 
@@ -46,6 +46,11 @@
                 <p>{{ $appointment['notes'] }}</p>
             </div>
             @endif
+
+            <div class="mb-3">
+                <p><strong>Created:</strong></p>
+                <p>{{ \Carbon\Carbon::parse($appointment['created_at'])->format('M d, Y H:i A') }}</p>
+            </div>
 
             <hr>
 

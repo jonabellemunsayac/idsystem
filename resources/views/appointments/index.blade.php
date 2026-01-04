@@ -316,16 +316,227 @@
 
     <!-- Certificates Tab -->
     <div class="tab-pane fade" id="certificates" role="tabpanel" aria-labelledby="certificates-tab">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-header bg-white border-0 py-3 px-4 d-flex justify-content-between align-items-center">
-                <div class="d-flex align-items-center gap-2">
-                    <i class="bi bi-certificate text-primary fs-5"></i>
-                    <h5 class="fw-bold mb-0 text-dark">Issued Certificates</h5>
+        <div class="row g-4">
+            <!-- Certificate List -->
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-header bg-white border-0 py-3 px-4 d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-certificate text-primary fs-5"></i>
+                            <h5 class="fw-bold mb-0 text-dark">Certificate Requests</h5>
+                        </div>
+                        <span class="text-muted">Total: {{ $certificates->total() }}</span>
+                    </div>
+                    <div class="card-body p-4 d-flex flex-column" style="min-height: 500px;">
+                        @if($certificates->total() == 0)
+                            <div class="text-center text-muted py-5 flex-grow-1 d-flex align-items-center justify-content-center">
+                                <div>
+                                    <i class="bi bi-inbox fs-1 text-muted mb-2 d-block"></i>
+                                    <p class="mb-0">No certificate requests yet.</p>
+                                </div>
+                            </div>
+                        @else
+                            <div class="d-flex flex-column gap-3 flex-grow-1">
+                                @foreach($certificates as $cert)
+                                    <div class="card border rounded-3 p-3">
+                                        <div class="d-flex justify-content-between align-items-start gap-3">
+                                            <div style="flex: 1;">
+                                                <div class="d-flex align-items-center gap-2 mb-2">
+                                                    <h6 class="fw-bold mb-0 text-dark fs-6">{{ $cert['resident_name'] }}</h6>
+                                                    <span class="badge bg-{{ $cert['status'] === 'approved' ? 'success' : ($cert['status'] === 'pending' ? 'warning' : ($cert['status'] === 'rejected' ? 'danger' : 'secondary')) }} text-{{ $cert['status'] === 'warning' ? 'dark' : 'white' }} rounded-pill px-3">
+                                                        {{ ucfirst($cert['status']) }}
+                                                    </span>
+                                                </div>
+                                                <div class="d-flex align-items-center gap-2 text-muted mb-1">
+                                                    <i class="bi bi-file-text"></i>
+                                                    <span>{{ $cert['type'] }}</span>
+                                                </div>
+                                                <div class="d-flex align-items-center gap-2 text-muted mb-1">
+                                                    <i class="bi bi-calendar"></i>
+                                                    <span>{{ \Carbon\Carbon::parse($cert['created_at'])->format('M d, Y') }}</span>
+                                                </div>
+                                                @if($cert['purpose'])
+                                                <div class="d-flex align-items-center gap-2 text-muted">
+                                                    <i class="bi bi-chat-quote"></i>
+                                                    <span>{{ $cert['purpose'] }}</span>
+                                                </div>
+                                                @endif
+                                                <div class="text-primary mt-2 small">
+                                                    Ref: {{ $cert['reference_number'] }}
+                                                </div>
+                                            </div>
+                                            <div class="d-flex flex-column gap-2" style="white-space: nowrap;">
+                                                <a href="{{ route('certificates.show', $cert['id']) }}" class="btn btn-outline-secondary btn-sm">Details</a>
+                                                @if($cert['status'] === 'pending')
+                                                <button class="btn btn-success btn-sm text-white approve-cert-btn" data-cert-id="{{ $cert['id'] }}" style="background-color: #198754;">Approve</button>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+
+                            <!-- Pagination -->
+                            @if($certificates->total() > 0)
+                            <div class="mt-auto pt-3 border-top bg-light" style="margin-left: -1rem; margin-right: -1rem; margin-bottom: -1rem; padding-left: 1rem; padding-right: 1rem; padding-bottom: 1rem;">
+                                <div class="d-flex justify-content-center gap-2 flex-wrap">
+                                    @for($i = 1; $i <= $certificates->lastPage(); $i++)
+                                        @if($i == $certificates->currentPage())
+                                            <button class="btn btn-primary btn-sm" disabled style="min-width: 40px;">{{ $i }}</button>
+                                        @else
+                                            <a href="{{ $certificates->url($i) }}" class="btn btn-outline-secondary btn-sm" style="min-width: 40px;">{{ $i }}</a>
+                                        @endif
+                                    @endfor
+                                </div>
+                            </div>
+                            @endif
+                        @endif
+                    </div>
                 </div>
-                <span class="text-muted">Total: 0</span>
             </div>
-            <div class="card-body p-4 text-center text-muted">
-                <p class="mb-0">No certificates issued yet.</p>
+
+            <!-- Certificate Calendar -->
+            <div class="col-lg-4">
+                @php
+                    // Group certificates by date for calendar display
+                    $certificatesByDate = [];
+                    foreach($allCertificates as $cert) {
+                        $date = \Carbon\Carbon::parse($cert['created_date'])->format('Y-m-d');
+                        if (!isset($certificatesByDate[$date])) {
+                            $certificatesByDate[$date] = [];
+                        }
+                        $certificatesByDate[$date][] = $cert['reference_number'];
+                    }
+                    
+                    // Get year and month from request or use current date
+                    $certCalendarYear = request('cert_year', \Carbon\Carbon::now()->year);
+                    $certCalendarMonth = request('cert_month', \Carbon\Carbon::now()->month);
+                    
+                    // Generate calendar for selected month
+                    $certCurrentDate = \Carbon\Carbon::createFromDate($certCalendarYear, $certCalendarMonth, 1);
+                    $certYear = $certCurrentDate->year;
+                    $certMonth = $certCurrentDate->month;
+                    $certMonthName = $certCurrentDate->format('F Y');
+                    
+                    // Calculate previous and next month URLs
+                    $certPrevMonth = $certCurrentDate->copy()->subMonth();
+                    $certNextMonth = $certCurrentDate->copy()->addMonth();
+                    $certPrevUrl = route('appointments.index', ['cert_year' => $certPrevMonth->year, 'cert_month' => $certPrevMonth->month]);
+                    $certNextUrl = route('appointments.index', ['cert_year' => $certNextMonth->year, 'cert_month' => $certNextMonth->month]);
+                    
+                    // Get first day of month and number of days
+                    $certFirstDay = \Carbon\Carbon::createFromDate($certYear, $certMonth, 1);
+                    $certDaysInMonth = $certFirstDay->daysInMonth;
+                    $certStartingDayOfWeek = $certFirstDay->dayOfWeek; // 0 = Sunday, 6 = Saturday
+                    
+                    $certCalendarDays = [];
+                    $certDayCounter = 1;
+                    
+                    // Fill in the calendar grid
+                    for ($week = 0; $week < 6; $week++) {
+                        for ($day = 0; $day < 7; $day++) {
+                            $cellDate = null;
+                            $isCurrentMonth = false;
+                            
+                            if ($week === 0 && $day < $certStartingDayOfWeek) {
+                                // Previous month days
+                                $prevDate = $certFirstDay->copy()->subDays($certStartingDayOfWeek - $day);
+                                $cellDate = $prevDate->format('Y-m-d');
+                                $dayNumber = $prevDate->day;
+                            } elseif ($certDayCounter <= $certDaysInMonth) {
+                                // Current month days
+                                $cellDate = \Carbon\Carbon::createFromDate($certYear, $certMonth, $certDayCounter)->format('Y-m-d');
+                                $dayNumber = $certDayCounter;
+                                $isCurrentMonth = true;
+                                $certDayCounter++;
+                            } else {
+                                // Next month days
+                                $nextDate = \Carbon\Carbon::createFromDate($certYear, $certMonth, $certDaysInMonth)->copy()->addDays($certDayCounter - $certDaysInMonth);
+                                $cellDate = $nextDate->format('Y-m-d');
+                                $dayNumber = $nextDate->day;
+                                $certDayCounter++;
+                            }
+                            
+                            $certCalendarDays[] = [
+                                'date' => $cellDate,
+                                'day' => $dayNumber,
+                                'isCurrentMonth' => $isCurrentMonth
+                            ];
+                        }
+                    }
+                @endphp
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h6 class="fw-bold mb-0 text-dark" style="font-size: 0.95rem;">{{ $certMonthName }}</h6>
+                            <div class="d-flex gap-1">
+                                <a href="{{ $certPrevUrl }}" class="btn btn-light btn-sm rounded-circle p-0 d-flex align-items-center justify-content-center" style="width: 24px; height: 24px; font-size: 0.7rem;"><i class="bi bi-chevron-left"></i></a>
+                                <a href="{{ $certNextUrl }}" class="btn btn-light btn-sm rounded-circle p-0 d-flex align-items-center justify-content-center" style="width: 24px; height: 24px; font-size: 0.7rem;"><i class="bi bi-chevron-right"></i></a>
+                            </div>
+                        </div>
+                        
+                        <table class="table table-borderless table-sm text-center mb-0" style="font-size: 0.7rem;">
+                                <thead>
+                                    <tr>
+                                        <th class="text-muted fw-normal p-1" style="width: 14.28%; font-size: 0.65rem;">Sun</th>
+                                        <th class="text-muted fw-normal p-1" style="width: 14.28%; font-size: 0.65rem;">Mon</th>
+                                        <th class="text-muted fw-normal p-1" style="width: 14.28%; font-size: 0.65rem;">Tue</th>
+                                        <th class="text-muted fw-normal p-1" style="width: 14.28%; font-size: 0.65rem;">Wed</th>
+                                        <th class="text-muted fw-normal p-1" style="width: 14.28%; font-size: 0.65rem;">Thu</th>
+                                        <th class="text-muted fw-normal p-1" style="width: 14.28%; font-size: 0.65rem;">Fri</th>
+                                        <th class="text-muted fw-normal p-1" style="width: 14.28%; font-size: 0.65rem;">Sat</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php $dayIndex = 0; @endphp
+                                    @for ($week = 0; $week < 6; $week++)
+                                        <tr>
+                                            @for ($day = 0; $day < 7; $day++)
+                                                @php
+                                                    $cellData = $certCalendarDays[$dayIndex];
+                                                    $cellDate = $cellData['date'];
+                                                    $dayNumber = $cellData['day'];
+                                                    $isCurrentMonth = $cellData['isCurrentMonth'];
+                                                    $dayIndex++;
+                                                    
+                                                    $hasCertificates = isset($certificatesByDate[$cellDate]);
+                                                    $references = $hasCertificates ? $certificatesByDate[$cellDate] : [];
+                                                    $tooltip = implode(PHP_EOL, $references);
+                                                    $isToday = $cellDate === now()->format('Y-m-d');
+                                                @endphp
+                                                
+                                                @if(!$isCurrentMonth)
+                                                    <td class="py-2 px-1 text-muted opacity-25" title="">{{ $dayNumber }}</td>
+                                                @elseif($isToday)
+                                                    <td class="py-2 px-1 position-relative" title="{{ $tooltip }}">
+                                                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto shadow-sm" style="width: 22px; height: 22px; font-size: 0.65rem;">
+                                                            <span class="fw-bold">{{ $dayNumber }}</span>
+                                                        </div>
+                                                        @if($hasCertificates)
+                                                        <div class="position-absolute bottom-0 start-50 translate-middle-x" style="margin-bottom: 2px;">
+                                                            <div class="bg-primary rounded-circle" style="width: 2px; height: 2px;"></div>
+                                                        </div>
+                                                        @endif
+                                                    </td>
+                                                @else
+                                                    <td class="py-2 px-1 position-relative" title="{{ $tooltip }}">
+                                                        @if($hasCertificates)
+                                                            <span class="fw-bold text-primary">{{ $dayNumber }}</span>
+                                                            <div class="position-absolute bottom-0 start-50 translate-middle-x" style="margin-bottom: 2px;">
+                                                                <div class="bg-primary rounded-circle" style="width: 2px; height: 2px;"></div>
+                                                            </div>
+                                                        @else
+                                                            <span>{{ $dayNumber }}</span>
+                                                        @endif
+                                                    </td>
+                                                @endif
+                                            @endfor
+                                        </tr>
+                                    @endfor
+                                </tbody>
+                            </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -333,6 +544,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+    // Handle appointment approval
     document.querySelectorAll('.approve-btn').forEach(button => {
         button.addEventListener('click', function(e) {
             e.preventDefault();
@@ -349,7 +561,6 @@
                 cancelButtonText: 'Cancel'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Make AJAX call to approve appointment
                     fetch(`/appointments/${appointmentId}/approve`, {
                         method: 'PATCH',
                         headers: {
@@ -380,6 +591,59 @@
                     .catch(error => {
                         console.error('Error:', error);
                         Swal.fire('Error', 'An error occurred while approving the appointment. Please try again.', 'error');
+                    });
+                }
+            });
+        });
+    });
+
+    // Handle certificate approval
+    document.querySelectorAll('.approve-cert-btn').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const certId = this.getAttribute('data-cert-id');
+            
+            Swal.fire({
+                title: 'Confirm Approval',
+                text: 'Are you sure you want to approve this certificate request?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#198754',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, Approve',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(`/certificates/${certId}/approve`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}'
+                        }
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: data.message || 'Certificate has been approved successfully.',
+                                icon: 'success',
+                                confirmButtonColor: '#198754'
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire('Error', data.message || 'Failed to approve certificate.', 'error');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire('Error', 'An error occurred while approving the certificate. Please try again.', 'error');
                     });
                 }
             });

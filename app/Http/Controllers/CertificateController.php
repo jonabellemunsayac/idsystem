@@ -68,10 +68,17 @@ class CertificateController extends Controller
                 'id' => $certificate->id,
                 'resident_id' => $certificate->resident_id,
                 'resident_name' => $certificate->resident->first_name . ' ' . $certificate->resident->last_name,
-                'certificate_type' => $certificate->certificate_type,
-                'issued_date' => $certificate->issued_date,
+                'type' => $certificate->type,
+                'purpose' => $certificate->purpose,
+                'purpose_details' => $certificate->purpose_details,
                 'status' => $certificate->status,
-                'remarks' => $certificate->remarks,
+                'pickup_or_delivery' => $certificate->pickup_or_delivery,
+                'delivery_address' => $certificate->delivery_address,
+                'approved_date' => $certificate->approved_date,
+                'released_date' => $certificate->released_date,
+                'rejection_reason' => $certificate->rejection_reason,
+                'notes' => $certificate->notes,
+                'reference_number' => $certificate->reference_number,
                 'created_at' => $certificate->created_at,
             ]
         ]);
@@ -82,6 +89,16 @@ class CertificateController extends Controller
         $certificate->delete();
 
         return redirect()->route('certificates.index')->with('success', 'Certificate deleted successfully!');
+    }
+
+    public function approve(Certificate $certificate)
+    {
+        $certificate->update(['status' => 'approved']);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Certificate approved successfully!'
+        ]);
     }
 
     /**

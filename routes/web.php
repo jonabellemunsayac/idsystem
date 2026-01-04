@@ -69,6 +69,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Certificates Management
     Route::resource('certificates', CertificateController::class);
+    Route::patch('certificates/{certificate}/approve', [CertificateController::class, 'approve'])->name('certificates.approve');
 
     // Clans Management
     Route::resource('clans', ClanController::class);
