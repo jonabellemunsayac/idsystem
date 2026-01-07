@@ -48,64 +48,9 @@
             <div class="card-body p-4 d-flex flex-column" style="min-height: 500px;">
                 <div class="d-flex flex-column gap-3 flex-grow-1">
                     @if($appointments->total() == 0)
-                        <!-- Mock Data for Preview if Empty -->
-                        <div class="card border rounded-3 p-3">
-                            <div class="d-flex justify-content-between align-items-start gap-3">
-                                <div style="flex: 1;">
-                                    <div class="d-flex align-items-center gap-2 mb-2">
-                                        <h6 class="fw-bold mb-0 text-dark fs-6">sakyo world</h6>
-                                        <span class="badge bg-warning text-dark rounded-pill px-3">pending</span>
-                                    </div>
-                                    <div class="d-flex align-items-center gap-2 text-muted mb-1">
-                                        <i class="bi bi-file-text"></i>
-                                        <span>Certificate of Residency</span>
-                                    </div>
-                                    <div class="d-flex align-items-center gap-2 text-muted mb-1">
-                                        <i class="bi bi-calendar"></i>
-                                        <span>2025-12-30</span>
-                                    </div>
-                                    <div class="d-flex align-items-center gap-2 text-muted">
-                                        <i class="bi bi-clock"></i>
-                                        <span>10:00 AM</span>
-                                    </div>
-                                    <div class="text-primary mt-2 small">
-                                        Ref: APT_CERRES_122825_01
-                                    </div>
-                                </div>
-                                <div class="d-flex flex-column gap-2" style="white-space: nowrap;">
-                                    <button class="btn btn-outline-secondary btn-sm">Details</button>
-                                    <button class="btn btn-success btn-sm text-white approve-btn" data-appointment-id="1" style="background-color: #198754;">Approve</button>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="card border rounded-3 p-3">
-                            <div class="d-flex justify-content-between align-items-start gap-3">
-                                <div style="flex: 1;">
-                                    <div class="d-flex align-items-center gap-2 mb-2">
-                                        <h6 class="fw-bold mb-0 text-dark fs-6">test asd</h6>
-                                        <span class="badge bg-success rounded-pill px-3">approved</span>
-                                    </div>
-                                    <div class="d-flex align-items-center gap-2 text-muted mb-1">
-                                        <i class="bi bi-file-text"></i>
-                                        <span>Certificate of Indigency</span>
-                                    </div>
-                                    <div class="d-flex align-items-center gap-2 text-muted mb-1">
-                                        <i class="bi bi-calendar"></i>
-                                        <span>2025-12-31</span>
-                                    </div>
-                                    <div class="d-flex align-items-center gap-2 text-muted">
-                                        <i class="bi bi-clock"></i>
-                                        <span>02:00 PM</span>
-                                    </div>
-                                    <div class="text-primary mt-2 small">
-                                        Ref: APT_CERIND_122325_04
-                                    </div>
-                                </div>
-                                <div class="d-flex flex-column gap-2" style="white-space: nowrap;">
-                                    <button class="btn btn-outline-secondary btn-sm">Details</button>
-                                </div>
-                            </div>
+                        <div class="text-center py-5">
+                            <i class="bi bi-inbox fs-1 text-muted d-block mb-3"></i>
+                            <p class="text-muted mb-0">No appointments found</p>
                         </div>
                     @else
                         @foreach($appointments as $appointment)

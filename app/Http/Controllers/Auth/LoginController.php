@@ -24,6 +24,15 @@ class LoginController extends Controller
 
         if (Auth::attempt($validated, $request->boolean('remember'))) {
             $request->session()->regenerate();
+            
+            // Log the successful login with IP address (wrapped in try-catch)
+            try {
+                \App\Services\ActivityLogger::logLogin(Auth::id(), $request->ip());
+            } catch (\Exception $e) {
+                // Fail silently if logging fails
+                \Log::error('Failed to log user login: ' . $e->getMessage());
+            }
+            
             return redirect()->intended('/dashboard');
         }
 

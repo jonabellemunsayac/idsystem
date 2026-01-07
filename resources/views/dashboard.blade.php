@@ -17,7 +17,7 @@
                 <div class="d-flex justify-content-between align-items-start">
                     <div class="flex-grow-1">
                         <p class="text-muted mb-2 fw-medium" style="font-size: 0.875rem;">Total Residents</p>
-                        <h3 class="fs-2 fw-bold mb-2">{{ number_format($stats['residents_count'] ?? 2847) }}</h3>
+                        <h3 class="fs-2 fw-bold mb-2">{{ number_format($stats['residents_count'] ?? 0) }}</h3>
                         <p class="text-success mb-0" style="font-size: 0.875rem;">
                             <i class="bi bi-arrow-up"></i> +12% from last month
                         </p>
@@ -37,7 +37,7 @@
                 <div class="d-flex justify-content-between align-items-start">
                     <div class="flex-grow-1">
                         <p class="text-muted mb-2 fw-medium" style="font-size: 0.875rem;">Pending Requests</p>
-                        <h3 class="fs-2 fw-bold mb-2">{{ number_format($stats['appointments_count'] ?? 24) }}</h3>
+                        <h3 class="fs-2 fw-bold mb-2">{{ number_format($stats['appointments_count'] ?? 0) }}</h3>
                         <p class="text-success mb-0" style="font-size: 0.875rem;">
                             <i class="bi bi-arrow-down"></i> -5% from last week
                         </p>
@@ -57,7 +57,7 @@
                 <div class="d-flex justify-content-between align-items-start">
                     <div class="flex-grow-1">
                         <p class="text-muted mb-2 fw-medium" style="font-size: 0.875rem;">Blotter Cases</p>
-                        <h3 class="fs-2 fw-bold mb-2">{{ number_format($stats['blotter_count'] ?? 15) }}</h3>
+                        <h3 class="fs-2 fw-bold mb-2">{{ number_format($stats['blotter_count'] ?? 0) }}</h3>
                         <p class="text-success mb-0" style="font-size: 0.875rem;">
                             <i class="bi bi-arrow-up"></i> 3 resolved today
                         </p>
@@ -77,7 +77,7 @@
                 <div class="d-flex justify-content-between align-items-start">
                     <div class="flex-grow-1">
                         <p class="text-muted mb-2 fw-medium" style="font-size: 0.875rem;">Barangay Assets</p>
-                        <h3 class="fs-2 fw-bold mb-2">{{ number_format($stats['assets_count'] ?? 142) }}</h3>
+                        <h3 class="fs-2 fw-bold mb-2">{{ number_format($stats['assets_count'] ?? 0) }}</h3>
                         <p class="text-muted mb-0" style="font-size: 0.875rem; visibility: hidden;">Placeholder</p>
                     </div>
                     <div class="rounded-3 bg-success bg-opacity-10 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; flex-shrink: 0;">
@@ -102,45 +102,25 @@
             </div>
             <div class="card-body p-4">
                 <div class="d-flex flex-column gap-3">
-                    <!-- Item 1 -->
+                    @forelse($recent_appointments as $appointment)
+                    <!-- Item {{ $loop->iteration }} -->
                     <div class="p-3 rounded-3 border hover-bg-light">
                         <div class="d-flex justify-content-between align-items-center gap-3">
                             <div class="flex-grow-1">
-                                <p class="mb-1 fw-medium" style="font-size: 1rem;">Juan Dela Cruz</p>
-                                <p class="text-muted mb-0" style="font-size: 0.875rem;">Barangay Clearance</p>
+                                <p class="mb-1 fw-medium" style="font-size: 1rem;">{{ $appointment['resident_name'] }}</p>
+                                <p class="text-muted mb-0" style="font-size: 0.875rem;">{{ $appointment['service_type'] }}</p>
                             </div>
                             <div class="d-flex align-items-center gap-2 flex-shrink-0">
-                                <span class="text-muted" style="font-size: 0.875rem;">10:00 AM</span>
-                                <span class="badge rounded-pill px-3 py-2" style="background-color: #ffc107; color: #000; font-size: 0.75rem;">pending</span>
+                                <span class="text-muted" style="font-size: 0.875rem;">{{ $appointment['scheduled_time']->format('h:i A') }}</span>
+                                <span class="badge rounded-pill px-3 py-2" style="background-color: {{ $appointment['status'] == 'pending' ? '#ffc107' : ($appointment['status'] == 'approved' ? '#28a745' : '#0038A8') }}; color: {{ $appointment['status'] == 'pending' ? '#000' : '#fff' }}; font-size: 0.75rem;">{{ $appointment['status'] }}</span>
                             </div>
                         </div>
                     </div>
-                    <!-- Item 2 -->
-                    <div class="p-3 rounded-3 border hover-bg-light">
-                        <div class="d-flex justify-content-between align-items-center gap-3">
-                            <div class="flex-grow-1">
-                                <p class="mb-1 fw-medium" style="font-size: 1rem;">Maria Santos</p>
-                                <p class="text-muted mb-0" style="font-size: 0.875rem;">Business Permit</p>
-                            </div>
-                            <div class="d-flex align-items-center gap-2 flex-shrink-0">
-                                <span class="text-muted" style="font-size: 0.875rem;">11:30 AM</span>
-                                <span class="badge rounded-pill px-3 py-2 bg-success" style="font-size: 0.75rem;">approved</span>
-                            </div>
-                        </div>
+                    @empty
+                    <div class="p-3 rounded-3 border text-center">
+                        <p class="text-muted mb-0" style="font-size: 0.875rem;">No appointments scheduled</p>
                     </div>
-                    <!-- Item 3 -->
-                    <div class="p-3 rounded-3 border hover-bg-light">
-                        <div class="d-flex justify-content-between align-items-center gap-3">
-                            <div class="flex-grow-1">
-                                <p class="mb-1 fw-medium" style="font-size: 1rem;">Pedro Reyes</p>
-                                <p class="text-muted mb-0" style="font-size: 0.875rem;">Residency Certificate</p>
-                            </div>
-                            <div class="d-flex align-items-center gap-2 flex-shrink-0">
-                                <span class="text-muted" style="font-size: 0.875rem;">2:00 PM</span>
-                                <span class="badge rounded-pill px-3 py-2 bg-primary" style="font-size: 0.75rem;">completed</span>
-                            </div>
-                        </div>
-                    </div>
+                    @endforelse
                 </div>
             </div>
         </div>
@@ -157,36 +137,22 @@
             </div>
             <div class="card-body p-4">
                 <div class="d-flex flex-column gap-3">
-                    <!-- Item 1 -->
+                    @forelse($recent_blotter_cases as $case)
+                    <!-- Item {{ $loop->iteration }} -->
                     <div class="p-3 rounded-3 border hover-bg-light">
                         <div class="d-flex justify-content-between align-items-center gap-3">
                             <div class="flex-grow-1">
-                                <p class="mb-1 fw-medium" style="font-size: 1rem;">Noise Complaint</p>
-                                <p class="text-muted mb-0" style="font-size: 0.875rem;">2024-01-15</p>
+                                <p class="mb-1 fw-medium" style="font-size: 1rem;">{{ $case['incident_type'] }}</p>
+                                <p class="text-muted mb-0" style="font-size: 0.875rem;">{{ $case['incident_date']->format('Y-m-d') }} - {{ $case['case_number'] }}</p>
                             </div>
-                            <span class="badge rounded-pill px-3 py-2 flex-shrink-0" style="background-color: #ffc107; color: #000; font-size: 0.75rem;">pending</span>
+                            <span class="badge rounded-pill px-3 py-2 flex-shrink-0" style="background-color: {{ $case['status'] == 'pending' ? '#ffc107' : ($case['status'] == 'resolved' ? '#28a745' : '#0038A8') }}; color: {{ $case['status'] == 'pending' ? '#000' : '#fff' }}; font-size: 0.75rem;">{{ $case['status'] }}</span>
                         </div>
                     </div>
-                    <!-- Item 2 -->
-                    <div class="p-3 rounded-3 border hover-bg-light">
-                        <div class="d-flex justify-content-between align-items-center gap-3">
-                            <div class="flex-grow-1">
-                                <p class="mb-1 fw-medium" style="font-size: 1rem;">Property Dispute</p>
-                                <p class="text-muted mb-0" style="font-size: 0.875rem;">2024-01-14</p>
-                            </div>
-                            <span class="badge rounded-pill px-3 py-2 bg-success flex-shrink-0" style="font-size: 0.75rem;">resolved</span>
-                        </div>
+                    @empty
+                    <div class="p-3 rounded-3 border text-center">
+                        <p class="text-muted mb-0" style="font-size: 0.875rem;">No blotter cases recorded</p>
                     </div>
-                    <!-- Item 3 -->
-                    <div class="p-3 rounded-3 border hover-bg-light">
-                        <div class="d-flex justify-content-between align-items-center gap-3">
-                            <div class="flex-grow-1">
-                                <p class="mb-1 fw-medium" style="font-size: 1rem;">Lost ID</p>
-                                <p class="text-muted mb-0" style="font-size: 0.875rem;">2024-01-13</p>
-                            </div>
-                            <span class="badge rounded-pill px-3 py-2 flex-shrink-0" style="background-color: #ffc107; color: #000; font-size: 0.75rem;">pending</span>
-                        </div>
-                    </div>
+                    @endforelse
                 </div>
             </div>
         </div>

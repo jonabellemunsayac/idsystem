@@ -7,6 +7,7 @@ use App\Models\ResidentAccount;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Str;
 
 class ResidentController extends Controller
@@ -148,11 +149,9 @@ class ResidentController extends Controller
         ]);
 
         // Generate username
-        $baseUsername = Str::of($resident->first_name)
-            ->lower()
-            ->trim()
-            ->append('.')
-            ->append(Str::of($resident->last_name)->lower()->trim());
+        $firstName = strtolower(trim($resident->first_name));
+        $lastName = strtolower(trim($resident->last_name));
+        $baseUsername = $firstName . '.' . $lastName;
 
         $username = $baseUsername;
         $counter = 1;
@@ -162,11 +161,22 @@ class ResidentController extends Controller
         }
 
         $password = Str::random(8);
-        ResidentAccount::create([
-            'resident_id' => $resident->id,
-            'username' => $username,
-            'password_hash' => Hash::make($password),
-        ]);
+        
+        try {
+            ResidentAccount::create([
+                'resident_id' => $resident->id,
+                'username' => $username,
+                'password_hash' => Hash::make($password),
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Failed to create resident account: ' . $e->getMessage(), [
+                'resident_id' => $resident->id,
+                'username' => $username,
+            ]);
+            return redirect()->route('residents.create')->with([
+                'error' => 'Resident added but failed to create account: ' . $e->getMessage()
+            ]);
+        }
 
         return redirect()->route('residents.create')->with([
             'success' => 'Resident added successfully!',
