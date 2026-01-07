@@ -529,6 +529,10 @@
                     <i class="bi bi-bar-chart-fill"></i> Reports & Analytics
                 </a>
 
+                <a href="{{ route('audit-logs.index') }}" class="list-group-item {{ request()->routeIs('audit-logs.*') ? 'active' : '' }}">
+                    <i class="bi bi-clock-history"></i> Audit Logs
+                </a>
+
                 <!-- Settings Group -->
                 <a href="#settingsSubmenu" class="list-group-item" data-bs-toggle="collapse">
                     <i class="bi bi-gear-fill"></i> Settings <i class="bi bi-chevron-down ms-auto" style="font-size: 0.8em;"></i>

@@ -48,4 +48,12 @@ class User extends Authenticatable
             'two_factor_confirmed_at' => 'datetime',
         ];
     }
+
+    /**
+     * Get the audit logs for this user.
+     */
+    public function auditLogs()
+    {
+        return $this->hasMany(AuditLog::class);
+    }
 }

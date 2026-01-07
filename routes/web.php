@@ -2,9 +2,13 @@
 
 use App\Http\Controllers\ResidentController;
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\AssetController;
+use App\Http\Controllers\AuditLogController;
+use App\Http\Controllers\BlotterController;
 use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\ClanController;
 use App\Http\Controllers\IDController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ResidentPortalController;
 use App\Http\Controllers\QRAuthController;
@@ -80,19 +84,36 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('ids', IDController::class);
 
     // Blotter Records
-    Route::get('/blotter', function () {
-        return view('blotter.index');
-    })->name('blotter.index');
+    Route::resource('blotter', BlotterController::class);
+    Route::get('/blotter', [BlotterController::class, 'index'])->name('blotter.index');
+    Route::get('/api/blotter/{id}', function ($id) {
+        $case = \App\Models\BlotterRecord::findOrFail($id);
+        return response()->json([
+            'success' => true,
+            'data' => $case
+        ]);
+    })->name('api.blotter.show');
 
     // Assets Management
-    Route::get('/assets', function () {
-        return view('assets.index');
-    })->name('assets.index');
+    Route::resource('assets', AssetController::class);
+    Route::get('/api/assets/{id}', function ($id) {
+        $asset = \App\Models\Asset::findOrFail($id);
+        return response()->json([
+            'success' => true,
+            'data' => $asset
+        ]);
+    })->name('api.assets.show');
 
     // Reports & Analytics
-    Route::get('/reports', function () {
-        return view('reports.index');
-    })->name('reports.index');
+    Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::get('/api/reports/demographics', [ReportController::class, 'getResidentDemographics'])->name('api.reports.demographics');
+    Route::get('/api/reports/appointments', [ReportController::class, 'getMonthlyAppointments'])->name('api.reports.appointments');
+    Route::get('/api/reports/blotter', [ReportController::class, 'getBlotterStatistics'])->name('api.reports.blotter');
+    Route::get('/api/reports/assets', [ReportController::class, 'getAssetUtilization'])->name('api.reports.assets');
+    Route::get('/api/reports/dashboard-stats', [ReportController::class, 'getDashboardStats'])->name('api.reports.dashboard-stats');
+
+    // Audit Logs
+    Route::resource('audit-logs', AuditLogController::class)->only(['index', 'show']);
 
     // Settings
     Route::prefix('settings')->name('settings.')->group(function () {
