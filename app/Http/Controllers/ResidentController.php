@@ -167,6 +167,7 @@ class ResidentController extends Controller
                 'resident_id' => $resident->id,
                 'username' => $username,
                 'password_hash' => Hash::make($password),
+                'email' => $validated['email'] ?? null,
             ]);
         } catch (\Exception $e) {
             Log::error('Failed to create resident account: ' . $e->getMessage(), [
@@ -308,6 +309,14 @@ class ResidentController extends Controller
 
     public function destroy(Resident $resident)
     {
+        // Delete profile image if exists
+        if ($resident->profile_image) {
+            $imagePath = storage_path('app/public/' . $resident->profile_image);
+            if (file_exists($imagePath)) {
+                unlink($imagePath);
+            }
+        }
+
         ResidentAccount::where('resident_id', $resident->id)->delete();
         $resident->delete();
 
@@ -425,6 +434,7 @@ class ResidentController extends Controller
             'resident_id' => $resident->id,
             'username' => $username,
             'password_hash' => Hash::make($password),
+            'email' => $validated['email'] ?? null,
         ]);
 
         return redirect()->route('public.register')

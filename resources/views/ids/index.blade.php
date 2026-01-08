@@ -10,7 +10,7 @@
     </div>
 </div>
 
-<div class="row g-4">
+<div class="row g-4 align-items-start">
     <!-- ID Card Preview -->
     <div class="col-lg-6">
         <div class="card border-0 shadow-sm h-100">
@@ -25,132 +25,134 @@
 
                 <div id="id-preview-content" style="display: none;">
                     <!-- FRONT PREVIEW -->
-                    <div class="id-card-preview mb-4 position-relative overflow-hidden shadow-sm" style="aspect-ratio: 1.586/1; background-color: #f8f9fa; border-radius: 12px; container-type: inline-size; font-family: sans-serif;">
+                    <div class="id-card-preview mb-4 position-relative overflow-hidden shadow-sm" style="width: 100%; max-width: 600px; margin: 0 auto; background-color: #f8f9fa; border-radius: 12px; font-family: sans-serif;">
                         <!-- Background Pattern (Fingerprint style simulation) -->
                         <div class="position-absolute w-100 h-100" style="opacity: 0.6; background: repeating-radial-gradient(circle at 0 100%, transparent 0, transparent 10px, rgba(0,56,168,0.03) 11px, rgba(0,56,168,0.03) 12px), repeating-radial-gradient(circle at 100% 0, transparent 0, transparent 10px, rgba(206,17,38,0.03) 11px, rgba(206,17,38,0.03) 12px); pointer-events: none;"></div>
                         
                         <!-- Header -->
-                        <div class="position-relative d-flex align-items-center px-4 py-2" style="background: linear-gradient(90deg, #0038A8 0%, #CE1126 100%), repeating-radial-gradient(circle at 0 100%, transparent 0, transparent 10px, rgba(255,255,255,0.08) 11px, rgba(255,255,255,0.08) 12px), repeating-radial-gradient(circle at 100% 0, transparent 0, transparent 10px, rgba(255,255,255,0.08) 11px, rgba(255,255,255,0.08) 12px); height: 18cqw; color: white;">
-                            <div class="d-flex align-items-center gap-2" style="width: 100%;">
-                                <div class="d-flex align-items-center justify-content-center" style="width: 14cqw; height: 14cqw; flex-shrink: 0;">
-                                    <img src="/images/kalawaan.png" alt="Barangay Logo" style="width: 100%; height: 100%; object-fit: contain; border-radius: 50%; ">
+                        <div class="position-relative d-flex align-items-center px-3 py-2" style="background: linear-gradient(90deg, rgba(38,143,255,0.85) 0%, rgba(255,255,255,0.85) 50%, rgba(0,48,103,0.85) 100%), url('/images/sil.jpg') center/cover; min-height: 60px; color: #003067;">
+                            <div class="d-flex align-items-center gap-2 w-100" style="position: relative; z-index: 1;">
+                                <div class="d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; flex-shrink: 0;">
+                                    <img src="/images/OIP.jpg" alt="Barangay Logo" style="width: 100%; height: 100%; object-fit: contain; border-radius: 50%;">
                                 </div>
                                 <div class="flex-grow-1 text-center" style="line-height: 1.1;">
-                                    <h3 style="font-size: 2cqw; font-weight: normal; letter-spacing: 2px; margin: 0; text-transform: uppercase;">Republic of the Philippines</h3>
-                                    <h2 style="font-size: 3.5cqw; font-weight: 800; margin: 0; text-transform: uppercase; letter-spacing: 1px;">Barangay Kalawaan</h2>
-                                    <h3 style="font-size: 2cqw; font-weight: normal; margin: 0; text-transform: uppercase;">City of Pasig</h3>
+                                    <h2 style="font-size: 0.65rem; font-weight: normal; letter-spacing: 1px; margin: 0; text-transform: uppercase;">Republic of the Philippines</h2>
+                                    <h2 style="font-size: 0.65rem; font-weight: normal; letter-spacing: 1px; margin: 0; text-transform: uppercase;">National Capital Region</h2>
+                                    <h3 style="font-size: 1rem; font-weight: 800; margin: 0; text-transform: uppercase; letter-spacing: 0.5px;">City of Pasig</h3>
+                                    <h3 style="font-size: 1rem; font-weight: 800; margin: 0; text-transform: uppercase; letter-spacing: 0.5px;">Barangay Kalawaan</h3>
+                                    
                                 </div>
-                                <div class="d-flex align-items-center justify-content-center" style="width: 14cqw; height: 14cqw; flex-shrink: 0;">
+                                <div class="d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; flex-shrink: 0;">
                                     <img src="/images/Pasig_City_Seal_Logo.svg" alt="Pasig Logo" style="width: 90%; height: 90%; object-fit: contain;">
                                 </div>
                             </div>
                         </div>
 
                         <!-- Body -->
-                        <div class="d-flex p-3 h-100 position-relative" style="padding: 3cqw !important; gap: 3cqw;">
+                        <div class="d-flex p-3 position-relative" style="gap: 12px; min-height: 240px;">
                             <!-- Left Column: Photo & Signature -->
-                            <div class="d-flex flex-column align-items-center" style="width: 28cqw;">
-                                <div class="bg-white border border-2 border-secondary d-flex align-items-center justify-content-center overflow-hidden rounded mb-2" style="width: 28cqw; height: 34cqw; background-color: #e9ecef;">
+                            <div class="d-flex flex-column align-items-center" style="width: 90px; flex-shrink: 0;">
+                                <div class="bg-white border border-2 border-secondary d-flex align-items-center justify-content-center overflow-hidden rounded mb-2" style="width: 90px; height: 110px; background-color: #e9ecef;">
                                     <img id="preview-photo" src="" alt="Photo" style="width: 100%; height: 100%; object-fit: cover; display: none;">
-                                    <span id="preview-no-photo" style="font-size: 3cqw; color: #adb5bd;">PHOTO</span>
+                                    <span id="preview-no-photo" style="font-size: 0.9rem; color: #adb5bd;">PHOTO</span>
                                 </div>
-                                <div class="text-center w-100" style="border-bottom: 1px solid #000; margin-bottom: 0.5cqw; height: 6cqw; display: flex; align-items: flex-end; justify-content: center;">
-                                    <span style="font-family: cursive; font-size: 3cqw;">Signature</span>
+                                <div class="text-center w-100" style="border-bottom: 1px solid #000; margin-bottom: 4px; height: 20px; display: flex; align-items: flex-end; justify-content: center;">
+                                    <span style="font-family: cursive; font-size: 0.85rem;">Signature</span>
                                 </div>
-                                <div class="text-center fw-bold" style="font-size: 2.5cqw; letter-spacing: 1px; color: #0038A8;">RESIDENT</div>
+                                <div class="text-center fw-bold" style="font-size: 0.75rem; letter-spacing: 0.5px; color: #0038A8;">RESIDENT</div>
                             </div>
 
                             <!-- Right Column: Details -->
-                            <div class="flex-grow-1 d-flex flex-column position-relative">
+                            <div class="flex-grow-1 d-flex flex-column position-relative" style="min-width: 0; padding-right: 90px;">
                                 <!-- Name -->
-                                <div class="mb-3">
-                                    <div class="text-muted text-uppercase" style="font-size: 1.8cqw;">Last Name, First Name, Middle Name</div>
-                                    <div id="preview-name" class="fw-bold text-uppercase text-dark" style="font-size: 3.8cqw; line-height: 1.1; color: #0038A8 !important;">
+                                <div class="mb-2">
+                                    <div class="text-muted text-uppercase" style="font-size: 0.55rem; line-height: 1;">Last Name, First Name, Middle Name</div>
+                                    <div id="preview-name" class="fw-bold text-uppercase text-dark" style="font-size: 1.1rem; line-height: 1.1; color: #0038A8 !important; word-break: break-word;">
                                         RESIDENT NAME
                                     </div>
                                 </div>
 
                                 <!-- Grid Details -->
-                                <div class="d-flex flex-wrap gap-2 mb-2" style="row-gap: 1.5cqw;">
-                                    <div style="width: 20%;">
-                                        <div class="text-muted text-uppercase" style="font-size: 1.5cqw;">Sex</div>
-                                        <div id="preview-sex" class="fw-bold text-dark" style="font-size: 2.2cqw;">-</div>
+                                <div class="d-flex flex-wrap mb-2" style="gap: 4px; row-gap: 6px;">
+                                    <div style="width: calc(25% - 3px);">
+                                        <div class="text-muted text-uppercase" style="font-size: 0.5rem; line-height: 1;">Sex</div>
+                                        <div id="preview-sex" class="fw-bold text-dark" style="font-size: 0.7rem; line-height: 1.1;">-</div>
                                     </div>
-                                    <div style="width: 35%;">
-                                        <div class="text-muted text-uppercase" style="font-size: 1.5cqw;">Date of Birth</div>
-                                        <div id="preview-dob" class="fw-bold text-dark" style="font-size: 2.2cqw;">-</div>
+                                    <div style="width: calc(37% - 3px);">
+                                        <div class="text-muted text-uppercase" style="font-size: 0.5rem; line-height: 1;">Date of Birth</div>
+                                        <div id="preview-dob" class="fw-bold text-dark" style="font-size: 0.7rem; line-height: 1.1;">-</div>
                                     </div>
-                                     <div style="width: 35%;">
-                                        <div class="text-muted text-uppercase" style="font-size: 1.5cqw;">Civil Status</div>
-                                        <div id="preview-status" class="fw-bold text-dark" style="font-size: 2.2cqw;">-</div>
+                                    <div style="width: calc(38% - 3px);">
+                                        <div class="text-muted text-uppercase" style="font-size: 0.5rem; line-height: 1;">Civil Status</div>
+                                        <div id="preview-status" class="fw-bold text-dark" style="font-size: 0.7rem; line-height: 1.1;">-</div>
                                     </div>
                                     
-                                    <div style="width: 20%;">
-                                        <div class="text-muted text-uppercase" style="font-size: 1.5cqw;">Blood Type</div>
-                                        <div id="preview-blood" class="fw-bold text-dark" style="font-size: 2.2cqw;">-</div>
+                                    <div style="width: calc(25% - 3px);">
+                                        <div class="text-muted text-uppercase" style="font-size: 0.5rem; line-height: 1;">Blood Type</div>
+                                        <div id="preview-blood" class="fw-bold text-dark" style="font-size: 0.7rem; line-height: 1.1;">-</div>
                                     </div>
-                                    <div style="width: 35%;">
-                                        <div class="text-muted text-uppercase" style="font-size: 1.5cqw;">Nationality</div>
-                                        <div id="preview-nationality" class="fw-bold text-dark" style="font-size: 2.2cqw;">-</div>
+                                    <div style="width: calc(37% - 3px);">
+                                        <div class="text-muted text-uppercase" style="font-size: 0.5rem; line-height: 1;">Nationality</div>
+                                        <div id="preview-nationality" class="fw-bold text-dark" style="font-size: 0.7rem; line-height: 1.1;">-</div>
                                     </div>
-                                    <div style="width: 35%;">
-                                        <div class="text-muted text-uppercase" style="font-size: 1.5cqw;">Valid Until</div>
-                                        <div id="preview-validity" class="fw-bold text-dark" style="font-size: 2.2cqw;">-</div>
+                                    <div style="width: calc(38% - 3px);">
+                                        <div class="text-muted text-uppercase" style="font-size: 0.5rem; line-height: 1;">Valid Until</div>
+                                        <div id="preview-validity" class="fw-bold text-dark" style="font-size: 0.7rem; line-height: 1.1;">-</div>
                                     </div>
                                 </div>
 
                                 <!-- Address -->
                                 <div class="mb-2">
-                                    <div class="text-muted text-uppercase" style="font-size: 1.5cqw;">Address</div>
-                                    <div id="preview-address" class="fw-bold text-dark text-uppercase" style="font-size: 2.2cqw; line-height: 1.2;">
+                                    <div class="text-muted text-uppercase" style="font-size: 0.5rem; line-height: 1;">Address</div>
+                                    <div id="preview-address" class="fw-bold text-dark text-uppercase" style="font-size: 0.7rem; line-height: 1.2; word-break: break-word;">
                                         -
                                     </div>
                                 </div>
 
                                 <!-- QR Code & ID No -->
-                                <div class="position-absolute" style="bottom: 3cqw; right: 3cqw; text-align: center;">
-                                    <div class="bg-white p-1 mb-1 border border-2 border-dark" style="width: 15cqw; height: 15cqw; display: flex; align-items: center; justify-content: center;">
+                                <div class="position-absolute" style="bottom: 0; right: 0; text-align: center;">
+                                    <div class="bg-white p-1 mb-1 border border-2 border-dark" style="width: 55px; height: 55px; display: flex; align-items: center; justify-content: center;">
                                         <img id="preview-qr" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E" alt="QR" style="width: 100%; height: 100%; object-fit: contain;">
                                     </div>
-                                    <div id="preview-id-no" class="font-monospace fw-bold" style="font-size: 1.2cqw; letter-spacing: 0.5px; color: #212529;">PENDING</div>
+                                    <div id="preview-id-no" class="font-monospace fw-bold" style="font-size: 0.5rem; letter-spacing: 0.3px; color: #212529;">PENDING</div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- BACK PREVIEW -->
-                    <div class="id-card-preview position-relative overflow-hidden shadow-sm" style="aspect-ratio: 1.586/1; background-color: #f8f9fa; border-radius: 12px; container-type: inline-size; font-family: sans-serif;">
+                    <div class="id-card-preview position-relative overflow-hidden shadow-sm" style="width: 100%; max-width: 600px; margin: 0 auto; background-color: #f8f9fa; border-radius: 12px; font-family: sans-serif;">
                         <!-- Background Pattern -->
                         <div class="position-absolute w-100 h-100" style="opacity: 0.6; background: repeating-radial-gradient(circle at 0 100%, transparent 0, transparent 10px, rgba(0,56,168,0.03) 11px, rgba(0,56,168,0.03) 12px), repeating-radial-gradient(circle at 100% 0, transparent 0, transparent 10px, rgba(206,17,38,0.03) 11px, rgba(206,17,38,0.03) 12px); pointer-events: none;"></div>
 
-                        <div class="text-center text-white fw-bold py-2" style="background: linear-gradient(90deg, #0038A8 0%, #CE1126 100%), repeating-radial-gradient(circle at 0 100%, transparent 0, transparent 10px, rgba(255,255,255,0.08) 11px, rgba(255,255,255,0.08) 12px), repeating-radial-gradient(circle at 100% 0, transparent 0, transparent 10px, rgba(255,255,255,0.08) 11px, rgba(255,255,255,0.08) 12px); font-size: 2.8cqw; letter-spacing: 0.1em; padding: 1cqw 2cqw;">
+                        <div class="text-center fw-bold py-2" style="background: linear-gradient(90deg, rgba(38,143,255,0.85) 0%, rgba(255,255,255,0.85) 50%, rgba(0,48,103,0.85) 100%), url('/images/sil.jpg') center/cover; color: #003067; font-size: 0.9rem; letter-spacing: 0.1em; padding: 8px 12px;">
                             EMERGENCY CONTACT
                         </div>
                         
-                        <div class="d-flex gap-3 p-3 h-100 position-relative" style="padding: 4cqw !important; gap: 4cqw !important;">
-                            <div class="flex-grow-1 d-flex flex-column gap-2" style="gap: 2cqw !important;">
+                        <div class="d-flex p-3 position-relative" style="gap: 15px; min-height: 240px;">
+                            <div class="flex-grow-1 d-flex flex-column" style="gap: 10px; min-width: 0;">
                                 <div>
-                                    <div style="font-size: 2.2cqw; font-weight: bold; color: #0038A8; margin-bottom: 0.5cqw;">NAME</div>
-                                    <div id="preview-ec-name" style="font-size: 2.5cqw; color: #333; font-weight: bold; border-bottom: 1px solid #ccc;">_____________________</div>
+                                    <div style="font-size: 0.7rem; font-weight: bold; color: #0038A8; margin-bottom: 2px;">NAME</div>
+                                    <div id="preview-ec-name" style="font-size: 0.8rem; color: #333; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 2px; word-break: break-word;">_____________________</div>
                                 </div>
                                 <div>
-                                    <div style="font-size: 2.2cqw; font-weight: bold; color: #0038A8; margin-bottom: 0.5cqw;">ADDRESS</div>
-                                    <div id="preview-ec-address" style="font-size: 2.5cqw; color: #333; font-weight: bold; line-height: 1.2; border-bottom: 1px solid #ccc;">_____________________</div>
+                                    <div style="font-size: 0.7rem; font-weight: bold; color: #0038A8; margin-bottom: 2px;">ADDRESS</div>
+                                    <div id="preview-ec-address" style="font-size: 0.8rem; color: #333; font-weight: bold; line-height: 1.2; border-bottom: 1px solid #ccc; padding-bottom: 2px; word-break: break-word;">_____________________</div>
                                 </div>
                                 <div>
-                                    <div style="font-size: 2.2cqw; font-weight: bold; color: #0038A8; margin-bottom: 0.5cqw;">CONTACT NO.</div>
-                                    <div id="preview-ec-no" style="font-size: 2.5cqw; color: #333; font-weight: bold; border-bottom: 1px solid #ccc;">_____________________</div>
+                                    <div style="font-size: 0.7rem; font-weight: bold; color: #0038A8; margin-bottom: 2px;">CONTACT NO.</div>
+                                    <div id="preview-ec-no" style="font-size: 0.8rem; color: #333; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 2px; word-break: break-word;">_____________________</div>
                                 </div>
                                 
-                                <div class="mt-auto text-center text-muted" style="font-size: 1.8cqw; line-height: 1.2;">
+                                <div class="mt-auto text-center text-muted" style="font-size: 0.6rem; line-height: 1.3; padding-top: 10px;">
                                     This card is non-transferable.<br>Please report lost or found cards<br>to the Barangay Hall immediately.
                                 </div>
                             </div>
                             
-                            <div class="d-flex flex-column align-items-center justify-content-center" style="width: 25cqw; gap: 2cqw;">
-                                <div class="text-center w-100 mt-auto">
-                                    <div style="border-top: 1px solid #000; margin: 1cqw auto; width: 80%;"></div>
-                                    <div style="font-size: 2cqw; font-weight: bold; color: #0038A8;">BARANGAY<br>CHAIRMAN</div>
+                            <div class="d-flex flex-column align-items-center justify-content-end" style="width: 80px; flex-shrink: 0;">
+                                <div class="text-center w-100">
+                                    <div style="border-top: 1px solid #000; margin: 8px auto; width: 90%;"></div>
+                                    <div style="font-size: 0.65rem; font-weight: bold; color: #0038A8; line-height: 1.2;">BARANGAY<br>CHAIRMAN</div>
                                 </div>
                             </div>
                         </div>
@@ -362,7 +364,17 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             previewIdNo.textContent = 'PENDING';
             previewQr.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E";
-            previewValidity.textContent = 'N/A';
+            // Calculate validity: resident created_at + 3 years
+            if (resident.created_at) {
+                const createdDate = new Date(resident.created_at);
+                const year = createdDate.getFullYear() + 3;
+                const month = createdDate.getMonth();
+                const date = createdDate.getDate();
+                const validityDate = new Date(year, month, date).toISOString().split('T')[0];
+                previewValidity.textContent = validityDate;
+            } else {
+                previewValidity.textContent = 'N/A';
+            }
         }
     }
 
@@ -376,7 +388,7 @@ document.addEventListener('DOMContentLoaded', function() {
         generatedInfo.style.display = 'none';
         
         const issuedDate = new Date().toISOString().split('T')[0];
-        const expirationDate = new Date(new Date().setFullYear(new Date().getFullYear() + 5)).toISOString().split('T')[0];
+        const expirationDate = new Date(new Date().setFullYear(new Date().getFullYear() + 3)).toISOString().split('T')[0];
 
         const requestBody = {
             resident_id: resident.id,
@@ -536,12 +548,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 .header { 
                   position: relative; 
                   z-index: 1; 
-                  background: linear-gradient(90deg, #0038A8 0%, #CE1126 100%), repeating-radial-gradient(circle at 0 100%, transparent 0, transparent 10px, rgba(255,255,255,0.08) 11px, rgba(255,255,255,0.08) 12px), repeating-radial-gradient(circle at 100% 0, transparent 0, transparent 10px, rgba(255,255,255,0.08) 11px, rgba(255,255,255,0.08) 12px); 
+                  background: linear-gradient(90deg, rgba(38,143,255,0.85) 0%, rgba(255,255,255,0.85) 50%, rgba(0,48,103,0.85) 100%), url('/images/sil.jpg') center/cover; 
                   height: 45px; 
                   display: flex; 
                   align-items: center; 
                   padding: 0 8px; 
-                  color: white;
+                  color: #003067;
                   flex-shrink: 0;
                   -webkit-print-color-adjust: exact;
                   print-color-adjust: exact;
@@ -596,7 +608,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 .id-no { font-family: monospace; font-weight: bold; font-size: 7px; letter-spacing: 0.3px; }
 
                 /* Back Side */
-                .back-header { background: linear-gradient(90deg, #0038A8 0%, #CE1126 100%); color: white; text-align: center; font-weight: bold; font-size: 9px; padding: 4px; letter-spacing: 0.5px; flex-shrink: 0; }
+                .back-header { background: linear-gradient(90deg, rgba(38,143,255,0.85) 0%, rgba(255,255,255,0.85) 50%, rgba(0,48,103,0.85) 100%), url('/images/sil.jpg') center/cover; color: #003067; text-align: center; font-weight: bold; font-size: 9px; padding: 4px; letter-spacing: 0.5px; flex-shrink: 0; }
                 .back-body { padding: 10px; display: flex; gap: 10px; flex: 1; overflow: hidden; }
                 .back-left { flex: 1; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
                 .ec-label { font-size: 6px; font-weight: bold; color: #0038A8; margin-bottom: 0.5px; }
@@ -619,12 +631,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="bg-pattern"></div>
                 <div class="header">
                   <div class="header-logo">
-                      <img src="${window.location.origin}/images/kalawaan.png" alt="Logo">
+                      <img src="${window.location.origin}/images/OIP.jpg" alt="Logo">
                   </div>
                   <div class="header-text">
-                      <h3>Republic of the Philippines</h3>
-                      <h2>Barangay Kalawaan</h2>
+                      <h2>Republic of the Philippines</h2>
+                      <h2>National Capital Region</h2>
                       <h3>City of Pasig</h3>
+                      <h3>Barangay Kalawaan</h3>
                   </div>
                   <div class="header-logo">
                       <img src="${window.location.origin}/images/Pasig_City_Seal_Logo.svg" alt="Logo">

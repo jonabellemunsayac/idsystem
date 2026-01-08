@@ -485,7 +485,7 @@
                 </div>
                 <div class="sidebar-title">
                     <h2>Barangay</h2>
-                    <p>Management System</p>
+                    <p>E-Services System</p>
                 </div>
             </div>
             
@@ -538,11 +538,8 @@
                     <i class="bi bi-gear-fill"></i> Settings <i class="bi bi-chevron-down ms-auto" style="font-size: 0.8em;"></i>
                 </a>
                 <div class="collapse" id="settingsSubmenu">
-                    <a href="#" class="list-group-item ps-5" style="font-size: 0.85rem;">
+                    <a href="{{ route('settings.user-account.index') }}" class="list-group-item ps-5 {{ request()->routeIs('settings.user-account.*') ? 'active' : '' }}" style="font-size: 0.85rem;">
                         User Accounts
-                    </a>
-                    <a href="#" class="list-group-item ps-5" style="font-size: 0.85rem;">
-                        System Settings
                     </a>
                 </div>
             </div>
@@ -563,11 +560,6 @@
                 </div>
 
                 <div class="topbar-actions">
-                    <button class="btn-icon">
-                        <i class="bi bi-bell"></i>
-                        <span class="notification-dot"></span>
-                    </button>
-                    
                     <div class="dropdown">
                         <button class="btn-icon" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="bi bi-person-circle"></i>
@@ -575,8 +567,7 @@
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><h6 class="dropdown-header">Admin User</h6></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="{{ route('settings.profile.edit') }}">Profile</a></li>
-                            <li><a class="dropdown-item" href="#">Settings</a></li>
+                            <li><a class="dropdown-item" href="{{ route('settings.profile.edit') }}">Change Password</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
                                 <form action="{{ route('logout') }}" method="POST">
