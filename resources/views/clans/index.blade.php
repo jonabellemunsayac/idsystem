@@ -12,9 +12,9 @@
         <h1 class="h4 fw-bold text-dark mb-1">Clan Management</h1>
         <p class="text-muted mb-0">Manage family clans and households</p>
     </div>
-    <a href="{{ route('clans.create') }}" class="btn btn-primary d-flex align-items-center gap-1" style="background-color: #0038A8; border-color: #0038A8; padding: 0.5rem 1rem; font-size: 0.95rem;">
+    <!-- <a href="{{ route('clans.create') }}" class="btn btn-primary d-flex align-items-center gap-1" style="background-color: #0038A8; border-color: #0038A8; padding: 0.5rem 1rem; font-size: 0.95rem;">
         <i class="bi bi-plus-lg"></i> Add
-    </a>
+    </a> -->
 </div>
 
 <!-- Metrics -->
@@ -86,7 +86,7 @@
                         <th class="border-0 text-secondary text-uppercase fw-bold" style="font-size: 0.65rem;">Head of Family</th>
                         <th class="border-0 text-secondary text-uppercase fw-bold" style="font-size: 0.65rem;">Address</th>
                         <th class="border-0 text-secondary text-uppercase fw-bold" style="font-size: 0.65rem;">Contact</th>
-                        <th class="border-0 text-secondary text-uppercase fw-bold text-end pe-2" style="font-size: 0.65rem;">Actions</th>
+                        <!-- <th class="border-0 text-secondary text-uppercase fw-bold text-end pe-2" style="font-size: 0.65rem;">Actions</th> -->
                     </tr>
                 </thead>
                 <tbody>
@@ -96,14 +96,14 @@
                         <td style="font-size: 0.75rem;">{{ $clan['head_of_family'] }}</td>
                         <td style="font-size: 0.75rem;">{{ $clan['address'] }}</td>
                         <td style="font-size: 0.75rem;">{{ $clan['contact_number'] }}</td>
-                        <td class="text-end pe-2">
+                        <!-- <td class="text-end pe-2">
                             <a href="{{ route('clans.show', $clan['id']) }}" class="btn btn-link text-primary p-0 me-1" style="font-size: 0.7rem;">View</a>
                             <form action="{{ route('clans.destroy', $clan['id']) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure?');">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-link text-danger p-0" style="font-size: 0.7rem;">Delete</button>
                             </form>
-                        </td>
+                        </td> -->
                     </tr>
                     @empty
                     <tr>

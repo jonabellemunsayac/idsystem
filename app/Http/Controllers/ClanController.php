@@ -11,37 +11,45 @@ class ClanController extends Controller
     {
         $clans = Clan::paginate(10)->through(fn($clan) => [
             'id' => $clan->id,
-            'name' => $clan->name,
-            'description' => $clan->description,
+            'clan_name' => $clan->clan_name,
+            'head_of_family' => $clan->head_of_family,
+            'contact_number' => $clan->contact_number,
+            'email' => $clan->email,
+            'notes' => $clan->notes,
+            'address' => $clan->address,
         ]);
 
         return view('clans.index', ['clans' => $clans]);
     }
 
-    public function create()
-    {
-        return view('clans.create');
-    }
+    // public function create()
+    // {
+    //     return view('clans.create');
+    // }
 
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
-        ]);
+    // public function store(Request $request)
+    // {
+    //     $validated = $request->validate([
+    //         'name' => ['required', 'string', 'max:255'],
+    //         'description' => ['nullable', 'string'],
+    //     ]);
 
-        Clan::create($validated);
+    //     Clan::create($validated);
 
-        return redirect()->route('clans.index')->with('success', 'Clan created successfully!');
-    }
+    //     return redirect()->route('clans.index')->with('success', 'Clan created successfully!');
+    // }
 
     public function show(Clan $clan)
     {
         return view('clans.show', [
             'clan' => [
                 'id' => $clan->id,
-                'name' => $clan->name,
-                'description' => $clan->description,
+                'clan_name' => $clan->clan_name,
+                'head_of_family' => $clan->head_of_family,
+                'contact_number' => $clan->contact_number,
+                'email' => $clan->email,
+                'notes' => $clan->notes,
+                'address' => $clan->address,
             ]
         ]);
     }

@@ -8,10 +8,15 @@ class Clan extends Model
 {
     protected $fillable = [
         'clan_name',
-        'head_of_family',
         'address',
+        'head_of_family',
         'contact_number',
         'email',
         'notes',
     ];
+
+    public function residents()
+    {
+        return $this->hasMany(Resident::class);
+    }
 }
