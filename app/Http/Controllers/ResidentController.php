@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Clan;
 use App\Models\Resident;
 use App\Models\ResidentAccount;
 use Carbon\Carbon;
@@ -120,6 +121,14 @@ class ResidentController extends Controller
         if (!empty($validated['zip_code'])) $addressParts[] = $validated['zip_code'];
         $formattedAddress = implode(', ', array_filter($addressParts));
 
+        // Auto-create or reuse clan (lastname + address)
+        $clan = Clan::firstOrCreate(
+            [
+                'clan_name' => $validated['last_name'],
+                'address'   => $formattedAddress,
+            ]
+        );
+
         $resident = Resident::create([
             'first_name' => $validated['first_name'],
             'middle_name' => $validated['middle_name'] ?? null,
@@ -137,6 +146,7 @@ class ResidentController extends Controller
             'municipality' => $validated['municipality'] ?? null,
             'zip_code' => $validated['zip_code'] ?? null,
             'address' => $formattedAddress ?: null,
+            'clan_id' => $clan->id,
             'contact_number' => $validated['contact_number'] ?? null,
             'telephone_no' => $validated['telephone_no'] ?? null,
             'blood_type' => $validated['blood_type'] ?? null,
@@ -383,6 +393,14 @@ class ResidentController extends Controller
         
         $fullAddress = implode(', ', array_filter($addressParts));
 
+        // Auto-create or reuse clan (lastname + address)
+        $clan = Clan::firstOrCreate(
+            [
+                'clan_name' => $validated['last_name'],
+                'address'   => $fullAddress,
+            ]
+        );
+
         // Create resident
         $resident = Resident::create([
             'first_name' => $validated['first_name'],
@@ -402,6 +420,7 @@ class ResidentController extends Controller
             'province' => $validated['province'] ?? 'Metro Manila',
             'zip_code' => $validated['zip_code'] ?? null,
             'address' => $fullAddress,
+            'clan_id' => $clan->id,
             'contact_number' => $validated['contact_number'] ?? null,
             'telephone_no' => $validated['telephone_no'] ?? null,
             'email' => $validated['email'] ?? null,

@@ -31,7 +31,8 @@ class Resident extends Model
         'emergency_contact_relationship',
         'emergency_contact_address',
         'profile_image',
-        'family_id'
+        'family_id',
+        'clan_id',
     ];
 
     // Relationship to ResidentAccount
@@ -43,5 +44,10 @@ class Resident extends Model
     public static function getAllResidents()
     {
         return self::all(); // Equivalent to SELECT * FROM residents
+    }
+
+    public function clan()
+    {
+        return $this->belongsTo(Clan::class);
     }
 }
