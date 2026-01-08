@@ -157,15 +157,9 @@
                         <option value="">Select...</option>
                         <option value="Mother">Mother</option>
                         <option value="Father">Father</option>
-                        <option value="Spouse">Spouse</option>
-                        <option value="Child">Child</option>
                         <option value="Sibling">Sibling</option>
                         <option value="Grandparent">Grandparent</option>
-                        <option value="Grandchild">Grandchild</option>
-                        <option value="Aunt/Uncle">Aunt/Uncle</option>
                         <option value="Cousin">Cousin</option>
-                        <option value="Friend">Friend</option>
-                        <option value="Neighbor">Neighbor</option>
                         <option value="Other">Other</option>
                     </select>
                 </div>
@@ -415,7 +409,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Initialize Cropper
             const image = modal.querySelector('#crop-image');
             const cropper = new Cropper(image, {
-                aspectRatio: 1,
+                aspectRatio: 5 / 6,
                 viewMode: 1,
                 autoCropArea: 1,
                 responsive: true,
@@ -426,8 +420,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const cropApply = modal.querySelector('#crop-apply');
             cropApply.addEventListener('click', function() {
                 cropper.getCroppedCanvas({
-                    width: 400,
-                    height: 400,
+                    width: 300,
+                    height: 360,
                     imageSmoothingQuality: 'high',
                 }).toBlob((blob) => {
                     // Create a new file from the blob

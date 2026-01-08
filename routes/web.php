@@ -15,6 +15,7 @@ use App\Http\Controllers\QRAuthController;
 use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\Settings\PasswordController;
 use App\Http\Controllers\Settings\TwoFactorAuthenticationController;
+use App\Http\Controllers\Settings\UserAccountController;
 use App\Http\Controllers\Admin\AppointmentController as AdminAppointmentController;
 use App\Http\Controllers\Admin\CertificateController as AdminCertificateController;
 use App\Http\Controllers\Auth\AdminLoginController;
@@ -127,6 +128,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('two-factor', [TwoFactorAuthenticationController::class, 'show'])->name('two-factor.show');
         Route::post('two-factor/enable', [TwoFactorAuthenticationController::class, 'enable'])->name('two-factor.enable');
         Route::post('two-factor/disable', [TwoFactorAuthenticationController::class, 'disable'])->name('two-factor.disable');
+
+        // User Account Settings
+        Route::get('user-account', [UserAccountController::class, 'index'])->name('user-account.index');
+        Route::patch('user-account/password', [UserAccountController::class, 'updatePassword'])->name('user-account.update-password');
     });
 
     // Admin-specific routes

@@ -298,12 +298,14 @@
 
 <script>
     async function viewCaseDetails(caseId) {
+        currentCaseId = caseId;
         try {
             const response = await fetch(`/api/blotter/${caseId}`);
             const data = await response.json();
             
             if (data.success) {
                 const caseData = data.data;
+                currentCaseStatus = caseData.status;
                 const contentDiv = document.getElementById('caseDetailsContent');
                 
                 let severityBadge = '';
@@ -444,49 +446,6 @@
 
     let currentCaseId = null;
     let currentCaseStatus = null;
-
-    async function viewCaseDetails(caseId) {
-        currentCaseId = caseId;
-        try {
-            const response = await fetch(`/api/blotter/${caseId}`);
-            const data = await response.json();
-            
-            if (data.success) {
-                const caseData = data.data;
-                currentCaseStatus = caseData.status;
-                const contentDiv = document.getElementById('caseDetailsContent');
-                
-                let severityBadge = '';
-                if (caseData.severity === 'low') {
-                    severityBadge = '<span class="badge bg-light text-dark border rounded-pill px-3">low</span>';
-                } else if (caseData.severity === 'medium') {
-                    severityBadge = '<span class="badge bg-warning text-dark rounded-pill px-3">medium</span>';
-                } else if (caseData.severity === 'high') {
-                    severityBadge = '<span class="badge bg-danger rounded-pill px-3">high</span>';
-                } else if (caseData.severity === 'critical') {
-                    severityBadge = '<span class="badge bg-danger rounded-pill px-3">critical</span>';
-                } else {
-                    severityBadge = `<span class="badge bg-secondary rounded-pill px-3">${caseData.severity}</span>`;
-                }
-                
-                let statusBadge = '';
-                if (caseData.status === 'pending') {
-                    statusBadge = '<span class="badge bg-warning text-dark rounded-pill px-3">pending</span>';
-                } else if (caseData.status === 'investigating') {
-                    statusBadge = '<span class="badge bg-primary rounded-pill px-3">investigating</span>';
-                } else if (caseData.status === 'resolved') {
-                    statusBadge = '<span class="badge bg-success rounded-pill px-3">resolved</span>';
-                } else {
-                    statusBadge = `<span class="badge bg-secondary rounded-pill px-3">${caseData.status}</span>`;
-                }
-                
-                viewCaseDetails(currentCaseId);
-            }
-        } catch (error) {
-            console.error('Error fetching case details:', error);
-            alert('Error loading case details');
-        }
-    }
 
     async function saveCaseStatus() {
         const newStatus = document.getElementById('caseStatusSelect').value;

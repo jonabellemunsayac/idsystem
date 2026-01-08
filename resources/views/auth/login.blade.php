@@ -223,7 +223,7 @@
             <div class="icon-circle">
                 <i class="bi bi-building"></i>
             </div>
-            <h1>Barangay Management System</h1>
+            <h1>Barangay E-Services System</h1>
             <p>Resident Portal</p>
         </div>
 

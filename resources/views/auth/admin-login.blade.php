@@ -225,7 +225,7 @@
                 <i class="bi bi-shield-lock"></i>
             </div>
             <h1>Admin Portal</h1>
-            <p>Barangay Management System</p>
+            <p>Barangay E-Services System</p>
         </div>
 
         <div class="login-card">

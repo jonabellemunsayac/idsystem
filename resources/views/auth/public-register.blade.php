@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Public Registration - Barangay Management System</title>
+    <title>Public Registration - Barangay E-Services System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
@@ -29,7 +29,7 @@
                 <div class="card-body p-5" style="overflow-y: auto; max-height: 100vh;">
                     <div class="text-center mb-4">
                         <h1 class="h3 fw-bold text-dark mb-0">Resident Registration</h1>
-                        <p class="text-muted small mt-1">Create your account in the Barangay Management System</p>
+                        <p class="text-muted small mt-1">Create your account in the Barangay E-Services System</p>
                     </div>
 
                     @if (session('success'))

@@ -331,7 +331,13 @@ document.addEventListener('DOMContentLoaded', function() {
         generatingLoader.style.display = 'block';
         
         const issuedDate = new Date().toISOString().split('T')[0];
-        const expirationDate = new Date(new Date().setFullYear(new Date().getFullYear() + 5)).toISOString().split('T')[0];
+        
+        // Calculate expiration date: resident created_at + 3 years
+        const residentCreatedDate = new Date(resident.created_at);
+        const year = residentCreatedDate.getFullYear() + 3;
+        const month = residentCreatedDate.getMonth();
+        const date = residentCreatedDate.getDate();
+        const expirationDate = new Date(year, month, date).toISOString().split('T')[0];
 
         fetch('/api/ids/generate', {
             method: 'POST',
