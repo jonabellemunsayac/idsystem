@@ -101,7 +101,7 @@ class ResidentController extends Controller
             'emergency_contact_relationship' => ['nullable', 'string', 'max:255'],
             'emergency_contact_address' => ['nullable', 'string', 'max:500'],
             'email' => ['nullable', 'email', 'max:255'],
-            'profile_image' => ['nullable', 'image', 'max:2048'],
+            'profile_image' => $request->hasFile('profile_image') ? ['image', 'max:2048'] : ['nullable'],
         ]);
 
         $profileImagePath = null;
@@ -301,7 +301,7 @@ class ResidentController extends Controller
             'emergency_contact_relationship' => ['nullable', 'string', 'max:255'],
             'emergency_contact_address' => ['nullable', 'string', 'max:500'],
             'email' => ['nullable', 'email', 'max:255'],
-            'profile_image' => ['nullable', 'image', 'max:2048'],
+            'profile_image' => $request->hasFile('profile_image') ? ['image', 'max:2048'] : ['nullable'],
         ]);
 
         if ($request->hasFile('profile_image')) {

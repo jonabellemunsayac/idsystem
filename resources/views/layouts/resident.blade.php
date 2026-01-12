@@ -200,27 +200,6 @@
             padding: 1rem;
         }
 
-        .sidebar-footer .logout-btn {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.75rem 1rem;
-            border-radius: 0.5rem;
-            color: white;
-            background: none;
-            border: none;
-            text-align: left;
-            font-size: 0.875rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        .sidebar-footer .logout-btn:hover {
-            background-color: var(--sidebar-hover);
-        }
-
         /* Bottom Navigation */
         .bottom-nav {
             position: fixed;
@@ -533,16 +512,6 @@
                     </a>
                 </div>
             </nav>
-
-            <div class="sidebar-footer">
-                <form action="{{ route('resident.logout') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="logout-btn">
-                        <i class="bi bi-box-arrow-right"></i>
-                        <span>Logout</span>
-                    </button>
-                </form>
-            </div>
         </aside>
 
         <!-- Main Content Area -->

@@ -24,31 +24,39 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 
-// Root redirect
-Route::get('/', function () {
+// Public website routes
+Route::view('/', 'public.home')->name('public.home');
+Route::view('/about', 'public.about')->name('public.about');
+Route::view('/services', 'public.services')->name('public.services');
+Route::view('/news', 'public.news')->name('public.news');
+Route::view('/contact', 'public.contact')->name('public.contact');
+
+// Admin and resident portals
+Route::get('/portal', function () {
     if (auth()->check()) {
         return auth()->user()->role === 'admin' 
             ? redirect()->route('dashboard') 
             : redirect()->route('resident.dashboard');
     }
     return redirect()->route('login');
-})->name('home');
+})->name('portal');
 
-// Guest only routes (login & register)
+// Resident Login (visible in public website only)
 Route::middleware('guest')->group(function () {
-    // Resident Login
     Route::get('/login', function () {
         return view('auth.login');
     })->name('login');
 
     Route::post('/login', [ResidentLoginController::class, 'store'])->name('login.store');
+});
 
-    // Admin Login
-    Route::get('/admin/login', function () {
+// Admin Login (protected route - not exposed in public website)
+Route::middleware('guest:web')->prefix('admin')->group(function () {
+    Route::get('/login', function () {
         return view('auth.admin-login');
     })->name('admin.login');
 
-    Route::post('/admin/login', [AdminLoginController::class, 'store'])->name('admin.login.store');
+    Route::post('/login', [AdminLoginController::class, 'store'])->name('admin.login.store');
 });
 
 // Public Registration (accessible to everyone, controller handles auth check)
@@ -62,7 +70,7 @@ Route::post('/register', [ResidentController::class, 'publicRegisterStore'])
 Route::get('/qr/authenticate/{token}', [QRAuthController::class, 'authenticate'])->name('qr.authenticate');
 
 // Protected admin routes
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Residents Management
@@ -143,12 +151,12 @@ Route::middleware(['auth'])->group(function () {
         Route::patch('certificates/{certificate}/status', [AdminCertificateController::class, 'updateStatus'])->name('certificates.updateStatus');
     });
 
-    // Logout
+    // Admin Logout
     Route::post('/logout', function (Request $request) {
-        auth()->logout();
+        auth()->guard('web')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect()->route('login');
+        return redirect()->route('admin.login');
     })->name('logout');
 });
 
