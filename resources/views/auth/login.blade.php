@@ -287,11 +287,6 @@
                     <button type="submit" class="btn-primary">
                         Log in
                     </button>
-
-                    <div class="footer-text">
-                        <span>Are you an admin? </span>
-                        <a href="{{ route('admin.login') }}">Admin Login</a>
-                    </div>
                 </form>
             </div>
         </div>

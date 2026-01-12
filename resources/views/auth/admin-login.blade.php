@@ -288,11 +288,6 @@
                     <button type="submit" class="btn-danger">
                         Admin Login
                     </button>
-
-                    <div class="footer-text">
-                        <span>Not an admin? </span>
-                        <a href="{{ route('login') }}">Resident Login</a>
-                    </div>
                 </form>
             </div>
         </div>
