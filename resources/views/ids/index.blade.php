@@ -51,13 +51,14 @@
                         <!-- Body -->
                         <div class="d-flex p-3 position-relative" style="gap: 12px; min-height: 240px;">
                             <!-- Left Column: Photo & Signature -->
-                            <div class="d-flex flex-column align-items-center" style="width: 90px; flex-shrink: 0;">
-                                <div class="bg-white border border-2 border-secondary d-flex align-items-center justify-content-center overflow-hidden rounded mb-2" style="width: 90px; height: 110px; background-color: #e9ecef;">
+                            <div class="d-flex flex-column align-items-center" style="width: auto; flex-shrink: 0; gap: 8px;">
+                                <div class="bg-white d-flex align-items-center justify-content-center overflow-hidden rounded" style="width: 90px; height: 110px; background-color: #e9ecef;">
                                     <img id="preview-photo" src="" alt="Photo" style="width: 100%; height: 100%; object-fit: cover; display: none;">
                                     <span id="preview-no-photo" style="font-size: 0.9rem; color: #adb5bd;">PHOTO</span>
                                 </div>
-                                <div class="text-center w-100" style="border-bottom: 1px solid #000; margin-bottom: 4px; height: 20px; display: flex; align-items: flex-end; justify-content: center;">
-                                    <span style="font-family: cursive; font-size: 0.85rem;">Signature</span>
+                                <div class="d-flex align-items-center justify-content-center position-relative" style="width: 100px; height: 50px; overflow: hidden; background: transparent;">
+                                    <img id="preview-signature" src="" alt="Signature" style="max-width: 95px; max-height: 45px; object-fit: contain; display: none; background: transparent;">
+                                    <span id="preview-no-signature" style="font-family: cursive; font-size: 0.8rem; display: block; color: #999;">Signature</span>
                                 </div>
                                 <div class="text-center fw-bold" style="font-size: 0.75rem; letter-spacing: 0.5px; color: #0038A8;">RESIDENT</div>
                             </div>
@@ -67,7 +68,7 @@
                                 <!-- Name -->
                                 <div class="mb-2">
                                     <div class="text-muted text-uppercase" style="font-size: 0.55rem; line-height: 1;">Last Name, First Name, Middle Name</div>
-                                    <div id="preview-name" class="fw-bold text-uppercase text-dark" style="font-size: 1.1rem; line-height: 1.1; color: #0038A8 !important; word-break: break-word;">
+                                    <div id="preview-name" class="fw-bold text-uppercase text-dark" style="font-size: 0.85rem; line-height: 1.1; color: #0038A8 !important; word-break: break-word;">
                                         RESIDENT NAME
                                     </div>
                                 </div>
@@ -88,8 +89,8 @@
                                     </div>
                                     
                                     <div style="width: calc(25% - 3px);">
-                                        <div class="text-muted text-uppercase" style="font-size: 0.5rem; line-height: 1;">Blood Type</div>
-                                        <div id="preview-blood" class="fw-bold text-dark" style="font-size: 0.7rem; line-height: 1.1;">-</div>
+                                        <div class="text-muted text-uppercase" style="font-size: 0.5rem; line-height: 1;">Special Sector</div>
+                                        <div id="preview-special-sector" class="fw-bold text-dark" style="font-size: 0.7rem; line-height: 1.1;">-</div>
                                     </div>
                                     <div style="width: calc(37% - 3px);">
                                         <div class="text-muted text-uppercase" style="font-size: 0.5rem; line-height: 1;">Nationality</div>
@@ -104,14 +105,14 @@
                                 <!-- Address -->
                                 <div class="mb-2">
                                     <div class="text-muted text-uppercase" style="font-size: 0.5rem; line-height: 1;">Address</div>
-                                    <div id="preview-address" class="fw-bold text-dark text-uppercase" style="font-size: 0.7rem; line-height: 1.2; word-break: break-word;">
+                                    <div id="preview-address" class="fw-bold text-dark text-uppercase" style="font-size: 0.7rem; line-height: 1.2; word-break: break-word; margin-bottom: 8px;">
                                         -
                                     </div>
                                 </div>
 
                                 <!-- QR Code & ID No -->
                                 <div class="position-absolute" style="bottom: 0; right: 0; text-align: center;">
-                                    <div class="bg-white p-1 mb-1 border border-2 border-dark" style="width: 55px; height: 55px; display: flex; align-items: center; justify-content: center;">
+                                    <div class="bg-white p-1 mb-1 border border-2 border-dark" style="width: 75px; height: 75px; display: flex; align-items: center; justify-content: center;">
                                         <img id="preview-qr" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E" alt="QR" style="width: 100%; height: 100%; object-fit: contain;">
                                     </div>
                                     <div id="preview-id-no" class="font-monospace fw-bold" style="font-size: 0.5rem; letter-spacing: 0.3px; color: #212529;">PENDING</div>
@@ -202,9 +203,14 @@
                             </div>
                         </div>
 
-                        <button type="button" id="print-btn" class="btn btn-primary w-100 py-2" style="background-color: #0038A8; border-color: #0038A8;">
-                            <i class="bi bi-printer me-2"></i> Print ID Card
-                        </button>
+                        <div class="d-flex gap-2">
+                            <button type="button" id="print-front-btn" class="btn btn-primary flex-fill py-2" style="background-color: #0038A8; border-color: #0038A8;">
+                                <i class="bi bi-printer me-2"></i> Print Front
+                            </button>
+                            <button type="button" id="print-back-btn" class="btn btn-outline-primary flex-fill py-2" style="border-color: #0038A8; color: #0038A8;">
+                                <i class="bi bi-printer me-2"></i> Print Back
+                            </button>
+                        </div>
                     </div>
                     
                     <div id="generating-loader" class="alert alert-info py-2 px-3 mb-0 text-center" style="display: none;">
@@ -226,7 +232,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const generatedInfo = document.getElementById('generated-info');
     const generatedIdNo = document.getElementById('generated-id-no');
     const generatingLoader = document.getElementById('generating-loader');
-    const printBtn = document.getElementById('print-btn');
+    const printFrontBtn = document.getElementById('print-front-btn');
+    const printBackBtn = document.getElementById('print-back-btn');
     
     const emptyPreview = document.getElementById('empty-preview');
     const idPreviewContent = document.getElementById('id-preview-content');
@@ -234,12 +241,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // Preview Elements
     const previewPhoto = document.getElementById('preview-photo');
     const previewNoPhoto = document.getElementById('preview-no-photo');
+    const previewSignature = document.getElementById('preview-signature');
+    const previewNoSignature = document.getElementById('preview-no-signature');
     const previewName = document.getElementById('preview-name');
     const previewDob = document.getElementById('preview-dob');
     const previewSex = document.getElementById('preview-sex');
     const previewNationality = document.getElementById('preview-nationality');
     const previewStatus = document.getElementById('preview-status');
-    const previewBlood = document.getElementById('preview-blood');
+    const previewSpecialSector = document.getElementById('preview-special-sector');
     const previewAddress = document.getElementById('preview-address');
     const previewIdNo = document.getElementById('preview-id-no');
     const previewEcName = document.getElementById('preview-ec-name');
@@ -326,12 +335,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function updatePreview(resident, idData = null) {
-        previewName.textContent = `${resident.first_name} ${resident.middle_name ? resident.middle_name[0] + '.' : ''} ${resident.last_name}`;
+        previewName.textContent = `${resident.last_name}, ${resident.first_name}${resident.middle_name ? ', ' + resident.middle_name : ''}`;
         previewDob.textContent = resident.birth_date || '-';
         previewSex.textContent = resident.gender || '-';
         previewNationality.textContent = resident.nationality || 'FILIPINO';
         previewStatus.textContent = resident.civil_status || '-';
-        previewBlood.textContent = resident.blood_type || '-';
+        previewSpecialSector.textContent = resident.special_sector || '-';
         previewAddress.textContent = resident.address || '-';
         
         previewEcName.textContent = resident.emergency_contact_name || '_____________________';
@@ -352,6 +361,22 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             previewPhoto.style.display = 'none';
             previewNoPhoto.style.display = 'block';
+        }
+
+        // Handle signature display
+        if (resident.signature && resident.signature.trim()) {
+            try {
+                previewSignature.src = `/storage/${resident.signature}`;
+                previewSignature.style.display = 'block';
+                previewNoSignature.style.display = 'none';
+            } catch (e) {
+                console.error('Error loading signature:', e);
+                previewSignature.style.display = 'none';
+                previewNoSignature.style.display = 'block';
+            }
+        } else {
+            previewSignature.style.display = 'none';
+            previewNoSignature.style.display = 'block';
         }
 
         // Handle ID data
@@ -471,16 +496,42 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Print Handler
-    printBtn.addEventListener('click', function() {
+    // Print Front Handler
+    // Print Front Handler
+    printFrontBtn.addEventListener('click', function() {
         if (!currentResident || !currentID) return;
+        printCard('front');
+    });
+
+    // Print Back Handler
+    printBackBtn.addEventListener('click', function() {
+        if (!currentResident || !currentID) return;
+        printCard('back');
+    });
+
+    // Print Both Handler
+    printBothBtn.addEventListener('click', function() {
+        if (!currentResident || !currentID) return;
+        printCard('both');
+    });
+
+    // Print Handler
+    function printCard(side = 'both') {
+        if (!currentResident || !currentID) return;
+
+        // Log the print action
+        logPrintAction(side);
 
         const printWindow = window.open('', '_blank');
         if (!printWindow) return;
 
-        // Get absolute image URL for print preview
+        // Get absolute image URLs for print preview
         const photoUrl = currentResident.profile_image 
             ? `${window.location.protocol}//${window.location.host}/storage/${currentResident.profile_image}`
+            : '';
+
+        const signatureUrl = currentResident.signature
+            ? `${window.location.protocol}//${window.location.host}/storage/${currentResident.signature}`
             : '';
 
         // Function to fetch and convert image to base64
@@ -500,11 +551,15 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        // Generate print HTML after image is ready
-        getImageBase64(photoUrl).then(photoBase64 => {
+        // Generate print HTML after images are ready
+        Promise.all([
+            getImageBase64(photoUrl),
+            getImageBase64(signatureUrl)
+        ]).then(([photoBase64, signatureBase64]) => {
             const photoSrc = photoBase64;
+            const signatureSrc = signatureBase64;
 
-        const idCardHTML = `
+        const frontCardHTML = `
           <!DOCTYPE html>
           <html>
             <head>
@@ -589,21 +644,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 .left-col { width: 80px; display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
                 .photo-box { width: 80px; height: 95px; background-color: #e9ecef; border: 1px solid #adb5bd; border-radius: 3px; overflow: hidden; display: flex; align-items: center; justify-content: center; margin-bottom: 4px; flex-shrink: 0; }
                 .photo-box img { width: 100%; height: 100%; object-fit: cover; }
-                .signature-area { width: 100%; border-bottom: 1px solid #000; height: 18px; margin-bottom: 2px; display: flex; align-items: flex-end; justify-content: center; flex-shrink: 0; }
+                .signature-area { width: 100%; height: 25px; margin-bottom: 2px; display: flex; align-items: flex-end; justify-content: center; flex-shrink: 0; }
                 .signature-text { font-family: cursive; font-size: 7px; }
                 .resident-label { font-size: 8px; font-weight: bold; color: #0038A8; letter-spacing: 0.5px; }
 
                 /* Right Col */
-                .right-col { flex: 1; display: flex; flex-direction: column; position: relative; min-width: 0; }
+                .right-col { flex: 1; display: flex; flex-direction: column; position: relative; min-width: 0; padding-right: 72px; padding-bottom: 4px; }
                 .field-label { font-size: 5px; color: #6c757d; text-transform: uppercase; margin-bottom: 0.5px; }
-                .field-value { font-size: 8px; font-weight: bold; color: #212529; line-height: 1; }
-                .name-value { font-size: 11px; color: #0038A8; text-transform: uppercase; margin-bottom: 6px; line-height: 1.1; }
+                .field-value { font-size: 8px; font-weight: bold; color: #212529; line-height: 1; word-break: break-word; }
+                .name-value { font-size: 8px; color: #0038A8; text-transform: uppercase; margin-bottom: 6px; line-height: 1.1; }
 
                 .grid-container { display: flex; flex-wrap: wrap; gap: 2px; row-gap: 4px; margin-bottom: 4px; }
                 .grid-item { flex-shrink: 0; }
                 
                 .qr-section { position: absolute; bottom: 0; right: 0; text-align: center; padding: 4px; }
-                .qr-box { width: 45px; height: 45px; background: white; border: 1px solid #999; padding: 1px; margin-bottom: 1px; display: flex; align-items: center; justify-content: center; }
+                .qr-box { width: 60px; height: 60px; background: white; border: 1px solid #999; padding: 1px; margin-bottom: 1px; display: flex; align-items: center; justify-content: center; }
                 .qr-box img { width: 100%; height: 100%; object-fit: contain; }
                 .id-no { font-family: monospace; font-weight: bold; font-size: 7px; letter-spacing: 0.3px; }
 
@@ -650,14 +705,14 @@ document.addEventListener('DOMContentLoaded', function() {
                           ${photoSrc ? `<img src="${photoSrc}" alt="Photo">` : '<span style="font-size: 7px; color: #adb5bd;">PHOTO</span>'}
                       </div>
                       <div class="signature-area">
-                          <span class="signature-text">Signature</span>
+                          ${signatureSrc ? `<img src="${signatureSrc}" alt="Signature" style="max-width: 75px; max-height: 22px; object-fit: contain; background: transparent;">` : '<span style="font-family: cursive; font-size: 7px; color: #999;">Signature</span>'}
                       </div>
                       <div class="resident-label">RESIDENT</div>
                   </div>
                   
                   <div class="right-col">
                       <div class="field-label">Last Name, First Name, Middle Name</div>
-                      <div class="field-value name-value">${currentResident.last_name}, ${currentResident.first_name} ${currentResident.middle_name || ''}</div>
+                      <div class="field-value name-value" style="font-size: 8px;">${currentResident.last_name}, ${currentResident.first_name}${currentResident.middle_name ? ', ' + currentResident.middle_name : ''}</div>
                       
                       <div class="grid-container">
                           <div class="grid-item" style="width: 25%">
@@ -673,8 +728,8 @@ document.addEventListener('DOMContentLoaded', function() {
                               <div class="field-value">${currentResident.civil_status || '-'}</div>
                           </div>
                           <div class="grid-item" style="width: 25%">
-                              <div class="field-label">Blood</div>
-                              <div class="field-value">${currentResident.blood_type || '-'}</div>
+                              <div class="field-label">Special Sector</div>
+                              <div class="field-value">${currentResident.special_sector || '-'}</div>
                           </div>
                           <div class="grid-item" style="width: 35%">
                               <div class="field-label">Nationality</div>
@@ -687,7 +742,7 @@ document.addEventListener('DOMContentLoaded', function() {
                       </div>
 
                       <div class="field-label">Address</div>
-                      <div class="field-value" style="font-size: 7px; line-height: 1; text-transform: uppercase;">${currentResident.address || '-'}</div>
+                      <div class="field-value" style="font-size: 7px; line-height: 1.2; text-transform: uppercase; margin-bottom: 8px; word-break: break-word; max-width: 100%; overflow-wrap: break-word;">${currentResident.address || '-'}</div>
 
                       <div class="qr-section">
                           <div class="qr-box">
@@ -698,8 +753,9 @@ document.addEventListener('DOMContentLoaded', function() {
                   </div>
                 </div>
               </div>
+        `;
 
-              <!-- BACK CARD -->
+        const backCardHTML = `
               <div class="id-card">
                 <div class="bg-pattern"></div>
                 <div class="back-header">EMERGENCY CONTACT</div>
@@ -727,18 +783,174 @@ document.addEventListener('DOMContentLoaded', function() {
                   </div>
                 </div>
               </div>
+        `;
+
+            let finalHTML = `
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <meta charset="UTF-8">
+              <title>Barangay ID Card - ${currentResident.first_name} ${currentResident.last_name}</title>
+              <style>
+                * { margin: 0; padding: 0; box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                html, body { margin: 0; padding: 0; height: 100%; }
+                body { font-family: sans-serif; background: white; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                
+                .id-card { 
+                  position: relative; 
+                  width: 3.375in; 
+                  height: 2.125in; 
+                  background-color: #f8f9fa; 
+                  overflow: hidden; 
+                  display: flex; 
+                  flex-direction: column;
+                  margin-bottom: 20px;
+                  break-after: always;
+                  -webkit-print-color-adjust: exact;
+                  print-color-adjust: exact;
+                }
+                
+                /* Background Pattern */
+                .bg-pattern { 
+                  position: absolute; 
+                  top: 0; 
+                  left: 0; 
+                  width: 100%; 
+                  height: 100%; 
+                  opacity: 0.6; 
+                  background: repeating-radial-gradient(circle at 0 100%, transparent 0, transparent 10px, rgba(0,56,168,0.03) 11px, rgba(0,56,168,0.03) 12px), repeating-radial-gradient(circle at 100% 0, transparent 0, transparent 10px, rgba(206,17,38,0.03) 11px, rgba(206,17,38,0.03) 12px); 
+                  pointer-events: none; 
+                  z-index: 0;
+                  -webkit-print-color-adjust: exact;
+                  print-color-adjust: exact;
+                }
+
+                /* Header */
+                .header { 
+                  position: relative; 
+                  z-index: 1; 
+                  background: linear-gradient(90deg, rgba(38,143,255,0.85) 0%, rgba(255,255,255,0.85) 50%, rgba(0,48,103,0.85) 100%), url('/images/sil.jpg') center/cover; 
+                  height: 45px; 
+                  display: flex; 
+                  align-items: center; 
+                  padding: 0 8px; 
+                  color: #003067;
+                  flex-shrink: 0;
+                  -webkit-print-color-adjust: exact;
+                  print-color-adjust: exact;
+                }
+                .header-logo { 
+                  width: 35px; 
+                  height: 35px; 
+                  border-radius: 50%; 
+                  display: flex; 
+                  align-items: center; 
+                  justify-content: center;
+                  flex-shrink: 0;
+                  -webkit-print-color-adjust: exact;
+                  print-color-adjust: exact;
+                }
+                .header-logo img { width: 90%; height: 90%; object-fit: contain; border-radius: 60%}
+                .header-text { flex: 1; text-align: center; line-height: 1.05; text-transform: uppercase; padding: 0 5px; }
+                .header-text h3 { font-size: 5px; font-weight: normal; letter-spacing: 0.5px; margin: 0; }
+                .header-text h2 { font-size: 9px; font-weight: 800; margin: 0; letter-spacing: 0.5px; }
+
+                /* Body */
+                .card-body { 
+                  position: relative; 
+                  z-index: 1; 
+                  display: flex; 
+                  padding: 8px; 
+                  gap: 8px; 
+                  flex: 1;
+                  overflow: hidden;
+                }
+
+                /* Left Col */
+                .left-col { width: 80px; display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+                .photo-box { width: 80px; height: 95px; background-color: #e9ecef; border: 1px solid #adb5bd; border-radius: 3px; overflow: hidden; display: flex; align-items: center; justify-content: center; margin-bottom: 4px; flex-shrink: 0; }
+                .photo-box img { width: 100%; height: 100%; object-fit: cover; }
+                .signature-area { width: 100%; height: 25px; margin-bottom: 2px; display: flex; align-items: flex-end; justify-content: center; flex-shrink: 0; }
+                .signature-text { font-family: cursive; font-size: 7px; }
+                .resident-label { font-size: 8px; font-weight: bold; color: #0038A8; letter-spacing: 0.5px; }
+
+                /* Right Col */
+                .right-col { flex: 1; display: flex; flex-direction: column; position: relative; min-width: 0; padding-right: 72px; padding-bottom: 4px; }
+                .field-label { font-size: 5px; color: #6c757d; text-transform: uppercase; margin-bottom: 0.5px; }
+                .field-value { font-size: 8px; font-weight: bold; color: #212529; line-height: 1; word-break: break-word; }
+                .name-value { font-size: 8px; color: #0038A8; text-transform: uppercase; margin-bottom: 6px; line-height: 1.1; }
+
+                .grid-container { display: flex; flex-wrap: wrap; gap: 2px; row-gap: 4px; margin-bottom: 4px; }
+                .grid-item { flex-shrink: 0; }
+                
+                .qr-section { position: absolute; bottom: 0; right: 0; text-align: center; padding: 4px; }
+                .qr-box { width: 60px; height: 60px; background: white; border: 1px solid #999; padding: 1px; margin-bottom: 1px; display: flex; align-items: center; justify-content: center; }
+                .qr-box img { width: 100%; height: 100%; object-fit: contain; }
+                .id-no { font-family: monospace; font-weight: bold; font-size: 7px; letter-spacing: 0.3px; }
+
+                /* Back Side */
+                .back-header { background: linear-gradient(90deg, rgba(38,143,255,0.85) 0%, rgba(255,255,255,0.85) 50%, rgba(0,48,103,0.85) 100%), url('/images/sil.jpg') center/cover; color: #003067; text-align: center; font-weight: bold; font-size: 9px; padding: 4px; letter-spacing: 0.5px; flex-shrink: 0; }
+                .back-body { padding: 10px; display: flex; gap: 10px; flex: 1; overflow: hidden; }
+                .back-left { flex: 1; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+                .ec-label { font-size: 6px; font-weight: bold; color: #0038A8; margin-bottom: 0.5px; }
+                .ec-value { font-size: 8px; font-weight: bold; color: #333; border-bottom: 1px solid #999; padding-bottom: 0.5px; min-height: 10px; }
+                .disclaimer { margin-top: auto; font-size: 5px; color: #6c757d; text-align: center; line-height: 1.1; }
+                .back-right { width: 70px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; flex-shrink: 0; }
+                .chairman-line { border-top: 1px solid #000; width: 100%; margin-bottom: 1px; }
+                .chairman-label { font-size: 6px; font-weight: bold; color: #0038A8; text-align: center; line-height: 1.1; }
+
+                @media print {
+                  @page { size: 3.375in 2.125in; margin: 0; }
+                  html, body { margin: 0; padding: 0; }
+                  body { display: block; background: white; }
+                }
+              </style>
+            </head>
+            <body>
+            `;
+
+            if (side === 'front' || side === 'both') {
+                finalHTML += frontCardHTML;
+            }
+            if (side === 'back' || side === 'both') {
+                finalHTML += backCardHTML;
+            }
+
+            finalHTML += `
             </body>
           </html>
         `;
 
-            printWindow.document.write(idCardHTML);
+            printWindow.document.write(finalHTML);
             printWindow.document.close();
             printWindow.onload = () => {
                 printWindow.focus();
                 printWindow.print();
             };
         });
-    });
+    }
+
+    // Log print action to audit logs
+    function logPrintAction(printType) {
+        if (!currentResident) return;
+
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+        if (!csrfToken) return;
+
+        fetch('/api/ids/log-print', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken
+            },
+            body: JSON.stringify({
+                resident_id: currentResident.id,
+                print_type: printType
+            })
+        }).catch(err => {
+            console.error('Failed to log print action:', err);
+        });
+    }
 });
 </script>
 @endsection

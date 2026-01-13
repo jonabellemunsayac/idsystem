@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ID;
 use App\Models\Resident;
+use App\Services\ActivityLogger;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
@@ -87,6 +88,7 @@ class IDController extends Controller
                 'last_name' => $r->last_name,
                 'address' => $this->formatAddress($r),
                 'profile_image' => $r->profile_image,
+                'signature' => $r->signature,
                 'gender' => $r->gender,
                 'birth_date' => $r->birth_date,
                 'civil_status' => $r->civil_status,
@@ -165,5 +167,23 @@ class IDController extends Controller
         if ($resident->province) $parts[] = $resident->province;
         
         return implode(', ', $parts) ?: $resident->address;
+    }
+
+    /**
+     * Log ID print action
+     */
+    public function logPrint(Request $request)
+    {
+        $validated = $request->validate([
+            'resident_id' => 'required|exists:residents,id',
+            'print_type' => 'required|in:front,back,both',
+        ]);
+
+        $resident = Resident::findOrFail($validated['resident_id']);
+        $residentName = "{$resident->first_name} {$resident->last_name}";
+
+        ActivityLogger::logPrint($validated['print_type'], $resident->id, $residentName);
+
+        return response()->json(['success' => true]);
     }
 }

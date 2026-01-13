@@ -34,7 +34,7 @@ Route::view('/contact', 'public.contact')->name('public.contact');
 // Admin and resident portals
 Route::get('/portal', function () {
     if (auth()->check()) {
-        return auth()->user()->role === 'admin' 
+        return in_array(auth()->user()->role, ['admin', 'superadmin']) 
             ? redirect()->route('dashboard') 
             : redirect()->route('resident.dashboard');
     }
@@ -90,6 +90,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     // IDs Management
     Route::get('/api/residents/search', [IDController::class, 'searchResidents'])->name('api.residents.search');
     Route::post('/api/ids/generate', [IDController::class, 'generateID'])->name('api.ids.generate');
+    Route::post('/api/ids/log-print', [IDController::class, 'logPrint'])->name('api.ids.log-print');
     Route::resource('ids', IDController::class);
 
     // Blotter Records
@@ -116,10 +117,13 @@ Route::middleware(['auth', 'admin'])->group(function () {
     // Reports & Analytics
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
     Route::get('/api/reports/demographics', [ReportController::class, 'getResidentDemographics'])->name('api.reports.demographics');
+    Route::get('/api/reports/demographic-stats', [ReportController::class, 'getDemographics'])->name('api.reports.demographic-stats');
     Route::get('/api/reports/appointments', [ReportController::class, 'getMonthlyAppointments'])->name('api.reports.appointments');
     Route::get('/api/reports/blotter', [ReportController::class, 'getBlotterStatistics'])->name('api.reports.blotter');
     Route::get('/api/reports/assets', [ReportController::class, 'getAssetUtilization'])->name('api.reports.assets');
     Route::get('/api/reports/dashboard-stats', [ReportController::class, 'getDashboardStats'])->name('api.reports.dashboard-stats');
+    Route::get('/api/reports/export/pdf', [ReportController::class, 'exportPDF'])->name('api.reports.export.pdf');
+    Route::get('/api/reports/export/excel', [ReportController::class, 'exportExcel'])->name('api.reports.export.excel');
 
     // Audit Logs
     Route::resource('audit-logs', AuditLogController::class)->only(['index', 'show']);

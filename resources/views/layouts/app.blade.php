@@ -529,9 +529,11 @@
                     <i class="bi bi-bar-chart-fill"></i> Reports & Analytics
                 </a>
 
+                @if(auth()->user()->role === 'superadmin')
                 <a href="{{ route('audit-logs.index') }}" class="list-group-item {{ request()->routeIs('audit-logs.*') ? 'active' : '' }}">
                     <i class="bi bi-clock-history"></i> Audit Logs
                 </a>
+                @endif
 
                 <!-- Settings Group -->
                 <a href="#settingsSubmenu" class="list-group-item" data-bs-toggle="collapse">

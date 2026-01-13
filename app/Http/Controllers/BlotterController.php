@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BlotterRecord;
+use App\Services\ActivityLogger;
 use Illuminate\Http\Request;
 
 class BlotterController extends Controller
@@ -75,6 +76,9 @@ class BlotterController extends Controller
                 'notes' => $validated['notes'] ?? null,
             ]);
 
+            // Log the creation
+            ActivityLogger::logBlotter('created', $blotterRecord->incident_type, $blotterRecord->id);
+
             return response()->json([
                 'success' => true,
                 'message' => 'Case created successfully',
@@ -103,8 +107,10 @@ class BlotterController extends Controller
     /**
      * Update the specified blotter record in storage.
      */
-    public function update(Request $request, BlotterRecord $blotterRecord)
+    public function update(Request $request, $id)
     {
+        $blotterRecord = BlotterRecord::findOrFail($id);
+        
         $validated = $request->validate([
             'status' => 'sometimes|required|in:pending,investigating,resolved',
             'severity' => 'sometimes|required|in:low,medium,high,critical',
@@ -113,7 +119,13 @@ class BlotterController extends Controller
         ]);
 
         try {
+            $oldStatus = $blotterRecord->status;
             $blotterRecord->update($validated);
+
+            // Log the status update if status was changed
+            if (isset($validated['status'])) {
+                ActivityLogger::logBlotter('updated', $blotterRecord->incident_type, $blotterRecord->id);
+            }
 
             return response()->json([
                 'success' => true,

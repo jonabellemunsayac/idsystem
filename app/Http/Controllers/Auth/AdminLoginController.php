@@ -22,8 +22,8 @@ class AdminLoginController extends Controller
 
             $user = Auth::user();
             
-            // Check if user is admin
-            if ($user->role !== 'admin') {
+            // Check if user is admin or superadmin
+            if (!in_array($user->role, ['admin', 'superadmin'])) {
                 Auth::logout();
                 throw ValidationException::withMessages([
                     'email' => 'Only admin accounts can access this.',

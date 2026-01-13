@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Asset;
+use App\Services\ActivityLogger;
 use Illuminate\Http\Request;
 
 class AssetController extends Controller
@@ -34,6 +35,9 @@ class AssetController extends Controller
 
         try {
             $asset = Asset::create($validated);
+
+            // Log the action
+            ActivityLogger::logAsset('created', $asset->asset_name, $asset->id);
 
             return response()->json([
                 'success' => true,
@@ -90,6 +94,9 @@ class AssetController extends Controller
         try {
             $asset->update($validated);
 
+            // Log the action
+            ActivityLogger::logAsset('updated', $asset->asset_name, $asset->id);
+
             return response()->json([
                 'success' => true,
                 'message' => 'Asset updated successfully',
@@ -110,7 +117,13 @@ class AssetController extends Controller
     public function destroy(Asset $asset)
     {
         try {
+            $assetName = $asset->asset_name;
+            $assetId = $asset->id;
+            
             $asset->delete();
+
+            // Log the action
+            ActivityLogger::logAsset('deleted', $assetName, $assetId);
 
             return response()->json([
                 'success' => true,

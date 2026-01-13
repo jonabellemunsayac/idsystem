@@ -88,7 +88,7 @@
                 <div class="col-lg-3 col-md-4 col-sm-6">
                     <div class="text-center">
                         <div class="mb-3">
-                            <img src="https://via.placeholder.com/150" alt="Councilor" class="rounded-circle shadow-sm" width="120" height="120">
+                            <img src="{{ asset('images/1.png') }}" alt="Councilor" class="rounded-circle shadow-sm" width="120" height="120">
                         </div>
                         <h5 class="fw-bold text-dark">Hon. Maria Santos</h5>
                         <p class="text-muted small">Kagawad</p>
@@ -98,7 +98,7 @@
                 <div class="col-lg-3 col-md-4 col-sm-6">
                     <div class="text-center">
                         <div class="mb-3">
-                            <img src="https://via.placeholder.com/150" alt="Councilor" class="rounded-circle shadow-sm" width="120" height="120">
+                            <img src="{{ asset('images/2.png') }}" alt="Councilor" class="rounded-circle shadow-sm" width="120" height="120">
                         </div>
                         <h5 class="fw-bold text-dark">Hon. Pedro Reyes</h5>
                         <p class="text-muted small">Kagawad</p>
@@ -108,7 +108,7 @@
                 <div class="col-lg-3 col-md-4 col-sm-6">
                     <div class="text-center">
                         <div class="mb-3">
-                            <img src="https://via.placeholder.com/150" alt="Councilor" class="rounded-circle shadow-sm" width="120" height="120">
+                            <img src="{{ asset('images/3.png') }}" alt="Councilor" class="rounded-circle shadow-sm" width="120" height="120">
                         </div>
                         <h5 class="fw-bold text-dark">Hon. Ana Lim</h5>
                         <p class="text-muted small">Kagawad</p>
@@ -118,7 +118,7 @@
                 <div class="col-lg-3 col-md-4 col-sm-6">
                     <div class="text-center">
                         <div class="mb-3">
-                            <img src="https://via.placeholder.com/150" alt="Councilor" class="rounded-circle shadow-sm" width="120" height="120">
+                            <img src="{{ asset('images/4.png') }}" alt="Councilor" class="rounded-circle shadow-sm" width="120" height="120">
                         </div>
                         <h5 class="fw-bold text-dark">Hon. Jose Garcia</h5>
                         <p class="text-muted small">Kagawad</p>
@@ -128,7 +128,7 @@
                   <div class="col-lg-3 col-md-4 col-sm-6">
                     <div class="text-center">
                         <div class="mb-3">
-                            <img src="https://via.placeholder.com/150" alt="Councilor" class="rounded-circle shadow-sm" width="120" height="120">
+                            <img src="{{ asset('images/5.png') }}" alt="Councilor" class="rounded-circle shadow-sm" width="120" height="120">
                         </div>
                         <h5 class="fw-bold text-dark">Hon. Lita Cruz</h5>
                         <p class="text-muted small">Kagawad</p>
@@ -138,7 +138,7 @@
                   <div class="col-lg-3 col-md-4 col-sm-6">
                     <div class="text-center">
                         <div class="mb-3">
-                            <img src="https://via.placeholder.com/150" alt="Councilor" class="rounded-circle shadow-sm" width="120" height="120">
+                            <img src="{{ asset('images/6.png') }}" alt="Councilor" class="rounded-circle shadow-sm" width="120" height="120">
                         </div>
                         <h5 class="fw-bold text-dark">Hon. Robert Tan</h5>
                         <p class="text-muted small">Kagawad</p>
@@ -148,7 +148,7 @@
                   <div class="col-lg-3 col-md-4 col-sm-6">
                     <div class="text-center">
                         <div class="mb-3">
-                            <img src="https://via.placeholder.com/150" alt="Councilor" class="rounded-circle shadow-sm" width="120" height="120">
+                            <img src="{{ asset('images/7.png') }}" alt="Councilor" class="rounded-circle shadow-sm" width="120" height="120">
                         </div>
                         <h5 class="fw-bold text-dark">Hon. Tessie Sy</h5>
                         <p class="text-muted small">Kagawad</p>
@@ -158,7 +158,7 @@
                 <div class="col-lg-3 col-md-4 col-sm-6">
                     <div class="text-center">
                         <div class="mb-3">
-                            <img src="https://via.placeholder.com/150" alt="Councilor" class="rounded-circle shadow-sm" width="120" height="120">
+                            <img src="{{ asset('images/ARNOLDTAJAN.png') }}" alt="Councilor" class="rounded-circle shadow-sm" width="120" height="120">
                         </div>
                         <h5 class="fw-bold text-dark">Hon. SK Chair</h5>
                         <p class="text-muted small">SK Chairperson</p>

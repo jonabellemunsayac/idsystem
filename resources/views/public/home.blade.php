@@ -15,17 +15,13 @@
     <!-- Hero Section -->
     <section class="hero-section">
         <div class="hero-overlay"></div>
-        <div class="container hero-content text-center text-lg-start">
-            <div class="row align-items-center">
-                <div class="col-lg-8 mx-auto text-center">
-                    <span class="badge bg-warning text-dark mb-4 px-3 py-2 rounded-pill fw-bold text-uppercase ls-1">Welcome to Pasig City</span>
-                    <h1 class="hero-title text-white">Experience a Progressive & Safe Community</h1>
-                    <p class="hero-subtitle">Barangay Kalawaan is committed to providing efficient public service, ensuring safety, and fostering unity among its residents.</p>
-                    <div class="d-flex gap-3 justify-content-center flex-wrap">
-                        <a href="{{ route('public.services') }}" class="btn btn-pasig btn-lg">Explore Services</a>
-                        <a href="{{ route('public.about') }}" class="btn btn-outline-pasig btn-lg">Learn More</a>
-                    </div>
-                </div>
+        <div class="hero-content">
+            <span class="badge bg-warning text-dark mb-3 mb-md-4 px-3 py-2 rounded-pill fw-bold text-uppercase ls-1" style="font-size: clamp(0.65rem, 2vw, 0.875rem);">Welcome to Pasig City</span>
+            <h1 class="hero-title text-white">Experience a Progressive & Safe Community</h1>
+            <p class="hero-subtitle">Barangay Kalawaan is committed to providing efficient public service, ensuring safety, and fostering unity among its residents.</p>
+            <div class="d-flex gap-2 gap-md-3 justify-content-center flex-wrap">
+                <a href="{{ route('public.services') }}" class="btn btn-pasig" style="font-size: clamp(0.875rem, 2.5vw, 1rem); padding: clamp(0.5rem, 2vw, 0.75rem) clamp(1rem, 3vw, 1.5rem);">Explore Services</a>
+                <a href="{{ route('public.about') }}" class="btn btn-outline-pasig" style="font-size: clamp(0.875rem, 2.5vw, 1rem); padding: clamp(0.5rem, 2vw, 0.75rem) clamp(1rem, 3vw, 1.5rem);">Learn More</a>
             </div>
         </div>
     </section>

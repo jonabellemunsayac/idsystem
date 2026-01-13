@@ -90,6 +90,8 @@ h1, h2, h3, h4, h5, h6 {
     border-radius: 50px;
     font-weight: 600;
     border: 2px solid var(--pasig-blue);
+    white-space: nowrap;
+    transition: all 0.2s ease;
 }
 
 .btn-pasig:hover {
@@ -107,6 +109,8 @@ h1, h2, h3, h4, h5, h6 {
     border-radius: 50px;
     font-weight: 600;
     border: 2px solid white;
+    white-space: nowrap;
+    transition: all 0.2s ease;
 }
 
 .btn-outline-pasig:hover {
@@ -123,6 +127,7 @@ h1, h2, h3, h4, h5, h6 {
     background: url('/images/city.jpg') center/cover no-repeat;
     display: flex;
     align-items: center;
+    justify-content: center;
     color: white;
 }
 
@@ -135,22 +140,27 @@ h1, h2, h3, h4, h5, h6 {
 .hero-content {
     position: relative;
     z-index: 2;
-    max-width: 800px;
+    max-width: 900px;
+    width: 100%;
     padding: 2rem;
+    text-align: center;
 }
 
 .hero-title {
-    font-size: 3.5rem;
+    font-size: clamp(1.75rem, 8vw, 3.5rem);
     font-weight: 800;
     margin-bottom: 1.5rem;
     letter-spacing: -1px;
+    line-height: 1.2;
+    word-break: break-word;
 }
 
 .hero-subtitle {
-    font-size: 1.25rem;
+    font-size: clamp(0.95rem, 4vw, 1.25rem);
     opacity: 0.9;
     font-weight: 300;
-    margin-bottom: 2.5rem;
+    margin-bottom: 2rem;
+    line-height: 1.5;
 }
 
 /* Section Common */
@@ -340,12 +350,85 @@ h1, h2, h3, h4, h5, h6 {
     background: var(--pasig-blue);
 }
 
-@media (max-width: 768px) {
-    .hero-title {
-        font-size: 2.5rem;
-    }
+@media (max-width: 1024px) {
     .hero-section {
-        height: auto;
-        padding: 6rem 0;
+        min-height: 500px;
+        height: 80vh;
+    }
+    .hero-content {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-section {
+        min-height: 450px;
+        height: 75vh;
+        padding: 4rem 0;
+    }
+    .hero-content {
+        padding: 1rem;
+    }
+    .hero-title {
+        margin-bottom: 1rem;
+    }
+    .hero-subtitle {
+        margin-bottom: 1.5rem;
+    }
+    .section-padding {
+        padding: 3rem 0;
+    }
+    .section-header {
+        margin-bottom: 2rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-section {
+        min-height: 400px;
+        height: 70vh;
+    }
+    .hero-content {
+        padding: 1rem;
+        max-width: 100%;
+    }
+    .hero-title {
+        margin-bottom: 0.75rem;
+    }
+    .hero-subtitle {
+        margin-bottom: 1.25rem;
+        font-size: 0.95rem;
+    }
+    .section-padding {
+        padding: 2rem 0;
+    }
+    .news-img {
+        height: 180px;
+    }
+    .news-title {
+        font-size: 1.1rem;
+    }
+    .feature-card {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-section {
+        min-height: 350px;
+        height: 65vh;
+    }
+    .section-padding {
+        padding: 1.5rem 0;
+    }
+    .news-card {
+        margin-bottom: 1.5rem;
+    }
+}
+
+@media (max-width: 360px) {
+    .hero-section {
+        min-height: 300px;
+        height: 60vh;
     }
 }

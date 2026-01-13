@@ -3,14 +3,19 @@
 @section('title', 'Audit Logs')
 
 @section('content')
+@if(isset($error))
+<div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+    <i class="bi bi-exclamation-triangle me-2"></i>
+    <strong>Error:</strong> {{ $error }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif
+
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
         <h1 class="h4 fw-bold text-dark mb-1">Audit Logs</h1>
         <p class="text-muted mb-0">System activity and administrative changes</p>
     </div>
-    <button class="btn btn-primary" style="background-color: #0038A8; border-color: #0038A8; padding: 0.5rem 1rem; font-size: 0.95rem;" onclick="exportLogs()">
-        <i class="bi bi-download me-2"></i> Export
-    </button>
 </div>
 
 <!-- Filters -->
@@ -36,12 +41,12 @@
     <div class="card-header bg-white border-0 py-3 px-4 d-flex justify-content-between align-items-center">
         <h5 class="fw-bold mb-0 text-dark">
             @if($viewingUserActivities ?? false)
-                Activity History for {{ $logs->first()?->user->name ?? 'User' }}
+                Activity History for {{ $logs->first()?->user->name ?? $logs[0]?->user?->name ?? 'User' }}
             @else
                 User Activity Summary
             @endif
         </h5>
-        <span class="badge bg-secondary">{{ count($logs) }} {{ ($viewingUserActivities ?? false) ? 'entries' : 'users' }}</span>
+        <span class="badge bg-secondary">{{ is_countable($logs) ? count($logs) : $logs->count() }} {{ ($viewingUserActivities ?? false) ? 'entries' : 'users' }}</span>
     </div>
     <div class="card-body px-0 pb-0">
         <div class="table-responsive">
@@ -67,6 +72,12 @@
                             'viewed' => 'secondary',
                             'login' => 'primary',
                             'logout' => 'warning',
+                            'printed' => 'info',
+                            'generated' => 'success',
+                            'approved' => 'success',
+                            'rejected' => 'danger',
+                            'activated' => 'success',
+                            'deactivated' => 'warning',
                             default => 'secondary'
                         };
                         $actionIcon = match($log->action) {
@@ -76,6 +87,12 @@
                             'viewed' => 'eye',
                             'login' => 'box-arrow-in-right',
                             'logout' => 'box-arrow-right',
+                            'printed' => 'printer',
+                            'generated' => 'file-earmark-text',
+                            'approved' => 'check-circle',
+                            'rejected' => 'x-circle',
+                            'activated' => 'toggle-on',
+                            'deactivated' => 'toggle-off',
                             default => 'info-circle'
                         };
                     @endphp
@@ -194,9 +211,5 @@
 </div>
 @endif
 
-<script>
-    function exportLogs() {
-        alert('Export functionality coming soon! This will export logs as CSV or PDF.');
-    }
-</script>
+
 @endsection

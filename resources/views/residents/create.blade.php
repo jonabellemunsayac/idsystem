@@ -84,17 +84,24 @@
                         <option value="O-">O-</option>
                     </select>
                 </div>
+                <div class="col-md-4">
+                    <div class="form-check mt-4">
+                        <input class="form-check-input" type="checkbox" name="is_head_of_family" id="is_head_of_family" value="1" style="font-size: 0.8rem;">
+                        <label class="form-check-label text-muted small fw-bold" for="is_head_of_family" style="font-size: 0.65rem;">Head of Family</label>
+                        <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Check if this person is the head of the family</small>
+                    </div>
+                </div>
             </div>
 
             <h6 class="fw-bold mb-2 mt-2" style="font-size: 0.8rem;">Address</h6>
             <div class="row g-2 mb-2">
                 <div class="col-md-6">
                     <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">House No.</label>
-                    <input type="text" class="form-control form-control-sm" name="house_no" placeholder="e.g., #45 or 12" style="font-size: 0.8rem;">
+                    <input type="text" class="form-control form-control-sm address-field" name="house_no" placeholder="e.g., #45 or 12" style="font-size: 0.8rem;">
                 </div>
                 <div class="col-md-6">
                     <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Street Name</label>
-                    <select class="form-select form-select-sm" name="street_name" style="font-size: 0.8rem;">
+                    <select class="form-select form-select-sm address-field" name="street_name" style="font-size: 0.8rem;">
                         <option value="">Select Street...</option>
                         <option value="Roxas St.">Roxas St.</option>
                         <option value="Osmena St.">Osmena St.</option>
@@ -103,7 +110,7 @@
                 </div>
                 <div class="col-md-6">
                     <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Purok</label>
-                    <select class="form-select form-select-sm" name="purok" style="font-size: 0.8rem;">
+                    <select class="form-select form-select-sm address-field" name="purok" style="font-size: 0.8rem;">
                         <option value="">Select Purok...</option>
                         <option value="Purok 1">Purok 1</option>
                         <option value="Purok 2">Purok 2</option>
@@ -112,14 +119,19 @@
                 </div>
                 <div class="col-md-6">
                     <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Province</label>
-                    <select class="form-select form-select-sm" name="province" style="font-size: 0.8rem;">
+                    <select class="form-select form-select-sm address-field" name="province" style="font-size: 0.8rem;">
                         <option value="">Select Province...</option>
                         <option value="Metro Manila">Metro Manila</option>
                     </select>
                 </div>
                 <div class="col-md-6">
                     <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Zip Code</label>
-                    <input type="text" class="form-control form-control-sm" name="zip_code" placeholder="e.g., 3022" style="font-size: 0.8rem;">
+                    <input type="text" class="form-control form-control-sm address-field" name="zip_code" placeholder="e.g., 3022" style="font-size: 0.8rem;">
+                </div>
+                <div class="col-md-12">
+                    <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Full Address</label>
+                    <textarea class="form-control form-control-sm" id="full_address_display" rows="2" readonly style="font-size: 0.8rem; background-color: #f8f9fa;"></textarea>
+                    <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Auto-filled from house no., street name, purok, and province above</small>
                 </div>
             </div>
 
@@ -173,11 +185,13 @@
                 </div>
             </div>
 
-            <h6 class="fw-bold mb-2 mt-2" style="font-size: 0.8rem;">Profile Picture</h6>
+            <h6 class="fw-bold mb-2 mt-2" style="font-size: 0.8rem;">Profile Picture & Signature</h6>
             <div class="row g-2 mb-2">
-                <div class="col-12">
-                    <div class="card border-light bg-light">
+                <!-- Profile Picture (Left) -->
+                <div class="col-md-6">
+                    <div class="card border-light bg-light h-100">
                         <div class="card-body p-2">
+                            <h6 class="fw-bold mb-2" style="font-size: 0.75rem;">Profile Picture</h6>
                             <div id="profile-image-section">
                                 <div class="d-flex gap-1 flex-wrap mb-2">
                                     <button type="button" class="btn btn-outline-primary btn-sm" id="upload-btn" style="font-size: 0.75rem; padding: 0.3rem 0.6rem;">
@@ -188,6 +202,7 @@
                                     </button>
                                 </div>
                                 <input type="file" id="photo-file-input" name="profile_image" accept="image/*" style="display: none;">
+                                <input type="hidden" id="profile-image-base64" name="profile_image_base64" value="">
                                 
                                 <div id="image-preview" style="display: none;" class="mt-2">
                                     <img id="preview-img" src="" alt="Preview" style="max-width: 150px; max-height: 150px; border-radius: 6px; border: 2px solid #dee2e6;">
@@ -217,6 +232,37 @@
                     </div>
                     @if ($errors->has('profile_image'))
                         <div class="alert alert-danger mt-1 mb-0" style="font-size: 0.75rem; padding: 0.4rem 0.6rem;">{{ $errors->first('profile_image') }}</div>
+                    @endif
+                </div>
+
+                <!-- Signature (Right) -->
+                <div class="col-md-6">
+                    <div class="card border-light bg-light h-100">
+                        <div class="card-body p-2">
+                            <h6 class="fw-bold mb-2" style="font-size: 0.75rem;">Signature</h6>
+                            <div id="signature-section">
+                                <div class="d-flex gap-1 flex-wrap mb-2">
+                            
+                                    <button type="button" class="btn btn-outline-info btn-sm" id="draw-signature-large-btn" style="font-size: 0.75rem; padding: 0.3rem 0.6rem;">
+                                        <i class="bi bi-pencil"></i> Draw
+                                    </button>
+                                </div>
+                                <input type="file" id="signature-file-input" name="signature" accept="image/*" style="display: none;">
+                                <input type="hidden" id="signature-base64" name="signature_base64" value="">
+                                
+                                <div id="signature-preview" style="display: none;" class="mt-2">
+                                    <img id="preview-signature" src="" alt="Signature Preview" style="max-width: 200px; max-height: 100px; border: 2px solid #dee2e6; border-radius: 4px; background: transparent; padding: 5px;">
+                                    <div class="mt-1">
+                                        <button type="button" class="btn btn-sm btn-danger" id="remove-signature-btn" style="font-size: 0.7rem; padding: 0.2rem 0.4rem;">
+                                            <i class="bi bi-trash"></i> Remove
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @if ($errors->has('signature'))
+                        <div class="alert alert-danger mt-1 mb-0" style="font-size: 0.75rem; padding: 0.4rem 0.6rem;">{{ $errors->first('signature') }}</div>
                     @endif
                 </div>
             </div>
@@ -281,12 +327,97 @@
     </div>
 </div>
 
+<!-- Signature Large Canvas Modal -->
+<div class="modal fade" id="signatureLargeModal" tabindex="-1" aria-labelledby="signatureLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="signatureLargeModalLabel">Draw Signature</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <div style="border: 2px solid #dee2e6; border-radius: 4px; background: transparent; overflow: hidden; display: inline-block;">
+                        <canvas id="signature-canvas-large" width="800" height="400" style="display: block; cursor: crosshair; background: transparent;"></canvas>
+                    </div>
+                    <p class="text-muted mt-2 mb-0" style="font-size: 0.85rem;">
+                        <i class="bi bi-info-circle"></i> Draw your signature using your mouse or touch screen
+                    </p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" id="clear-signature-large-btn">
+                    <i class="bi bi-arrow-counterclockwise"></i> Clear
+                </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-lg"></i> Cancel
+                </button>
+                <button type="button" class="btn btn-success" id="save-signature-large-btn">
+                    <i class="bi bi-check-lg"></i> Save Signature
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Cropper.js -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Auto-select Senior Citizen for birthdate >= 60 years old
+    const birthDateInput = document.querySelector('input[name="birth_date"]');
+    const specialSectorSelect = document.querySelector('select[name="special_sector"]');
+    
+    function calculateAge(birthDate) {
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDifference = today.getMonth() - birthDate.getMonth();
+        
+        if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        return age;
+    }
+    
+    function checkAndSetSeniorCitizen() {
+        if (birthDateInput.value) {
+            const birthDate = new Date(birthDateInput.value);
+            const age = calculateAge(birthDate);
+            
+            if (age >= 60) {
+                specialSectorSelect.value = 'Senior Citizen';
+            }
+        }
+    }
+    
+    birthDateInput.addEventListener('change', checkAndSetSeniorCitizen);
+    
+    // Auto-fill full address from address components
+    const addressFields = document.querySelectorAll('.address-field');
+    const fullAddressDisplay = document.getElementById('full_address_display');
+    
+    function updateFullAddress() {
+        const houseNo = document.querySelector('input[name="house_no"]').value;
+        const streetName = document.querySelector('select[name="street_name"]').value;
+        const purok = document.querySelector('select[name="purok"]').value;
+        const province = document.querySelector('select[name="province"]').value;
+        
+        const addressParts = [];
+        if (houseNo) addressParts.push(houseNo);
+        if (streetName) addressParts.push(streetName);
+        if (purok) addressParts.push(purok);
+        if (province) addressParts.push(province);
+        
+        fullAddressDisplay.value = addressParts.join(', ') || '';
+    }
+    
+    addressFields.forEach(field => {
+        field.addEventListener('change', updateFullAddress);
+        field.addEventListener('input', updateFullAddress);
+    });
+    
     // Copy to clipboard functionality
     document.querySelectorAll('.btn-copy').forEach(btn => {
         btn.addEventListener('click', function() {
@@ -484,6 +615,122 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
         return modal;
     }
+});
+
+// Signature functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const signaturePreview = document.getElementById('signature-preview');
+    const previewSignature = document.getElementById('preview-signature');
+    const removeSignatureBtn = document.getElementById('remove-signature-btn');
+    
+    removeSignatureBtn.addEventListener('click', function() {
+        previewSignature.src = '';
+        signaturePreview.style.display = 'none';
+        document.getElementById('signature-base64').value = '';
+    });
+    
+    // Large Canvas Modal Functionality
+    const drawSignatureLargeBtn = document.getElementById('draw-signature-large-btn');
+    const signatureLargeModal = new bootstrap.Modal(document.getElementById('signatureLargeModal'));
+    const signatureCanvasLarge = document.getElementById('signature-canvas-large');
+    const saveSignatureLargeBtn = document.getElementById('save-signature-large-btn');
+    const clearSignatureLargeBtn = document.getElementById('clear-signature-large-btn');
+    
+    let isDrawingLarge = false;
+    let ctxLarge = signatureCanvasLarge.getContext('2d');
+    
+    // Initialize large canvas
+    ctxLarge.clearRect(0, 0, signatureCanvasLarge.width, signatureCanvasLarge.height);
+    
+    // Open large canvas modal
+    drawSignatureLargeBtn.addEventListener('click', function() {
+        signatureLargeModal.show();
+        ctxLarge.clearRect(0, 0, signatureCanvasLarge.width, signatureCanvasLarge.height);
+    });
+    
+    // Mouse events for large canvas
+    signatureCanvasLarge.addEventListener('mousedown', function(e) {
+        isDrawingLarge = true;
+        const rect = signatureCanvasLarge.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        ctxLarge.beginPath();
+        ctxLarge.moveTo(x, y);
+    });
+    
+    signatureCanvasLarge.addEventListener('mousemove', function(e) {
+        if (!isDrawingLarge) return;
+        const rect = signatureCanvasLarge.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        ctxLarge.lineTo(x, y);
+        ctxLarge.strokeStyle = '#000000';
+        ctxLarge.lineWidth = 2;
+        ctxLarge.lineCap = 'round';
+        ctxLarge.lineJoin = 'round';
+        ctxLarge.stroke();
+    });
+    
+    signatureCanvasLarge.addEventListener('mouseup', function() {
+        isDrawingLarge = false;
+    });
+    
+    signatureCanvasLarge.addEventListener('mouseleave', function() {
+        isDrawingLarge = false;
+    });
+    
+    // Touch events for large canvas (mobile)
+    signatureCanvasLarge.addEventListener('touchstart', function(e) {
+        e.preventDefault();
+        isDrawingLarge = true;
+        const rect = signatureCanvasLarge.getBoundingClientRect();
+        const touch = e.touches[0];
+        const x = touch.clientX - rect.left;
+        const y = touch.clientY - rect.top;
+        ctxLarge.beginPath();
+        ctxLarge.moveTo(x, y);
+    });
+    
+    signatureCanvasLarge.addEventListener('touchmove', function(e) {
+        e.preventDefault();
+        if (!isDrawingLarge) return;
+        const rect = signatureCanvasLarge.getBoundingClientRect();
+        const touch = e.touches[0];
+        const x = touch.clientX - rect.left;
+        const y = touch.clientY - rect.top;
+        ctxLarge.lineTo(x, y);
+        ctxLarge.strokeStyle = '#000000';
+        ctxLarge.lineWidth = 2;
+        ctxLarge.lineCap = 'round';
+        ctxLarge.lineJoin = 'round';
+        ctxLarge.stroke();
+    });
+    
+    signatureCanvasLarge.addEventListener('touchend', function(e) {
+        e.preventDefault();
+        isDrawingLarge = false;
+    });
+    
+    // Clear large canvas
+    clearSignatureLargeBtn.addEventListener('click', function() {
+        ctxLarge.clearRect(0, 0, signatureCanvasLarge.width, signatureCanvasLarge.height);
+    });
+    
+    // Save large canvas signature
+    saveSignatureLargeBtn.addEventListener('click', function() {
+        const dataURL = signatureCanvasLarge.toDataURL('image/png');
+        previewSignature.src = dataURL;
+        previewSignature.style.background = 'transparent';
+        
+        // Store base64 in hidden input for form submission
+        document.getElementById('signature-base64').value = dataURL;
+        
+        signaturePreview.style.display = 'block';
+        drawSignatureSection.style.display = 'none';
+        
+        // Close modal
+        signatureLargeModal.hide();
+    });
 });
 </script>
 
