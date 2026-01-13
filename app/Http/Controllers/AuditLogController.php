@@ -12,6 +12,11 @@ class AuditLogController extends Controller
      */
     public function index(Request $request)
     {
+        // Only superadmin can access audit logs
+        if (!auth()->check() || auth()->user()->role !== 'superadmin') {
+            abort(403, 'Unauthorized. Only superadmin can access audit logs.');
+        }
+        
         try {
             // Check if viewing all activities for a specific user
             if ($request->filled('view_user')) {
@@ -60,16 +65,18 @@ class AuditLogController extends Controller
 
             $users = \App\Models\User::whereHas('auditLogs')->get();
             $viewingUserActivities = false;
+            $viewingUserId = null;
             $logs = collect($latestLogs);
             
-            return view('audit-logs.index', compact('logs', 'users', 'viewingUserActivities'));
+            return view('audit-logs.index', compact('logs', 'users', 'viewingUserActivities', 'viewingUserId'));
         } catch (\Exception $e) {
-            \Log::error('Audit log controller error: ' . $e->getMessage());
+            \Log::error('Audit log controller error: ' . $e->getMessage() . ' ' . $e->getTraceAsString());
             return view('audit-logs.index', [
                 'logs' => collect(),
                 'users' => collect(),
                 'viewingUserActivities' => false,
-                'error' => 'Error loading audit logs'
+                'viewingUserId' => null,
+                'error' => 'Error loading audit logs: ' . $e->getMessage()
             ]);
         }
     }

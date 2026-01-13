@@ -130,4 +130,107 @@ class ActivityLogger
             ->limit($limit)
             ->get();
     }
+
+    /**
+     * Log ID card print action
+     */
+    public static function logPrint(string $printType, int $residentId, string $residentName): AuditLog
+    {
+        return self::log('printed', "Printed {$printType} ID card for {$residentName} (Resident ID: {$residentId})");
+    }
+
+    /**
+     * Log asset action
+     */
+    public static function logAsset(string $action, string $assetName, int $assetId): AuditLog
+    {
+        $actionText = match($action) {
+            'created' => 'Added',
+            'updated' => 'Updated',
+            'deleted' => 'Deleted',
+            default => ucfirst($action)
+        };
+        return self::log($action, "{$actionText} asset: {$assetName} (Asset ID: {$assetId})");
+    }
+
+    /**
+     * Log certificate action
+     */
+    public static function logCertificate(string $action, string $certificateType, int $certificateId): AuditLog
+    {
+        $actionText = match($action) {
+            'created' => 'Generated',
+            'viewed' => 'Viewed',
+            'printed' => 'Printed',
+            default => ucfirst($action)
+        };
+        return self::log($action, "{$actionText} {$certificateType} certificate (Certificate ID: {$certificateId})");
+    }
+
+    /**
+     * Log blotter action
+     */
+    public static function logBlotter(string $action, string $incidentType, int $blotterId): AuditLog
+    {
+        $actionText = match($action) {
+            'created' => 'Created',
+            'updated' => 'Updated',
+            'deleted' => 'Deleted',
+            default => ucfirst($action)
+        };
+        return self::log($action, "{$actionText} blotter record: {$incidentType} (Blotter ID: {$blotterId})");
+    }
+
+    /**
+     * Log appointment action
+     */
+    public static function logAppointment(string $action, string $purpose, int $appointmentId): AuditLog
+    {
+        $actionText = match($action) {
+            'created' => 'Scheduled',
+            'updated' => 'Updated',
+            'deleted' => 'Cancelled',
+            'approved' => 'Approved',
+            'rejected' => 'Rejected',
+            default => ucfirst($action)
+        };
+        return self::log($action, "{$actionText} appointment: {$purpose} (Appointment ID: {$appointmentId})");
+    }
+
+    /**
+     * Log resident account action
+     */
+    public static function logResidentAccount(string $action, string $residentName, int $residentId): AuditLog
+    {
+        $actionText = match($action) {
+            'created' => 'Created',
+            'updated' => 'Updated',
+            'deleted' => 'Deleted',
+            'activated' => 'Activated',
+            'deactivated' => 'Deactivated',
+            default => ucfirst($action)
+        };
+        return self::log($action, "{$actionText} resident account: {$residentName} (Resident ID: {$residentId})");
+    }
+
+    /**
+     * Log report generation
+     */
+    public static function logReport(string $reportType, string $parameters = ''): AuditLog
+    {
+        $details = "Generated {$reportType} report";
+        if ($parameters) {
+            $details .= " ({$parameters})";
+        }
+        return self::log('generated', $details);
+    }
+
+    /**
+     * Log export action
+     */
+    public static function logExport(string $dataType, string $format = 'CSV'): AuditLog
+    {
+        return self::log('exported', "Exported {$dataType} data as {$format}");
+    }
 }
+

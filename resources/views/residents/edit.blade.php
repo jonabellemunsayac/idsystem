@@ -91,8 +91,21 @@
 
                     <div class="col-md-4">
                         <label for="special_sector" class="form-label" style="font-size: 0.65rem;">Special Sector</label>
-                        <input type="text" class="form-control form-control-sm @error('special_sector') is-invalid @enderror" id="special_sector" name="special_sector" value="{{ old('special_sector', $resident['special_sector']) }}" style="font-size: 0.8rem;">
+                        <select class="form-select form-select-sm @error('special_sector') is-invalid @enderror" id="special_sector" name="special_sector" style="font-size: 0.8rem;">
+                            <option value="">Select...</option>
+                            <option value="Senior Citizen" @selected(old('special_sector', $resident['special_sector']) == 'Senior Citizen')>Senior Citizen</option>
+                            <option value="PWD" @selected(old('special_sector', $resident['special_sector']) == 'PWD')>PWD</option>
+                            <option value="Solo Parent" @selected(old('special_sector', $resident['special_sector']) == 'Solo Parent')>Solo Parent</option>
+                        </select>
                         @error('special_sector') <div class="invalid-feedback" style="font-size: 0.65rem;">{{ $message }}</div> @enderror
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-check mt-4">
+                            <input class="form-check-input" type="checkbox" name="is_head_of_family" id="is_head_of_family" value="1" @checked(old('is_head_of_family', $resident['is_head_of_family'] ?? false)) style="font-size: 0.8rem;">
+                            <label class="form-check-label text-muted small fw-bold" for="is_head_of_family" style="font-size: 0.65rem;">Head of Family</label>
+                            <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Check if this person is the head of the family</small>
+                        </div>
                     </div>
                 </div>
 
@@ -123,19 +136,19 @@
                 <div class="row g-2 mb-2">
                     <div class="col-md-4">
                         <label for="house_no" class="form-label" style="font-size: 0.65rem;">House Number</label>
-                        <input type="text" class="form-control form-control-sm @error('house_no') is-invalid @enderror" id="house_no" name="house_no" value="{{ old('house_no', $resident['house_no']) }}" style="font-size: 0.8rem;">
+                        <input type="text" class="form-control form-control-sm @error('house_no') is-invalid @enderror address-field-edit" id="house_no" name="house_no" value="{{ old('house_no', $resident['house_no']) }}" style="font-size: 0.8rem;">
                         @error('house_no') <div class="invalid-feedback" style="font-size: 0.65rem;">{{ $message }}</div> @enderror
                     </div>
 
                     <div class="col-md-4">
                         <label for="street_name" class="form-label" style="font-size: 0.65rem;">Street Name</label>
-                        <input type="text" class="form-control form-control-sm @error('street_name') is-invalid @enderror" id="street_name" name="street_name" value="{{ old('street_name', $resident['street_name']) }}" style="font-size: 0.8rem;">
+                        <input type="text" class="form-control form-control-sm @error('street_name') is-invalid @enderror address-field-edit" id="street_name" name="street_name" value="{{ old('street_name', $resident['street_name']) }}" style="font-size: 0.8rem;">
                         @error('street_name') <div class="invalid-feedback" style="font-size: 0.65rem;">{{ $message }}</div> @enderror
                     </div>
 
                     <div class="col-md-4">
                         <label for="purok" class="form-label" style="font-size: 0.65rem;">Purok</label>
-                        <input type="text" class="form-control form-control-sm @error('purok') is-invalid @enderror" id="purok" name="purok" value="{{ old('purok', $resident['purok']) }}" style="font-size: 0.8rem;">
+                        <input type="text" class="form-control form-control-sm @error('purok') is-invalid @enderror address-field-edit" id="purok" name="purok" value="{{ old('purok', $resident['purok']) }}" style="font-size: 0.8rem;">
                         @error('purok') <div class="invalid-feedback" style="font-size: 0.65rem;">{{ $message }}</div> @enderror
                     </div>
 
@@ -147,14 +160,20 @@
 
                     <div class="col-md-4">
                         <label for="province" class="form-label" style="font-size: 0.65rem;">Province</label>
-                        <input type="text" class="form-control form-control-sm @error('province') is-invalid @enderror" id="province" name="province" value="{{ old('province', $resident['province']) }}" style="font-size: 0.8rem;">
+                        <input type="text" class="form-control form-control-sm @error('province') is-invalid @enderror address-field-edit" id="province" name="province" value="{{ old('province', $resident['province']) }}" style="font-size: 0.8rem;">
                         @error('province') <div class="invalid-feedback" style="font-size: 0.65rem;">{{ $message }}</div> @enderror
                     </div>
 
                     <div class="col-md-4">
                         <label for="zip_code" class="form-label" style="font-size: 0.65rem;">ZIP Code</label>
-                        <input type="text" class="form-control form-control-sm @error('zip_code') is-invalid @enderror" id="zip_code" name="zip_code" value="{{ old('zip_code', $resident['zip_code']) }}" style="font-size: 0.8rem;">
+                        <input type="text" class="form-control form-control-sm @error('zip_code') is-invalid @enderror address-field-edit" id="zip_code" name="zip_code" value="{{ old('zip_code', $resident['zip_code']) }}" style="font-size: 0.8rem;">
                         @error('zip_code') <div class="invalid-feedback" style="font-size: 0.65rem;">{{ $message }}</div> @enderror
+                    </div>
+
+                    <div class="col-md-12">
+                        <label for="full_address_display_edit" class="form-label" style="font-size: 0.65rem;">Full Address</label>
+                        <textarea class="form-control form-control-sm" id="full_address_display_edit" rows="2" readonly style="font-size: 0.8rem; background-color: #f8f9fa;"></textarea>
+                        <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Auto-filled from house number, street name, purok, and province above</small>
                     </div>
                 </div>
 
@@ -186,19 +205,70 @@
                     </div>
                 </div>
 
-                <!-- Profile Image -->
-                <h6 class="fw-bold text-dark mt-2 mb-1" style="font-size: 0.8rem;">Profile Image</h6>
+                <!-- Profile Image & Signature -->
+                <h6 class="fw-bold text-dark mt-2 mb-1" style="font-size: 0.8rem;">Profile Image & Signature</h6>
                 <div class="row g-2 mb-2">
-                    <div class="col-md-12">
-                        @if($resident['profile_image'])
-                            <div class="mb-1">
-                                <img src="{{ asset('storage/' . $resident['profile_image']) }}" alt="Current Profile Image" class="img-thumbnail" style="max-height: 100px; max-width: 100px;">
+                    <!-- Profile Image (Left) -->
+                    <div class="col-md-6">
+                        <div class="card border-light bg-light h-100">
+                            <div class="card-body p-2">
+                                <h6 class="fw-bold mb-2" style="font-size: 0.75rem;">Profile Image</h6>
+                                @if($resident['profile_image'])
+                                    <div class="mb-2">
+                                        <img src="{{ asset('storage/' . $resident['profile_image']) }}" alt="Current Profile Image" class="img-thumbnail" style="max-height: 150px; max-width: 150px;">
+                                    </div>
+                                @endif
+                                <label for="profile_image" class="form-label" style="font-size: 0.65rem;">Update Photo</label>
+                                <input type="file" class="form-control form-control-sm @error('profile_image') is-invalid @enderror" id="profile_image" name="profile_image" accept="image/*" style="font-size: 0.8rem;">
+                                <div class="form-text" style="font-size: 0.6rem;">Supported formats: JPEG, PNG, JPG. Max size: 2MB.</div>
+                                @error('profile_image') <div class="invalid-feedback" style="font-size: 0.65rem;">{{ $message }}</div> @enderror
                             </div>
-                        @endif
-                        <label for="profile_image" class="form-label" style="font-size: 0.65rem;">Update Photo</label>
-                        <input type="file" class="form-control form-control-sm @error('profile_image') is-invalid @enderror" id="profile_image" name="profile_image" accept="image/*" style="font-size: 0.8rem;">
-                        <div class="form-text" style="font-size: 0.6rem;">Supported formats: JPEG, PNG, JPG. Max size: 2MB.</div>
-                        @error('profile_image') <div class="invalid-feedback" style="font-size: 0.65rem;">{{ $message }}</div> @enderror
+                        </div>
+                    </div>
+
+                    <!-- Signature (Right) -->
+                    <div class="col-md-6">
+                        <div class="card border-light bg-light h-100">
+                            <div class="card-body p-2">
+                                <h6 class="fw-bold mb-2" style="font-size: 0.75rem;">Signature</h6>
+                                <div id="signature-section">
+                                    <div class="d-flex gap-1 flex-wrap mb-2">
+                                        <button type="button" class="btn btn-outline-primary btn-sm" id="upload-signature-btn" style="font-size: 0.75rem; padding: 0.3rem 0.6rem;">
+                                            <i class="bi bi-cloud-upload"></i> Upload
+                                        </button>
+                                        <button type="button" class="btn btn-outline-info btn-sm" id="draw-signature-large-btn" style="font-size: 0.75rem; padding: 0.3rem 0.6rem;">
+                                            <i class="bi bi-pencil"></i> Draw
+                                        </button>
+                                    </div>
+                                    <input type="file" id="signature-file-input" name="signature" accept="image/*" style="display: none;">
+                                    <input type="hidden" id="signature-base64" name="signature_base64" value="">
+                                    
+                                    @if($resident['signature'])
+                                        <div id="signature-preview" class="mt-2">
+                                            <p class="mb-1" style="font-size: 0.65rem; color: #6c757d;">Current Signature:</p>
+                                            <img id="preview-signature" src="{{ asset('storage/' . $resident['signature']) }}" alt="Signature Preview" style="max-width: 200px; max-height: 100px; border: 2px solid #dee2e6; border-radius: 4px; background: transparent; padding: 5px;">
+                                            <div class="mt-1">
+                                                <button type="button" class="btn btn-sm btn-danger" id="remove-signature-btn" style="font-size: 0.7rem; padding: 0.2rem 0.4rem;">
+                                                    <i class="bi bi-trash"></i> Remove
+                                                </button>
+                                            </div>
+                                        </div>
+                                    @else
+                                        <div id="signature-preview" style="display: none;" class="mt-2">
+                                            <img id="preview-signature" src="" alt="Signature Preview" style="max-width: 200px; max-height: 100px; border: 2px solid #dee2e6; border-radius: 4px; background: transparent; padding: 5px;">
+                                            <div class="mt-1">
+                                                <button type="button" class="btn btn-sm btn-danger" id="remove-signature-btn" style="font-size: 0.7rem; padding: 0.2rem 0.4rem;">
+                                                    <i class="bi bi-trash"></i> Remove
+                                                </button>
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
+                                @if ($errors->has('signature'))
+                                    <div class="alert alert-danger mt-1 mb-0" style="font-size: 0.75rem; padding: 0.4rem 0.6rem;">{{ $errors->first('signature') }}</div>
+                                @endif
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -212,4 +282,229 @@
         </div>
     </div>
 </div>
+
+<!-- Signature Large Canvas Modal -->
+<div class="modal fade" id="signatureLargeModal" tabindex="-1" aria-labelledby="signatureLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="signatureLargeModalLabel">Draw Signature</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <div style="border: 2px solid #dee2e6; border-radius: 4px; background: transparent; overflow: hidden; display: inline-block;">
+                        <canvas id="signature-canvas-large" width="800" height="400" style="display: block; cursor: crosshair; background: transparent;"></canvas>
+                    </div>
+                    <p class="text-muted mt-2 mb-0" style="font-size: 0.85rem;">
+                        <i class="bi bi-info-circle"></i> Draw your signature using your mouse or touch screen
+                    </p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" id="clear-signature-large-btn">
+                    <i class="bi bi-arrow-counterclockwise"></i> Clear
+                </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-lg"></i> Cancel
+                </button>
+                <button type="button" class="btn btn-success" id="save-signature-large-btn">
+                    <i class="bi bi-check-lg"></i> Save Signature
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Auto-select Senior Citizen for birthdate >= 60 years old
+    const birthDateInput = document.getElementById('birth_date');
+    const specialSectorSelect = document.getElementById('special_sector');
+    
+    function calculateAge(birthDate) {
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDifference = today.getMonth() - birthDate.getMonth();
+        
+        if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        return age;
+    }
+    
+    function checkAndSetSeniorCitizen() {
+        if (birthDateInput.value) {
+            const birthDate = new Date(birthDateInput.value);
+            const age = calculateAge(birthDate);
+            
+            if (age >= 60) {
+                specialSectorSelect.value = 'Senior Citizen';
+            }
+        }
+    }
+    
+    birthDateInput.addEventListener('change', checkAndSetSeniorCitizen);
+    
+    // Auto-fill full address from address components
+    const addressFieldsEdit = document.querySelectorAll('.address-field-edit');
+    const fullAddressDisplayEdit = document.getElementById('full_address_display_edit');
+    
+    function updateFullAddressEdit() {
+        const houseNo = document.getElementById('house_no').value;
+        const streetName = document.getElementById('street_name').value;
+        const purok = document.getElementById('purok').value;
+        const province = document.getElementById('province').value;
+        
+        const addressParts = [];
+        if (houseNo) addressParts.push(houseNo);
+        if (streetName) addressParts.push(streetName);
+        if (purok) addressParts.push(purok);
+        if (province) addressParts.push(province);
+        
+        fullAddressDisplayEdit.value = addressParts.join(', ') || '';
+    }
+    
+    addressFieldsEdit.forEach(field => {
+        field.addEventListener('change', updateFullAddressEdit);
+        field.addEventListener('input', updateFullAddressEdit);
+    });
+    
+    // Initialize on page load
+    updateFullAddressEdit();
+
+    // Signature functionality
+    const uploadSignatureBtn = document.getElementById('upload-signature-btn');
+    const signatureFileInput = document.getElementById('signature-file-input');
+    const signaturePreview = document.getElementById('signature-preview');
+    const previewSignature = document.getElementById('preview-signature');
+    const removeSignatureBtn = document.getElementById('remove-signature-btn');
+    
+    // Upload signature functionality
+    uploadSignatureBtn.addEventListener('click', function() {
+        signatureFileInput.click();
+    });
+    
+    signatureFileInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewSignature.src = e.target.result;
+                signaturePreview.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+    
+    removeSignatureBtn.addEventListener('click', function() {
+        signatureFileInput.value = '';
+        previewSignature.src = '';
+        signaturePreview.style.display = 'none';
+        document.getElementById('signature-base64').value = '';
+    });
+    
+    // Large Canvas Modal Functionality
+    const drawSignatureLargeBtn = document.getElementById('draw-signature-large-btn');
+    const signatureLargeModal = new bootstrap.Modal(document.getElementById('signatureLargeModal'));
+    const signatureCanvasLarge = document.getElementById('signature-canvas-large');
+    const saveSignatureLargeBtn = document.getElementById('save-signature-large-btn');
+    const clearSignatureLargeBtn = document.getElementById('clear-signature-large-btn');
+    
+    let isDrawingLarge = false;
+    let ctxLarge = signatureCanvasLarge.getContext('2d');
+    
+    // Initialize large canvas
+    ctxLarge.clearRect(0, 0, signatureCanvasLarge.width, signatureCanvasLarge.height);
+    
+    // Open large canvas modal
+    drawSignatureLargeBtn.addEventListener('click', function() {
+        signatureLargeModal.show();
+        ctxLarge.clearRect(0, 0, signatureCanvasLarge.width, signatureCanvasLarge.height);
+    });
+    
+    // Mouse events for large canvas
+    signatureCanvasLarge.addEventListener('mousedown', function(e) {
+        isDrawingLarge = true;
+        const rect = signatureCanvasLarge.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        ctxLarge.beginPath();
+        ctxLarge.moveTo(x, y);
+    });
+    
+    signatureCanvasLarge.addEventListener('mousemove', function(e) {
+        if (!isDrawingLarge) return;
+        const rect = signatureCanvasLarge.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        ctxLarge.lineTo(x, y);
+        ctxLarge.strokeStyle = '#000000';
+        ctxLarge.lineWidth = 2;
+        ctxLarge.lineCap = 'round';
+        ctxLarge.lineJoin = 'round';
+        ctxLarge.stroke();
+    });
+    
+    signatureCanvasLarge.addEventListener('mouseup', function() {
+        isDrawingLarge = false;
+    });
+    
+    signatureCanvasLarge.addEventListener('mouseleave', function() {
+        isDrawingLarge = false;
+    });
+    
+    // Touch events for large canvas (mobile)
+    signatureCanvasLarge.addEventListener('touchstart', function(e) {
+        e.preventDefault();
+        isDrawingLarge = true;
+        const rect = signatureCanvasLarge.getBoundingClientRect();
+        const touch = e.touches[0];
+        const x = touch.clientX - rect.left;
+        const y = touch.clientY - rect.top;
+        ctxLarge.beginPath();
+        ctxLarge.moveTo(x, y);
+    });
+    
+    signatureCanvasLarge.addEventListener('touchmove', function(e) {
+        e.preventDefault();
+        if (!isDrawingLarge) return;
+        const rect = signatureCanvasLarge.getBoundingClientRect();
+        const touch = e.touches[0];
+        const x = touch.clientX - rect.left;
+        const y = touch.clientY - rect.top;
+        ctxLarge.lineTo(x, y);
+        ctxLarge.strokeStyle = '#000000';
+        ctxLarge.lineWidth = 2;
+        ctxLarge.lineCap = 'round';
+        ctxLarge.lineJoin = 'round';
+        ctxLarge.stroke();
+    });
+    
+    signatureCanvasLarge.addEventListener('touchend', function(e) {
+        e.preventDefault();
+        isDrawingLarge = false;
+    });
+    
+    // Clear large canvas
+    clearSignatureLargeBtn.addEventListener('click', function() {
+        ctxLarge.clearRect(0, 0, signatureCanvasLarge.width, signatureCanvasLarge.height);
+    });
+    
+    // Save large canvas signature
+    saveSignatureLargeBtn.addEventListener('click', function() {
+        const dataURL = signatureCanvasLarge.toDataURL('image/png');
+        previewSignature.src = dataURL;
+        previewSignature.style.background = 'transparent';
+        
+        // Store base64 in hidden input for form submission
+        document.getElementById('signature-base64').value = dataURL;
+        
+        signaturePreview.style.display = 'block';
+        drawSignatureSection.style.display = 'none';
+        
+        // Close modal
+        signatureLargeModal.hide();
+    });
+});</script>
 @endsection

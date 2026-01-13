@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Clan;
 use App\Models\Resident;
 use App\Models\ResidentAccount;
+use App\Services\ActivityLogger;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Str;
 
 class ResidentController extends Controller
@@ -101,7 +103,11 @@ class ResidentController extends Controller
             'emergency_contact_relationship' => ['nullable', 'string', 'max:255'],
             'emergency_contact_address' => ['nullable', 'string', 'max:500'],
             'email' => ['nullable', 'email', 'max:255'],
-            'profile_image' => $request->hasFile('profile_image') ? ['image', 'max:2048'] : ['nullable'],
+            'is_head_of_family' => ['nullable', 'boolean'],
+            'profile_image' => ['nullable'],
+            'profile_image_base64' => ['nullable', 'string'],
+            'signature' => ['nullable'],
+            'signature_base64' => ['nullable', 'string'],
         ]);
 
         $profileImagePath = null;
@@ -109,6 +115,41 @@ class ResidentController extends Controller
             $file = $request->file('profile_image');
             $filename = strtolower($validated['first_name'] . '.' . $validated['last_name'] . '.' . $file->getClientOriginalExtension());
             $profileImagePath = $file->storeAs('profile_images', $filename, 'public');
+        } elseif (!empty($validated['profile_image_base64'])) {
+            try {
+                $base64Data = $validated['profile_image_base64'];
+                if (strpos($base64Data, ',') !== false) {
+                    $base64Data = explode(',', $base64Data)[1];
+                }
+                $imageData = base64_decode($base64Data);
+                $filename = strtolower($validated['first_name'] . '.' . $validated['last_name'] . '.png');
+                $profileImagePath = 'profile_images/' . $filename;
+                Storage::disk('public')->put($profileImagePath, $imageData);
+            } catch (\Exception $e) {
+                Log::error('Failed to save profile image: ' . $e->getMessage());
+                $profileImagePath = null;
+            }
+        }
+
+        $signaturePath = null;
+        if ($request->hasFile('signature')) {
+            $file = $request->file('signature');
+            $filename = strtolower($validated['first_name'] . '.' . $validated['last_name'] . '_signature.' . $file->getClientOriginalExtension());
+            $signaturePath = $file->storeAs('signatures', $filename, 'public');
+        } elseif (!empty($validated['signature_base64'])) {
+            try {
+                $base64Data = $validated['signature_base64'];
+                if (strpos($base64Data, ',') !== false) {
+                    $base64Data = explode(',', $base64Data)[1];
+                }
+                $imageData = base64_decode($base64Data);
+                $filename = strtolower($validated['first_name'] . '.' . $validated['last_name'] . '_signature.png');
+                $signaturePath = 'signatures/' . $filename;
+                Storage::disk('public')->put($signaturePath, $imageData);
+            } catch (\Exception $e) {
+                Log::error('Failed to save signature: ' . $e->getMessage());
+                $signaturePath = null;
+            }
         }
 
         $addressParts = [];
@@ -156,7 +197,16 @@ class ResidentController extends Controller
             'emergency_contact_address' => $validated['emergency_contact_address'] ?? null,
             'email' => $validated['email'] ?? null,
             'profile_image' => $profileImagePath,
+            'signature' => $signaturePath,
         ]);
+
+        // If marked as head of family, update the clan with resident_id and head_of_family name
+        if ($validated['is_head_of_family']) {
+            $clan->update([
+                'resident_id' => $resident->id,
+                'head_of_family' => $resident->first_name . ' ' . $resident->last_name,
+            ]);
+        }
 
         // Generate username
         $firstName = strtolower(trim($resident->first_name));
@@ -179,6 +229,11 @@ class ResidentController extends Controller
                 'password_hash' => Hash::make($password),
                 'email' => $validated['email'] ?? null,
             ]);
+
+            // Log the resident creation
+            $residentName = "{$resident->first_name} {$resident->last_name}";
+            ActivityLogger::logResidentAccount('created', $residentName, $resident->id);
+            
         } catch (\Exception $e) {
             Log::error('Failed to create resident account: ' . $e->getMessage(), [
                 'resident_id' => $resident->id,
@@ -265,8 +320,10 @@ class ResidentController extends Controller
                 'telephone_no' => $resident->telephone_no,
                 'email' => $resident->email,
                 'profile_image' => $resident->profile_image,
+                'signature' => $resident->signature,
                 'special_sector' => $resident->special_sector,
                 'blood_type' => $resident->blood_type,
+                'is_head_of_family' => $resident->clan && $resident->clan->resident_id === $resident->id,
                 'emergency_contact_name' => $resident->emergency_contact_name,
                 'emergency_contact_no' => $resident->emergency_contact_no,
                 'emergency_contact_relationship' => $resident->emergency_contact_relationship,
@@ -301,18 +358,66 @@ class ResidentController extends Controller
             'emergency_contact_relationship' => ['nullable', 'string', 'max:255'],
             'emergency_contact_address' => ['nullable', 'string', 'max:500'],
             'email' => ['nullable', 'email', 'max:255'],
-            'profile_image' => $request->hasFile('profile_image') ? ['image', 'max:2048'] : ['nullable'],
+            'is_head_of_family' => ['nullable', 'in:0,1'],
+            'profile_image' => ['nullable'],
+            'profile_image_base64' => ['nullable', 'string'],
+            'signature' => ['nullable'],
+            'signature_base64' => ['nullable', 'string'],
         ]);
 
         if ($request->hasFile('profile_image')) {
             $file = $request->file('profile_image');
             $filename = strtolower($validated['first_name'] . '.' . $validated['last_name'] . '.' . $file->getClientOriginalExtension());
             $validated['profile_image'] = $file->storeAs('profile_images', $filename, 'public');
+        } elseif (!empty($validated['profile_image_base64'])) {
+            try {
+                $base64Data = $validated['profile_image_base64'];
+                if (strpos($base64Data, ',') !== false) {
+                    $base64Data = explode(',', $base64Data)[1];
+                }
+                $imageData = base64_decode($base64Data);
+                $filename = strtolower($validated['first_name'] . '.' . $validated['last_name'] . '.png');
+                $validated['profile_image'] = 'profile_images/' . $filename;
+                Storage::disk('public')->put($validated['profile_image'], $imageData);
+            } catch (\Exception $e) {
+                Log::error('Failed to save profile image: ' . $e->getMessage());
+                unset($validated['profile_image']);
+            }
         } else {
             unset($validated['profile_image']);
         }
 
+        if ($request->hasFile('signature')) {
+            $file = $request->file('signature');
+            $filename = strtolower($validated['first_name'] . '.' . $validated['last_name'] . '_signature.' . $file->getClientOriginalExtension());
+            $validated['signature'] = $file->storeAs('signatures', $filename, 'public');
+        } elseif (!empty($validated['signature_base64'])) {
+            try {
+                $base64Data = $validated['signature_base64'];
+                if (strpos($base64Data, ',') !== false) {
+                    $base64Data = explode(',', $base64Data)[1];
+                }
+                $imageData = base64_decode($base64Data);
+                $filename = strtolower($validated['first_name'] . '.' . $validated['last_name'] . '_signature.png');
+                $validated['signature'] = 'signatures/' . $filename;
+                Storage::disk('public')->put($validated['signature'], $imageData);
+            } catch (\Exception $e) {
+                Log::error('Failed to save signature: ' . $e->getMessage());
+                unset($validated['signature']);
+            }
+        } else {
+            unset($validated['signature']);
+        }
+
         $resident->update($validated);
+
+        // If marked as head of family, update the clan with resident_id and head_of_family name
+        if ($validated['is_head_of_family'] && $resident->clan_id) {
+            $resident->clan->update([
+                'resident_id' => $resident->id,
+                'head_of_family' => $resident->first_name . ' ' . $resident->last_name,
+            ]);
+        }
 
         return redirect()->route('residents.show', $resident)->with('success', 'Resident updated successfully!');
     }
@@ -327,8 +432,14 @@ class ResidentController extends Controller
             }
         }
 
+        $residentName = "{$resident->first_name} {$resident->last_name}";
+        $residentId = $resident->id;
+
         ResidentAccount::where('resident_id', $resident->id)->delete();
         $resident->delete();
+
+        // Log the deletion
+        ActivityLogger::logResidentAccount('deleted', $residentName, $residentId);
 
         return redirect()->route('residents.index')->with('success', 'Resident deleted successfully!');
     }

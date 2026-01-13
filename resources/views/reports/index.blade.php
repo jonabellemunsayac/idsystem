@@ -8,9 +8,22 @@
         <h1 class="h4 fw-bold text-dark mb-1">Reports & Analytics</h1>
         <p class="text-muted mb-0">View system statistics and insights</p>
     </div>
-    <button class="btn btn-primary" style="background-color: #0038A8; border-color: #0038A8; padding: 0.5rem 1rem; font-size: 0.95rem;" id="exportReportBtn">
-        <i class="bi bi-download me-2"></i> Export Report
-    </button>
+    <div class="btn-group">
+        <button type="button" class="btn btn-primary" style="background-color: #0038A8; border-color: #0038A8; padding: 0.5rem 1rem; font-size: 0.95rem;" onclick="exportReport('pdf')">
+            <i class="bi bi-download me-2"></i> Export Report
+        </button>
+        <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" style="background-color: #0038A8; border-color: #0038A8; padding: 0.5rem 1rem;" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="visually-hidden">Toggle Dropdown</span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="#" onclick="exportReport('pdf'); return false;">
+                <i class="bi bi-file-earmark-pdf text-danger"></i> Export as PDF
+            </a></li>
+            <li><a class="dropdown-item" href="#" onclick="exportReport('excel'); return false;">
+                <i class="bi bi-file-earmark-excel text-success"></i> Export as Excel
+            </a></li>
+        </ul>
+    </div>
 </div>
 
 <!-- Dashboard Statistics Cards -->
@@ -63,6 +76,78 @@
                         <h3 class="fw-bold mb-0 text-dark" id="totalAssets">0</h3>
                     </div>
                     <i class="bi bi-box-seam-fill text-info fs-5"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Demographic Statistics Cards -->
+<div class="row g-4 mb-4 mt-2" id="demographicsContainer">
+    <div class="col-12">
+        <h5 class="fw-bold text-dark mb-3">Demographic Statistics</h5>
+    </div>
+    <div class="col-md-2">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-3">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <p class="text-muted small mb-1">PWD</p>
+                        <h4 class="fw-bold mb-0 text-dark" id="pwdCount">0</h4>
+                    </div>
+                    <i class="bi bi-heart-pulse-fill text-danger fs-5"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-3">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <p class="text-muted small mb-1">Senior Citizen</p>
+                        <h4 class="fw-bold mb-0 text-dark" id="seniorCitizenCount">0</h4>
+                    </div>
+                    <i class="bi bi-person-walking text-secondary fs-5"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-3">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <p class="text-muted small mb-1">Solo Parent</p>
+                        <h4 class="fw-bold mb-0 text-dark" id="soloParentCount">0</h4>
+                    </div>
+                    <i class="bi bi-person-hearts text-info fs-5"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-3">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <p class="text-muted small mb-1">Female</p>
+                        <h4 class="fw-bold mb-0 text-dark" id="femaleCount">0</h4>
+                    </div>
+                    <i class="bi bi-gender-female text-danger fs-5"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-3">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <p class="text-muted small mb-1">Male</p>
+                        <h4 class="fw-bold mb-0 text-dark" id="maleCount">0</h4>
+                    </div>
+                    <i class="bi bi-gender-male text-primary fs-5"></i>
                 </div>
             </div>
         </div>
@@ -134,7 +219,19 @@
             })
             .catch(error => console.error('Error loading dashboard stats:', error));
     }
-
+    // Load demographic statistics
+    function loadDemographicStats() {
+        fetch('/api/reports/demographic-stats')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('pwdCount').textContent = data.pwd || 0;
+                document.getElementById('seniorCitizenCount').textContent = data.seniorCitizen || 0;
+                document.getElementById('soloParentCount').textContent = data.soloParent || 0;
+                document.getElementById('femaleCount').textContent = data.female || 0;
+                document.getElementById('maleCount').textContent = data.male || 0;
+            })
+            .catch(error => console.error('Error loading demographic stats:', error));
+    }
     // Load case status chart
     function loadCaseStatusChart() {
         fetch('/api/reports/blotter')
@@ -248,13 +345,18 @@
     }
 
     // Export report functionality
-    document.getElementById('exportReportBtn').addEventListener('click', function() {
-        alert('Export functionality coming soon! This will generate a PDF or CSV report.');
-    });
+    function exportReport(format) {
+        if (format === 'pdf') {
+            window.location.href = '/api/reports/export/pdf';
+        } else if (format === 'excel') {
+            window.location.href = '/api/reports/export/excel';
+        }
+    }
 
     // Load all charts on page load
     document.addEventListener('DOMContentLoaded', function() {
         loadDashboardStats();
+        loadDemographicStats();
         loadCaseStatusChart();
         loadAssetStatusChart();
         loadCaseTrendChart();
@@ -263,6 +365,7 @@
     // Refresh charts every 30 seconds
     setInterval(function() {
         loadDashboardStats();
+        loadDemographicStats();
         loadCaseStatusChart();
         loadAssetStatusChart();
         loadCaseTrendChart();

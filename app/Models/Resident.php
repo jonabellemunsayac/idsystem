@@ -31,6 +31,7 @@ class Resident extends Model
         'emergency_contact_relationship',
         'emergency_contact_address',
         'profile_image',
+        'signature',
         'family_id',
         'clan_id',
     ];

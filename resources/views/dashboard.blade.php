@@ -170,13 +170,132 @@
                 </h5>
             </div>
             <div class="card-body p-4">
-                <div class="d-flex align-items-center justify-content-center rounded-3 bg-light" style="height: 256px;">
-                    <p class="text-muted mb-0" style="font-size: 0.875rem;">Chart placeholder - Integration ready</p>
+                <div class="rounded-3 bg-light" style="height: 400px; position: relative;">
+                    <canvas id="weeklyStatsChart"></canvas>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Prepare weekly statistics data
+        const appointmentsData = @json($weeklyAppointments->pluck('count')->values());
+        const blotterData = @json($weeklyBlotterCases->pluck('count')->values());
+        const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+        
+        const ctx = document.getElementById('weeklyStatsChart').getContext('2d');
+        
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: daysOfWeek,
+                datasets: [
+                    {
+                        label: 'Appointments',
+                        data: appointmentsData,
+                        borderColor: '#0038A8',
+                        backgroundColor: 'rgba(0, 56, 168, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 6,
+                        pointBackgroundColor: '#0038A8',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointHoverRadius: 8,
+                        yAxisID: 'y'
+                    },
+                    {
+                        label: 'Blotter Cases',
+                        data: blotterData,
+                        borderColor: '#CE1126',
+                        backgroundColor: 'rgba(206, 17, 38, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 6,
+                        pointBackgroundColor: '#CE1126',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointHoverRadius: 8,
+                        yAxisID: 'y1'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            padding: 20,
+                            font: {
+                                size: 12,
+                                weight: 'bold'
+                            },
+                            usePointStyle: true
+                        }
+                    },
+                    filler: {
+                        propagate: true
+                    }
+                },
+                scales: {
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        title: {
+                            display: true,
+                            text: 'Appointments',
+                            font: {
+                                size: 12,
+                                weight: 'bold'
+                            }
+                        },
+                        beginAtZero: true,
+                        grid: {
+                            drawBorder: false,
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        }
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        title: {
+                            display: true,
+                            text: 'Blotter Cases',
+                            font: {
+                                size: 12,
+                                weight: 'bold'
+                            }
+                        },
+                        beginAtZero: true,
+                        grid: {
+                            drawOnChartArea: false,
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false,
+                            drawBorder: false
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
 
 <style>
     .hover-shadow {
