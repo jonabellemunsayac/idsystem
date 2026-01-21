@@ -135,21 +135,9 @@
                 <h6 class="fw-bold text-dark mt-2 mb-1" style="font-size: 0.8rem;">Address Information</h6>
                 <div class="row g-2 mb-2">
                     <div class="col-md-4">
-                        <label for="house_no" class="form-label" style="font-size: 0.65rem;">House Number</label>
-                        <input type="text" class="form-control form-control-sm @error('house_no') is-invalid @enderror address-field-edit" id="house_no" name="house_no" value="{{ old('house_no', $resident['house_no']) }}" style="font-size: 0.8rem;">
-                        @error('house_no') <div class="invalid-feedback" style="font-size: 0.65rem;">{{ $message }}</div> @enderror
-                    </div>
-
-                    <div class="col-md-4">
                         <label for="street_name" class="form-label" style="font-size: 0.65rem;">Street Name</label>
                         <input type="text" class="form-control form-control-sm @error('street_name') is-invalid @enderror address-field-edit" id="street_name" name="street_name" value="{{ old('street_name', $resident['street_name']) }}" style="font-size: 0.8rem;">
                         @error('street_name') <div class="invalid-feedback" style="font-size: 0.65rem;">{{ $message }}</div> @enderror
-                    </div>
-
-                    <div class="col-md-4">
-                        <label for="purok" class="form-label" style="font-size: 0.65rem;">Purok</label>
-                        <input type="text" class="form-control form-control-sm @error('purok') is-invalid @enderror address-field-edit" id="purok" name="purok" value="{{ old('purok', $resident['purok']) }}" style="font-size: 0.8rem;">
-                        @error('purok') <div class="invalid-feedback" style="font-size: 0.65rem;">{{ $message }}</div> @enderror
                     </div>
 
                     <div class="col-md-4">
@@ -173,7 +161,7 @@
                     <div class="col-md-12">
                         <label for="full_address_display_edit" class="form-label" style="font-size: 0.65rem;">Full Address</label>
                         <textarea class="form-control form-control-sm" id="full_address_display_edit" rows="2" readonly style="font-size: 0.8rem; background-color: #f8f9fa;"></textarea>
-                        <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Auto-filled from house number, street name, purok, and province above</small>
+                        <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Auto-filled from street name and province above</small>
                     </div>
                 </div>
 

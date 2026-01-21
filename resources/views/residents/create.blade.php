@@ -64,6 +64,7 @@
                         <option value="Senior Citizen">Senior Citizen</option>
                         <option value="PWD">PWD</option>
                         <option value="Solo Parent">Solo Parent</option>
+                        <option value="LGBTQ">LGBTQ</option>
                     </select>
                 </div>
                 <div class="col-md-4">
@@ -96,25 +97,12 @@
             <h6 class="fw-bold mb-2 mt-2" style="font-size: 0.8rem;">Address</h6>
             <div class="row g-2 mb-2">
                 <div class="col-md-6">
-                    <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">House No.</label>
-                    <input type="text" class="form-control form-control-sm address-field" name="house_no" placeholder="e.g., #45 or 12" style="font-size: 0.8rem;">
-                </div>
-                <div class="col-md-6">
                     <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Street Name</label>
                     <select class="form-select form-select-sm address-field" name="street_name" style="font-size: 0.8rem;">
                         <option value="">Select Street...</option>
                         <option value="Roxas St.">Roxas St.</option>
                         <option value="Osmena St.">Osmena St.</option>
                         <option value="Del Pilar St.">Del Pilar St.</option>
-                    </select>
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Purok</label>
-                    <select class="form-select form-select-sm address-field" name="purok" style="font-size: 0.8rem;">
-                        <option value="">Select Purok...</option>
-                        <option value="Purok 1">Purok 1</option>
-                        <option value="Purok 2">Purok 2</option>
-                        <option value="Purok 3">Purok 3</option>
                     </select>
                 </div>
                 <div class="col-md-6">
@@ -126,12 +114,12 @@
                 </div>
                 <div class="col-md-6">
                     <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Zip Code</label>
-                    <input type="text" class="form-control form-control-sm address-field" name="zip_code" placeholder="e.g., 3022" style="font-size: 0.8rem;">
+                    <input type="text" class="form-control form-control-sm address-field" name="zip_code" value="1600" readonly style="font-size: 0.8rem;">
                 </div>
                 <div class="col-md-12">
                     <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Full Address</label>
                     <textarea class="form-control form-control-sm" id="full_address_display" rows="2" readonly style="font-size: 0.8rem; background-color: #f8f9fa;"></textarea>
-                    <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Auto-filled from house no., street name, purok, and province above</small>
+                    <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Auto-filled from street name and province above</small>
                 </div>
             </div>
 
@@ -399,15 +387,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const fullAddressDisplay = document.getElementById('full_address_display');
     
     function updateFullAddress() {
-        const houseNo = document.querySelector('input[name="house_no"]').value;
         const streetName = document.querySelector('select[name="street_name"]').value;
-        const purok = document.querySelector('select[name="purok"]').value;
         const province = document.querySelector('select[name="province"]').value;
         
         const addressParts = [];
-        if (houseNo) addressParts.push(houseNo);
         if (streetName) addressParts.push(streetName);
-        if (purok) addressParts.push(purok);
         if (province) addressParts.push(province);
         
         fullAddressDisplay.value = addressParts.join(', ') || '';
