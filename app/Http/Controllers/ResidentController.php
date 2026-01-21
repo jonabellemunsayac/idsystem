@@ -482,6 +482,8 @@ class ResidentController extends Controller
             'emergency_contact_no' => 'nullable|string|max:20',
             'emergency_contact_address' => 'nullable|string|max:255',
             'profile_image' => 'nullable|image|max:2048',
+            'signature' => 'nullable|image|max:2048',
+            'is_head_of_family' => 'nullable|boolean',
         ]);
 
         // Handle profile image upload
@@ -490,6 +492,14 @@ class ResidentController extends Controller
             $file = $request->file('profile_image');
             $filename = strtolower($validated['first_name'] . '.' . $validated['last_name'] . '.' . $file->getClientOriginalExtension());
             $profileImagePath = $file->storeAs('profile_images', $filename, 'public');
+        }
+
+        // Handle signature upload
+        $signaturePath = null;
+        if ($request->hasFile('signature')) {
+            $file = $request->file('signature');
+            $filename = strtolower($validated['first_name'] . '.' . $validated['last_name'] . '.signature.' . $file->getClientOriginalExtension());
+            $signaturePath = $file->storeAs('signatures', $filename, 'public');
         }
 
         // Build address from parts
@@ -536,12 +546,21 @@ class ResidentController extends Controller
             'telephone_no' => $validated['telephone_no'] ?? null,
             'email' => $validated['email'] ?? null,
             'profile_image' => $profileImagePath,
+            'signature' => $signaturePath,
             'emergency_contact_name' => $validated['emergency_contact_name'] ?? null,
             'emergency_contact_relationship' => $validated['emergency_contact_relationship'] ?? null,
             'emergency_contact_no' => $validated['emergency_contact_no'] ?? null,
             'emergency_contact_address' => $validated['emergency_contact_address'] ?? null,
             'status' => 'pending_verification',
         ]);
+
+        // If marked as head of family, update the clan with resident_id and head_of_family name
+        if ($request->input('is_head_of_family')) {
+            $clan->update([
+                'resident_id' => $resident->id,
+                'head_of_family' => $resident->first_name . ' ' . $resident->last_name,
+            ]);
+        }
 
         // Generate username
         $baseUsername = Str::of($resident->first_name)
