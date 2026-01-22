@@ -145,10 +145,33 @@ class ReportController extends Controller
     /**
      * Get comprehensive dashboard statistics
      */
-    public function getDashboardStats()
+    public function getDashboardStats(Request $request)
     {
+        $residentsQuery = Resident::query();
+
+        // Apply filters only to residents count
+        if ($request->filled('gender')) {
+            $residentsQuery->where('gender', $request->gender);
+        }
+        if ($request->filled('specialSector')) {
+            $residentsQuery->where('special_sector', $request->specialSector);
+        }
+        if ($request->filled('streetName')) {
+            $residentsQuery->where('street_name', $request->streetName);
+        }
+        if ($request->filled('ageGroup')) {
+            $today = now();
+            if ($request->ageGroup === 'children') {
+                $residentsQuery->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, ?) < 18', [$today]);
+            } elseif ($request->ageGroup === 'adult') {
+                $residentsQuery->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, ?) BETWEEN 18 AND 59', [$today]);
+            } elseif ($request->ageGroup === 'senior') {
+                $residentsQuery->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, ?) >= 60', [$today]);
+            }
+        }
+
         return response()->json([
-            'residents' => Resident::count(),
+            'residents' => $residentsQuery->count(),
             'blotterCases' => BlotterRecord::count(),
             'appointments' => Appointment::count(),
             'assets' => Asset::count(),
@@ -162,20 +185,240 @@ class ReportController extends Controller
     /**
      * Get demographic statistics
      */
-    public function getDemographics()
+    public function getDemographics(Request $request)
     {
-        $pwdCount = Resident::where('special_sector', 'PWD')->count();
-        $seniorCitizenCount = Resident::where('special_sector', 'Senior Citizen')->count();
-        $soloParentCount = Resident::where('special_sector', 'Solo Parent')->count();
-        $femaleCount = Resident::where('gender', 'Female')->count();
-        $maleCount = Resident::where('gender', 'Male')->count();
+        $query = Resident::query();
+
+        // Apply filters
+        if ($request->filled('gender')) {
+            $query->where('gender', $request->gender);
+        }
+        if ($request->filled('specialSector')) {
+            $query->where('special_sector', $request->specialSector);
+        }
+        if ($request->filled('streetName')) {
+            $query->where('street_name', $request->streetName);
+        }
+        if ($request->filled('ageGroup')) {
+            $today = now();
+            if ($request->ageGroup === 'children') {
+                $query->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, ?) < 18', [$today]);
+            } elseif ($request->ageGroup === 'adult') {
+                $query->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, ?) BETWEEN 18 AND 59', [$today]);
+            } elseif ($request->ageGroup === 'senior') {
+                $query->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, ?) >= 60', [$today]);
+            }
+        }
+
+        $pwdCount = (clone $query)->where('special_sector', 'PWD')->count();
+        $seniorCitizenCount = (clone $query)->where('special_sector', 'Senior Citizen')->count();
+        $soloParentCount = (clone $query)->where('special_sector', 'Solo Parent')->count();
+        $lgbtqCount = (clone $query)->where('special_sector', 'LGBTQ')->count();
+        
+        // Calculate children count (0-17 years old)
+        $childrenQuery = clone $query;
+        $childrenCount = $childrenQuery->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, NOW()) < 18')->count();
+        
+        $femaleCount = (clone $query)->where('gender', 'Female')->count();
+        $maleCount = (clone $query)->where('gender', 'Male')->count();
 
         return response()->json([
             'pwd' => $pwdCount,
             'seniorCitizen' => $seniorCitizenCount,
             'soloParent' => $soloParentCount,
+            'lgbtq' => $lgbtqCount,
+            'children' => $childrenCount,
             'female' => $femaleCount,
             'male' => $maleCount,
+        ]);
+    }
+
+    /**
+     * Get street statistics
+     */
+    public function getStreetStats(Request $request)
+    {
+        $query = Resident::query();
+
+        // Apply filters
+        if ($request->filled('gender')) {
+            $query->where('gender', $request->gender);
+        }
+        if ($request->filled('specialSector')) {
+            $query->where('special_sector', $request->specialSector);
+        }
+        if ($request->filled('streetName')) {
+            $query->where('street_name', $request->streetName);
+        }
+        if ($request->filled('ageGroup')) {
+            $today = now();
+            if ($request->ageGroup === 'children') {
+                $query->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, ?) < 18', [$today]);
+            } elseif ($request->ageGroup === 'adult') {
+                $query->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, ?) BETWEEN 18 AND 59', [$today]);
+            } elseif ($request->ageGroup === 'senior') {
+                $query->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, ?) >= 60', [$today]);
+            }
+        }
+
+        $streetStats = $query->selectRaw('
+            street_name,
+            COUNT(*) as total,
+            SUM(CASE WHEN gender = "Male" THEN 1 ELSE 0 END) as male,
+            SUM(CASE WHEN gender = "Female" THEN 1 ELSE 0 END) as female
+        ')
+        ->whereNotNull('street_name')
+        ->where('street_name', '!=', '')
+        ->groupBy('street_name')
+        ->orderBy('street_name')
+        ->get();
+
+        return response()->json([
+            'streets' => $streetStats
+        ]);
+    }
+
+    /**
+     * Get all street names for filter dropdown
+     */
+    public function getStreetNames()
+    {
+        $streets = Resident::select('street_name')
+            ->whereNotNull('street_name')
+            ->where('street_name', '!=', '')
+            ->distinct()
+            ->orderBy('street_name')
+            ->pluck('street_name');
+
+        return response()->json([
+            'streets' => $streets
+        ]);
+    }
+
+    /**
+     * Get gender distribution
+     */
+    public function getGenderDistribution(Request $request)
+    {
+        $query = Resident::query();
+
+        // Apply filters
+        if ($request->filled('specialSector')) {
+            $query->where('special_sector', $request->specialSector);
+        }
+        if ($request->filled('streetName')) {
+            $query->where('street_name', $request->streetName);
+        }
+        if ($request->filled('ageGroup')) {
+            $today = now();
+            if ($request->ageGroup === 'children') {
+                $query->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, ?) < 18', [$today]);
+            } elseif ($request->ageGroup === 'adult') {
+                $query->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, ?) BETWEEN 18 AND 59', [$today]);
+            } elseif ($request->ageGroup === 'senior') {
+                $query->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, ?) >= 60', [$today]);
+            }
+        }
+
+        return response()->json([
+            'male' => (clone $query)->where('gender', 'Male')->count(),
+            'female' => (clone $query)->where('gender', 'Female')->count(),
+        ]);
+    }
+
+    /**
+     * Get age group distribution
+     */
+    public function getAgeGroupDistribution(Request $request)
+    {
+        $query = Resident::query();
+
+        // Apply filters
+        if ($request->filled('gender')) {
+            $query->where('gender', $request->gender);
+        }
+        if ($request->filled('specialSector')) {
+            $query->where('special_sector', $request->specialSector);
+        }
+        if ($request->filled('streetName')) {
+            $query->where('street_name', $request->streetName);
+        }
+
+        $today = now();
+        return response()->json([
+            'children' => (clone $query)->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, ?) < 18', [$today])->count(),
+            'adult' => (clone $query)->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, ?) BETWEEN 18 AND 59', [$today])->count(),
+            'senior' => (clone $query)->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, ?) >= 60', [$today])->count(),
+        ]);
+    }
+
+    /**
+     * Get special sector distribution
+     */
+    public function getSpecialSectorDistribution(Request $request)
+    {
+        $query = Resident::query();
+
+        // Apply filters
+        if ($request->filled('gender')) {
+            $query->where('gender', $request->gender);
+        }
+        if ($request->filled('streetName')) {
+            $query->where('street_name', $request->streetName);
+        }
+        if ($request->filled('ageGroup')) {
+            $today = now();
+            if ($request->ageGroup === 'children') {
+                $query->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, ?) < 18', [$today]);
+            } elseif ($request->ageGroup === 'adult') {
+                $query->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, ?) BETWEEN 18 AND 59', [$today]);
+            } elseif ($request->ageGroup === 'senior') {
+                $query->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, ?) >= 60', [$today]);
+            }
+        }
+
+        return response()->json([
+            'seniorCitizen' => (clone $query)->where('special_sector', 'Senior Citizen')->count(),
+            'pwd' => (clone $query)->where('special_sector', 'PWD')->count(),
+            'soloParent' => (clone $query)->where('special_sector', 'Solo Parent')->count(),
+            'lgbtq' => (clone $query)->where('special_sector', 'LGBTQ')->count(),
+        ]);
+    }
+
+    /**
+     * Get street distribution
+     */
+    public function getStreetDistribution(Request $request)
+    {
+        $query = Resident::query();
+
+        // Apply filters
+        if ($request->filled('gender')) {
+            $query->where('gender', $request->gender);
+        }
+        if ($request->filled('specialSector')) {
+            $query->where('special_sector', $request->specialSector);
+        }
+        if ($request->filled('ageGroup')) {
+            $today = now();
+            if ($request->ageGroup === 'children') {
+                $query->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, ?) < 18', [$today]);
+            } elseif ($request->ageGroup === 'adult') {
+                $query->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, ?) BETWEEN 18 AND 59', [$today]);
+            } elseif ($request->ageGroup === 'senior') {
+                $query->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, ?) >= 60', [$today]);
+            }
+        }
+
+        $streetStats = $query->selectRaw('street_name, COUNT(*) as total')
+            ->whereNotNull('street_name')
+            ->where('street_name', '!=', '')
+            ->groupBy('street_name')
+            ->orderBy('street_name')
+            ->get();
+
+        return response()->json([
+            'streets' => $streetStats
         ]);
     }
 
@@ -193,6 +436,8 @@ class ReportController extends Controller
             'pwd' => Resident::where('special_sector', 'PWD')->count(),
             'seniorCitizen' => Resident::where('special_sector', 'Senior Citizen')->count(),
             'soloParent' => Resident::where('special_sector', 'Solo Parent')->count(),
+            'lgbtq' => Resident::where('special_sector', 'LGBTQ')->count(),
+            'children' => Resident::whereRaw('TIMESTAMPDIFF(YEAR, birth_date, NOW()) < 18')->count(),
             'female' => Resident::where('gender', 'Female')->count(),
             'male' => Resident::where('gender', 'Male')->count(),
         ];
@@ -213,6 +458,8 @@ class ReportController extends Controller
         $content .= "PWD: {$data['pwd']}\n";
         $content .= "Senior Citizen: {$data['seniorCitizen']}\n";
         $content .= "Solo Parent: {$data['soloParent']}\n";
+        $content .= "LGBTQ: {$data['lgbtq']}\n";
+        $content .= "Children (0-17): {$data['children']}\n";
         $content .= "Female: {$data['female']}\n";
         $content .= "Male: {$data['male']}\n";
 
@@ -238,6 +485,8 @@ class ReportController extends Controller
             ['PWD', Resident::where('special_sector', 'PWD')->count()],
             ['Senior Citizen', Resident::where('special_sector', 'Senior Citizen')->count()],
             ['Solo Parent', Resident::where('special_sector', 'Solo Parent')->count()],
+            ['LGBTQ', Resident::where('special_sector', 'LGBTQ')->count()],
+            ['Children (0-17)', Resident::whereRaw('TIMESTAMPDIFF(YEAR, birth_date, NOW()) < 18')->count()],
             ['Female', Resident::where('gender', 'Female')->count()],
             ['Male', Resident::where('gender', 'Male')->count()],
         ];
