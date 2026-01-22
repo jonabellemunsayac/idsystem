@@ -118,6 +118,12 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
     Route::get('/api/reports/demographics', [ReportController::class, 'getResidentDemographics'])->name('api.reports.demographics');
     Route::get('/api/reports/demographic-stats', [ReportController::class, 'getDemographics'])->name('api.reports.demographic-stats');
+    Route::get('/api/reports/street-stats', [ReportController::class, 'getStreetStats'])->name('api.reports.street-stats');
+    Route::get('/api/reports/street-names', [ReportController::class, 'getStreetNames'])->name('api.reports.street-names');
+    Route::get('/api/reports/gender-distribution', [ReportController::class, 'getGenderDistribution'])->name('api.reports.gender-distribution');
+    Route::get('/api/reports/age-group-distribution', [ReportController::class, 'getAgeGroupDistribution'])->name('api.reports.age-group-distribution');
+    Route::get('/api/reports/special-sector-distribution', [ReportController::class, 'getSpecialSectorDistribution'])->name('api.reports.special-sector-distribution');
+    Route::get('/api/reports/street-distribution', [ReportController::class, 'getStreetDistribution'])->name('api.reports.street-distribution');
     Route::get('/api/reports/appointments', [ReportController::class, 'getMonthlyAppointments'])->name('api.reports.appointments');
     Route::get('/api/reports/blotter', [ReportController::class, 'getBlotterStatistics'])->name('api.reports.blotter');
     Route::get('/api/reports/assets', [ReportController::class, 'getAssetUtilization'])->name('api.reports.assets');

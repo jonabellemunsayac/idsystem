@@ -569,7 +569,7 @@
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><h6 class="dropdown-header">Admin User</h6></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="{{ route('settings.profile.edit') }}">Change Password</a></li>
+                            <li><a class="dropdown-item" href="{{ route('settings.user-account.index') }}">Change Password</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
                                 <form action="{{ route('logout') }}" method="POST">
