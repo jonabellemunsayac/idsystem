@@ -48,7 +48,9 @@
     </div>
     
     <div class="mt-2">
-        {{ $clans->links() }}
+        <div style="font-size: 0.875rem;">
+            {{ $clans->links('vendor.pagination.custom') }}
+        </div>
     </div>
 @else
     <div class="card border-0 shadow-sm">

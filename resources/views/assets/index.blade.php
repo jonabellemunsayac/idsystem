@@ -8,128 +8,81 @@
         <h1 class="h4 fw-bold text-dark mb-1">Assets Management</h1>
         <p class="text-muted mb-0">Track and manage barangay assets</p>
     </div>
-    <button class="btn btn-primary" style="background-color: #0038A8; border-color: #0038A8; padding: 0.5rem 1rem; font-size: 0.95rem;" data-bs-toggle="modal" data-bs-target="#newAssetModal">
+    <button class="btn btn-primary d-flex align-items-center gap-1" style="background-color: #0038A8; border-color: #0038A8; padding: 0.5rem 1rem; font-size: 0.95rem;" data-bs-toggle="modal" data-bs-target="#newAssetModal">
         <i class="bi bi-plus-lg"></i> Add
     </button>
 </div>
 
-<!-- Metrics Grid -->
-@php
-    $totalAssets = $assets->count();
-    $workingAssets = $assets->where('status', 'working')->count();
-    $maintenanceAssets = $assets->where('status', 'maintenance')->count();
-    $disposalAssets = $assets->where('status', 'disposal')->count();
-@endphp
-<div class="row g-4 mb-4">
-    <div class="col-md-3">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body p-4">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <p class="text-muted small mb-1">Total Assets</p>
-                        <h2 class="fw-bold mb-0 text-dark">{{ $totalAssets }}</h2>
-                    </div>
-                    <div class="text-primary">
-                        <i class="bi bi-box-seam fs-4"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body p-4">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <p class="text-muted small mb-1">Working</p>
-                        <h2 class="fw-bold mb-0 text-dark">{{ $workingAssets }}</h2>
-                    </div>
-                    <div class="text-success">
-                        <i class="bi bi-check-circle fs-4"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body p-4">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <p class="text-muted small mb-1">Under Maintenance</p>
-                        <h2 class="fw-bold mb-0 text-dark">{{ $maintenanceAssets }}</h2>
-                    </div>
-                    <div class="text-warning">
-                        <i class="bi bi-tools fs-4"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body p-4">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <p class="text-muted small mb-1">For Disposal</p>
-                        <h2 class="fw-bold mb-0 text-dark">{{ $disposalAssets }}</h2>
-                    </div>
-                    <div class="text-danger">
-                        <i class="bi bi-trash fs-4"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Asset Inventory Table -->
 <div class="card border-0 shadow-sm">
-    <div class="card-header bg-white border-0 py-2 px-3">
-        <h5 class="fw-bold mb-0 text-dark">Asset Inventory</h5>
+    <div class="card-header bg-white py-1 border-bottom-0">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-1">
+            <h6 class="card-title mb-0 fw-bold small" style="font-size: 0.8rem;">Asset Inventory</h6>
+            <div class="d-flex gap-1 flex-wrap">
+                <form method="GET" action="{{ route('assets.index') }}" class="d-flex gap-1">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text bg-white border-end-0" style="font-size: 0.8rem;">
+                            <i class="bi bi-search text-muted"></i>
+                        </span>
+                        <input type="text" name="search" class="form-control form-control-sm border-start-0 ps-0" placeholder="Search..." value="{{ request('search') }}" style="width: 150px; font-size: 0.8rem;">
+                        <button class="btn btn-light btn-sm border" type="submit" style="font-size: 0.75rem;">Search</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-    <div class="card-body px-0 pb-0">
+    <div class="card-body p-0">
         <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
+            <table class="table table-hover align-middle mb-0" style="font-size: 0.75rem;">
                 <thead class="bg-light">
                     <tr>
-                        <th class="px-3 py-2 text-muted small fw-bold text-uppercase">Asset ID</th>
-                        <th class="px-3 py-2 text-muted small fw-bold text-uppercase">Name</th>
-                        <th class="px-3 py-2 text-muted small fw-bold text-uppercase">Category</th>
-                        <th class="px-3 py-2 text-muted small fw-bold text-uppercase">Quantity</th>
-                        <th class="px-3 py-2 text-muted small fw-bold text-uppercase">Last Maintenance</th>
-                        <th class="px-3 py-2 text-muted small fw-bold text-uppercase">Status</th>
-                        <th class="px-3 py-2 text-muted small fw-bold text-uppercase text-end">Actions</th>
+                        <th class="border-0 text-secondary text-uppercase fw-bold ps-2" style="font-size: 0.65rem;">Asset ID</th>
+                        <th class="border-0 text-secondary text-uppercase fw-bold" style="font-size: 0.65rem;">Name</th>
+                        <th class="border-0 text-secondary text-uppercase fw-bold" style="font-size: 0.65rem;">Category</th>
+                        <th class="border-0 text-secondary text-uppercase fw-bold" style="font-size: 0.65rem;">Quantity</th>
+                        <th class="border-0 text-secondary text-uppercase fw-bold" style="font-size: 0.65rem;">Location</th>
+                        <th class="border-0 text-secondary text-uppercase fw-bold" style="font-size: 0.65rem;">Status</th>
+                        <th class="border-0 text-secondary text-uppercase fw-bold text-end pe-2" style="font-size: 0.65rem;">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($assets as $asset)
-                    <tr>
-                        <td class="px-3 py-2 fw-bold text-dark">AST-{{ str_pad($asset->id, 3, '0', STR_PAD_LEFT) }}</td>
-                        <td class="px-3 py-2">{{ $asset->asset_name }}</td>
-                        <td class="px-3 py-2">{{ $asset->category }}</td>
-                        <td class="px-3 py-2">{{ $asset->quantity }}</td>
-                        <td class="px-3 py-2">{{ $asset->last_maintenance_date?->format('Y-m-d') ?? 'N/A' }}</td>
-                        <td class="px-3 py-2">
+                    <tr style="font-size: 0.75rem;">
+                        <td class="ps-2">
+                            <div class="fw-medium text-dark" style="font-size: 0.75rem;">AST-{{ str_pad($asset->id, 3, '0', STR_PAD_LEFT) }}</div>
+                        </td>
+                        <td style="font-size: 0.7rem;">{{ $asset->asset_name ?? '-' }}</td>
+                        <td style="font-size: 0.7rem;">{{ $asset->category ?? '-' }}</td>
+                        <td style="font-size: 0.7rem;">{{ $asset->quantity ?? '-' }}</td>
+                        <td style="font-size: 0.7rem; max-width: 120px;">{{ $asset->location ?? '-' }}</td>
+                        <td style="font-size: 0.7rem;">
                             @if($asset->status === 'working')
-                                <span class="badge bg-success rounded-pill px-3">working</span>
+                                <span class="badge bg-success" style="font-size: 0.65rem;">Working</span>
                             @elseif($asset->status === 'maintenance')
-                                <span class="badge bg-warning text-dark rounded-pill px-3">maintenance</span>
+                                <span class="badge bg-warning text-dark" style="font-size: 0.65rem;">Maintenance</span>
                             @elseif($asset->status === 'disposal')
-                                <span class="badge bg-danger rounded-pill px-3">disposal</span>
-                            @else
-                                <span class="badge bg-secondary rounded-pill px-3">{{ $asset->status }}</span>
+                                <span class="badge bg-danger" style="font-size: 0.65rem;">Disposal</span>
+                            @elseif($asset->status === 'inactive')
+                                <span class="badge bg-secondary" style="font-size: 0.65rem;">Inactive</span>
                             @endif
                         </td>
-                        <td class="px-3 py-2 text-end">
-                            <button class="btn btn-outline-secondary btn-sm" onclick="viewAssetDetails({{ $asset->id }})">View Details</button>
+                        <td class="text-end pe-2">
+                            <div class="dropdown">
+                                <button class="btn btn-light btn-sm border dropdown-toggle" type="button" data-bs-toggle="dropdown" style="font-size: 0.65rem; padding: 0.2rem 0.4rem;">
+                                    <i class="bi bi-three-dots-vertical"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><button class="dropdown-item" onclick="viewAssetDetails({{ $asset->id }})" style="font-size: 0.75rem;">View Details</button></li>
+                                    <li><hr class="dropdown-divider m-1"></li>
+                                    <li><button class="dropdown-item text-danger" onclick="deleteAsset({{ $asset->id }})" style="font-size: 0.75rem;">Delete</button></li>
+                                </ul>
+                            </div>
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="7" class="px-3 py-4 text-center text-muted">
-                            <i class="bi bi-inbox fs-4 d-block mb-2"></i>
-                            No assets found. Click "Add" to create one.
+                        <td colspan="7" class="text-center py-2 text-muted">
+                            <i class="bi bi-inbox" style="font-size: 1.5rem; opacity: 0.5;"></i>
+                            <p class="mt-1 small" style="font-size: 0.75rem;">No assets found.</p>
                         </td>
                     </tr>
                     @endforelse
@@ -137,6 +90,13 @@
             </table>
         </div>
     </div>
+    @if($assets->hasPages())
+    <div class="card-footer bg-white border-top-0 py-2">
+        <div style="font-size: 0.875rem;">
+            {{ $assets->links('vendor.pagination.custom') }}
+        </div>
+    </div>
+    @endif
 </div>
 
 <!-- New Asset Modal -->

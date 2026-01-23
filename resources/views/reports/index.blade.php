@@ -38,6 +38,7 @@
                 <label class="form-label small fw-semibold text-muted">Gender</label>
                 <select class="form-select form-select-sm" id="filterGender">
                     <option value="">All</option>
+                    <option value="None">None</option>
                     <option value="Male">Male</option>
                     <option value="Female">Female</option>
                 </select>
@@ -46,6 +47,7 @@
                 <label class="form-label small fw-semibold text-muted">Special Sector</label>
                 <select class="form-select form-select-sm" id="filterSpecialSector">
                     <option value="">All</option>
+                    <option value="None">None</option>
                     <option value="Senior Citizen">Senior Citizen</option>
                     <option value="PWD">PWD</option>
                     <option value="Solo Parent">Solo Parent</option>
@@ -56,6 +58,7 @@
                 <label class="form-label small fw-semibold text-muted">Age Group</label>
                 <select class="form-select form-select-sm" id="filterAgeGroup">
                     <option value="">All</option>
+                    <option value="None">None</option>
                     <option value="children">Children (0-17)</option>
                     <option value="adult">Adult (18-59)</option>
                     <option value="senior">Senior (60+)</option>
@@ -244,6 +247,7 @@
 
 <!-- Include Chart.js from CDN -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <script>
     let charts = {};
@@ -277,7 +281,7 @@
             .then(response => response.json())
             .then(data => {
                 const select = document.getElementById('filterStreetName');
-                select.innerHTML = '<option value="">All Streets</option>';
+                select.innerHTML = '<option value="">All Streets</option><option value="None">None</option>';
                 if (data.streets && data.streets.length > 0) {
                     data.streets.forEach(street => {
                         if (street) {
@@ -403,16 +407,17 @@
                 charts.specialSector = new Chart(ctx, {
                     type: 'bar',
                     data: {
-                        labels: ['Senior Citizen', 'PWD', 'Solo Parent', 'LGBTQ'],
+                        labels: ['Senior Citizen', 'PWD', 'Solo Parent', 'LGBTQ', 'None'],
                         datasets: [{
                             label: 'Count',
                             data: [
                                 data.seniorCitizen || 0,
                                 data.pwd || 0,
                                 data.soloParent || 0,
-                                data.lgbtq || 0
+                                data.lgbtq || 0,
+                                data.none || 0
                             ],
-                            backgroundColor: ['#6c757d', '#dc3545', '#17a2b8', '#ffc107'],
+                            backgroundColor: ['#6c757d', '#dc3545', '#17a2b8', '#ffc107', '#28a745'],
                             borderColor: '#fff',
                             borderWidth: 1
                         }]
@@ -451,12 +456,18 @@
                 const labels = data.streets ? data.streets.map(s => s.street_name || 'N/A') : [];
                 const counts = data.streets ? data.streets.map(s => s.total || 0) : [];
                 
+                // When a specific street is selected, adjust chart to show only that street
+                let chartLabel = 'Residents';
+                if (currentFilters.streetName) {
+                    chartLabel = `Residents in ${currentFilters.streetName}`;
+                }
+                
                 charts.street = new Chart(ctx, {
                     type: 'bar',
                     data: {
                         labels: labels,
                         datasets: [{
-                            label: 'Residents',
+                            label: chartLabel,
                             data: counts,
                             backgroundColor: '#0038A8',
                             borderColor: '#fff',
@@ -468,7 +479,8 @@
                         maintainAspectRatio: false,
                         plugins: {
                             legend: {
-                                display: false
+                                display: true,
+                                position: 'top'
                             }
                         },
                         scales: {
@@ -488,7 +500,196 @@
     // Export report functionality
     function exportReport(format) {
         if (format === 'pdf') {
-            window.location.href = '/api/reports/export/pdf';
+            // Disable buttons to prevent multiple clicks
+            const buttons = document.querySelectorAll('.btn-primary');
+            buttons.forEach(btn => btn.disabled = true);
+            
+            try {
+                // Create a new container for PDF content
+                const reportContainer = document.createElement('div');
+                reportContainer.style.padding = '15px';
+                reportContainer.style.backgroundColor = '#fff';
+                reportContainer.style.fontFamily = 'Arial, sans-serif';
+                reportContainer.style.width = '100%';
+                reportContainer.style.maxWidth = '210mm';
+                
+                // Add title
+                const title = document.createElement('h1');
+                title.textContent = 'BARANGAY MANAGEMENT SYSTEM';
+                title.style.textAlign = 'center';
+                title.style.color = '#0038A8';
+                title.style.marginBottom = '5px';
+                title.style.fontSize = '20px';
+                title.style.margin = '0 0 5px 0';
+                reportContainer.appendChild(title);
+                
+                const subtitle = document.createElement('h2');
+                subtitle.textContent = 'Reports & Analytics Dashboard';
+                subtitle.style.textAlign = 'center';
+                subtitle.style.color = '#666';
+                subtitle.style.fontSize = '14px';
+                subtitle.style.marginBottom = '5px';
+                subtitle.style.fontWeight = '600';
+                subtitle.style.margin = '0 0 5px 0';
+                reportContainer.appendChild(subtitle);
+                
+                const date = document.createElement('p');
+                date.textContent = 'Generated on: ' + new Date().toLocaleString();
+                date.style.textAlign = 'center';
+                date.style.color = '#999';
+                date.style.fontSize = '11px';
+                date.style.marginBottom = '20px';
+                date.style.margin = '0 0 20px 0';
+                reportContainer.appendChild(date);
+                
+                // Add demographic statistics title
+                const statsTitle = document.createElement('h3');
+                statsTitle.textContent = 'Demographic Statistics';
+                statsTitle.style.color = '#0038A8';
+                statsTitle.style.fontSize = '14px';
+                statsTitle.style.marginBottom = '15px';
+                statsTitle.style.borderBottom = '2px solid #0038A8';
+                statsTitle.style.paddingBottom = '8px';
+                statsTitle.style.margin = '0 0 15px 0';
+                reportContainer.appendChild(statsTitle);
+                
+                // Add demographic stats cards in single column
+                const statsGrid = document.createElement('div');
+                statsGrid.style.display = 'grid';
+                statsGrid.style.gridTemplateColumns = 'repeat(3, 1fr)';
+                statsGrid.style.gap = '10px';
+                statsGrid.style.marginBottom = '25px';
+                
+                const demoDivs = document.querySelectorAll('#demographicsContainer .card');
+                demoDivs.forEach(card => {
+                    const clone = card.cloneNode(true);
+                    clone.style.padding = '12px';
+                    clone.style.border = '1px solid #ddd';
+                    clone.style.borderRadius = '4px';
+                    clone.style.fontSize = '11px';
+                    statsGrid.appendChild(clone);
+                });
+                reportContainer.appendChild(statsGrid);
+                
+                // Add charts section
+                const chartsTitle = document.createElement('h3');
+                chartsTitle.textContent = 'Charts & Graphs';
+                chartsTitle.style.color = '#0038A8';
+                chartsTitle.style.fontSize = '14px';
+                chartsTitle.style.marginBottom = '15px';
+                chartsTitle.style.marginTop = '25px';
+                chartsTitle.style.borderBottom = '2px solid #0038A8';
+                chartsTitle.style.paddingBottom = '8px';
+                chartsTitle.style.margin = '25px 0 15px 0';
+                reportContainer.appendChild(chartsTitle);
+                
+                // Add charts as images - full width layout
+                const chartIds = ['genderChart', 'ageGroupChart', 'specialSectorChart', 'streetChart'];
+                const chartTitles = ['Gender Distribution', 'Age Group Distribution', 'Special Sector Distribution', 'Residents by Street'];
+                
+                chartIds.forEach((chartId, index) => {
+                    const canvas = document.getElementById(chartId);
+                    if (canvas) {
+                        const chartDiv = document.createElement('div');
+                        chartDiv.style.border = '1px solid #ddd';
+                        chartDiv.style.padding = '12px';
+                        chartDiv.style.borderRadius = '4px';
+                        chartDiv.style.pageBreakInside = 'avoid';
+                        chartDiv.style.marginBottom = '15px';
+                        chartDiv.style.width = '100%';
+                        chartDiv.style.boxSizing = 'border-box';
+                        
+                        // Alternate between full width and 2-column layout
+                        if (index < 2) {
+                            // First two charts side by side
+                            if (index === 0) {
+                                const chartsRow = document.createElement('div');
+                                chartsRow.style.display = 'grid';
+                                chartsRow.style.gridTemplateColumns = 'repeat(2, 1fr)';
+                                chartsRow.style.gap = '15px';
+                                chartsRow.style.marginBottom = '15px';
+                                
+                                // Add Gender chart
+                                const genderDiv = createChartDiv(chartIds[0], chartTitles[0]);
+                                chartsRow.appendChild(genderDiv);
+                                
+                                // Add Age Group chart
+                                const ageDiv = createChartDiv(chartIds[1], chartTitles[1]);
+                                chartsRow.appendChild(ageDiv);
+                                
+                                reportContainer.appendChild(chartsRow);
+                            }
+                        } else {
+                            // Last two charts full width
+                            const chartDiv = createChartDiv(chartId, chartTitles[index]);
+                            reportContainer.appendChild(chartDiv);
+                        }
+                    }
+                });
+                
+                // Helper function to create chart div
+                function createChartDiv(chartId, title) {
+                    const canvas = document.getElementById(chartId);
+                    const chartDiv = document.createElement('div');
+                    chartDiv.style.border = '1px solid #ddd';
+                    chartDiv.style.padding = '12px';
+                    chartDiv.style.borderRadius = '4px';
+                    chartDiv.style.pageBreakInside = 'avoid';
+                    chartDiv.style.width = '100%';
+                    chartDiv.style.boxSizing = 'border-box';
+                    
+                    const chartTitleEl = document.createElement('h4');
+                    chartTitleEl.textContent = title;
+                    chartTitleEl.style.fontSize = '12px';
+                    chartTitleEl.style.color = '#333';
+                    chartTitleEl.style.marginBottom = '10px';
+                    chartTitleEl.style.fontWeight = '600';
+                    chartTitleEl.style.margin = '0 0 10px 0';
+                    chartDiv.appendChild(chartTitleEl);
+                    
+                    const img = document.createElement('img');
+                    img.src = canvas.toDataURL('image/png');
+                    img.style.maxWidth = '100%';
+                    img.style.height = 'auto';
+                    img.style.display = 'block';
+                    chartDiv.appendChild(img);
+                    
+                    return chartDiv;
+                }
+                
+                // Add footer
+                const footer = document.createElement('div');
+                footer.style.marginTop = '25px';
+                footer.style.paddingTop = '15px';
+                footer.style.borderTop = '1px solid #ddd';
+                footer.style.fontSize = '10px';
+                footer.style.color = '#999';
+                footer.style.textAlign = 'center';
+                footer.innerHTML = '<p style="margin: 0;">This report was automatically generated by the Barangay Management System</p>';
+                reportContainer.appendChild(footer);
+                
+                // Generate PDF
+                const opt = {
+                    margin: [10, 8, 10, 8],
+                    filename: 'reports-' + new Date().toISOString().split('T')[0] + '.pdf',
+                    image: { type: 'jpeg', quality: 0.95 },
+                    html2canvas: { scale: 2, useCORS: true, logging: false, allowTaint: true },
+                    jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4', compress: true }
+                };
+                
+                html2pdf().set(opt).from(reportContainer).save().then(() => {
+                    // Re-enable buttons
+                    buttons.forEach(btn => btn.disabled = false);
+                }).catch(error => {
+                    console.error('PDF generation error:', error);
+                    alert('Error generating PDF. Please try again.');
+                    buttons.forEach(btn => btn.disabled = false);
+                });
+            } catch (error) {
+                console.error('Export error:', error);
+                alert('Error exporting PDF: ' + error.message);
+                buttons.forEach(btn => btn.disabled = false);
+            }
         } else if (format === 'excel') {
             window.location.href = '/api/reports/export/excel';
         }

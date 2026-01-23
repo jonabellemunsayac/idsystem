@@ -11,9 +11,20 @@ class BlotterController extends Controller
     /**
      * Display a listing of the blotter records.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $cases = BlotterRecord::orderBy('created_at', 'desc')->get();
+        $query = BlotterRecord::query();
+
+        if ($search = $request->input('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('case_number', 'like', "%{$search}%")
+                  ->orWhere('complainant_name', 'like', "%{$search}%")
+                  ->orWhere('respondent_name', 'like', "%{$search}%")
+                  ->orWhere('location', 'like', "%{$search}%");
+            });
+        }
+
+        $cases = $query->orderBy('created_at', 'desc')->paginate(5);
         return view('blotter.index', compact('cases'));
     }
 
