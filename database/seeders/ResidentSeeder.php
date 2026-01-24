@@ -56,8 +56,58 @@ class ResidentSeeder extends Seeder
         for ($i = 1; $i <= 100; $i++) {
             $firstName = $firstNames[array_rand($firstNames)];
             $lastName = $lastNames[array_rand($lastNames)];
-            $birthDate = Carbon::now()->subYears(rand(18, 80))->subDays(rand(0, 365));
+            
+            // Generate realistic age distribution: children, adults, seniors
+            $ageGroup = rand(1, 100);
+            if ($ageGroup <= 25) {
+                // 25% children (0-17)
+                $age = rand(0, 17);
+            } elseif ($ageGroup <= 80) {
+                // 55% adults (18-59)
+                $age = rand(18, 59);
+            } else {
+                // 20% seniors (60+)
+                $age = rand(60, 90);
+            }
+            
+            $birthDate = Carbon::now()->subYears($age)->subDays(rand(0, 365));
             $gender = $genders[array_rand($genders)];
+            
+            // Assign special sector based on age and realistic probabilities
+            $specialSector = null;
+            if ($age >= 60) {
+                // Seniors: 70% are marked as Senior Citizen, 10% PWD, 20% None
+                $seniorRand = rand(1, 100);
+                if ($seniorRand <= 70) {
+                    $specialSector = 'Senior Citizen';
+                } elseif ($seniorRand <= 80) {
+                    $specialSector = 'PWD';
+                } else {
+                    $specialSector = 'None';
+                }
+            } elseif ($age >= 18) {
+                // Adults: 5% PWD, 10% Solo Parent, 3% Farmer, 2% Fisher, 80% None
+                $adultRand = rand(1, 100);
+                if ($adultRand <= 5) {
+                    $specialSector = 'PWD';
+                } elseif ($adultRand <= 15) {
+                    $specialSector = 'Solo Parent';
+                } elseif ($adultRand <= 18) {
+                    $specialSector = 'Farmer';
+                } elseif ($adultRand <= 20) {
+                    $specialSector = 'Fisher';
+                } else {
+                    $specialSector = 'None';
+                }
+            } else {
+                // Children: 98% None, 2% PWD
+                $childRand = rand(1, 100);
+                if ($childRand <= 2) {
+                    $specialSector = 'PWD';
+                } else {
+                    $specialSector = 'None';
+                }
+            }
 
             Resident::create([
                 'first_name' => $firstName,
@@ -67,7 +117,7 @@ class ResidentSeeder extends Seeder
                 'birth_date' => $birthDate->format('Y-m-d'),
                 'civil_status' => $civilStatus[array_rand($civilStatus)],
                 'nationality' => $nationalities[array_rand($nationalities)],
-                'special_sector' => $specialSectors[array_rand($specialSectors)],
+                'special_sector' => $specialSector,
                 'barangay' => $barangays[array_rand($barangays)],
                 'house_no' => rand(1, 999),
                 'street_name' => $streets[array_rand($streets)],

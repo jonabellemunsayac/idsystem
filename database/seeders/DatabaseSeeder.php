@@ -20,9 +20,20 @@ class DatabaseSeeder extends Seeder
             User::factory()->create([
                 'name' => 'Admin User',
                 'username' => 'admin',
-                'email' => 'admin@test.com',
-                'password' => bcrypt('password'),
+                'email' => 'admin@gmail.com',
+                'password' => bcrypt('admin123'),
                 'role' => 'admin',
+            ]);
+        }
+
+         // Only create users if they don't exist
+        if (!User::where('username', 'superadmin')->exists()) {
+            User::factory()->create([
+                'name' => 'Superadmin User',
+                'username' => 'superadmin',
+                'email' => 'superadmin@gmail.com',
+                'password' => bcrypt('superadmin123'),
+                'role' => 'superadmin',
             ]);
         }
 

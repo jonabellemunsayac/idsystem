@@ -185,7 +185,7 @@
 
 <div class="row g-4">
     <!-- Gender Distribution -->
-    <div class="col-lg-6">
+    <div class="col-lg-6" id="genderChartContainer">
         <div class="card border-0 shadow-sm h-100">
             <div class="card-body p-4">
                 <div class="d-flex align-items-center gap-2 mb-4">
@@ -200,7 +200,7 @@
     </div>
 
     <!-- Age Group Distribution -->
-    <div class="col-lg-6">
+    <div class="col-lg-6" id="ageGroupChartContainer">
         <div class="card border-0 shadow-sm h-100">
             <div class="card-body p-4">
                 <div class="d-flex align-items-center gap-2 mb-4">
@@ -215,7 +215,7 @@
     </div>
 
     <!-- Special Sector Distribution -->
-    <div class="col-lg-6">
+    <div class="col-lg-6" id="specialSectorChartContainer">
         <div class="card border-0 shadow-sm h-100">
             <div class="card-body p-4">
                 <div class="d-flex align-items-center gap-2 mb-4">
@@ -230,7 +230,7 @@
     </div>
 
     <!-- Street Distribution -->
-    <div class="col-lg-6">
+    <div class="col-lg-6" id="streetChartContainer">
         <div class="card border-0 shadow-sm h-100">
             <div class="card-body p-4">
                 <div class="d-flex align-items-center gap-2 mb-4">
@@ -293,6 +293,24 @@
             .catch(error => console.error('Error loading street names:', error));
     }
 
+    // Update chart visibility based on selected filters
+    function updateChartVisibility() {
+        const hasGenderFilter = currentFilters.gender && currentFilters.gender !== '';
+        const hasSpecialSectorFilter = currentFilters.specialSector && currentFilters.specialSector !== '';
+        const hasAgeGroupFilter = currentFilters.ageGroup && currentFilters.ageGroup !== '';
+        const hasStreetNameFilter = currentFilters.streetName && currentFilters.streetName !== '';
+        
+        // If no filters are selected, show all charts
+        const noFiltersSelected = !hasGenderFilter && !hasSpecialSectorFilter && !hasAgeGroupFilter && !hasStreetNameFilter;
+        
+        // Always show all charts - they will be smart filtered to show relevant data
+        // The selected filter's chart will show only that value, others will show full breakdown within that context
+        document.getElementById('genderChartContainer').style.display = '';
+        document.getElementById('ageGroupChartContainer').style.display = '';
+        document.getElementById('specialSectorChartContainer').style.display = '';
+        document.getElementById('streetChartContainer').style.display = '';
+    }
+
     // Apply filters
     function applyFilters() {
         currentFilters = {
@@ -302,7 +320,12 @@
             streetName: document.getElementById('filterStreetName').value
         };
         
+        // Show/hide charts based on selected filters
+        updateChartVisibility();
+        
         loadDemographicStats();
+        
+        // Load all charts - they will show smart filtered data
         loadGenderChart();
         loadAgeGroupChart();
         loadSpecialSectorChart();
@@ -323,6 +346,9 @@
             streetName: ''
         };
         
+        // Show all charts when filters are reset
+        updateChartVisibility();
+        
         loadDemographicStats();
         loadGenderChart();
         loadAgeGroupChart();
@@ -338,13 +364,36 @@
             .then(data => {
                 const ctx = document.getElementById('genderChart').getContext('2d');
                 if (charts.gender) charts.gender.destroy();
+                
+                // If gender filter is selected, show only that gender
+                let labels, chartData, colors;
+                if (currentFilters.gender && currentFilters.gender !== '') {
+                    if (currentFilters.gender === 'Male') {
+                        labels = ['Male'];
+                        chartData = [data.male || 0];
+                        colors = ['#0038A8'];
+                    } else if (currentFilters.gender === 'Female') {
+                        labels = ['Female'];
+                        chartData = [data.female || 0];
+                        colors = ['#CE1126'];
+                    } else if (currentFilters.gender === 'None') {
+                        labels = ['None'];
+                        chartData = [data.male || 0]; // Using male as total for None
+                        colors = ['#6c757d'];
+                    }
+                } else {
+                    labels = ['Male', 'Female'];
+                    chartData = [data.male || 0, data.female || 0];
+                    colors = ['#0038A8', '#CE1126'];
+                }
+                
                 charts.gender = new Chart(ctx, {
                     type: 'pie',
                     data: {
-                        labels: ['Male', 'Female'],
+                        labels: labels,
                         datasets: [{
-                            data: [data.male || 0, data.female || 0],
-                            backgroundColor: ['#0038A8', '#CE1126'],
+                            data: chartData,
+                            backgroundColor: colors,
                             borderColor: '#fff',
                             borderWidth: 2
                         }]
@@ -371,13 +420,40 @@
             .then(data => {
                 const ctx = document.getElementById('ageGroupChart').getContext('2d');
                 if (charts.ageGroup) charts.ageGroup.destroy();
+                
+                // If age group filter is selected, show only that age group
+                let labels, chartData, colors;
+                if (currentFilters.ageGroup && currentFilters.ageGroup !== '') {
+                    if (currentFilters.ageGroup === 'children') {
+                        labels = ['Children (0-17)'];
+                        chartData = [data.children || 0];
+                        colors = ['#28a745'];
+                    } else if (currentFilters.ageGroup === 'adult') {
+                        labels = ['Adult (18-59)'];
+                        chartData = [data.adult || 0];
+                        colors = ['#ffc107'];
+                    } else if (currentFilters.ageGroup === 'senior') {
+                        labels = ['Senior (60+)'];
+                        chartData = [data.senior || 0];
+                        colors = ['#6c757d'];
+                    } else if (currentFilters.ageGroup === 'None') {
+                        labels = ['None'];
+                        chartData = [data.children || 0]; // Using children as total for None
+                        colors = ['#dc3545'];
+                    }
+                } else {
+                    labels = ['Children (0-17)', 'Adult (18-59)', 'Senior (60+)'];
+                    chartData = [data.children || 0, data.adult || 0, data.senior || 0];
+                    colors = ['#28a745', '#ffc107', '#6c757d'];
+                }
+                
                 charts.ageGroup = new Chart(ctx, {
                     type: 'pie',
                     data: {
-                        labels: ['Children (0-17)', 'Adult (18-59)', 'Senior (60+)'],
+                        labels: labels,
                         datasets: [{
-                            data: [data.children || 0, data.adult || 0, data.senior || 0],
-                            backgroundColor: ['#28a745', '#ffc107', '#6c757d'],
+                            data: chartData,
+                            backgroundColor: colors,
                             borderColor: '#fff',
                             borderWidth: 2
                         }]
@@ -404,20 +480,54 @@
             .then(data => {
                 const ctx = document.getElementById('specialSectorChart').getContext('2d');
                 if (charts.specialSector) charts.specialSector.destroy();
+                
+                // If special sector filter is selected, show only that sector
+                // Otherwise, show all sectors (filtered by other dimensions if applicable)
+                let labels, chartData, colors;
+                if (currentFilters.specialSector && currentFilters.specialSector !== '') {
+                    // Show only the selected special sector
+                    if (currentFilters.specialSector === 'Senior Citizen') {
+                        labels = ['Senior Citizen'];
+                        chartData = [data.seniorCitizen || 0];
+                        colors = ['#6c757d'];
+                    } else if (currentFilters.specialSector === 'PWD') {
+                        labels = ['PWD'];
+                        chartData = [data.pwd || 0];
+                        colors = ['#dc3545'];
+                    } else if (currentFilters.specialSector === 'Solo Parent') {
+                        labels = ['Solo Parent'];
+                        chartData = [data.soloParent || 0];
+                        colors = ['#17a2b8'];
+                    } else if (currentFilters.specialSector === 'LGBTQ') {
+                        labels = ['LGBTQ'];
+                        chartData = [data.lgbtq || 0];
+                        colors = ['#ffc107'];
+                    } else if (currentFilters.specialSector === 'None') {
+                        labels = ['None'];
+                        chartData = [data.none || 0];
+                        colors = ['#28a745'];
+                    }
+                } else {
+                    // Show all special sectors breakdown (filtered by other selected dimensions)
+                    labels = ['Senior Citizen', 'PWD', 'Solo Parent', 'LGBTQ', 'None'];
+                    chartData = [
+                        data.seniorCitizen || 0,
+                        data.pwd || 0,
+                        data.soloParent || 0,
+                        data.lgbtq || 0,
+                        data.none || 0
+                    ];
+                    colors = ['#6c757d', '#dc3545', '#17a2b8', '#ffc107', '#28a745'];
+                }
+                
                 charts.specialSector = new Chart(ctx, {
                     type: 'bar',
                     data: {
-                        labels: ['Senior Citizen', 'PWD', 'Solo Parent', 'LGBTQ', 'None'],
+                        labels: labels,
                         datasets: [{
                             label: 'Count',
-                            data: [
-                                data.seniorCitizen || 0,
-                                data.pwd || 0,
-                                data.soloParent || 0,
-                                data.lgbtq || 0,
-                                data.none || 0
-                            ],
-                            backgroundColor: ['#6c757d', '#dc3545', '#17a2b8', '#ffc107', '#28a745'],
+                            data: chartData,
+                            backgroundColor: colors,
                             borderColor: '#fff',
                             borderWidth: 1
                         }]
@@ -456,10 +566,19 @@
                 const labels = data.streets ? data.streets.map(s => s.street_name || 'N/A') : [];
                 const counts = data.streets ? data.streets.map(s => s.total || 0) : [];
                 
-                // When a specific street is selected, adjust chart to show only that street
+                // Adjust chart title based on filters
                 let chartLabel = 'Residents';
-                if (currentFilters.streetName) {
+                if (currentFilters.streetName && currentFilters.streetName !== '') {
                     chartLabel = `Residents in ${currentFilters.streetName}`;
+                } else if (currentFilters.ageGroup || currentFilters.specialSector || currentFilters.gender) {
+                    // Show what dimensions are filtered
+                    let filterParts = [];
+                    if (currentFilters.ageGroup) filterParts.push(currentFilters.ageGroup);
+                    if (currentFilters.specialSector) filterParts.push(currentFilters.specialSector);
+                    if (currentFilters.gender) filterParts.push(currentFilters.gender);
+                    if (filterParts.length > 0) {
+                        chartLabel = `Residents (${filterParts.join(', ')})`;
+                    }
                 }
                 
                 charts.street = new Chart(ctx, {

@@ -510,11 +510,18 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Ensure emergency_contact_address is populated on form submit if checkbox is checked
-    document.querySelector('form').addEventListener('submit', function() {
-        if (sameAsAboveCheckbox && sameAsAboveCheckbox.checked) {
-            emergencyAddressDisplay.value = fullAddressDisplay.value;
-        }
-    });
+    const form = document.querySelector('form');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            try {
+                if (sameAsAboveCheckbox && sameAsAboveCheckbox.checked) {
+                    emergencyAddressDisplay.value = fullAddressDisplay.value;
+                }
+            } catch (err) {
+                console.warn('Form submit handler error:', err);
+            }
+        }, { passive: true });
+    }
     
     // Copy to clipboard functionality
     document.querySelectorAll('.btn-copy').forEach(btn => {

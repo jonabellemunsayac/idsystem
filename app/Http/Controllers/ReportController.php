@@ -217,17 +217,43 @@ class ReportController extends Controller
 
         // Apply filters
         if ($request->filled('gender')) {
-            $query->where('gender', $request->gender);
+            if ($request->gender === 'None') {
+                $query->where(function($q) {
+                    $q->whereNull('gender')
+                      ->orWhere('gender', '')
+                      ->orWhere('gender', 'None');
+                });
+            } else {
+                $query->where('gender', $request->gender);
+            }
         }
         if ($request->filled('specialSector')) {
-            $query->where('special_sector', $request->specialSector);
+            if ($request->specialSector === 'None') {
+                $query->where(function($q) {
+                    $q->whereNull('special_sector')
+                      ->orWhere('special_sector', '')
+                      ->orWhere('special_sector', 'None');
+                });
+            } else {
+                $query->where('special_sector', $request->specialSector);
+            }
         }
         if ($request->filled('streetName')) {
-            $query->where('street_name', $request->streetName);
+            if ($request->streetName === 'None') {
+                $query->where(function($q) {
+                    $q->whereNull('street_name')
+                      ->orWhere('street_name', '')
+                      ->orWhere('street_name', 'None');
+                });
+            } else {
+                $query->where('street_name', $request->streetName);
+            }
         }
         if ($request->filled('ageGroup')) {
             $today = now();
-            if ($request->ageGroup === 'children') {
+            if ($request->ageGroup === 'None') {
+                $query->whereNull('birth_date');
+            } elseif ($request->ageGroup === 'children') {
                 $query->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, ?) < 18', [$today]);
             } elseif ($request->ageGroup === 'adult') {
                 $query->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, ?) BETWEEN 18 AND 59', [$today]);
@@ -349,11 +375,21 @@ class ReportController extends Controller
             }
         }
         if ($request->filled('streetName')) {
-            $query->where('street_name', $request->streetName);
+            if ($request->streetName === 'None') {
+                $query->where(function($q) {
+                    $q->whereNull('street_name')
+                      ->orWhere('street_name', '')
+                      ->orWhere('street_name', 'None');
+                });
+            } else {
+                $query->where('street_name', $request->streetName);
+            }
         }
         if ($request->filled('ageGroup')) {
             $today = now();
-            if ($request->ageGroup === 'children') {
+            if ($request->ageGroup === 'None') {
+                $query->whereNull('birth_date');
+            } elseif ($request->ageGroup === 'children') {
                 $query->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, ?) < 18', [$today]);
             } elseif ($request->ageGroup === 'adult') {
                 $query->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, ?) BETWEEN 18 AND 59', [$today]);
@@ -377,7 +413,15 @@ class ReportController extends Controller
 
         // Apply filters (exclude age group to show all age groups in the chart)
         if ($request->filled('gender')) {
-            $query->where('gender', $request->gender);
+            if ($request->gender === 'None') {
+                $query->where(function($q) {
+                    $q->whereNull('gender')
+                      ->orWhere('gender', '')
+                      ->orWhere('gender', 'None');
+                });
+            } else {
+                $query->where('gender', $request->gender);
+            }
         }
         if ($request->filled('specialSector')) {
             if ($request->specialSector === 'None') {
@@ -391,7 +435,15 @@ class ReportController extends Controller
             }
         }
         if ($request->filled('streetName')) {
-            $query->where('street_name', $request->streetName);
+            if ($request->streetName === 'None') {
+                $query->where(function($q) {
+                    $q->whereNull('street_name')
+                      ->orWhere('street_name', '')
+                      ->orWhere('street_name', 'None');
+                });
+            } else {
+                $query->where('street_name', $request->streetName);
+            }
         }
 
         $today = now();
@@ -411,14 +463,32 @@ class ReportController extends Controller
 
         // Apply filters (exclude special sector to show all special sectors in the chart)
         if ($request->filled('gender')) {
-            $query->where('gender', $request->gender);
+            if ($request->gender === 'None') {
+                $query->where(function($q) {
+                    $q->whereNull('gender')
+                      ->orWhere('gender', '')
+                      ->orWhere('gender', 'None');
+                });
+            } else {
+                $query->where('gender', $request->gender);
+            }
         }
         if ($request->filled('streetName')) {
-            $query->where('street_name', $request->streetName);
+            if ($request->streetName === 'None') {
+                $query->where(function($q) {
+                    $q->whereNull('street_name')
+                      ->orWhere('street_name', '')
+                      ->orWhere('street_name', 'None');
+                });
+            } else {
+                $query->where('street_name', $request->streetName);
+            }
         }
         if ($request->filled('ageGroup')) {
             $today = now();
-            if ($request->ageGroup === 'children') {
+            if ($request->ageGroup === 'None') {
+                $query->whereNull('birth_date');
+            } elseif ($request->ageGroup === 'children') {
                 $query->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, ?) < 18', [$today]);
             } elseif ($request->ageGroup === 'adult') {
                 $query->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, ?) BETWEEN 18 AND 59', [$today]);
