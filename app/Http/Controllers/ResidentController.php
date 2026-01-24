@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Str;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class ResidentController extends Controller
 {
@@ -592,6 +594,117 @@ class ResidentController extends Controller
                 'username' => $username,
                 'password' => $password,
             ]);
+    }
+
+    public function export()
+    {
+        try {
+            $residents = Resident::orderBy('last_name')->get();
+
+            // Create a new spreadsheet
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
+            $sheet->setTitle('Residents');
+
+            // Set headers - comprehensive with all form fields
+            $headers = [
+                'First Name', 'Middle Name', 'Last Name', 'Birth Date', 'Age', 'Gender', 
+                'Civil Status', 'Nationality', 'Special Sector', 'Blood Type', 'Head of Family',
+                'Barangay', 'House No.', 'Street Name', 'Purok', 'Province', 'Zip Code',
+                'Contact Number', 'Telephone No', 'Email',
+                'Emergency Contact Name', 'Emergency Contact Relationship', 'Emergency Contact No', 'Emergency Contact Address'
+            ];
+            
+            foreach ($headers as $col => $header) {
+                $sheet->setCellValueByColumnAndRow($col + 1, 1, $header);
+            }
+
+            // Style headers
+            $headerStyle = $sheet->getStyle('A1:' . chr(64 + count($headers)) . '1');
+            $headerStyle->getFont()->setBold(true)->getColor()->setARGB('FFFFFFFF');
+            $headerStyle->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID);
+            $headerStyle->getFill()->getStartColor()->setARGB('FF0038A8');
+            $headerStyle->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+            $headerStyle->getAlignment()->setWrapText(true);
+
+            // Add data rows
+            $row = 2;
+            foreach ($residents as $resident) {
+                $sheet->setCellValueByColumnAndRow(1, $row, $resident->first_name);
+                $sheet->setCellValueByColumnAndRow(2, $row, $resident->middle_name);
+                $sheet->setCellValueByColumnAndRow(3, $row, $resident->last_name);
+                $sheet->setCellValueByColumnAndRow(4, $row, Carbon::parse($resident->birth_date)->format('m/d/Y'));
+                $sheet->setCellValueByColumnAndRow(5, $row, Carbon::parse($resident->birth_date)->age);
+                $sheet->setCellValueByColumnAndRow(6, $row, substr($resident->gender, 0, 1) ?? '');
+                $sheet->setCellValueByColumnAndRow(7, $row, $resident->civil_status);
+                $sheet->setCellValueByColumnAndRow(8, $row, $resident->nationality ?? 'Filipino');
+                $sheet->setCellValueByColumnAndRow(9, $row, $resident->special_sector ?? '');
+                $sheet->setCellValueByColumnAndRow(10, $row, $resident->blood_type ?? '');
+                $sheet->setCellValueByColumnAndRow(11, $row, isset($resident->is_head_of_family) && $resident->is_head_of_family ? 'Yes' : 'No');
+                $sheet->setCellValueByColumnAndRow(12, $row, $resident->barangay);
+                $sheet->setCellValueByColumnAndRow(13, $row, $resident->house_no ?? '');
+                $sheet->setCellValueByColumnAndRow(14, $row, $resident->street_name ?? '');
+                $sheet->setCellValueByColumnAndRow(15, $row, $resident->purok ?? '');
+                $sheet->setCellValueByColumnAndRow(16, $row, $resident->province ?? 'Metro Manila');
+                $sheet->setCellValueByColumnAndRow(17, $row, $resident->zip_code ?? '1600');
+                $sheet->setCellValueByColumnAndRow(18, $row, $resident->contact_number);
+                $sheet->setCellValueByColumnAndRow(19, $row, $resident->telephone_no ?? '');
+                $sheet->setCellValueByColumnAndRow(20, $row, $resident->email ?? '');
+                $sheet->setCellValueByColumnAndRow(21, $row, $resident->emergency_contact_name ?? '');
+                $sheet->setCellValueByColumnAndRow(22, $row, $resident->emergency_contact_relationship ?? '');
+                $sheet->setCellValueByColumnAndRow(23, $row, $resident->emergency_contact_no ?? '');
+                $sheet->setCellValueByColumnAndRow(24, $row, $resident->emergency_contact_address ?? '');
+                $row++;
+            }
+
+            // Adjust column widths
+            $sheet->getColumnDimensionByColumn(1)->setWidth(12);
+            $sheet->getColumnDimensionByColumn(2)->setWidth(12);
+            $sheet->getColumnDimensionByColumn(3)->setWidth(12);
+            $sheet->getColumnDimensionByColumn(4)->setWidth(12);
+            $sheet->getColumnDimensionByColumn(5)->setWidth(8);
+            $sheet->getColumnDimensionByColumn(6)->setWidth(8);
+            $sheet->getColumnDimensionByColumn(7)->setWidth(12);
+            $sheet->getColumnDimensionByColumn(8)->setWidth(12);
+            $sheet->getColumnDimensionByColumn(9)->setWidth(15);
+            $sheet->getColumnDimensionByColumn(10)->setWidth(10);
+            $sheet->getColumnDimensionByColumn(11)->setWidth(10);
+            $sheet->getColumnDimensionByColumn(12)->setWidth(12);
+            $sheet->getColumnDimensionByColumn(13)->setWidth(10);
+            $sheet->getColumnDimensionByColumn(14)->setWidth(12);
+            $sheet->getColumnDimensionByColumn(15)->setWidth(10);
+            $sheet->getColumnDimensionByColumn(16)->setWidth(12);
+            $sheet->getColumnDimensionByColumn(17)->setWidth(10);
+            $sheet->getColumnDimensionByColumn(18)->setWidth(15);
+            $sheet->getColumnDimensionByColumn(19)->setWidth(15);
+            $sheet->getColumnDimensionByColumn(20)->setWidth(20);
+            $sheet->getColumnDimensionByColumn(21)->setWidth(20);
+            $sheet->getColumnDimensionByColumn(22)->setWidth(15);
+            $sheet->getColumnDimensionByColumn(23)->setWidth(15);
+            $sheet->getColumnDimensionByColumn(24)->setWidth(25);
+
+            // Freeze header row
+            $sheet->freezePane('A2');
+
+            // Save and return as download
+            $writer = new Xlsx($spreadsheet);
+            $filename = 'resident_records_' . now()->format('Y-m-d_H-i-s') . '.xlsx';
+
+            return response()->stream(
+                function () use ($writer) {
+                    $writer->save('php://output');
+                },
+                200,
+                [
+                    'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                    'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+                    'Cache-Control' => 'max-age=0',
+                ]
+            );
+        } catch (\Exception $e) {
+            Log::error('Export Error: ' . $e->getMessage());
+            return redirect()->route('residents.index')->with('error', 'Failed to export file: ' . $e->getMessage());
+        }
     }
 }
 

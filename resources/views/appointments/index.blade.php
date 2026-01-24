@@ -60,11 +60,15 @@
                                     <div class="d-flex align-items-center gap-2 mb-2">
                                         <h6 class="fw-bold mb-0 text-dark fs-6">{{ $appointment['resident_name'] ?? 'Resident Name' }}</h6>
                                         @if($appointment['status'] == 'pending')
-                                            <span class="badge bg-warning text-dark rounded-pill px-3">pending</span>
-                                        @elseif($appointment['status'] == 'approved')
-                                            <span class="badge bg-success rounded-pill px-3">approved</span>
+                                            <span class="badge bg-danger rounded-pill px-3" style="font-weight: 600;">⚠ PENDING</span>
+                                        @elseif($appointment['status'] == 'confirmed')
+                                            <span class="badge bg-success rounded-pill px-3">Confirmed</span>
+                                        @elseif($appointment['status'] == 'completed')
+                                            <span class="badge bg-info rounded-pill px-3">Completed</span>
+                                        @elseif($appointment['status'] == 'cancelled')
+                                            <span class="badge bg-secondary rounded-pill px-3">Cancelled</span>
                                         @else
-                                            <span class="badge bg-secondary rounded-pill px-3">{{ $appointment['status'] }}</span>
+                                            <span class="badge bg-secondary rounded-pill px-3">{{ ucfirst($appointment['status']) }}</span>
                                         @endif
                                     </div>
                                     <div class="d-flex align-items-center gap-2 text-muted mb-1">
@@ -97,15 +101,9 @@
                 
                 <!-- Pagination - Always Visible -->
                 @if($appointments->total() > 0)
-                <div class="mt-auto pt-3 border-top bg-light" style="margin-left: -1rem; margin-right: -1rem; margin-bottom: -1rem; padding-left: 1rem; padding-right: 1rem; padding-bottom: 1rem;">
-                    <div class="d-flex justify-content-center gap-2 flex-wrap">
-                        @for($i = 1; $i <= $appointments->lastPage(); $i++)
-                            @if($i == $appointments->currentPage())
-                                <button class="btn btn-primary btn-sm" disabled style="min-width: 40px;">{{ $i }}</button>
-                            @else
-                                <a href="{{ $appointments->url($i) }}" class="btn btn-outline-secondary btn-sm" style="min-width: 40px;">{{ $i }}</a>
-                            @endif
-                        @endfor
+                <div class="mt-auto pt-3 border-top">
+                    <div style="font-size: 0.875rem;">
+                        {{ $appointments->links('vendor.pagination.custom') }}
                     </div>
                 </div>
                 @endif
@@ -186,7 +184,10 @@
                 <div class="card border-0 shadow-sm">
                     <div class="card-body p-3">
                         <div class="d-flex justify-content-between align-items-center mb-2">
-                            <h6 class="fw-bold mb-0 text-dark" style="font-size: 0.95rem;">{{ $monthName }}</h6>
+                            <div>
+                                <h6 class="fw-bold mb-0 text-dark" style="font-size: 0.95rem;">{{ $monthName }}</h6>
+                                <small class="text-muted d-block" style="font-size: 0.7rem;">Pending Appointments</small>
+                            </div>
                             <div class="d-flex gap-1">
                                 <a href="{{ $prevUrl }}" class="btn btn-light btn-sm rounded-circle p-0 d-flex align-items-center justify-content-center" style="width: 24px; height: 24px; font-size: 0.7rem;"><i class="bi bi-chevron-left"></i></a>
                                 <a href="{{ $nextUrl }}" class="btn btn-light btn-sm rounded-circle p-0 d-flex align-items-center justify-content-center" style="width: 24px; height: 24px; font-size: 0.7rem;"><i class="bi bi-chevron-right"></i></a>
@@ -323,15 +324,9 @@
 
                             <!-- Pagination -->
                             @if($certificates->total() > 0)
-                            <div class="mt-auto pt-3 border-top bg-light" style="margin-left: -1rem; margin-right: -1rem; margin-bottom: -1rem; padding-left: 1rem; padding-right: 1rem; padding-bottom: 1rem;">
-                                <div class="d-flex justify-content-center gap-2 flex-wrap">
-                                    @for($i = 1; $i <= $certificates->lastPage(); $i++)
-                                        @if($i == $certificates->currentPage())
-                                            <button class="btn btn-primary btn-sm" disabled style="min-width: 40px;">{{ $i }}</button>
-                                        @else
-                                            <a href="{{ $certificates->url($i) }}" class="btn btn-outline-secondary btn-sm" style="min-width: 40px;">{{ $i }}</a>
-                                        @endif
-                                    @endfor
+                            <div class="mt-auto pt-3 border-top">
+                                <div style="font-size: 0.875rem;">
+                                    {{ $certificates->links('vendor.pagination.custom') }}
                                 </div>
                             </div>
                             @endif

@@ -151,17 +151,43 @@ class ReportController extends Controller
 
         // Apply filters only to residents count
         if ($request->filled('gender')) {
-            $residentsQuery->where('gender', $request->gender);
+            if ($request->gender === 'None') {
+                $residentsQuery->where(function($q) {
+                    $q->whereNull('gender')
+                      ->orWhere('gender', '')
+                      ->orWhere('gender', 'None');
+                });
+            } else {
+                $residentsQuery->where('gender', $request->gender);
+            }
         }
         if ($request->filled('specialSector')) {
-            $residentsQuery->where('special_sector', $request->specialSector);
+            if ($request->specialSector === 'None') {
+                $residentsQuery->where(function($q) {
+                    $q->whereNull('special_sector')
+                      ->orWhere('special_sector', '')
+                      ->orWhere('special_sector', 'None');
+                });
+            } else {
+                $residentsQuery->where('special_sector', $request->specialSector);
+            }
         }
         if ($request->filled('streetName')) {
-            $residentsQuery->where('street_name', $request->streetName);
+            if ($request->streetName === 'None') {
+                $residentsQuery->where(function($q) {
+                    $q->whereNull('street_name')
+                      ->orWhere('street_name', '')
+                      ->orWhere('street_name', 'None');
+                });
+            } else {
+                $residentsQuery->where('street_name', $request->streetName);
+            }
         }
         if ($request->filled('ageGroup')) {
             $today = now();
-            if ($request->ageGroup === 'children') {
+            if ($request->ageGroup === 'None') {
+                $residentsQuery->whereNull('birth_date');
+            } elseif ($request->ageGroup === 'children') {
                 $residentsQuery->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, ?) < 18', [$today]);
             } elseif ($request->ageGroup === 'adult') {
                 $residentsQuery->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, ?) BETWEEN 18 AND 59', [$today]);
@@ -191,17 +217,43 @@ class ReportController extends Controller
 
         // Apply filters
         if ($request->filled('gender')) {
-            $query->where('gender', $request->gender);
+            if ($request->gender === 'None') {
+                $query->where(function($q) {
+                    $q->whereNull('gender')
+                      ->orWhere('gender', '')
+                      ->orWhere('gender', 'None');
+                });
+            } else {
+                $query->where('gender', $request->gender);
+            }
         }
         if ($request->filled('specialSector')) {
-            $query->where('special_sector', $request->specialSector);
+            if ($request->specialSector === 'None') {
+                $query->where(function($q) {
+                    $q->whereNull('special_sector')
+                      ->orWhere('special_sector', '')
+                      ->orWhere('special_sector', 'None');
+                });
+            } else {
+                $query->where('special_sector', $request->specialSector);
+            }
         }
         if ($request->filled('streetName')) {
-            $query->where('street_name', $request->streetName);
+            if ($request->streetName === 'None') {
+                $query->where(function($q) {
+                    $q->whereNull('street_name')
+                      ->orWhere('street_name', '')
+                      ->orWhere('street_name', 'None');
+                });
+            } else {
+                $query->where('street_name', $request->streetName);
+            }
         }
         if ($request->filled('ageGroup')) {
             $today = now();
-            if ($request->ageGroup === 'children') {
+            if ($request->ageGroup === 'None') {
+                $query->whereNull('birth_date');
+            } elseif ($request->ageGroup === 'children') {
                 $query->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, ?) < 18', [$today]);
             } elseif ($request->ageGroup === 'adult') {
                 $query->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, ?) BETWEEN 18 AND 59', [$today]);
@@ -245,7 +297,15 @@ class ReportController extends Controller
             $query->where('gender', $request->gender);
         }
         if ($request->filled('specialSector')) {
-            $query->where('special_sector', $request->specialSector);
+            if ($request->specialSector === 'None') {
+                $query->where(function($q) {
+                    $q->whereNull('special_sector')
+                      ->orWhere('special_sector', '')
+                      ->orWhere('special_sector', 'None');
+                });
+            } else {
+                $query->where('special_sector', $request->specialSector);
+            }
         }
         if ($request->filled('streetName')) {
             $query->where('street_name', $request->streetName);
@@ -302,16 +362,34 @@ class ReportController extends Controller
     {
         $query = Resident::query();
 
-        // Apply filters
+        // Apply filters (exclude gender to show all genders in the chart)
         if ($request->filled('specialSector')) {
-            $query->where('special_sector', $request->specialSector);
+            if ($request->specialSector === 'None') {
+                $query->where(function($q) {
+                    $q->whereNull('special_sector')
+                      ->orWhere('special_sector', '')
+                      ->orWhere('special_sector', 'None');
+                });
+            } else {
+                $query->where('special_sector', $request->specialSector);
+            }
         }
         if ($request->filled('streetName')) {
-            $query->where('street_name', $request->streetName);
+            if ($request->streetName === 'None') {
+                $query->where(function($q) {
+                    $q->whereNull('street_name')
+                      ->orWhere('street_name', '')
+                      ->orWhere('street_name', 'None');
+                });
+            } else {
+                $query->where('street_name', $request->streetName);
+            }
         }
         if ($request->filled('ageGroup')) {
             $today = now();
-            if ($request->ageGroup === 'children') {
+            if ($request->ageGroup === 'None') {
+                $query->whereNull('birth_date');
+            } elseif ($request->ageGroup === 'children') {
                 $query->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, ?) < 18', [$today]);
             } elseif ($request->ageGroup === 'adult') {
                 $query->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, ?) BETWEEN 18 AND 59', [$today]);
@@ -333,15 +411,39 @@ class ReportController extends Controller
     {
         $query = Resident::query();
 
-        // Apply filters
+        // Apply filters (exclude age group to show all age groups in the chart)
         if ($request->filled('gender')) {
-            $query->where('gender', $request->gender);
+            if ($request->gender === 'None') {
+                $query->where(function($q) {
+                    $q->whereNull('gender')
+                      ->orWhere('gender', '')
+                      ->orWhere('gender', 'None');
+                });
+            } else {
+                $query->where('gender', $request->gender);
+            }
         }
         if ($request->filled('specialSector')) {
-            $query->where('special_sector', $request->specialSector);
+            if ($request->specialSector === 'None') {
+                $query->where(function($q) {
+                    $q->whereNull('special_sector')
+                      ->orWhere('special_sector', '')
+                      ->orWhere('special_sector', 'None');
+                });
+            } else {
+                $query->where('special_sector', $request->specialSector);
+            }
         }
         if ($request->filled('streetName')) {
-            $query->where('street_name', $request->streetName);
+            if ($request->streetName === 'None') {
+                $query->where(function($q) {
+                    $q->whereNull('street_name')
+                      ->orWhere('street_name', '')
+                      ->orWhere('street_name', 'None');
+                });
+            } else {
+                $query->where('street_name', $request->streetName);
+            }
         }
 
         $today = now();
@@ -359,16 +461,34 @@ class ReportController extends Controller
     {
         $query = Resident::query();
 
-        // Apply filters
+        // Apply filters (exclude special sector to show all special sectors in the chart)
         if ($request->filled('gender')) {
-            $query->where('gender', $request->gender);
+            if ($request->gender === 'None') {
+                $query->where(function($q) {
+                    $q->whereNull('gender')
+                      ->orWhere('gender', '')
+                      ->orWhere('gender', 'None');
+                });
+            } else {
+                $query->where('gender', $request->gender);
+            }
         }
         if ($request->filled('streetName')) {
-            $query->where('street_name', $request->streetName);
+            if ($request->streetName === 'None') {
+                $query->where(function($q) {
+                    $q->whereNull('street_name')
+                      ->orWhere('street_name', '')
+                      ->orWhere('street_name', 'None');
+                });
+            } else {
+                $query->where('street_name', $request->streetName);
+            }
         }
         if ($request->filled('ageGroup')) {
             $today = now();
-            if ($request->ageGroup === 'children') {
+            if ($request->ageGroup === 'None') {
+                $query->whereNull('birth_date');
+            } elseif ($request->ageGroup === 'children') {
                 $query->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, ?) < 18', [$today]);
             } elseif ($request->ageGroup === 'adult') {
                 $query->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, ?) BETWEEN 18 AND 59', [$today]);
@@ -382,6 +502,11 @@ class ReportController extends Controller
             'pwd' => (clone $query)->where('special_sector', 'PWD')->count(),
             'soloParent' => (clone $query)->where('special_sector', 'Solo Parent')->count(),
             'lgbtq' => (clone $query)->where('special_sector', 'LGBTQ')->count(),
+            'none' => (clone $query)->where(function($q) {
+                $q->whereNull('special_sector')
+                  ->orWhere('special_sector', '')
+                  ->orWhere('special_sector', 'None');
+            })->count(),
         ]);
     }
 
@@ -397,7 +522,15 @@ class ReportController extends Controller
             $query->where('gender', $request->gender);
         }
         if ($request->filled('specialSector')) {
-            $query->where('special_sector', $request->specialSector);
+            if ($request->specialSector === 'None') {
+                $query->where(function($q) {
+                    $q->whereNull('special_sector')
+                      ->orWhere('special_sector', '')
+                      ->orWhere('special_sector', 'None');
+                });
+            } else {
+                $query->where('special_sector', $request->specialSector);
+            }
         }
         if ($request->filled('ageGroup')) {
             $today = now();
@@ -408,6 +541,9 @@ class ReportController extends Controller
             } elseif ($request->ageGroup === 'senior') {
                 $query->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, ?) >= 60', [$today]);
             }
+        }
+        if ($request->filled('streetName')) {
+            $query->where('street_name', $request->streetName);
         }
 
         $streetStats = $query->selectRaw('street_name, COUNT(*) as total')
@@ -427,6 +563,52 @@ class ReportController extends Controller
      */
     public function exportPDF()
     {
+        // Get all statistics
+        $statistics = [
+            'residents' => Resident::count(),
+            'blotterCases' => BlotterRecord::count(),
+            'appointments' => Appointment::count(),
+            'assets' => Asset::count(),
+            'certificates' => Certificate::count(),
+            'pwd' => Resident::where('special_sector', 'PWD')->count(),
+            'seniorCitizen' => Resident::where('special_sector', 'Senior Citizen')->count(),
+            'soloParent' => Resident::where('special_sector', 'Solo Parent')->count(),
+            'lgbtq' => Resident::where('special_sector', 'LGBTQ')->count(),
+            'children' => Resident::whereRaw('TIMESTAMPDIFF(YEAR, birth_date, NOW()) < 18')->count(),
+            'adult' => Resident::whereRaw('TIMESTAMPDIFF(YEAR, birth_date, NOW()) BETWEEN 18 AND 59')->count(),
+            'senior' => Resident::whereRaw('TIMESTAMPDIFF(YEAR, birth_date, NOW()) >= 60')->count(),
+            'female' => Resident::where('gender', 'Female')->count(),
+            'male' => Resident::where('gender', 'Male')->count(),
+        ];
+
+        // Get civil status distribution
+        $civilStatusData = Resident::selectRaw('civil_status, count(*) as count')
+            ->groupBy('civil_status')
+            ->where('civil_status', '!=', null)
+            ->get();
+
+        $civilStatusArray = [];
+        foreach ($civilStatusData as $item) {
+            $civilStatusArray[$item->civil_status] = $item->count;
+        }
+        $statistics['civilStatus'] = $civilStatusArray;
+
+        // Log the export action
+        \App\Services\ActivityLogger::logExport('Reports Dashboard', 'PDF');
+
+        // Render the view as HTML
+        $html = view('reports.pdf', ['statistics' => $statistics])->render();
+
+        // Return as HTML to display in browser (JavaScript will handle PDF generation and download)
+        return response($html)
+            ->header('Content-Type', 'text/html; charset=utf-8');
+    }
+
+    /**
+     * Export reports to Excel (CSV format)
+     */
+    public function exportExcel()
+    {
         $data = [
             'residents' => Resident::count(),
             'blotterCases' => BlotterRecord::count(),
@@ -443,65 +625,35 @@ class ReportController extends Controller
         ];
 
         // Log the export action
-        \App\Services\ActivityLogger::logExport('Reports Dashboard', 'PDF');
-
-        // Return a download response with JSON data formatted as text
-        $content = "BARANGAY MANAGEMENT SYSTEM - REPORTS DASHBOARD\n";
-        $content .= "Generated on: " . now()->format('F d, Y h:i A') . "\n\n";
-        $content .= "GENERAL STATISTICS\n";
-        $content .= "Total Residents: {$data['residents']}\n";
-        $content .= "Total Blotter Cases: {$data['blotterCases']}\n";
-        $content .= "Total Appointments: {$data['appointments']}\n";
-        $content .= "Total Assets: {$data['assets']}\n";
-        $content .= "Total Certificates: {$data['certificates']}\n\n";
-        $content .= "DEMOGRAPHIC STATISTICS\n";
-        $content .= "PWD: {$data['pwd']}\n";
-        $content .= "Senior Citizen: {$data['seniorCitizen']}\n";
-        $content .= "Solo Parent: {$data['soloParent']}\n";
-        $content .= "LGBTQ: {$data['lgbtq']}\n";
-        $content .= "Children (0-17): {$data['children']}\n";
-        $content .= "Female: {$data['female']}\n";
-        $content .= "Male: {$data['male']}\n";
-
-        return response($content)
-            ->header('Content-Type', 'text/plain')
-            ->header('Content-Disposition', 'attachment; filename="reports-' . now()->format('Y-m-d') . '.txt"');
-    }
-
-    /**
-     * Export reports to Excel
-     */
-    public function exportExcel()
-    {
-        $data = [
-            ['Metric', 'Count'],
-            ['Total Residents', Resident::count()],
-            ['Total Blotter Cases', BlotterRecord::count()],
-            ['Total Appointments', Appointment::count()],
-            ['Total Assets', Asset::count()],
-            ['Total Certificates', Certificate::count()],
-            [''],
-            ['Demographic Statistics', ''],
-            ['PWD', Resident::where('special_sector', 'PWD')->count()],
-            ['Senior Citizen', Resident::where('special_sector', 'Senior Citizen')->count()],
-            ['Solo Parent', Resident::where('special_sector', 'Solo Parent')->count()],
-            ['LGBTQ', Resident::where('special_sector', 'LGBTQ')->count()],
-            ['Children (0-17)', Resident::whereRaw('TIMESTAMPDIFF(YEAR, birth_date, NOW()) < 18')->count()],
-            ['Female', Resident::where('gender', 'Female')->count()],
-            ['Male', Resident::where('gender', 'Male')->count()],
-        ];
-
-        // Log the export action
         \App\Services\ActivityLogger::logExport('Reports Dashboard', 'XLS');
 
         // Create CSV content
-        $csv = '';
-        foreach ($data as $row) {
-            $csv .= implode(',', $row) . "\n";
-        }
+        $csv = "BARANGAY MANAGEMENT SYSTEM - REPORTS DASHBOARD\n";
+        $csv .= "Generated: " . \Carbon\Carbon::now()->format('F d, Y h:i A') . "\n\n";
+        
+        $csv .= "GENERAL STATISTICS\n";
+        $csv .= "Metric,Count\n";
+        $csv .= "Total Residents," . $data['residents'] . "\n";
+        $csv .= "Total Blotter Cases," . $data['blotterCases'] . "\n";
+        $csv .= "Total Appointments," . $data['appointments'] . "\n";
+        $csv .= "Total Assets," . $data['assets'] . "\n";
+        $csv .= "Total Certificates," . $data['certificates'] . "\n\n";
+        
+        $csv .= "DEMOGRAPHIC STATISTICS\n";
+        $csv .= "Category,Count\n";
+        $csv .= "PWD," . $data['pwd'] . "\n";
+        $csv .= "Senior Citizen," . $data['seniorCitizen'] . "\n";
+        $csv .= "Solo Parent," . $data['soloParent'] . "\n";
+        $csv .= "LGBTQ," . $data['lgbtq'] . "\n";
+        $csv .= "Children (0-17)," . $data['children'] . "\n\n";
+        
+        $csv .= "GENDER DISTRIBUTION\n";
+        $csv .= "Gender,Count\n";
+        $csv .= "Female," . $data['female'] . "\n";
+        $csv .= "Male," . $data['male'] . "\n";
 
         return response($csv)
-            ->header('Content-Type', 'text/csv')
-            ->header('Content-Disposition', 'attachment; filename="reports-' . now()->format('Y-m-d') . '.csv"');
+            ->header('Content-Type', 'text/csv; charset=utf-8')
+            ->header('Content-Disposition', 'attachment; filename="reports-' . \Carbon\Carbon::now()->format('Y-m-d') . '.csv"');
     }
 }

@@ -75,6 +75,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     // Residents Management
     Route::resource('residents', ResidentController::class);
+    Route::get('residents/export/excel', [ResidentController::class, 'export'])->name('residents.export');
 
     // Appointments Management
     Route::resource('appointments', AppointmentController::class);

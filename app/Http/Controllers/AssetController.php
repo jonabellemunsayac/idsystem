@@ -11,9 +11,20 @@ class AssetController extends Controller
     /**
      * Display a listing of the assets.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $assets = Asset::orderBy('created_at', 'desc')->get();
+        $query = Asset::query();
+
+        if ($search = $request->input('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('asset_name', 'like', "%{$search}%")
+                  ->orWhere('category', 'like', "%{$search}%")
+                  ->orWhere('location', 'like', "%{$search}%")
+                  ->orWhere('status', 'like', "%{$search}%");
+            });
+        }
+
+        $assets = $query->orderBy('created_at', 'desc')->paginate(5);
         return view('assets.index', compact('assets'));
     }
 

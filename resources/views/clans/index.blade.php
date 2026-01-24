@@ -26,7 +26,7 @@
                     <p class="text-muted small text-uppercase fw-bold mb-0" style="font-size: 0.6rem;">Total Clans</p>
                     <h6 class="fw-bold mb-0 text-dark" style="font-size: 1.1rem;">{{ $clans->total() }}</h6>
                 </div>
-                <div class="bg-light rounded p-2 text-primary" style="font-size: 0.95rem;">
+                <div class="bg-light rounded p-2 text-primary" style="font-size: 0.75rem;">
                     <i class="bi bi-people"></i>
                 </div>
             </div>
@@ -39,7 +39,7 @@
                     <p class="text-muted small text-uppercase fw-bold mb-0" style="font-size: 0.6rem;">Total Members</p>
                     <h6 class="fw-bold mb-0 text-dark" style="font-size: 1.1rem;">387</h6>
                 </div>
-                <div class="bg-light rounded p-2 text-success" style="font-size: 0.95rem;">
+                <div class="bg-light rounded p-2 text-success" style="font-size: 0.75rem;">
                     <i class="bi bi-person-check"></i>
                 </div>
             </div>
@@ -52,7 +52,7 @@
                     <p class="text-muted small text-uppercase fw-bold mb-0" style="font-size: 0.6rem;">Average Size</p>
                     <h6 class="fw-bold mb-0 text-dark" style="font-size: 1.1rem;">8.6</h6>
                 </div>
-                <div class="bg-light rounded p-2 text-warning" style="font-size: 0.95rem;">
+                <div class="bg-light rounded p-2 text-warning" style="font-size: 0.75rem;">
                     <i class="bi bi-people-fill"></i>
                 </div>
             </div>
@@ -65,7 +65,7 @@
                     <p class="text-muted small text-uppercase fw-bold mb-0" style="font-size: 0.6rem;">Largest Clan</p>
                     <h6 class="fw-bold mb-0 text-dark" style="font-size: 1.1rem;">22</h6>
                 </div>
-                <div class="bg-light rounded p-2 text-info" style="font-size: 0.95rem;">
+                <div class="bg-light rounded p-2 text-info" style="font-size: 0.75rem;">
                     <i class="bi bi-trophy"></i>
                 </div>
             </div>
@@ -118,7 +118,9 @@
     </div>
     @if($clans->hasPages())
     <div class="card-footer bg-white border-top-0 py-2">
-        {{ $clans->links() }}
+        <div style="font-size: 0.875rem;">
+            {{ $clans->links('vendor.pagination.custom') }}
+        </div>
     </div>
     @endif
 </div>

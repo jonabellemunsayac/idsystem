@@ -27,8 +27,7 @@
                         <button class="btn btn-light btn-sm border" type="submit" style="font-size: 0.75rem;">Search</button>
                     </div>
                 </form>
-                <button class="btn btn-light btn-sm border" style="font-size: 0.75rem;"><i class="bi bi-funnel"></i></button>
-                <button class="btn btn-light btn-sm border" style="font-size: 0.75rem;"><i class="bi bi-download"></i></button>
+                <a href="{{ route('residents.export') }}" class="btn btn-light btn-sm border" style="font-size: 0.75rem;" title="Export to Excel"><i class="bi bi-download"></i> Export</a>
             </div>
         </div>
     </div>
@@ -98,7 +97,7 @@
     @if($residents->hasPages())
     <div class="card-footer bg-white border-top-0 py-2">
         <div style="font-size: 0.875rem;">
-            {{ $residents->links('pagination::bootstrap-5') }}
+            {{ $residents->links('vendor.pagination.custom') }}
         </div>
     </div>
     @endif

@@ -8,127 +8,91 @@
         <h1 class="h4 fw-bold text-dark mb-1">Blotter Records</h1>
         <p class="text-muted mb-0">Track and manage incident reports</p>
     </div>
-    <button class="btn btn-primary" style="background-color: #0038A8; border-color: #0038A8; padding: 0.5rem 1rem; font-size: 0.95rem;" data-bs-toggle="modal" data-bs-target="#newCaseModal">
+    <button class="btn btn-primary d-flex align-items-center gap-1" style="background-color: #0038A8; border-color: #0038A8; padding: 0.5rem 1rem; font-size: 0.95rem;" data-bs-toggle="modal" data-bs-target="#newCaseModal">
         <i class="bi bi-plus-lg"></i> Case
     </button>
 </div>
 
-<!-- Metrics Grid -->
-@php
-    $totalCases = $cases->count();
-    $pendingCases = $cases->where('status', 'pending')->count();
-    $resolvedCases = $cases->where('status', 'resolved')->count();
-@endphp
-<div class="row g-4 mb-4">
-    <div class="col-md-4">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body p-4">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <p class="text-muted small mb-1">Total Cases</p>
-                        <h2 class="fw-bold mb-0 text-dark">{{ $totalCases }}</h2>
-                    </div>
-                    <div class="text-primary">
-                        <i class="bi bi-exclamation-circle fs-4"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body p-4">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <p class="text-muted small mb-1">Pending</p>
-                        <h2 class="fw-bold mb-0 text-dark">{{ $pendingCases }}</h2>
-                    </div>
-                    <div class="text-warning">
-                        <i class="bi bi-exclamation-circle fs-4"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body p-4">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <p class="text-muted small mb-1">Resolved</p>
-                        <h2 class="fw-bold mb-0 text-dark">{{ $resolvedCases }}</h2>
-                    </div>
-                    <div class="text-success">
-                        <i class="bi bi-exclamation-circle fs-4"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Recent Cases Table -->
 <div class="card border-0 shadow-sm">
-    <div class="card-header bg-white border-0 py-2 px-3 d-flex justify-content-between align-items-center">
-        <h5 class="fw-bold mb-0 text-dark">Recent Cases</h5>
-        <button class="btn btn-outline-secondary btn-sm">
-            <i class="bi bi-funnel me-2"></i> Filter
-        </button>
+    <div class="card-header bg-white py-1 border-bottom-0">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-1">
+            <h6 class="card-title mb-0 fw-bold small" style="font-size: 0.8rem;">Blotter Cases</h6>
+            <div class="d-flex gap-1 flex-wrap">
+                <form method="GET" action="{{ route('blotter.index') }}" class="d-flex gap-1">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text bg-white border-end-0" style="font-size: 0.8rem;">
+                            <i class="bi bi-search text-muted"></i>
+                        </span>
+                        <input type="text" name="search" class="form-control form-control-sm border-start-0 ps-0" placeholder="Search..." value="{{ request('search') }}" style="width: 150px; font-size: 0.8rem;">
+                        <button class="btn btn-light btn-sm border" type="submit" style="font-size: 0.75rem;">Search</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-    <div class="card-body px-0 pb-0">
+    <div class="card-body p-0">
         <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
+            <table class="table table-hover align-middle mb-0" style="font-size: 0.75rem;">
                 <thead class="bg-light">
                     <tr>
-                        <th class="px-3 py-2 text-muted small fw-bold text-uppercase">Case ID</th>
-                        <th class="px-3 py-2 text-muted small fw-bold text-uppercase">Type</th>
-                        <th class="px-3 py-2 text-muted small fw-bold text-uppercase">Complainant</th>
-                        <th class="px-3 py-2 text-muted small fw-bold text-uppercase">Date</th>
-                        <th class="px-3 py-2 text-muted small fw-bold text-uppercase">Severity</th>
-                        <th class="px-3 py-2 text-muted small fw-bold text-uppercase">Status</th>
-                        <th class="px-3 py-2 text-muted small fw-bold text-uppercase text-end">Actions</th>
+                        <th class="border-0 text-secondary text-uppercase fw-bold ps-2" style="font-size: 0.65rem;">Case ID</th>
+                        <th class="border-0 text-secondary text-uppercase fw-bold" style="font-size: 0.65rem;">Type</th>
+                        <th class="border-0 text-secondary text-uppercase fw-bold" style="font-size: 0.65rem;">Complainant</th>
+                        <th class="border-0 text-secondary text-uppercase fw-bold" style="font-size: 0.65rem;">Location</th>
+                        <th class="border-0 text-secondary text-uppercase fw-bold" style="font-size: 0.65rem;">Date</th>
+                        <th class="border-0 text-secondary text-uppercase fw-bold" style="font-size: 0.65rem;">Severity</th>
+                        <th class="border-0 text-secondary text-uppercase fw-bold" style="font-size: 0.65rem;">Status</th>
+                        <th class="border-0 text-secondary text-uppercase fw-bold text-end pe-2" style="font-size: 0.65rem;">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($cases as $case)
-                    <tr>
-                        <td class="px-3 py-2 fw-bold text-dark">{{ $case->case_number }}</td>
-                        <td class="px-3 py-2">{{ ucfirst(str_replace('-', ' ', $case->incident_type)) }}</td>
-                        <td class="px-3 py-2">{{ $case->complainant_name }}</td>
-                        <td class="px-3 py-2">{{ $case->incident_date->format('Y-m-d') }}</td>
-                        <td class="px-3 py-2">
+                    <tr style="font-size: 0.75rem;">
+                        <td class="ps-2">
+                            <div class="fw-medium text-dark" style="font-size: 0.75rem;">{{ $case->case_number }}</div>
+                        </td>
+                        <td style="font-size: 0.7rem;">{{ ucfirst(str_replace('-', ' ', $case->incident_type ?? '')) }}</td>
+                        <td style="font-size: 0.7rem;">{{ $case->complainant_name ?? '-' }}</td>
+                        <td style="font-size: 0.7rem; max-width: 120px;">{{ $case->location ?? '-' }}</td>
+                        <td style="font-size: 0.7rem;">{{ $case->incident_date ? $case->incident_date->format('m/d/Y') : '-' }}</td>
+                        <td style="font-size: 0.7rem;">
                             @if($case->severity === 'low')
-                                <span class="badge bg-light text-dark border rounded-pill px-3">low</span>
+                                <span class="badge bg-info text-dark" style="font-size: 0.65rem;">Low</span>
                             @elseif($case->severity === 'medium')
-                                <span class="badge bg-warning text-dark rounded-pill px-3">medium</span>
+                                <span class="badge bg-warning text-dark" style="font-size: 0.65rem;">Medium</span>
                             @elseif($case->severity === 'high')
-                                <span class="badge bg-danger rounded-pill px-3">high</span>
+                                <span class="badge bg-danger" style="font-size: 0.65rem;">High</span>
                             @elseif($case->severity === 'critical')
-                                <span class="badge bg-danger rounded-pill px-3">critical</span>
-                            @else
-                                <span class="badge bg-secondary rounded-pill px-3">{{ $case->severity }}</span>
+                                <span class="badge bg-danger" style="font-size: 0.65rem;">Critical</span>
                             @endif
                         </td>
-                        <td class="px-3 py-2">
+                        <td style="font-size: 0.7rem;">
                             @if($case->status === 'pending')
-                                <span class="badge bg-warning text-dark rounded-pill px-3">pending</span>
+                                <span class="badge bg-warning text-dark" style="font-size: 0.65rem;">Pending</span>
                             @elseif($case->status === 'investigating')
-                                <span class="badge bg-primary rounded-pill px-3">investigating</span>
+                                <span class="badge bg-primary" style="font-size: 0.65rem;">Investigating</span>
                             @elseif($case->status === 'resolved')
-                                <span class="badge bg-success rounded-pill px-3">resolved</span>
-                            @else
-                                <span class="badge bg-secondary rounded-pill px-3">{{ $case->status }}</span>
+                                <span class="badge bg-success" style="font-size: 0.65rem;">Resolved</span>
                             @endif
                         </td>
-                        <td class="px-3 py-2 text-end">
-                            <button class="btn btn-outline-secondary btn-sm" onclick="viewCaseDetails({{ $case->id }})">View Details</button>
+                        <td class="text-end pe-2">
+                            <div class="dropdown">
+                                <button class="btn btn-light btn-sm border dropdown-toggle" type="button" data-bs-toggle="dropdown" style="font-size: 0.65rem; padding: 0.2rem 0.4rem;">
+                                    <i class="bi bi-three-dots-vertical"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><button class="dropdown-item" onclick="viewCaseDetails({{ $case->id }})" style="font-size: 0.75rem;">View Details</button></li>
+                                    <li><hr class="dropdown-divider m-1"></li>
+                                    <li><button class="dropdown-item text-danger" onclick="deleteCase({{ $case->id }})" style="font-size: 0.75rem;">Delete</button></li>
+                                </ul>
+                            </div>
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="7" class="px-3 py-4 text-center text-muted">
-                            <i class="bi bi-inbox fs-4 d-block mb-2"></i>
-                            No cases found. Click "Case" to create one.
+                        <td colspan="8" class="text-center py-2 text-muted">
+                            <i class="bi bi-inbox" style="font-size: 1.5rem; opacity: 0.5;"></i>
+                            <p class="mt-1 small" style="font-size: 0.75rem;">No cases found.</p>
                         </td>
                     </tr>
                     @endforelse
@@ -136,6 +100,13 @@
             </table>
         </div>
     </div>
+    @if($cases->hasPages())
+    <div class="card-footer bg-white border-top-0 py-2">
+        <div style="font-size: 0.875rem;">
+            {{ $cases->links('vendor.pagination.custom') }}
+        </div>
+    </div>
+    @endif
 </div>
 
 <!-- New Case Modal -->

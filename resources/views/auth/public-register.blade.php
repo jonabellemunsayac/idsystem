@@ -24,6 +24,85 @@
     </style>
 </head>
 <body>
+<!-- Data Privacy Act Modal -->
+<div class="modal fade" id="dataPrivacyModal" tabindex="-1" aria-labelledby="dataPrivacyModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title fw-bold" id="dataPrivacyModalLabel">
+                    <i class="bi bi-shield-lock"></i> Data Privacy Notice
+                </h5>
+            </div>
+            <div class="modal-body" style="font-size: 0.85rem; max-height: 60vh; overflow-y: auto;">
+                <div class="alert alert-info" role="alert">
+                    <strong>Republic of the Philippines - Data Privacy Act of 2012</strong>
+                </div>
+                
+                <h6 class="fw-bold mt-3 mb-2">Privacy Policy Notice</h6>
+                <p>This Barangay E-Services System is committed to protecting your personal information and your right to privacy. If you have any questions or concerns about this privacy notice or our privacy practices, please contact us at the Barangay Office.</p>
+                
+                <h6 class="fw-bold mt-3 mb-2">1. Information We Collect</h6>
+                <p>We collect personal information that you voluntarily provide to us when you register or use our services, including:</p>
+                <ul style="font-size: 0.85rem;">
+                    <li>Personal identification information (name, birthdate, gender, civil status)</li>
+                    <li>Contact information (mobile number, telephone, email address)</li>
+                    <li>Address and residential information</li>
+                    <li>Identification documents and biometric data (profile photo, signature)</li>
+                    <li>Health information (blood type)</li>
+                    <li>Emergency contact information</li>
+                    <li>Employment and family information</li>
+                </ul>
+                
+                <h6 class="fw-bold mt-3 mb-2">2. How We Use Your Information</h6>
+                <p>We use the collected information for:</p>
+                <ul style="font-size: 0.85rem;">
+                    <li>Providing barangay services and benefits</li>
+                    <li>Issuance of barangay documents and certifications</li>
+                    <li>Community planning and statistical purposes</li>
+                    <li>Emergency response and disaster relief efforts</li>
+                    <li>Law enforcement and dispute resolution</li>
+                    <li>Communication regarding services and updates</li>
+                </ul>
+                
+                <h6 class="fw-bold mt-3 mb-2">3. Data Security</h6>
+                <p>We implement appropriate technical and organizational measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. Access to personal information is restricted to authorized personnel only.</p>
+                
+                <h6 class="fw-bold mt-3 mb-2">4. Your Rights</h6>
+                <p>Under the Data Privacy Act of 2012, you have the right to:</p>
+                <ul style="font-size: 0.85rem;">
+                    <li>Access your personal information</li>
+                    <li>Correct inaccurate or incomplete information</li>
+                    <li>Request deletion of your information (subject to legal requirements)</li>
+                    <li>Object to processing of your information</li>
+                    <li>Lodge complaints with the National Privacy Commission</li>
+                </ul>
+                
+                <h6 class="fw-bold mt-3 mb-2">5. Data Retention</h6>
+                <p>We retain your personal information for as long as necessary to provide our services and fulfill the purposes outlined in this notice, unless a longer retention period is required by law.</p>
+                
+                <h6 class="fw-bold mt-3 mb-2">6. Contact Information</h6>
+                <p><strong>Barangay Office:</strong> Brgy. Kalawaan, City of Pasig, Philippines</p>
+                <p><strong>For Privacy Concerns:</strong> Please visit the National Privacy Commission website or contact your local barangay office.</p>
+                
+                <div class="alert alert-warning mt-3" role="alert" style="font-size: 0.8rem;">
+                    <strong>Important:</strong> By clicking "I Agree and Accept", you acknowledge that you have read and understood this Privacy Notice and consent to the collection, processing, and use of your personal information as described herein, in accordance with the Data Privacy Act of 2012.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="form-check w-100 mb-2">
+                    <input class="form-check-input" type="checkbox" id="privacyAgreement" required>
+                    <label class="form-check-label" for="privacyAgreement" style="font-size: 0.85rem;">
+                        I have read and agree to the Data Privacy Notice
+                    </label>
+                </div>
+                <button type="button" class="btn btn-primary" id="acceptPrivacyBtn" disabled>
+                    <i class="bi bi-check-circle"></i> I Agree and Accept
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="registration-container">
             <div class="card border-0 shadow-0">
                 <div class="card-body p-5" style="overflow-y: auto; max-height: 100vh;">
@@ -135,7 +214,7 @@
                                 <input type="text" class="form-control form-control-sm" name="barangay" value="Kalawaan" readonly style="font-size: 0.8rem;">
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Blood Type</label>
+                                <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Blood Type <span class="text-muted">(Optional)</span></label>
                                 <select class="form-select form-select-sm" name="blood_type" style="font-size: 0.8rem;">
                                     <option value="">Select...</option>
                                     <option value="A+" {{ old('blood_type') === 'A+' ? 'selected' : '' }}>A+</option>
@@ -171,9 +250,9 @@
                             <div class="col-md-6">
                                 <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Province</label>
                                 <select class="form-select form-select-sm address-field" name="province" style="font-size: 0.8rem;">
-                                    <option value="">Select Province...</option>
-                                    <option value="Metro Manila" {{ old('province') === 'Metro Manila' ? 'selected' : '' }}>Metro Manila</option>
+                                    <option value="Metro Manila" selected>Metro Manila</option>
                                 </select>
+                                <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Fixed to Metro Manila</small>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Zip Code</label>
@@ -190,7 +269,8 @@
                         <div class="row g-2 mb-2">
                             <div class="col-md-6">
                                 <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Mobile Number</label>
-                                <input type="text" class="form-control form-control-sm @error('contact_number') is-invalid @enderror" name="contact_number" value="{{ old('contact_number') }}" placeholder="e.g., 09123456789" style="font-size: 0.8rem;">
+                                <input type="text" class="form-control form-control-sm mobile-number @error('contact_number') is-invalid @enderror" name="contact_number" value="{{ old('contact_number') }}" placeholder="e.g., 09123456789" inputmode="numeric" maxlength="11" pattern="[0-9]{11}" style="font-size: 0.8rem;">
+                                <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Must be exactly 11 digits</small>
                                 @error('contact_number')<div class="text-danger small" style="font-size: 0.65rem;">{{ $message }}</div>@enderror
                             </div>
                             <div class="col-md-6">
@@ -224,11 +304,18 @@
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Contact Number</label>
-                                <input type="text" class="form-control form-control-sm" name="emergency_contact_no" value="{{ old('emergency_contact_no') }}" placeholder="e.g., 09123456789" style="font-size: 0.8rem;">
+                                <input type="text" class="form-control form-control-sm mobile-number" name="emergency_contact_no" value="{{ old('emergency_contact_no') }}" placeholder="e.g., 09123456789" inputmode="numeric" maxlength="11" pattern="[0-9]{11}" style="font-size: 0.8rem;">
+                                <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Must be exactly 11 digits</small>
                             </div>
                             <div class="col-md-12">
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="same_as_above_address" name="same_as_above_address">
+                                    <label class="form-check-label text-muted" for="same_as_above_address" style="font-size: 0.75rem;">
+                                        Same as above (use main address)
+                                    </label>
+                                </div>
                                 <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Address</label>
-                                <textarea class="form-control form-control-sm" name="emergency_contact_address" rows="2" style="font-size: 0.8rem;">{{ old('emergency_contact_address') }}</textarea>
+                                <textarea class="form-control form-control-sm" id="emergency_address_display" name="emergency_contact_address" rows="2" style="font-size: 0.8rem;">{{ old('emergency_contact_address') }}</textarea>
                             </div>
                         </div>
 
@@ -368,6 +455,34 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 
 <script>
+// Data Privacy Modal Handler
+window.addEventListener('load', function() {
+    const dataPrivacyModal = new bootstrap.Modal(document.getElementById('dataPrivacyModal'), {
+        backdrop: 'static',
+        keyboard: false
+    });
+    const privacyAgreement = document.getElementById('privacyAgreement');
+    const acceptPrivacyBtn = document.getElementById('acceptPrivacyBtn');
+    
+    // Check if privacy has been accepted (using sessionStorage)
+    if (!sessionStorage.getItem('privacyAccepted')) {
+        dataPrivacyModal.show();
+    }
+    
+    // Toggle accept button based on checkbox
+    privacyAgreement.addEventListener('change', function() {
+        acceptPrivacyBtn.disabled = !this.checked;
+    });
+    
+    // Handle accept button
+    acceptPrivacyBtn.addEventListener('click', function() {
+        if (privacyAgreement.checked) {
+            sessionStorage.setItem('privacyAccepted', 'true');
+            dataPrivacyModal.hide();
+        }
+    });
+});
+
 document.addEventListener('DOMContentLoaded', function() {
     // Auto-select Senior Citizen for birthdate >= 60 years old
     const birthDateInput = document.querySelector('input[name="birth_date"]');
@@ -417,6 +532,34 @@ document.addEventListener('DOMContentLoaded', function() {
         field.addEventListener('input', updateFullAddress);
     });
     
+    // Handle "Same as above" checkbox for emergency contact address
+    // Handle "Same as above" checkbox for emergency contact address
+    const sameAsAboveCheckbox = document.getElementById('same_as_above_address');
+    const emergencyAddressDisplay = document.getElementById('emergency_address_display');
+    
+    if (sameAsAboveCheckbox) {
+        sameAsAboveCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                emergencyAddressDisplay.value = fullAddressDisplay.value;
+                emergencyAddressDisplay.readOnly = true;
+                emergencyAddressDisplay.style.backgroundColor = '#f8f9fa';
+                emergencyAddressDisplay.style.cursor = 'default';
+            } else {
+                emergencyAddressDisplay.value = '';
+                emergencyAddressDisplay.readOnly = false;
+                emergencyAddressDisplay.style.backgroundColor = 'white';
+                emergencyAddressDisplay.style.cursor = 'auto';
+            }
+        });
+    }
+    
+    // Ensure emergency_contact_address is populated on form submit if checkbox is checked
+    document.querySelector('form').addEventListener('submit', function() {
+        if (sameAsAboveCheckbox && sameAsAboveCheckbox.checked) {
+            emergencyAddressDisplay.value = fullAddressDisplay.value;
+        }
+    });
+    
     // Copy to clipboard functionality
     document.querySelectorAll('.btn-copy').forEach(btn => {
         btn.addEventListener('click', function() {
@@ -435,6 +578,32 @@ document.addEventListener('DOMContentLoaded', function() {
                     this.classList.add('btn-outline-secondary');
                 }, 2000);
             });
+        });
+    });
+
+    // Mobile number validation - only numbers and 11 digits
+    document.querySelectorAll('.mobile-number').forEach(field => {
+        field.addEventListener('input', function(e) {
+            // Remove any non-numeric characters
+            this.value = this.value.replace(/[^0-9]/g, '');
+            
+            // Limit to 11 digits
+            if (this.value.length > 11) {
+                this.value = this.value.slice(0, 11);
+            }
+        });
+        
+        field.addEventListener('blur', function() {
+            // Validate on blur
+            if (this.value && this.value.length !== 11) {
+                this.classList.add('is-invalid');
+            } else {
+                this.classList.remove('is-invalid');
+            }
+        });
+        
+        field.addEventListener('focus', function() {
+            this.classList.remove('is-invalid');
         });
     });
 

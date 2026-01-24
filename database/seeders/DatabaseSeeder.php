@@ -15,16 +15,44 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory()->create([
-            'name' => 'Admin User',
-            'email' => 'admin@test.com',
-            'password' => bcrypt('password'),
-        ]);
+        // Only create users if they don't exist
+        if (!User::where('username', 'admin')->exists()) {
+            User::factory()->create([
+                'name' => 'Admin User',
+                'username' => 'admin',
+                'email' => 'admin@gmail.com',
+                'password' => bcrypt('admin123'),
+                'role' => 'admin',
+            ]);
+        }
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => bcrypt('password'),
+         // Only create users if they don't exist
+        if (!User::where('username', 'superadmin')->exists()) {
+            User::factory()->create([
+                'name' => 'Superadmin User',
+                'username' => 'superadmin',
+                'email' => 'superadmin@gmail.com',
+                'password' => bcrypt('superadmin123'),
+                'role' => 'superadmin',
+            ]);
+        }
+
+        if (!User::where('username', 'testuser')->exists()) {
+            User::factory()->create([
+                'name' => 'Test User',
+                'username' => 'testuser',
+                'email' => 'testuser@example.com',
+                'password' => bcrypt('password'),
+                'role' => 'user',
+            ]);
+        }
+
+        // Call other seeders
+        $this->call([
+            ResidentSeeder::class,
+            AppointmentSeeder::class,
+            BlotterSeeder::class,
+            AssetSeeder::class,
         ]);
     }
 }
