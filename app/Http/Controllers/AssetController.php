@@ -24,7 +24,9 @@ class AssetController extends Controller
             });
         }
 
-        $assets = $query->orderBy('created_at', 'desc')->paginate(5);
+        // Display latest added items first
+        $assets = $query->orderBy('created_at', 'desc')
+            ->paginate(5);
         return view('assets.index', compact('assets'));
     }
 

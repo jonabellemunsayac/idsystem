@@ -20,10 +20,9 @@ class AppointmentController extends Controller
             });
         }
 
-        // Prioritize pending status - sort by status (pending first) then by scheduled_time
-        $appointments = $query->orderByRaw("FIELD(status, 'pending') DESC")
-            ->orderByRaw("FIELD(status, 'pending', 'confirmed', 'completed', 'cancelled')")
-            ->orderBy('scheduled_time', 'desc')
+        // Prioritize pending status - sort by status (pending first) then by created_at (newest first)
+        $appointments = $query->orderByRaw("FIELD(status, 'pending', 'confirmed', 'completed', 'cancelled')")
+            ->orderBy('created_at', 'desc')
             ->paginate(3)
             ->through(fn($apt) => [
                 'id' => $apt->id,

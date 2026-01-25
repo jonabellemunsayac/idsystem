@@ -20,11 +20,14 @@ class BlotterController extends Controller
                 $q->where('case_number', 'like', "%{$search}%")
                   ->orWhere('complainant_name', 'like', "%{$search}%")
                   ->orWhere('respondent_name', 'like', "%{$search}%")
-                  ->orWhere('location', 'like', "%{$search}%");
+                  ->orWhere('incident_location', 'like', "%{$search}%");
             });
         }
 
-        $cases = $query->orderBy('created_at', 'desc')->paginate(5);
+        // Prioritize pending status first, then by most recent (created_at)
+        $cases = $query->orderByRaw("FIELD(status, 'pending', 'investigating', 'resolved')")
+            ->orderBy('created_at', 'desc')
+            ->paginate(5);
         return view('blotter.index', compact('cases'));
     }
 
