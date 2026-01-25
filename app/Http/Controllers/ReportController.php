@@ -561,24 +561,52 @@ class ReportController extends Controller
     /**
      * Export reports to PDF
      */
-    public function exportPDF()
+    public function exportPDF(Request $request)
     {
-        // Get all statistics
+        // Get filter parameters
+        $gender = $request->input('gender');
+        $specialSector = $request->input('specialSector');
+        $ageGroup = $request->input('ageGroup');
+        $streetName = $request->input('streetName');
+
+        // Build query with filters
+        $residentQuery = Resident::query();
+        
+        if ($gender && $gender !== '' && $gender !== 'None') {
+            $residentQuery->where('gender', $gender);
+        }
+        if ($specialSector && $specialSector !== '' && $specialSector !== 'None') {
+            $residentQuery->where('special_sector', $specialSector);
+        }
+        if ($ageGroup && $ageGroup !== '' && $ageGroup !== 'None') {
+            if ($ageGroup === 'children') {
+                $residentQuery->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, NOW()) < 18');
+            } elseif ($ageGroup === 'adult') {
+                $residentQuery->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, NOW()) BETWEEN 18 AND 59');
+            } elseif ($ageGroup === 'senior') {
+                $residentQuery->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, NOW()) >= 60');
+            }
+        }
+        if ($streetName && $streetName !== '') {
+            $residentQuery->where('street_name', $streetName);
+        }
+
+        // Get all statistics with filters
         $statistics = [
-            'residents' => Resident::count(),
+            'residents' => (clone $residentQuery)->count(),
             'blotterCases' => BlotterRecord::count(),
             'appointments' => Appointment::count(),
             'assets' => Asset::count(),
             'certificates' => Certificate::count(),
-            'pwd' => Resident::where('special_sector', 'PWD')->count(),
-            'seniorCitizen' => Resident::where('special_sector', 'Senior Citizen')->count(),
-            'soloParent' => Resident::where('special_sector', 'Solo Parent')->count(),
-            'lgbtq' => Resident::where('special_sector', 'LGBTQ')->count(),
-            'children' => Resident::whereRaw('TIMESTAMPDIFF(YEAR, birth_date, NOW()) < 18')->count(),
-            'adult' => Resident::whereRaw('TIMESTAMPDIFF(YEAR, birth_date, NOW()) BETWEEN 18 AND 59')->count(),
-            'senior' => Resident::whereRaw('TIMESTAMPDIFF(YEAR, birth_date, NOW()) >= 60')->count(),
-            'female' => Resident::where('gender', 'Female')->count(),
-            'male' => Resident::where('gender', 'Male')->count(),
+            'pwd' => (clone $residentQuery)->where('special_sector', 'PWD')->count(),
+            'seniorCitizen' => (clone $residentQuery)->where('special_sector', 'Senior Citizen')->count(),
+            'soloParent' => (clone $residentQuery)->where('special_sector', 'Solo Parent')->count(),
+            'lgbtq' => (clone $residentQuery)->where('special_sector', 'LGBTQ')->count(),
+            'children' => (clone $residentQuery)->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, NOW()) < 18')->count(),
+            'adult' => (clone $residentQuery)->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, NOW()) BETWEEN 18 AND 59')->count(),
+            'senior' => (clone $residentQuery)->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, NOW()) >= 60')->count(),
+            'female' => (clone $residentQuery)->where('gender', 'Female')->count(),
+            'male' => (clone $residentQuery)->where('gender', 'Male')->count(),
         ];
 
         // Get civil status distribution
@@ -607,21 +635,49 @@ class ReportController extends Controller
     /**
      * Export reports to Excel (CSV format)
      */
-    public function exportExcel()
+    public function exportExcel(Request $request)
     {
+        // Get filter parameters
+        $gender = $request->input('gender');
+        $specialSector = $request->input('specialSector');
+        $ageGroup = $request->input('ageGroup');
+        $streetName = $request->input('streetName');
+
+        // Build query with filters
+        $residentQuery = Resident::query();
+        
+        if ($gender && $gender !== '' && $gender !== 'None') {
+            $residentQuery->where('gender', $gender);
+        }
+        if ($specialSector && $specialSector !== '' && $specialSector !== 'None') {
+            $residentQuery->where('special_sector', $specialSector);
+        }
+        if ($ageGroup && $ageGroup !== '' && $ageGroup !== 'None') {
+            if ($ageGroup === 'children') {
+                $residentQuery->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, NOW()) < 18');
+            } elseif ($ageGroup === 'adult') {
+                $residentQuery->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, NOW()) BETWEEN 18 AND 59');
+            } elseif ($ageGroup === 'senior') {
+                $residentQuery->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, NOW()) >= 60');
+            }
+        }
+        if ($streetName && $streetName !== '') {
+            $residentQuery->where('street_name', $streetName);
+        }
+
         $data = [
-            'residents' => Resident::count(),
+            'residents' => (clone $residentQuery)->count(),
             'blotterCases' => BlotterRecord::count(),
             'appointments' => Appointment::count(),
             'assets' => Asset::count(),
             'certificates' => Certificate::count(),
-            'pwd' => Resident::where('special_sector', 'PWD')->count(),
-            'seniorCitizen' => Resident::where('special_sector', 'Senior Citizen')->count(),
-            'soloParent' => Resident::where('special_sector', 'Solo Parent')->count(),
-            'lgbtq' => Resident::where('special_sector', 'LGBTQ')->count(),
-            'children' => Resident::whereRaw('TIMESTAMPDIFF(YEAR, birth_date, NOW()) < 18')->count(),
-            'female' => Resident::where('gender', 'Female')->count(),
-            'male' => Resident::where('gender', 'Male')->count(),
+            'pwd' => (clone $residentQuery)->where('special_sector', 'PWD')->count(),
+            'seniorCitizen' => (clone $residentQuery)->where('special_sector', 'Senior Citizen')->count(),
+            'soloParent' => (clone $residentQuery)->where('special_sector', 'Solo Parent')->count(),
+            'lgbtq' => (clone $residentQuery)->where('special_sector', 'LGBTQ')->count(),
+            'children' => (clone $residentQuery)->whereRaw('TIMESTAMPDIFF(YEAR, birth_date, NOW()) < 18')->count(),
+            'female' => (clone $residentQuery)->where('gender', 'Female')->count(),
+            'male' => (clone $residentQuery)->where('gender', 'Male')->count(),
         ];
 
         // Log the export action
@@ -631,13 +687,9 @@ class ReportController extends Controller
         $csv = "BARANGAY MANAGEMENT SYSTEM - REPORTS DASHBOARD\n";
         $csv .= "Generated: " . \Carbon\Carbon::now()->format('F d, Y h:i A') . "\n\n";
         
-        $csv .= "GENERAL STATISTICS\n";
+        $csv .= "RESIDENT STATISTICS\n";
         $csv .= "Metric,Count\n";
-        $csv .= "Total Residents," . $data['residents'] . "\n";
-        $csv .= "Total Blotter Cases," . $data['blotterCases'] . "\n";
-        $csv .= "Total Appointments," . $data['appointments'] . "\n";
-        $csv .= "Total Assets," . $data['assets'] . "\n";
-        $csv .= "Total Certificates," . $data['certificates'] . "\n\n";
+        $csv .= "Total Residents," . $data['residents'] . "\n\n";
         
         $csv .= "DEMOGRAPHIC STATISTICS\n";
         $csv .= "Category,Count\n";
@@ -650,7 +702,20 @@ class ReportController extends Controller
         $csv .= "GENDER DISTRIBUTION\n";
         $csv .= "Gender,Count\n";
         $csv .= "Female," . $data['female'] . "\n";
-        $csv .= "Male," . $data['male'] . "\n";
+        $csv .= "Male," . $data['male'] . "\n\n";
+        
+        // Get street distribution
+        $streetData = (clone $residentQuery)->selectRaw('street_name, count(*) as count')
+            ->whereNotNull('street_name')
+            ->groupBy('street_name')
+            ->orderByRaw('count(*) DESC')
+            ->get();
+        
+        $csv .= "RESIDENTS BY STREET\n";
+        $csv .= "Street Name,Count\n";
+        foreach ($streetData as $street) {
+            $csv .= "\"" . $street->street_name . "\"," . $street->count . "\n";
+        }
 
         return response($csv)
             ->header('Content-Type', 'text/csv; charset=utf-8')
