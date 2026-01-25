@@ -53,7 +53,7 @@
                         </td>
                         <td style="font-size: 0.7rem;">{{ ucfirst(str_replace('-', ' ', $case->incident_type ?? '')) }}</td>
                         <td style="font-size: 0.7rem;">{{ $case->complainant_name ?? '-' }}</td>
-                        <td style="font-size: 0.7rem; max-width: 120px;">{{ $case->location ?? '-' }}</td>
+                        <td style="font-size: 0.7rem; max-width: 120px;">{{ $case->incident_location ?? '-' }}</td>
                         <td style="font-size: 0.7rem;">{{ $case->incident_date ? $case->incident_date->format('m/d/Y') : '-' }}</td>
                         <td style="font-size: 0.7rem;">
                             @if($case->severity === 'low')
