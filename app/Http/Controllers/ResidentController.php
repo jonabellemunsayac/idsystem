@@ -48,7 +48,7 @@ class ResidentController extends Controller
             });
         }
 
-        $residents = $query->orderBy('last_name')
+        $residents = $query->orderByDesc('id')
             ->paginate(5)
             ->through(fn($resident) => [
                 'id' => $resident->id,

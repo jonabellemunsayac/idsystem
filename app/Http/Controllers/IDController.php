@@ -186,4 +186,21 @@ class IDController extends Controller
 
         return response()->json(['success' => true]);
     }
+
+    /**
+     * Get chairman signature image
+     */
+    public function getChairmanSignature()
+    {
+        $path = storage_path('app/public/signatures/chairman-signature.png');
+        
+        if (!file_exists($path)) {
+            abort(404, 'Chairman signature not found');
+        }
+
+        return response()->file($path, [
+            'Content-Type' => 'image/png',
+            'Cache-Control' => 'public, max-age=31536000',
+        ]);
+    }
 }
