@@ -158,9 +158,10 @@ class BlotterController extends Controller
     /**
      * Remove the specified blotter record from storage.
      */
-    public function destroy(BlotterRecord $blotterRecord)
+    public function destroy($id)
     {
         try {
+            $blotterRecord = BlotterRecord::findOrFail($id);
             $blotterRecord->delete();
 
             return response()->json([

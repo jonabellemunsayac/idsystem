@@ -810,7 +810,9 @@
                 buttons.forEach(btn => btn.disabled = false);
             }
         } else if (format === 'excel') {
-            window.location.href = '/api/reports/export/excel';
+            // Build query string with filters
+            const params = new URLSearchParams(currentFilters);
+            window.location.href = '/api/reports/export/excel?' + params.toString();
         }
     }
 

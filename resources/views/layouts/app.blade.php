@@ -7,6 +7,7 @@
     <title>@yield('title', 'Pasig BMS')</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         :root {
             --pasig-blue: #0038A8;
@@ -555,10 +556,6 @@
                     <button class="btn-icon d-md-none" id="menu-toggle">
                         <i class="bi bi-list"></i>
                     </button>
-                    <div class="search-wrapper">
-                        <i class="bi bi-search"></i>
-                        <input type="text" class="form-control" placeholder="Search residents, cases, assets...">
-                    </div>
                 </div>
 
                 <div class="topbar-actions">

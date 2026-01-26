@@ -119,9 +119,21 @@ class IDController extends Controller
         // Get or create the resident account
         $residentAccount = $resident->residentAccount;
         if (!$residentAccount) {
+            // Generate unique username
+            $baseUsername = strtolower($resident->first_name . '.' . $resident->last_name);
+            $username = $baseUsername;
+            $counter = 1;
+            
+            // Check if username already exists and make it unique
+            while (\App\Models\ResidentAccount::where('username', $username)->exists()) {
+                $username = $baseUsername . $counter;
+                $counter++;
+            }
+            
             $residentAccount = $resident->residentAccount()->create([
-                'username' => strtolower($resident->first_name . '.' . $resident->last_name),
+                'username' => $username,
                 'email' => $request->input('email', $resident->first_name . '.' . $resident->last_name . '@barangay.local'),
+                'password_hash' => bcrypt('temporary_password_' . Str::random(8)),
             ]);
         }
         

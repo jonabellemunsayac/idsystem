@@ -30,6 +30,12 @@
             </div>
 
             <div class="col-md-6">
+                <label for="service_type" class="form-label required-field">Service Type</label>
+                <input type="text" class="form-control @error('service_type') is-invalid @enderror" id="service_type" name="service_type" placeholder="e.g., Certificate Request, General Inquiry" value="{{ old('service_type', $appointment['service_type'] ?? '') }}" required>
+                @error('service_type') <div class="invalid-feedback">{{ $message }}</div> @enderror
+            </div>
+
+            <div class="col-md-6">
                 <label for="appointment_date" class="form-label required-field">Date & Time</label>
                 <input type="datetime-local" class="form-control @error('appointment_date') is-invalid @enderror" id="appointment_date" name="appointment_date" value="{{ old('appointment_date', $appointment['appointment_date']) }}" required>
                 @error('appointment_date') <div class="invalid-feedback">{{ $message }}</div> @enderror

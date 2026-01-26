@@ -20,10 +20,37 @@ class AppointmentController extends Controller
             });
         }
 
-        // Prioritize pending status - sort by status (pending first) then by created_at (newest first)
-        $appointments = $query->orderByRaw("FIELD(status, 'pending', 'confirmed', 'completed', 'cancelled')")
+        // Exclude approved status - prioritize pending status, then sort by created_at (newest first)
+        $appointments = $query->where('status', '!=', 'approved')
+            ->orderByRaw("FIELD(status, 'pending', 'confirmed', 'completed', 'cancelled')")
             ->orderBy('created_at', 'desc')
             ->paginate(3)
+            ->through(fn($apt) => [
+                'id' => $apt->id,
+                'resident_id' => $apt->resident_id,
+                'resident_name' => $apt->resident->first_name . ' ' . $apt->resident->last_name,
+                'appointment_date' => $apt->scheduled_time,
+                'status' => $apt->status,
+                'purpose' => $apt->purpose ?? 'Certificate Request',
+                'reference_number' => $apt->reference_number,
+                'notes' => $apt->notes,
+                'created_at' => $apt->created_at,
+            ])
+            ->withQueryString();
+
+        // Get appointments log (confirmed and cancelled)
+        $logQuery = Appointment::with('resident');
+        
+        if ($search = $request->input('search')) {
+            $logQuery->whereHas('resident', function ($q) use ($search) {
+                $q->where('first_name', 'like', "%{$search}%")
+                  ->orWhere('last_name', 'like', "%{$search}%");
+            });
+        }
+
+        $appointmentsLog = $logQuery->whereIn('status', ['confirmed', 'cancelled'])
+            ->orderBy('created_at', 'desc')
+            ->paginate(3, ['*'], 'log_page')
             ->through(fn($apt) => [
                 'id' => $apt->id,
                 'resident_id' => $apt->resident_id,
@@ -80,6 +107,7 @@ class AppointmentController extends Controller
 
         return view('appointments.index', [
             'appointments' => $appointments,
+            'appointmentsLog' => $appointmentsLog,
             'allAppointments' => $allAppointments,
             'certificates' => $certificates,
             'allCertificates' => $allCertificates
@@ -101,10 +129,19 @@ class AppointmentController extends Controller
     {
         $validated = $request->validate([
             'resident_id' => ['required', 'exists:residents,id'],
+            'service_type' => ['required', 'string', 'max:255'],
             'appointment_date' => ['required', 'date_format:Y-m-d\TH:i'],
             'status' => ['required', 'in:pending,confirmed,cancelled'],
             'notes' => ['nullable', 'string', 'max:500'],
         ]);
+
+        // Check if a slot is already filled at this date and time
+        $existingAppointment = Appointment::where('scheduled_time', $validated['appointment_date'])->first();
+        if ($existingAppointment) {
+            return back()
+                ->withInput()
+                ->with('error', 'This time slot is already booked. Please select a different date or time.');
+        }
 
         // Get resident for reference number
         $resident = Resident::find($validated['resident_id']);
@@ -114,7 +151,6 @@ class AppointmentController extends Controller
 
         $data = array_merge($validated, [
             'scheduled_time' => $validated['appointment_date'],
-            'service_type' => 'General Appointment',
             'reference_number' => $referenceNumber,
         ]);
         unset($data['appointment_date']);
@@ -133,7 +169,8 @@ class AppointmentController extends Controller
                 'resident_name' => $appointment->resident->first_name . ' ' . $appointment->resident->last_name,
                 'appointment_date' => $appointment->scheduled_time,
                 'reference_number' => $appointment->reference_number,
-                'purpose' => $appointment->purpose ?? 'Certificate Request',
+                'service_type' => $appointment->service_type,
+                'purpose' => $appointment->service_type,
                 'status' => $appointment->status,
                 'notes' => $appointment->notes,
                 'created_at' => $appointment->created_at,
@@ -153,6 +190,7 @@ class AppointmentController extends Controller
             'appointment' => [
                 'id' => $appointment->id,
                 'resident_id' => $appointment->resident_id,
+                'service_type' => $appointment->service_type,
                 'appointment_date' => $appointment->scheduled_time,
                 'status' => $appointment->status,
                 'notes' => $appointment->notes,
@@ -165,10 +203,21 @@ class AppointmentController extends Controller
     {
         $validated = $request->validate([
             'resident_id' => ['required', 'exists:residents,id'],
+            'service_type' => ['required', 'string', 'max:255'],
             'appointment_date' => ['required', 'date_format:Y-m-d\TH:i'],
             'status' => ['required', 'in:pending,confirmed,cancelled'],
             'notes' => ['nullable', 'string', 'max:500'],
         ]);
+
+        // Check if a slot is already filled at this date and time (excluding current appointment)
+        $existingAppointment = Appointment::where('scheduled_time', $validated['appointment_date'])
+            ->where('id', '!=', $appointment->id)
+            ->first();
+        if ($existingAppointment) {
+            return back()
+                ->withInput()
+                ->with('error', 'This time slot is already booked. Please select a different date or time.');
+        }
 
         $data = array_merge($validated, [
             'scheduled_time' => $validated['appointment_date'],
@@ -375,5 +424,66 @@ class AppointmentController extends Controller
         $appointment->delete();
 
         return response()->json(['message' => 'Appointment deleted successfully']);
+    }
+
+    /**
+     * Check if a time slot is available
+     */
+    public function checkSlotAvailability(Request $request)
+    {
+        try {
+            $appointmentDate = $request->input('appointment_date');
+            
+            // Accept both T format (YYYY-MM-DDTHH:MM) and space format (YYYY-MM-DD HH:MM)
+            $appointmentDate = str_replace('T', ' ', $appointmentDate);
+            
+            // Validate the appointment date format (YYYY-MM-DD HH:MM)
+            if (!preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/', $appointmentDate)) {
+                return response()->json([
+                    'available' => false,
+                    'message' => 'Invalid date format. Expected format: YYYY-MM-DD HH:MM',
+                ], 400);
+            }
+
+            $existingAppointment = Appointment::where('scheduled_time', $appointmentDate)->first();
+
+            return response()->json([
+                'available' => !$existingAppointment,
+                'message' => $existingAppointment ? 'This time slot is already booked.' : 'Time slot is available.',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'available' => false,
+                'message' => 'Error checking slot availability: ' . $e->getMessage(),
+            ], 400);
+        }
+    }
+
+    /**
+     * Get booked time slots for a specific date
+     */
+    public function getBookedSlots($date)
+    {
+        try {
+            // Validate date format
+            \Carbon\Carbon::createFromFormat('Y-m-d', $date);
+            
+            $bookedSlots = Appointment::whereDate('scheduled_time', $date)
+                ->where('status', '!=', 'cancelled')
+                ->pluck('scheduled_time')
+                ->map(function ($time) {
+                    return \Carbon\Carbon::parse($time)->format('H:i');
+                })
+                ->toArray();
+
+            return response()->json([
+                'booked_slots' => $bookedSlots,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'booked_slots' => [],
+                'error' => $e->getMessage(),
+            ], 400);
+        }
     }
 }

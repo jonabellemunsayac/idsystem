@@ -47,7 +47,7 @@
                 </thead>
                 <tbody>
                     @forelse($cases as $case)
-                    <tr style="font-size: 0.75rem;">
+                    <tr style="font-size: 0.75rem;" data-case-id="{{ $case->id }}">
                         <td class="ps-2">
                             <div class="fw-medium text-dark" style="font-size: 0.75rem;">{{ $case->case_number }}</div>
                         </td>
@@ -470,6 +470,76 @@
             saveBtn.disabled = false;
             saveBtn.innerHTML = '<i class="bi bi-check-circle me-2"></i>Save';
         }
+    }
+
+    function deleteCase(caseId) {
+        Swal.fire({
+            title: 'Delete Case?',
+            text: 'This action cannot be undone. The case record will be permanently deleted.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: '<i class="bi bi-trash me-2"></i>Delete',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                
+                fetch(`/blotter/${caseId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        // Find and remove the row from the table
+                        const row = document.querySelector(`tr[data-case-id="${caseId}"]`);
+                        if (row) {
+                            // Fade out animation
+                            row.style.opacity = '0';
+                            row.style.transition = 'opacity 0.3s ease-out';
+                            setTimeout(() => {
+                                row.remove();
+                            }, 300);
+                        }
+
+                        Swal.fire({
+                            title: 'Deleted!',
+                            text: 'Case deleted successfully',
+                            icon: 'success',
+                            timer: 1500,
+                            timerProgressBar: true
+                        }).then(() => {
+                            // Reload page to sync with server and update counts
+                            window.location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: data.message || 'Failed to delete case',
+                            icon: 'error'
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error deleting case:', error);
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Error deleting case: ' + error.message,
+                        icon: 'error'
+                    });
+                });
+            }
+        });
     }
 </script>
 
