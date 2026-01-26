@@ -69,15 +69,25 @@ Route::post('/register', [ResidentController::class, 'publicRegisterStore'])
 // QR Authentication (public but secure token-based)
 Route::get('/qr/authenticate/{token}', [QRAuthController::class, 'authenticate'])->name('qr.authenticate');
 
+// Public API routes (accessible to anyone)
+Route::get('/api/appointments/booked-slots/{date}', [AppointmentController::class, 'getBookedSlots'])->name('api.appointments.booked-slots');
+Route::post('/api/appointments/check-slot-availability', [AppointmentController::class, 'checkSlotAvailability'])->name('api.appointments.check-slot-availability');
+
 // Protected admin routes
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    
+    // Dashboard export routes
+    Route::get('/dashboard/export/summary-csv', [DashboardController::class, 'exportSummaryCSV'])->name('dashboard.export.summary.csv');
+    Route::get('/dashboard/export/summary-pdf', [DashboardController::class, 'exportSummaryPDF'])->name('dashboard.export.summary.pdf');
 
     // Residents Management
     Route::resource('residents', ResidentController::class);
     Route::get('residents/export/excel', [ResidentController::class, 'export'])->name('residents.export');
 
-    // Appointments Management
+    // Appointments Management - Custom routes first (before resource route)
+    Route::post('/appointments/check-slot-availability', [AppointmentController::class, 'checkSlotAvailability'])->name('appointments.checkSlotAvailability');
+    Route::get('/appointments/booked-slots/{date}', [AppointmentController::class, 'getBookedSlots'])->name('appointments.getBookedSlots');
     Route::resource('appointments', AppointmentController::class);
     Route::patch('appointments/{appointment}/approve', [AppointmentController::class, 'approve'])->name('appointments.approve');
 
@@ -86,6 +96,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::patch('certificates/{certificate}/approve', [CertificateController::class, 'approve'])->name('certificates.approve');
 
     // Clans Management
+    Route::get('clans/{clan}/members', [ClanController::class, 'getMembers'])->name('clans.members');
     Route::resource('clans', ClanController::class);
 
     // IDs Management

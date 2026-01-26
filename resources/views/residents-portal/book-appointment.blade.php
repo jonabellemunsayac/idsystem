@@ -60,7 +60,7 @@
         transition: all 0.2s;
     }
     
-    .time-slot-btn:hover {
+    .time-slot-btn:hover:not(:disabled) {
         background-color: #f3f4f6;
     }
     
@@ -68,6 +68,20 @@
         background-color: var(--pasig-blue);
         color: white;
         border-color: var(--pasig-blue);
+    }
+    
+    .time-slot-btn:disabled {
+        background-color: #f3f4f6;
+        color: #d1d5db;
+        border-color: #d1d5db;
+        cursor: not-allowed;
+        opacity: 0.6;
+        text-decoration: line-through;
+    }
+    
+    .time-slot-btn:disabled::after {
+        content: ' (Booked)';
+        font-size: 0.65rem;
     }
     
     .form-step {
@@ -178,13 +192,13 @@
                 <div class="mb-3">
                     <label class="form-label">Time Slot</label>
                     <div class="time-slot-grid" id="timeSlots">
-                        <div class="time-slot-btn" onclick="selectTime('9:00 AM')">9:00 AM</div>
-                        <div class="time-slot-btn" onclick="selectTime('10:00 AM')">10:00 AM</div>
-                        <div class="time-slot-btn" onclick="selectTime('11:00 AM')">11:00 AM</div>
-                        <div class="time-slot-btn" onclick="selectTime('1:00 PM')">1:00 PM</div>
-                        <div class="time-slot-btn" onclick="selectTime('2:00 PM')">2:00 PM</div>
-                        <div class="time-slot-btn" onclick="selectTime('3:00 PM')">3:00 PM</div>
-                        <div class="time-slot-btn" onclick="selectTime('4:00 PM')">4:00 PM</div>
+                        <button type="button" class="time-slot-btn" data-time="09:00" onclick="selectTime('9:00 AM')">9:00 AM</button>
+                        <button type="button" class="time-slot-btn" data-time="10:00" onclick="selectTime('10:00 AM')">10:00 AM</button>
+                        <button type="button" class="time-slot-btn" data-time="11:00" onclick="selectTime('11:00 AM')">11:00 AM</button>
+                        <button type="button" class="time-slot-btn" data-time="13:00" onclick="selectTime('1:00 PM')">1:00 PM</button>
+                        <button type="button" class="time-slot-btn" data-time="14:00" onclick="selectTime('2:00 PM')">2:00 PM</button>
+                        <button type="button" class="time-slot-btn" data-time="15:00" onclick="selectTime('3:00 PM')">3:00 PM</button>
+                        <button type="button" class="time-slot-btn" data-time="16:00" onclick="selectTime('4:00 PM')">4:00 PM</button>
                     </div>
                 </div>
                 <div class="d-flex gap-2">
@@ -305,11 +319,26 @@
 let currentStep = 1;
 let selectedTime = '';
 let submitting = false;
+let lastSelectedDate = '';  // Track the last selected date
 
 function goToStep(step) {
-    const serviceType = document.getElementById('serviceType').value;
-    const appointmentDate = document.getElementById('appointmentDate').value;
-    const purpose = document.getElementById('purpose').value;
+    // Allow back button to work even if submitting
+    if (step < currentStep) {
+        submitting = false;
+    }
+    
+    const serviceTypeElem = document.getElementById('serviceType');
+    const appointmentDateElem = document.getElementById('appointmentDate');
+    const purposeElem = document.getElementById('purpose');
+    
+    if (!serviceTypeElem || !appointmentDateElem || !purposeElem) {
+        console.error('Required form elements not found');
+        return;
+    }
+    
+    const serviceType = serviceTypeElem.value;
+    const appointmentDate = appointmentDateElem.value;
+    const purpose = purposeElem.value;
     
     // Validation
     if (step === 2 && !serviceType) {
@@ -329,6 +358,8 @@ function goToStep(step) {
             showError('Weekends are not available. Please select a weekday (Monday to Friday)');
             return;
         }
+        // Load booked slots for selected date
+        loadBookedSlots();
     }
     
     if (step === 4 && !purpose) {
@@ -340,78 +371,238 @@ function goToStep(step) {
     
     // Update step circles
     document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
-    document.getElementById('step-' + step).classList.add('active');
+    const currentStepElem = document.getElementById('step-' + step);
+    if (currentStepElem) {
+        currentStepElem.classList.add('active');
+    }
     
     for (let i = 1; i <= 4; i++) {
         const circle = document.getElementById('step-circle-' + i);
         const line = document.getElementById('step-line-' + i);
         
-        if (i <= step) {
-            circle.classList.add('active');
-            if (line && i < step) line.classList.add('active');
-        } else {
-            circle.classList.remove('active');
-            if (line) line.classList.remove('active');
+        if (circle) {
+            if (i <= step) {
+                circle.classList.add('active');
+            } else {
+                circle.classList.remove('active');
+            }
+        }
+        
+        if (line) {
+            if (i <= step && i < step) {
+                line.classList.add('active');
+            } else {
+                line.classList.remove('active');
+            }
         }
     }
     
     // Update review section
     if (step === 4) {
-        document.getElementById('review-service').textContent = serviceType;
-        const dateObj = new Date(appointmentDate);
-        const formattedDate = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-        document.getElementById('review-datetime').textContent = formattedDate + ' at ' + selectedTime;
-        document.getElementById('review-purpose').textContent = purpose;
+        const reviewService = document.getElementById('review-service');
+        const reviewDatetime = document.getElementById('review-datetime');
+        const reviewPurpose = document.getElementById('review-purpose');
+        
+        if (reviewService) reviewService.textContent = serviceType;
+        if (reviewDatetime) {
+            const dateObj = new Date(appointmentDate);
+            const formattedDate = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            reviewDatetime.textContent = formattedDate + ' at ' + selectedTime;
+        }
+        if (reviewPurpose) reviewPurpose.textContent = purpose;
     }
     
     currentStep = step;
 }
 
 function selectTime(time) {
+    const btn = event.target;
+    if (btn.disabled) {
+        showError('This time slot is already booked.');
+        return;
+    }
     selectedTime = time;
-    document.querySelectorAll('.time-slot-btn').forEach(btn => btn.classList.remove('selected'));
-    event.target.classList.add('selected');
+    document.querySelectorAll('.time-slot-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+}
+
+function loadBookedSlots() {
+    const appointmentDateElem = document.getElementById('appointmentDate');
+    
+    if (!appointmentDateElem) {
+        console.error('Appointment date input not found');
+        return;
+    }
+    
+    const dateInput = appointmentDateElem.value;
+    
+    console.log('Loading booked slots for date:', dateInput);
+    
+    // Reset all buttons to enabled state (but preserve selected state if date hasn't changed)
+    document.querySelectorAll('.time-slot-btn').forEach(btn => {
+        btn.disabled = false;
+        // Don't remove selected class here - let the user keep their selection
+    });
+    
+    // Get CSRF token safely
+    const csrfTokenElement = document.querySelector('meta[name="csrf-token"]');
+    const csrfToken = csrfTokenElement ? csrfTokenElement.content : '';
+    
+    // Fetch booked slots for this date
+    fetch(`/api/appointments/booked-slots/${dateInput}`, {
+        method: 'GET',
+        headers: {
+            'X-CSRF-TOKEN': csrfToken,
+        }
+    })
+    .then(response => {
+        console.log('Response status:', response.status);
+        return response.json();
+    })
+    .then(data => {
+        console.log('Booked slots data:', data);
+        const bookedSlots = data.booked_slots || [];
+        console.log('Booked times:', bookedSlots);
+        
+        // Disable booked time slots
+        document.querySelectorAll('.time-slot-btn').forEach(btn => {
+            const time = btn.getAttribute('data-time');
+            if (bookedSlots.includes(time)) {
+                console.log('Disabling slot:', time);
+                btn.disabled = true;
+            }
+        });
+    })
+    .catch(error => {
+        console.error('Error loading booked slots:', error);
+    });
 }
 
 function showError(message) {
-    document.getElementById('error-message').textContent = message;
-    document.getElementById('error-alert').classList.remove('d-none');
+    const errorMessage = document.getElementById('error-message');
+    const errorAlert = document.getElementById('error-alert');
+    
+    if (!errorMessage || !errorAlert) {
+        console.error('Error elements not found:', {errorMessage, errorAlert});
+        return;
+    }
+    
+    errorMessage.textContent = message;
+    errorAlert.classList.remove('d-none');
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function hideError() {
-    document.getElementById('error-alert').classList.add('d-none');
+    const errorAlert = document.getElementById('error-alert');
+    if (errorAlert) {
+        errorAlert.classList.add('d-none');
+    }
 }
 
 async function submitAppointment() {
     if (submitting) return;
     submitting = true;
     
-    const serviceType = document.getElementById('serviceType').value;
-    const appointmentDate = document.getElementById('appointmentDate').value;
-    const purpose = document.getElementById('purpose').value;
+    const serviceTypeElem = document.getElementById('serviceType');
+    const appointmentDateElem = document.getElementById('appointmentDate');
+    const purposeElem = document.getElementById('purpose');
     
-    // Combine date and time
+    if (!serviceTypeElem || !appointmentDateElem || !purposeElem) {
+        showError('Required form elements not found');
+        submitting = false;
+        return;
+    }
+    
+    const serviceType = serviceTypeElem.value;
+    const appointmentDate = appointmentDateElem.value;
+    const purpose = purposeElem.value;
+    
+    // Validate inputs
+    if (!selectedTime) {
+        showError('Please select a time slot');
+        submitting = false;
+        return;
+    }
+    
+    // Parse date components directly from the date string (YYYY-MM-DD format)
+    const [year, month, day] = appointmentDate.split('-');
+    
+    if (!year || !month || !day) {
+        showError('Invalid date selected');
+        submitting = false;
+        return;
+    }
+    
+    // Parse time components (e.g., "9:00 AM" -> "09" hours and "00" minutes)
     const [timePart, period] = selectedTime.split(' ');
+    if (!timePart || !period) {
+        showError('Invalid time format');
+        submitting = false;
+        return;
+    }
+    
     const [hours, minutes] = timePart.split(':').map(Number);
-    const adjustedHours = period === 'PM' && hours !== 12 ? hours + 12 : period === 'AM' && hours === 12 ? 0 : hours;
+    if (isNaN(hours) || isNaN(minutes)) {
+        showError('Invalid time selected');
+        submitting = false;
+        return;
+    }
     
-    const dateTime = new Date(appointmentDate);
-    dateTime.setHours(adjustedHours, minutes, 0, 0);
+    // Convert to 24-hour format
+    let adjustedHours = hours;
+    if (period === 'PM' && hours !== 12) {
+        adjustedHours = hours + 12;
+    } else if (period === 'AM' && hours === 12) {
+        adjustedHours = 0;
+    }
     
-    const year = dateTime.getFullYear();
-    const month = String(dateTime.getMonth() + 1).padStart(2, '0');
-    const day = String(dateTime.getDate()).padStart(2, '0');
-    const hrs = String(dateTime.getHours()).padStart(2, '0');
-    const mins = String(dateTime.getMinutes()).padStart(2, '0');
+    // Format as YYYY-MM-DD HH:MM (with space, not T)
+    const hrs = String(adjustedHours).padStart(2, '0');
+    const mins = String(minutes).padStart(2, '0');
     const formattedDateTime = `${year}-${month}-${day} ${hrs}:${mins}`;
+    
+    console.log('Formatted date/time:', formattedDateTime);
+    
+    // Get CSRF token safely
+    const csrfTokenElement = document.querySelector('meta[name="csrf-token"]');
+    const csrfToken = csrfTokenElement ? csrfTokenElement.content : '';
+    
+    // Check slot availability first
+    try {
+        console.log('Checking slot availability for:', formattedDateTime);
+        const availabilityResponse = await fetch('/api/appointments/check-slot-availability', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken,
+            },
+            body: JSON.stringify({
+                appointment_date: formattedDateTime
+            })
+        });
+        
+        console.log('Availability response status:', availabilityResponse.status);
+        const availabilityData = await availabilityResponse.json();
+        console.log('Availability response data:', availabilityData);
+        
+        if (!availabilityResponse.ok || !availabilityData.available) {
+            showError(availabilityData.message || 'This time slot is already booked. Please select a different date or time.');
+            submitting = false;
+            return;
+        }
+    } catch (error) {
+        console.error('Error checking slot availability:', error);
+        showError('Error checking slot availability. Please try again.');
+        submitting = false;
+        return;
+    }
     
     try {
         const response = await fetch('/api/resident/appointments', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'X-CSRF-TOKEN': csrfToken,
                 'Accept': 'application/json',
             },
             body: JSON.stringify({
@@ -422,27 +613,47 @@ async function submitAppointment() {
         
         const data = await response.json();
         
+        console.log('Appointment response status:', response.status);
+        console.log('Appointment response data:', data);
+        
         if (!response.ok) {
+            // Log validation errors if present
+            if (data.errors) {
+                console.error('Validation errors:', data.errors);
+                const errorMessages = Object.values(data.errors).flat().join(', ');
+                throw new Error(errorMessages || data.message || 'Failed to book appointment');
+            }
             throw new Error(data.message || 'Failed to book appointment');
         }
         
-        // Show success modal
-        document.getElementById('ref-number').textContent = data.reference_number;
-        document.getElementById('success-service').textContent = serviceType;
+        // Show success modal with null checks
+        const refNumber = document.getElementById('ref-number');
+        const successService = document.getElementById('success-service');
+        const successDate = document.getElementById('success-date');
+        const successTime = document.getElementById('success-time');
+        const successModal = document.getElementById('successModal');
+        
+        if (refNumber) refNumber.textContent = data.reference_number;
+        if (successService) successService.textContent = serviceType;
+        
         const formattedDate = new Date(appointmentDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-        document.getElementById('success-date').textContent = formattedDate;
-        document.getElementById('success-time').textContent = selectedTime;
-        document.getElementById('successModal').classList.add('show');
+        if (successDate) successDate.textContent = formattedDate;
+        if (successTime) successTime.textContent = selectedTime;
+        if (successModal) successModal.classList.add('show');
         
         // Start countdown
         let countdown = 5;
         const interval = setInterval(() => {
             countdown--;
-            document.getElementById('countdown').textContent = countdown;
-            document.getElementById('countdown-text').textContent = countdown;
+            const countdownElem = document.getElementById('countdown');
+            const countdownText = document.getElementById('countdown-text');
+            const countdownProgress = document.getElementById('countdown-progress');
+            
+            if (countdownElem) countdownElem.textContent = countdown;
+            if (countdownText) countdownText.textContent = countdown;
             
             const offset = 226 * (1 - countdown / 5);
-            document.getElementById('countdown-progress').style.strokeDashoffset = offset;
+            if (countdownProgress) countdownProgress.style.strokeDashoffset = offset;
             
             if (countdown <= 0) {
                 clearInterval(interval);
@@ -455,5 +666,24 @@ async function submitAppointment() {
         submitting = false;
     }
 }
+
+// Add event listener for appointment date to load booked slots
+document.addEventListener('DOMContentLoaded', function() {
+    const appointmentDateInput = document.getElementById('appointmentDate');
+    if (appointmentDateInput) {
+        appointmentDateInput.addEventListener('change', function() {
+            if (this.value) {
+                // Only reset selectedTime if the date actually changed
+                if (lastSelectedDate !== this.value) {
+                    selectedTime = '';
+                    // Remove selected class from all buttons
+                    document.querySelectorAll('.time-slot-btn').forEach(b => b.classList.remove('selected'));
+                    lastSelectedDate = this.value;
+                }
+                loadBookedSlots();
+            }
+        });
+    }
+});
 </script>
 @endsection

@@ -178,6 +178,25 @@
     </div>
 </div>
 
+<!-- Export Dashboard Summary -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card border-0 shadow-sm bg-light">
+            <div class="card-body p-4 text-center">
+                <p class="text-muted mb-3" style="font-size: 0.875rem;">Export complete dashboard summary with all statistics and data</p>
+                <div class="btn-group" role="group">
+                    <a href="{{ route('dashboard.export.summary.csv') }}" class="btn btn-primary">
+                        <i class="bi bi-download"></i> <i class="bi bi-filetype-csv"></i> Export CSV
+                    </a>
+                    <a href="{{ route('dashboard.export.summary.pdf') }}" class="btn btn-danger">
+                        <i class="bi bi-download"></i> <i class="bi bi-filetype-pdf"></i> Export PDF
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {

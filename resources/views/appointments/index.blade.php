@@ -4,49 +4,95 @@
 
 @section('extra-styles')
     {{-- Styles are loaded from list-views.css --}}
+    <style>
+        .nav-tabs .nav-link {
+            color: #6b7280;
+            border: none;
+            border-bottom: 2px solid transparent;
+            padding: 0.75rem 1.5rem;
+            transition: all 0.3s;
+        }
+        
+        .nav-tabs .nav-link:hover {
+            color: #0038A8;
+            border-bottom-color: #0038A8;
+        }
+        
+        .nav-tabs .nav-link.active {
+            color: #0038A8;
+            background-color: transparent;
+            border-bottom-color: #0038A8;
+            font-weight: 600;
+        }
+        
+        .tab-content .tab-pane {
+            animation: fadeIn 0.3s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
 @endsection
 
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
-        <h1 class="h4 fw-bold text-dark mb-1">Appointment & Certificate System</h1>
-        <p class="text-muted mb-0">Manage and schedule resident appointments and certificates</p>
+        <h1 class="h4 fw-bold text-dark mb-1">Appointments</h1>
+        <p class="text-muted mb-0">Manage and schedule resident appointments</p>
     </div>
     <a href="{{ route('appointments.create') }}" class="btn btn-primary" style="background-color: #0038A8; border-color: #0038A8; padding: 0.5rem 1rem; font-size: 0.95rem;">
         <i class="bi bi-plus-lg me-1"></i> New Appointment
     </a>
 </div>
 
-<!-- Tabs -->
-<div class="card border-0 shadow-sm mb-4">
-    <div class="card-body p-2 bg-light rounded">
-        <ul class="nav nav-pills nav-fill" role="tablist" style="gap: 0.5rem;">
+<!-- Appointments Tabs -->
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white border-0 py-0 px-4">
+        <ul class="nav nav-tabs" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link active fw-bold text-dark bg-white shadow-sm py-2" id="appointments-tab" data-bs-toggle="tab" data-bs-target="#appointments" type="button" role="tab" aria-selected="true">Appointments</button>
+                <button class="nav-link active" id="schedule-tab" data-bs-toggle="tab" data-bs-target="#schedule-pane" type="button" role="tab" aria-controls="schedule-pane" aria-selected="true">
+                    <i class="bi bi-calendar-check me-2"></i>Appointment Schedule
+                </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link text-muted py-2" id="certificates-tab" data-bs-toggle="tab" data-bs-target="#certificates" type="button" role="tab" aria-selected="false">Certificates</button>
+                <button class="nav-link" id="logs-tab" data-bs-toggle="tab" data-bs-target="#logs-pane" type="button" role="tab" aria-controls="logs-pane" aria-selected="false">
+                    <i class="bi bi-clock-history me-2"></i>Appointment Logs
+                </button>
             </li>
         </ul>
     </div>
-</div>
 
-<div class="tab-content" id="appointmentsTabContent">
-    <!-- Appointments Tab -->
-    <div class="tab-pane fade show active" id="appointments" role="tabpanel" aria-labelledby="appointments-tab">
-        <div class="row g-4">
-            <!-- Appointment Schedule List -->
-            <div class="col-lg-8">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-header bg-white border-0 py-3 px-4 d-flex justify-content-between align-items-center">
-                <div class="d-flex align-items-center gap-2">
-                    <i class="bi bi-calendar-check text-primary fs-5"></i>
-                    <h5 class="fw-bold mb-0 text-dark">Appointment Schedule</h5>
+    <div class="card-body p-4">
+        <div class="tab-content">
+            <!-- Tab 1: Appointment Schedule -->
+            <div class="tab-pane fade show active" id="schedule-pane" role="tabpanel" aria-labelledby="schedule-tab">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <h5 class="fw-bold mb-0 text-dark">Active Appointments</h5>
+                    <span class="text-muted">({{ $appointments->count() }} total)</span>
                 </div>
-                <span class="text-muted">Total: {{ $appointments->count() }}</span>
-            </div>
-            <div class="card-body p-4 d-flex flex-column" style="min-height: 500px;">
-                <div class="d-flex flex-column gap-3 flex-grow-1">
+                
+                <!-- Search Bar -->
+                <form method="GET" action="{{ route('appointments.index') }}" class="mb-4">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0">
+                            <i class="bi bi-search text-muted"></i>
+                        </span>
+                        <input type="text" class="form-control border-start-0" placeholder="Search by resident name..." name="search" value="{{ request('search') }}">
+                        @if(request('search'))
+                            <a href="{{ route('appointments.index') }}" class="btn btn-outline-secondary">
+                                <i class="bi bi-x"></i>
+                            </a>
+                        @endif
+                    </div>
+                </form>
+
+                <div class="d-flex flex-column gap-3" style="min-height: 400px;">
                     @if($appointments->total() == 0)
                         <div class="text-center py-5">
                             <i class="bi bi-inbox fs-1 text-muted d-block mb-3"></i>
@@ -99,384 +145,92 @@
                     @endif
                 </div>
                 
-                <!-- Pagination - Always Visible -->
+                <!-- Pagination -->
                 @if($appointments->total() > 0)
-                <div class="mt-auto pt-3 border-top">
+                <div class="mt-4 pt-3 border-top">
                     <div style="font-size: 0.875rem;">
                         {{ $appointments->links('vendor.pagination.custom') }}
                     </div>
                 </div>
                 @endif
+            </div>
+
+            <!-- Tab 2: Appointment Logs -->
+            <div class="tab-pane fade" id="logs-pane" role="tabpanel" aria-labelledby="logs-tab">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <h5 class="fw-bold mb-0 text-dark">Appointment History</h5>
+                    <span class="text-muted">({{ $appointmentsLog->count() }} total)</span>
                 </div>
-            </div>
-            </div>
-
-            <!-- Calendar -->
-            <div class="col-lg-4">
-                @php
-                    // Group appointments by date for calendar display
-                    $appointmentsByDate = [];
-                    foreach($allAppointments as $apt) {
-                        $date = \Carbon\Carbon::parse($apt['appointment_date'])->format('Y-m-d');
-                        if (!isset($appointmentsByDate[$date])) {
-                            $appointmentsByDate[$date] = [];
-                        }
-                        $appointmentsByDate[$date][] = $apt['reference_number'];
-                    }
-                    
-                    // Get year and month from request or use current date
-                    $calendarYear = request('year', \Carbon\Carbon::now()->year);
-                    $calendarMonth = request('month', \Carbon\Carbon::now()->month);
-                    
-                    // Generate calendar for selected month
-                    $currentDate = \Carbon\Carbon::createFromDate($calendarYear, $calendarMonth, 1);
-                    $year = $currentDate->year;
-                    $month = $currentDate->month;
-                    $monthName = $currentDate->format('F Y');
-                    
-                    // Calculate previous and next month URLs
-                    $prevMonth = $currentDate->copy()->subMonth();
-                    $nextMonth = $currentDate->copy()->addMonth();
-                    $prevUrl = route('appointments.index', ['year' => $prevMonth->year, 'month' => $prevMonth->month]);
-                    $nextUrl = route('appointments.index', ['year' => $nextMonth->year, 'month' => $nextMonth->month]);
-                    
-                    // Get first day of month and number of days
-                    $firstDay = \Carbon\Carbon::createFromDate($year, $month, 1);
-                    $daysInMonth = $firstDay->daysInMonth;
-                    $startingDayOfWeek = $firstDay->dayOfWeek; // 0 = Sunday, 6 = Saturday
-                    
-                    $calendarDays = [];
-                    $dayCounter = 1;
-                    
-                    // Fill in the calendar grid
-                    for ($week = 0; $week < 6; $week++) {
-                        for ($day = 0; $day < 7; $day++) {
-                            $cellDate = null;
-                            $isCurrentMonth = false;
-                            
-                            if ($week === 0 && $day < $startingDayOfWeek) {
-                                // Previous month days
-                                $prevDate = $firstDay->copy()->subDays($startingDayOfWeek - $day);
-                                $cellDate = $prevDate->format('Y-m-d');
-                                $dayNumber = $prevDate->day;
-                            } elseif ($dayCounter <= $daysInMonth) {
-                                // Current month days
-                                $cellDate = \Carbon\Carbon::createFromDate($year, $month, $dayCounter)->format('Y-m-d');
-                                $dayNumber = $dayCounter;
-                                $isCurrentMonth = true;
-                                $dayCounter++;
-                            } else {
-                                // Next month days
-                                $nextDate = \Carbon\Carbon::createFromDate($year, $month, $daysInMonth)->copy()->addDays($dayCounter - $daysInMonth);
-                                $cellDate = $nextDate->format('Y-m-d');
-                                $dayNumber = $nextDate->day;
-                                $dayCounter++;
-                            }
-                            
-                            $calendarDays[] = [
-                                'date' => $cellDate,
-                                'day' => $dayNumber,
-                                'isCurrentMonth' => $isCurrentMonth
-                            ];
-                        }
-                    }
-                @endphp
-                <div class="card border-0 shadow-sm">
-                    <div class="card-body p-3">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <div>
-                                <h6 class="fw-bold mb-0 text-dark" style="font-size: 0.95rem;">{{ $monthName }}</h6>
-                                <small class="text-muted d-block" style="font-size: 0.7rem;">Pending Appointments</small>
-                            </div>
-                            <div class="d-flex gap-1">
-                                <a href="{{ $prevUrl }}" class="btn btn-light btn-sm rounded-circle p-0 d-flex align-items-center justify-content-center" style="width: 24px; height: 24px; font-size: 0.7rem;"><i class="bi bi-chevron-left"></i></a>
-                                <a href="{{ $nextUrl }}" class="btn btn-light btn-sm rounded-circle p-0 d-flex align-items-center justify-content-center" style="width: 24px; height: 24px; font-size: 0.7rem;"><i class="bi bi-chevron-right"></i></a>
-                            </div>
-                        </div>
-                        
-                        <table class="table table-borderless table-sm text-center mb-0" style="font-size: 0.7rem;">
-                                <thead>
-                                    <tr>
-                                        <th class="text-muted fw-normal p-1" style="width: 14.28%; font-size: 0.65rem;">Sun</th>
-                                        <th class="text-muted fw-normal p-1" style="width: 14.28%; font-size: 0.65rem;">Mon</th>
-                                        <th class="text-muted fw-normal p-1" style="width: 14.28%; font-size: 0.65rem;">Tue</th>
-                                        <th class="text-muted fw-normal p-1" style="width: 14.28%; font-size: 0.65rem;">Wed</th>
-                                        <th class="text-muted fw-normal p-1" style="width: 14.28%; font-size: 0.65rem;">Thu</th>
-                                        <th class="text-muted fw-normal p-1" style="width: 14.28%; font-size: 0.65rem;">Fri</th>
-                                        <th class="text-muted fw-normal p-1" style="width: 14.28%; font-size: 0.65rem;">Sat</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @php $dayIndex = 0; @endphp
-                                    @for ($week = 0; $week < 6; $week++)
-                                        <tr>
-                                            @for ($day = 0; $day < 7; $day++)
-                                                @php
-                                                    $cellData = $calendarDays[$dayIndex];
-                                                    $cellDate = $cellData['date'];
-                                                    $dayNumber = $cellData['day'];
-                                                    $isCurrentMonth = $cellData['isCurrentMonth'];
-                                                    $dayIndex++;
-                                                    
-                                                    $hasAppointments = isset($appointmentsByDate[$cellDate]);
-                                                    $references = $hasAppointments ? $appointmentsByDate[$cellDate] : [];
-                                                    $tooltip = implode(PHP_EOL, $references);
-                                                    $isToday = $cellDate === now()->format('Y-m-d');
-                                                @endphp
-                                                
-                                                @if(!$isCurrentMonth)
-                                                    <td class="py-2 px-1 text-muted opacity-25" title="">{{ $dayNumber }}</td>
-                                                @elseif($isToday)
-                                                    <td class="py-2 px-1 position-relative" title="{{ $tooltip }}">
-                                                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto shadow-sm" style="width: 22px; height: 22px; font-size: 0.65rem;">
-                                                            <span class="fw-bold">{{ $dayNumber }}</span>
-                                                        </div>
-                                                        @if($hasAppointments)
-                                                        <div class="position-absolute bottom-0 start-50 translate-middle-x" style="margin-bottom: 2px;">
-                                                            <div class="bg-primary rounded-circle" style="width: 2px; height: 2px;"></div>
-                                                        </div>
-                                                        @endif
-                                                    </td>
-                                                @else
-                                                    <td class="py-2 px-1 position-relative" title="{{ $tooltip }}">
-                                                        @if($hasAppointments)
-                                                            <span class="fw-bold text-primary">{{ $dayNumber }}</span>
-                                                            <div class="position-absolute bottom-0 start-50 translate-middle-x" style="margin-bottom: 2px;">
-                                                                <div class="bg-primary rounded-circle" style="width: 2px; height: 2px;"></div>
-                                                            </div>
-                                                        @else
-                                                            <span>{{ $dayNumber }}</span>
-                                                        @endif
-                                                    </td>
-                                                @endif
-                                            @endfor
-                                        </tr>
-                                    @endfor
-                                </tbody>
-                            </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Certificates Tab -->
-    <div class="tab-pane fade" id="certificates" role="tabpanel" aria-labelledby="certificates-tab">
-        <div class="row g-4">
-            <!-- Certificate List -->
-            <div class="col-lg-8">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-header bg-white border-0 py-3 px-4 d-flex justify-content-between align-items-center">
-                        <div class="d-flex align-items-center gap-2">
-                            <i class="bi bi-certificate text-primary fs-5"></i>
-                            <h5 class="fw-bold mb-0 text-dark">Certificate Requests</h5>
-                        </div>
-                        <span class="text-muted">Total: {{ $certificates->total() }}</span>
-                    </div>
-                    <div class="card-body p-4 d-flex flex-column" style="min-height: 500px;">
-                        @if($certificates->total() == 0)
-                            <div class="text-center text-muted py-5 flex-grow-1 d-flex align-items-center justify-content-center">
-                                <div>
-                                    <i class="bi bi-inbox fs-1 text-muted mb-2 d-block"></i>
-                                    <p class="mb-0">No certificate requests yet.</p>
-                                </div>
-                            </div>
-                        @else
-                            <div class="d-flex flex-column gap-3 flex-grow-1">
-                                @foreach($certificates as $cert)
-                                    <div class="card border rounded-3 p-3">
-                                        <div class="d-flex justify-content-between align-items-start gap-3">
-                                            <div style="flex: 1;">
-                                                <div class="d-flex align-items-center gap-2 mb-2">
-                                                    <h6 class="fw-bold mb-0 text-dark fs-6">{{ $cert['resident_name'] }}</h6>
-                                                    <span class="badge bg-{{ $cert['status'] === 'approved' ? 'success' : ($cert['status'] === 'pending' ? 'warning' : ($cert['status'] === 'rejected' ? 'danger' : 'secondary')) }} text-{{ $cert['status'] === 'warning' ? 'dark' : 'white' }} rounded-pill px-3">
-                                                        {{ ucfirst($cert['status']) }}
-                                                    </span>
-                                                </div>
-                                                <div class="d-flex align-items-center gap-2 text-muted mb-1">
-                                                    <i class="bi bi-file-text"></i>
-                                                    <span>{{ $cert['type'] }}</span>
-                                                </div>
-                                                <div class="d-flex align-items-center gap-2 text-muted mb-1">
-                                                    <i class="bi bi-calendar"></i>
-                                                    <span>{{ \Carbon\Carbon::parse($cert['created_at'])->format('M d, Y') }}</span>
-                                                </div>
-                                                @if($cert['purpose'])
-                                                <div class="d-flex align-items-center gap-2 text-muted">
-                                                    <i class="bi bi-chat-quote"></i>
-                                                    <span>{{ $cert['purpose'] }}</span>
-                                                </div>
-                                                @endif
-                                                <div class="text-primary mt-2 small">
-                                                    Ref: {{ $cert['reference_number'] }}
-                                                </div>
-                                            </div>
-                                            <div class="d-flex flex-column gap-2" style="white-space: nowrap;">
-                                                <a href="{{ route('certificates.show', $cert['id']) }}" class="btn btn-outline-secondary btn-sm">Details</a>
-                                                @if($cert['status'] === 'pending')
-                                                <button class="btn btn-success btn-sm text-white approve-cert-btn" data-cert-id="{{ $cert['id'] }}" style="background-color: #198754;">Approve</button>
-                                                @endif
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-
-                            <!-- Pagination -->
-                            @if($certificates->total() > 0)
-                            <div class="mt-auto pt-3 border-top">
-                                <div style="font-size: 0.875rem;">
-                                    {{ $certificates->links('vendor.pagination.custom') }}
-                                </div>
-                            </div>
-                            @endif
+                
+                <!-- Search Bar -->
+                <form method="GET" action="{{ route('appointments.index') }}" class="mb-4">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0">
+                            <i class="bi bi-search text-muted"></i>
+                        </span>
+                        <input type="text" class="form-control border-start-0" placeholder="Search by resident name..." name="search" value="{{ request('search') }}">
+                        @if(request('search'))
+                            <a href="{{ route('appointments.index') }}" class="btn btn-outline-secondary">
+                                <i class="bi bi-x"></i>
+                            </a>
                         @endif
                     </div>
-                </div>
-            </div>
+                </form>
 
-            <!-- Certificate Calendar -->
-            <div class="col-lg-4">
-                @php
-                    // Group certificates by date for calendar display
-                    $certificatesByDate = [];
-                    foreach($allCertificates as $cert) {
-                        $date = \Carbon\Carbon::parse($cert['created_date'])->format('Y-m-d');
-                        if (!isset($certificatesByDate[$date])) {
-                            $certificatesByDate[$date] = [];
-                        }
-                        $certificatesByDate[$date][] = $cert['reference_number'];
-                    }
-                    
-                    // Get year and month from request or use current date
-                    $certCalendarYear = request('cert_year', \Carbon\Carbon::now()->year);
-                    $certCalendarMonth = request('cert_month', \Carbon\Carbon::now()->month);
-                    
-                    // Generate calendar for selected month
-                    $certCurrentDate = \Carbon\Carbon::createFromDate($certCalendarYear, $certCalendarMonth, 1);
-                    $certYear = $certCurrentDate->year;
-                    $certMonth = $certCurrentDate->month;
-                    $certMonthName = $certCurrentDate->format('F Y');
-                    
-                    // Calculate previous and next month URLs
-                    $certPrevMonth = $certCurrentDate->copy()->subMonth();
-                    $certNextMonth = $certCurrentDate->copy()->addMonth();
-                    $certPrevUrl = route('appointments.index', ['cert_year' => $certPrevMonth->year, 'cert_month' => $certPrevMonth->month]);
-                    $certNextUrl = route('appointments.index', ['cert_year' => $certNextMonth->year, 'cert_month' => $certNextMonth->month]);
-                    
-                    // Get first day of month and number of days
-                    $certFirstDay = \Carbon\Carbon::createFromDate($certYear, $certMonth, 1);
-                    $certDaysInMonth = $certFirstDay->daysInMonth;
-                    $certStartingDayOfWeek = $certFirstDay->dayOfWeek; // 0 = Sunday, 6 = Saturday
-                    
-                    $certCalendarDays = [];
-                    $certDayCounter = 1;
-                    
-                    // Fill in the calendar grid
-                    for ($week = 0; $week < 6; $week++) {
-                        for ($day = 0; $day < 7; $day++) {
-                            $cellDate = null;
-                            $isCurrentMonth = false;
-                            
-                            if ($week === 0 && $day < $certStartingDayOfWeek) {
-                                // Previous month days
-                                $prevDate = $certFirstDay->copy()->subDays($certStartingDayOfWeek - $day);
-                                $cellDate = $prevDate->format('Y-m-d');
-                                $dayNumber = $prevDate->day;
-                            } elseif ($certDayCounter <= $certDaysInMonth) {
-                                // Current month days
-                                $cellDate = \Carbon\Carbon::createFromDate($certYear, $certMonth, $certDayCounter)->format('Y-m-d');
-                                $dayNumber = $certDayCounter;
-                                $isCurrentMonth = true;
-                                $certDayCounter++;
-                            } else {
-                                // Next month days
-                                $nextDate = \Carbon\Carbon::createFromDate($certYear, $certMonth, $certDaysInMonth)->copy()->addDays($certDayCounter - $certDaysInMonth);
-                                $cellDate = $nextDate->format('Y-m-d');
-                                $dayNumber = $nextDate->day;
-                                $certDayCounter++;
-                            }
-                            
-                            $certCalendarDays[] = [
-                                'date' => $cellDate,
-                                'day' => $dayNumber,
-                                'isCurrentMonth' => $isCurrentMonth
-                            ];
-                        }
-                    }
-                @endphp
-                <div class="card border-0 shadow-sm">
-                    <div class="card-body p-3">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <h6 class="fw-bold mb-0 text-dark" style="font-size: 0.95rem;">{{ $certMonthName }}</h6>
-                            <div class="d-flex gap-1">
-                                <a href="{{ $certPrevUrl }}" class="btn btn-light btn-sm rounded-circle p-0 d-flex align-items-center justify-content-center" style="width: 24px; height: 24px; font-size: 0.7rem;"><i class="bi bi-chevron-left"></i></a>
-                                <a href="{{ $certNextUrl }}" class="btn btn-light btn-sm rounded-circle p-0 d-flex align-items-center justify-content-center" style="width: 24px; height: 24px; font-size: 0.7rem;"><i class="bi bi-chevron-right"></i></a>
+                <div class="d-flex flex-column gap-3" style="min-height: 400px;">
+                    @if($appointmentsLog->total() == 0)
+                        <div class="text-center py-5">
+                            <i class="bi bi-inbox fs-1 text-muted d-block mb-3"></i>
+                            <p class="text-muted mb-0">No appointment logs found</p>
+                        </div>
+                    @else
+                        @foreach($appointmentsLog as $appointment)
+                        <div class="card border rounded-3 p-3">
+                            <div class="d-flex justify-content-between align-items-start gap-3">
+                                <div style="flex: 1;">
+                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                        <h6 class="fw-bold mb-0 text-dark fs-6">{{ $appointment['resident_name'] ?? 'Resident Name' }}</h6>
+                                        @if($appointment['status'] == 'confirmed')
+                                            <span class="badge bg-success rounded-pill px-3">Confirmed</span>
+                                        @elseif($appointment['status'] == 'cancelled')
+                                            <span class="badge bg-secondary rounded-pill px-3">Cancelled</span>
+                                        @else
+                                            <span class="badge bg-secondary rounded-pill px-3">{{ ucfirst($appointment['status']) }}</span>
+                                        @endif
+                                    </div>
+                                    <div class="d-flex align-items-center gap-2 text-muted mb-1">
+                                        <i class="bi bi-file-text"></i>
+                                        <span>{{ $appointment['purpose'] ?? 'Certificate Request' }}</span>
+                                    </div>
+                                    <div class="d-flex align-items-center gap-2 text-muted mb-1">
+                                        <i class="bi bi-calendar"></i>
+                                        <span>{{ \Carbon\Carbon::parse($appointment['appointment_date'])->format('Y-m-d') }}</span>
+                                    </div>
+                                    <div class="d-flex align-items-center gap-2 text-muted">
+                                        <i class="bi bi-clock"></i>
+                                        <span>{{ \Carbon\Carbon::parse($appointment['appointment_date'])->format('h:i A') }}</span>
+                                    </div>
+                                    <div class="text-primary mt-2 small">
+                                        Ref: APT_{{ strtoupper(substr($appointment['resident_name'] ?? 'RES', 0, 3)) }}_{{ \Carbon\Carbon::parse($appointment['appointment_date'])->format('mdy') }}_0{{ $loop->iteration }}
+                                    </div>
+                                </div>
+                                <div class="d-flex flex-column gap-2" style="white-space: nowrap;">
+                                    <a href="{{ route('appointments.show', $appointment['id']) }}" class="btn btn-outline-secondary btn-sm">Details</a>
+                                </div>
                             </div>
                         </div>
-                        
-                        <table class="table table-borderless table-sm text-center mb-0" style="font-size: 0.7rem;">
-                                <thead>
-                                    <tr>
-                                        <th class="text-muted fw-normal p-1" style="width: 14.28%; font-size: 0.65rem;">Sun</th>
-                                        <th class="text-muted fw-normal p-1" style="width: 14.28%; font-size: 0.65rem;">Mon</th>
-                                        <th class="text-muted fw-normal p-1" style="width: 14.28%; font-size: 0.65rem;">Tue</th>
-                                        <th class="text-muted fw-normal p-1" style="width: 14.28%; font-size: 0.65rem;">Wed</th>
-                                        <th class="text-muted fw-normal p-1" style="width: 14.28%; font-size: 0.65rem;">Thu</th>
-                                        <th class="text-muted fw-normal p-1" style="width: 14.28%; font-size: 0.65rem;">Fri</th>
-                                        <th class="text-muted fw-normal p-1" style="width: 14.28%; font-size: 0.65rem;">Sat</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @php $dayIndex = 0; @endphp
-                                    @for ($week = 0; $week < 6; $week++)
-                                        <tr>
-                                            @for ($day = 0; $day < 7; $day++)
-                                                @php
-                                                    $cellData = $certCalendarDays[$dayIndex];
-                                                    $cellDate = $cellData['date'];
-                                                    $dayNumber = $cellData['day'];
-                                                    $isCurrentMonth = $cellData['isCurrentMonth'];
-                                                    $dayIndex++;
-                                                    
-                                                    $hasCertificates = isset($certificatesByDate[$cellDate]);
-                                                    $references = $hasCertificates ? $certificatesByDate[$cellDate] : [];
-                                                    $tooltip = implode(PHP_EOL, $references);
-                                                    $isToday = $cellDate === now()->format('Y-m-d');
-                                                @endphp
-                                                
-                                                @if(!$isCurrentMonth)
-                                                    <td class="py-2 px-1 text-muted opacity-25" title="">{{ $dayNumber }}</td>
-                                                @elseif($isToday)
-                                                    <td class="py-2 px-1 position-relative" title="{{ $tooltip }}">
-                                                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto shadow-sm" style="width: 22px; height: 22px; font-size: 0.65rem;">
-                                                            <span class="fw-bold">{{ $dayNumber }}</span>
-                                                        </div>
-                                                        @if($hasCertificates)
-                                                        <div class="position-absolute bottom-0 start-50 translate-middle-x" style="margin-bottom: 2px;">
-                                                            <div class="bg-primary rounded-circle" style="width: 2px; height: 2px;"></div>
-                                                        </div>
-                                                        @endif
-                                                    </td>
-                                                @else
-                                                    <td class="py-2 px-1 position-relative" title="{{ $tooltip }}">
-                                                        @if($hasCertificates)
-                                                            <span class="fw-bold text-primary">{{ $dayNumber }}</span>
-                                                            <div class="position-absolute bottom-0 start-50 translate-middle-x" style="margin-bottom: 2px;">
-                                                                <div class="bg-primary rounded-circle" style="width: 2px; height: 2px;"></div>
-                                                            </div>
-                                                        @else
-                                                            <span>{{ $dayNumber }}</span>
-                                                        @endif
-                                                    </td>
-                                                @endif
-                                            @endfor
-                                        </tr>
-                                    @endfor
-                                </tbody>
-                            </table>
+                        @endforeach
+                    @endif
+                </div>
+                
+                <!-- Pagination -->
+                @if($appointmentsLog->total() > 0)
+                <div class="mt-4 pt-3 border-top">
+                    <div style="font-size: 0.875rem;">
+                        {{ $appointmentsLog->links('vendor.pagination.custom') }}
                     </div>
                 </div>
+                @endif
             </div>
         </div>
     </div>

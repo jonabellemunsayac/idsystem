@@ -400,6 +400,67 @@
             saveBtn.innerHTML = '<i class="bi bi-check-circle me-2"></i>Save';
         }
     }
+
+    function deleteAsset(assetId) {
+        Swal.fire({
+            title: 'Delete Asset?',
+            text: 'This action cannot be undone. The asset will be permanently deleted.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: '<i class="bi bi-trash me-2"></i>Delete',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                
+                fetch(`/assets/${assetId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire({
+                            title: 'Deleted!',
+                            text: 'Asset deleted successfully',
+                            icon: 'success',
+                            timer: 2000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                setTimeout(() => {
+                                    window.location.reload();
+                                }, 2000);
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: data.message || 'Failed to delete asset',
+                            icon: 'error'
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error deleting asset:', error);
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Error deleting asset: ' + error.message,
+                        icon: 'error'
+                    });
+                });
+            }
+        });
+    }
 </script>
 
 <script>

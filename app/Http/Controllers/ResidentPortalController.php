@@ -87,6 +87,45 @@ class ResidentPortalController extends Controller
     public function family()
     {
         $data = $this->getResidentData();
+        $residentAccount = auth('resident')->user();
+        $resident = $residentAccount->resident;
+        
+        // Get the resident's clan with all family members
+        $clan = $resident->clan;
+        $familyMembers = collect();
+        
+        if ($clan) {
+            $familyMembers = $clan->residents()
+                ->with('clan')
+                ->get()
+                ->map(function ($member) {
+                    return [
+                        'id' => $member->id,
+                        'first_name' => $member->first_name,
+                        'middle_name' => $member->middle_name,
+                        'last_name' => $member->last_name,
+                        'gender' => $member->gender,
+                        'birth_date' => $member->birth_date,
+                        'age' => $member->birth_date ? Carbon::parse($member->birth_date)->age : null,
+                        'civil_status' => $member->civil_status,
+                        'contact_number' => $member->contact_number,
+                        'email' => $member->email,
+                        'profile_image' => $member->profile_image,
+                    ];
+                });
+        }
+        
+        $data['clan'] = [
+            'id' => $clan?->id,
+            'clan_name' => $clan?->clan_name,
+            'head_of_family' => $clan?->head_of_family,
+            'address' => $clan?->address,
+            'contact_number' => $clan?->contact_number,
+            'email' => $clan?->email,
+            'notes' => $clan?->notes,
+        ];
+        $data['familyMembers'] = $familyMembers;
+        
         return view('residents-portal.family', $data);
     }
 

@@ -509,12 +509,6 @@ document.addEventListener('DOMContentLoaded', function() {
         printCard('back');
     });
 
-    // Print Both Handler
-    printBothBtn.addEventListener('click', function() {
-        if (!currentResident || !currentID) return;
-        printCard('both');
-    });
-
     // Print Handler
     function printCard(side = 'both') {
         if (!currentResident || !currentID) return;

@@ -164,13 +164,19 @@ class ResidentController extends Controller
         if (!empty($validated['zip_code'])) $addressParts[] = $validated['zip_code'];
         $formattedAddress = implode(', ', array_filter($addressParts));
 
-        // Auto-create or reuse clan (lastname + address)
-        $clan = Clan::firstOrCreate(
-            [
-                'clan_name' => $validated['last_name'],
-                'address'   => $formattedAddress,
-            ]
-        );
+        // Auto-create or reuse clan (lastname only - same last name = same clan)
+        // Normalize clan_name: trim whitespace for consistency
+        $clanName = trim($validated['last_name']);
+        $clan = Clan::where('clan_name', $clanName)->first();
+        
+        if (!$clan) {
+            $clan = Clan::create(['clan_name' => $clanName]);
+        }
+        
+        // Update clan address if this is the first resident or address was empty
+        if (empty($clan->address)) {
+            $clan->update(['address' => $formattedAddress]);
+        }
 
         $resident = Resident::create([
             'first_name' => $validated['first_name'],
@@ -516,13 +522,19 @@ class ResidentController extends Controller
         
         $fullAddress = implode(', ', array_filter($addressParts));
 
-        // Auto-create or reuse clan (lastname + address)
-        $clan = Clan::firstOrCreate(
-            [
-                'clan_name' => $validated['last_name'],
-                'address'   => $fullAddress,
-            ]
-        );
+        // Auto-create or reuse clan (lastname only - same last name = same clan)
+        // Normalize clan_name: trim whitespace for consistency
+        $clanName = trim($validated['last_name']);
+        $clan = Clan::where('clan_name', $clanName)->first();
+        
+        if (!$clan) {
+            $clan = Clan::create(['clan_name' => $clanName]);
+        }
+        
+        // Update clan address if this is the first resident or address was empty
+        if (empty($clan->address)) {
+            $clan->update(['address' => $fullAddress]);
+        }
 
         // Create resident
         $resident = Resident::create([
