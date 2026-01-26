@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Clan extends Model
 {
     protected $fillable = [
+        'resident_id',
         'clan_name',
         'address',
         'head_of_family',
