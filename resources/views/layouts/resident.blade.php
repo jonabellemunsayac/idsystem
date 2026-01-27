@@ -494,12 +494,6 @@
                     </a>
                 </div>
                 <div class="nav-item">
-                    <a href="{{ route('resident.certificates') }}" class="nav-link {{ request()->routeIs('resident.certificates') ? 'active' : '' }}">
-                        <i class="bi bi-file-text"></i>
-                        <span>Certificates</span>
-                    </a>
-                </div>
-                <div class="nav-item">
                     <a href="{{ route('resident.family') }}" class="nav-link {{ request()->routeIs('resident.family') ? 'active' : '' }}">
                         <i class="bi bi-people"></i>
                         <span>Family Members</span>
@@ -545,10 +539,6 @@
         <a href="{{ route('resident.appointments') }}" class="{{ request()->routeIs('resident.appointments') || request()->routeIs('resident.book-appointment') ? 'active' : '' }}">
             <i class="bi bi-calendar-check{{ request()->routeIs('resident.appointments') || request()->routeIs('resident.book-appointment') ? '-fill' : '' }}"></i>
             <span>Appts</span>
-        </a>
-        <a href="{{ route('resident.certificates') }}" class="{{ request()->routeIs('resident.certificates') || request()->routeIs('resident.request-certificate') ? 'active' : '' }}">
-            <i class="bi bi-file-text{{ request()->routeIs('resident.certificates') || request()->routeIs('resident.request-certificate') ? '-fill' : '' }}"></i>
-            <span>Certs</span>
         </a>
         <a href="{{ route('resident.family') }}" class="{{ request()->routeIs('resident.family') ? 'active' : '' }}">
             <i class="bi bi-people{{ request()->routeIs('resident.family') ? '-fill' : '' }}"></i>

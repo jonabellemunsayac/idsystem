@@ -215,13 +215,56 @@
                                 <i class="bi bi-file-text text-primary fs-5"></i>
                                 <h5 class="fw-bold mb-0 text-dark">Blotter Records</h5>
                             </div>
-                            <span class="text-muted">Total: 0</span>
+                            <span class="text-muted">Total: {{ $blotterRecords->count() }}</span>
                         </div>
                         <div class="card-body p-4">
-                            <div class="text-center text-muted py-5">
-                                <i class="bi bi-inbox fs-1 text-muted mb-2 d-block"></i>
-                                <p class="mb-0">No blotter records found.</p>
-                            </div>
+                            @if($blotterRecords->count() > 0)
+                                <div class="d-flex flex-column gap-3">
+                                    @foreach($blotterRecords as $blotter)
+                                        <div class="card border rounded-3 p-3">
+                                            <div class="d-flex justify-content-between align-items-start gap-3">
+                                                <div style="flex: 1;">
+                                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                                        <h6 class="fw-bold mb-0 text-dark fs-6">{{ $blotter->incident_type ?? 'Blotter Record' }}</h6>
+                                                        <span class="badge rounded-pill px-3 bg-secondary">
+                                                            {{ ucfirst($blotter->status ?? 'ongoing') }}
+                                                        </span>
+                                                    </div>
+                                                    <div class="d-flex align-items-center gap-2 text-muted mb-1">
+                                                        <i class="bi bi-person"></i>
+                                                        <span>Respondent: {{ $blotter->respondent_name ?? 'N/A' }}</span>
+                                                    </div>
+                                                    <div class="d-flex align-items-center gap-2 text-muted mb-1">
+                                                        <i class="bi bi-exclamation-circle"></i>
+                                                        <span>Type: {{ $blotter->incident_type ?? 'N/A' }}</span>
+                                                    </div>
+                                                    <div class="d-flex align-items-center gap-2 text-muted mb-1">
+                                                        <i class="bi bi-geo-alt"></i>
+                                                        <span>Location: {{ $blotter->incident_location ?? 'N/A' }}</span>
+                                                    </div>
+                                                    <div class="d-flex align-items-center gap-2 text-muted">
+                                                        <i class="bi bi-calendar"></i>
+                                                        <span>Date: {{ $blotter->incident_date ? \Carbon\Carbon::parse($blotter->incident_date)->format('M d, Y') : 'N/A' }}</span>
+                                                    </div>
+                                                    @if($blotter->case_number)
+                                                        <div class="text-primary mt-2 small">
+                                                            Case #: {{ $blotter->case_number }}
+                                                        </div>
+                                                    @endif
+                                                </div>
+                                                <div class="d-flex flex-column gap-2" style="white-space: nowrap;">
+                                                    <button class="btn btn-outline-secondary btn-sm">View</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @else
+                                <div class="text-center text-muted py-5">
+                                    <i class="bi bi-inbox fs-1 text-muted mb-2 d-block"></i>
+                                    <p class="mb-0">No blotter records found.</p>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -238,65 +281,58 @@
                         </div>
                         <div class="card-body p-4">
                             <div class="d-flex flex-column gap-3">
-                                <!-- Sample Request Record -->
-                                <div class="card border rounded-3 p-3">
-                                    <div class="d-flex justify-content-between align-items-start gap-3">
-                                        <div style="flex: 1;">
-                                            <div class="d-flex align-items-center gap-2 mb-2">
-                                                <h6 class="fw-bold mb-0 text-dark fs-6">Certificate of Residency</h6>
-                                                <span class="badge bg-success rounded-pill px-3">Approved</span>
+                                @forelse($appointments as $appointment)
+                                    <div class="card border rounded-3 p-3">
+                                        <div class="d-flex justify-content-between align-items-start gap-3">
+                                            <div style="flex: 1;">
+                                                <div class="d-flex align-items-center gap-2 mb-2">
+                                                    <h6 class="fw-bold mb-0 text-dark fs-6">{{ $appointment->service_type ?? 'Request' }}</h6>
+                                                    <span class="badge rounded-pill px-3 
+                                                        {{ $appointment->status === 'approved' ? 'bg-success' : ($appointment->status === 'pending' ? 'bg-warning text-dark' : ($appointment->status === 'rejected' ? 'bg-danger' : 'bg-secondary')) }}">
+                                                        {{ ucfirst($appointment->status ?? 'pending') }}
+                                                    </span>
+                                                </div>
+                                                <div class="d-flex align-items-center gap-2 text-muted mb-1">
+                                                    <i class="bi bi-file-earmark"></i>
+                                                    <span>Service Type: {{ $appointment->service_type ?? 'N/A' }}</span>
+                                                </div>
+                                                <div class="d-flex align-items-center gap-2 text-muted mb-1">
+                                                    <i class="bi bi-calendar"></i>
+                                                    <span>Scheduled: {{ $appointment->scheduled_time ? \Carbon\Carbon::parse($appointment->scheduled_time)->format('M d, Y h:i A') : 'N/A' }}</span>
+                                                </div>
+                                                @if($appointment->status === 'approved')
+                                                    <div class="d-flex align-items-center gap-2 text-muted">
+                                                        <i class="bi bi-check-circle"></i>
+                                                        <span>Request Approved</span>
+                                                    </div>
+                                                @elseif($appointment->status === 'pending')
+                                                    <div class="d-flex align-items-center gap-2 text-muted">
+                                                        <i class="bi bi-hourglass-split"></i>
+                                                        <span>Awaiting Approval</span>
+                                                    </div>
+                                                @elseif($appointment->status === 'rejected')
+                                                    <div class="d-flex align-items-center gap-2 text-muted">
+                                                        <i class="bi bi-x-circle"></i>
+                                                        <span>Request Rejected</span>
+                                                    </div>
+                                                @endif
+                                                @if($appointment->reference_number)
+                                                    <div class="text-primary mt-2 small">
+                                                        Ref: {{ $appointment->reference_number }}
+                                                    </div>
+                                                @endif
                                             </div>
-                                            <div class="d-flex align-items-center gap-2 text-muted mb-1">
-                                                <i class="bi bi-file-earmark"></i>
-                                                <span>Request Type: Certificate</span>
+                                            <div class="d-flex flex-column gap-2" style="white-space: nowrap;">
+                                                <button class="btn btn-outline-secondary btn-sm">View</button>
                                             </div>
-                                            <div class="d-flex align-items-center gap-2 text-muted mb-1">
-                                                <i class="bi bi-calendar"></i>
-                                                <span>Requested: Jan 04, 2026</span>
-                                            </div>
-                                            <div class="d-flex align-items-center gap-2 text-muted">
-                                                <i class="bi bi-check-circle"></i>
-                                                <span>Approved: Jan 04, 2026</span>
-                                            </div>
-                                            <div class="text-primary mt-2 small">
-                                                Ref: CERT_RES_010426_01
-                                            </div>
-                                        </div>
-                                        <div class="d-flex flex-column gap-2" style="white-space: nowrap;">
-                                            <button class="btn btn-outline-secondary btn-sm">View</button>
                                         </div>
                                     </div>
-                                </div>
-
-                                <!-- Sample Request Record 2 -->
-                                <div class="card border rounded-3 p-3">
-                                    <div class="d-flex justify-content-between align-items-start gap-3">
-                                        <div style="flex: 1;">
-                                            <div class="d-flex align-items-center gap-2 mb-2">
-                                                <h6 class="fw-bold mb-0 text-dark fs-6">Barangay Clearance</h6>
-                                                <span class="badge bg-warning text-dark rounded-pill px-3">Pending</span>
-                                            </div>
-                                            <div class="d-flex align-items-center gap-2 text-muted mb-1">
-                                                <i class="bi bi-file-earmark"></i>
-                                                <span>Request Type: Clearance</span>
-                                            </div>
-                                            <div class="d-flex align-items-center gap-2 text-muted mb-1">
-                                                <i class="bi bi-calendar"></i>
-                                                <span>Requested: Jan 03, 2026</span>
-                                            </div>
-                                            <div class="d-flex align-items-center gap-2 text-muted">
-                                                <i class="bi bi-hourglass-split"></i>
-                                                <span>Awaiting Approval</span>
-                                            </div>
-                                            <div class="text-primary mt-2 small">
-                                                Ref: CLR_BAR_010326_02
-                                            </div>
-                                        </div>
-                                        <div class="d-flex flex-column gap-2" style="white-space: nowrap;">
-                                            <button class="btn btn-outline-secondary btn-sm">View</button>
-                                        </div>
+                                @empty
+                                    <div class="alert alert-info rounded-3 p-4 text-center mb-0">
+                                        <i class="bi bi-info-circle fs-5 mb-2 d-block"></i>
+                                        <p class="mb-0">No request history found for this resident.</p>
                                     </div>
-                                </div>
+                                @endforelse
                             </div>
                         </div>
                     </div>

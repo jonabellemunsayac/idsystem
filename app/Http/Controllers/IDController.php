@@ -119,8 +119,28 @@ class IDController extends Controller
         // Get or create the resident account
         $residentAccount = $resident->residentAccount;
         if (!$residentAccount) {
-            // Generate unique username
-            $baseUsername = strtolower($resident->first_name . '.' . $resident->last_name);
+            // Generate unique username with counter for duplicate first names
+            $firstName = strtolower(str_replace(' ', '', $resident->first_name));
+            $lastName = strtolower($resident->last_name);
+            
+            // Check if this first name already exists (with or without counter)
+            $firstNamePattern = $firstName . '\\d*\\.';
+            $existingCount = \App\Models\ResidentAccount::where('username', 'regexp', $firstNamePattern)->count();
+            
+            if ($existingCount > 0) {
+                // Find the highest counter for this first name
+                $maxCounter = 0;
+                $accounts = \App\Models\ResidentAccount::whereRaw("username REGEXP ?", [$firstNamePattern])->get();
+                foreach ($accounts as $account) {
+                    if (preg_match("/^{$firstName}(\d+)\./", $account->username, $matches)) {
+                        $maxCounter = max($maxCounter, (int)$matches[1]);
+                    }
+                }
+                $baseUsername = $firstName . ($maxCounter + 1) . '.' . $lastName;
+            } else {
+                $baseUsername = $firstName . '.' . $lastName;
+            }
+            
             $username = $baseUsername;
             $counter = 1;
             

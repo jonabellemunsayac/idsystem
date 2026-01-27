@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Appointment;
+use App\Models\BlotterRecord;
 use App\Models\Clan;
 use App\Models\Resident;
 use App\Models\ResidentAccount;
@@ -381,17 +383,34 @@ class ResidentController extends Controller
         ]);
 
         // If marked as head of family, update the clan with resident_id and head_of_family name
-        if ($validated['is_head_of_family']) {
+        if ($validated['is_head_of_family'] ?? false) {
             $clan->update([
                 'resident_id' => $resident->id,
                 'head_of_family' => $resident->first_name . ' ' . $resident->last_name,
             ]);
         }
 
-        // Generate username
-        $firstName = strtolower(trim($resident->first_name));
+        // Generate username with counter for duplicate first names
+        $firstName = strtolower(trim(str_replace(' ', '', $resident->first_name)));
         $lastName = strtolower(trim($resident->last_name));
-        $baseUsername = $firstName . '.' . $lastName;
+        
+        // Check if this first name already exists (with or without counter)
+        $firstNamePattern = $firstName . '\\d*\\.';
+        $existingCount = ResidentAccount::where('username', 'regexp', $firstNamePattern)->count();
+        
+        if ($existingCount > 0) {
+            // Find the highest counter for this first name
+            $maxCounter = 0;
+            $accounts = ResidentAccount::whereRaw("username REGEXP ?", [$firstNamePattern])->get();
+            foreach ($accounts as $account) {
+                if (preg_match("/^{$firstName}(\d+)\./", $account->username, $matches)) {
+                    $maxCounter = max($maxCounter, (int)$matches[1]);
+                }
+            }
+            $baseUsername = $firstName . ($maxCounter + 1) . '.' . $lastName;
+        } else {
+            $baseUsername = $firstName . '.' . $lastName;
+        }
 
         $username = $baseUsername;
         $counter = 1;
@@ -436,6 +455,17 @@ class ResidentController extends Controller
     public function show(Resident $resident)
     {
         $account = ResidentAccount::where('resident_id', $resident->id)->first();
+        
+        // Fetch appointments/request history for this resident
+        $appointments = Appointment::where('resident_id', $resident->id)
+            ->orderBy('scheduled_time', 'desc')
+            ->get();
+        
+        // Fetch blotter records where resident is respondent/accused
+        $blotterRecords = BlotterRecord::where('respondent_name', 'LIKE', '%' . $resident->first_name . '%')
+            ->where('respondent_name', 'LIKE', '%' . $resident->last_name . '%')
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         return view('residents.show', [
             'resident' => [
@@ -473,6 +503,8 @@ class ResidentController extends Controller
                 'username' => $account->username,
                 'created_at' => $account->created_at,
             ] : null,
+            'appointments' => $appointments,
+            'blotterRecords' => $blotterRecords,
         ]);
     }
 
@@ -729,6 +761,8 @@ class ResidentController extends Controller
             unset($validated['signature']);
         }
 
+        $validated['is_head_of_family'] = $validated['is_head_of_family'] ?? false;
+
         $resident->update($validated);
 
         // If marked as head of family, update the clan with resident_id and head_of_family name
@@ -960,12 +994,27 @@ class ResidentController extends Controller
             ]);
         }
 
-        // Generate username
-        $baseUsername = Str::of($resident->first_name)
-            ->lower()
-            ->trim()
-            ->append('.')
-            ->append(Str::of($resident->last_name)->lower()->trim());
+        // Generate username with counter for duplicate first names
+        $firstName = strtolower(trim(str_replace(' ', '', $resident->first_name)));
+        $lastName = strtolower(trim($resident->last_name));
+        
+        // Check if this first name already exists (with or without counter)
+        $firstNamePattern = $firstName . '\\d*\\.';
+        $existingCount = ResidentAccount::where('username', 'regexp', $firstNamePattern)->count();
+        
+        if ($existingCount > 0) {
+            // Find the highest counter for this first name
+            $maxCounter = 0;
+            $accounts = ResidentAccount::whereRaw("username REGEXP ?", [$firstNamePattern])->get();
+            foreach ($accounts as $account) {
+                if (preg_match("/^{$firstName}(\d+)\./", $account->username, $matches)) {
+                    $maxCounter = max($maxCounter, (int)$matches[1]);
+                }
+            }
+            $baseUsername = $firstName . ($maxCounter + 1) . '.' . $lastName;
+        } else {
+            $baseUsername = $firstName . '.' . $lastName;
+        }
 
         $username = $baseUsername;
         $counter = 1;
