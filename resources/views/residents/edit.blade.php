@@ -3,16 +3,12 @@
 @section('title', 'Edit Resident')
 
 @section('content')
-<div class="mb-2">
-    <a href="{{ route('residents.index') }}" class="btn btn-secondary btn-sm mb-2" style="font-size: 0.75rem; padding: 0.3rem 0.6rem;">
-        <i class="bi bi-arrow-left me-1"></i> Back
+<div class="d-flex justify-content-between align-items-center mb-2">
+    <h1 class="h6 fw-bold text-dark mb-0" style="font-size: 0.9rem;">Edit Resident</h1>
+    <a href="{{ route('residents.index') }}" class="btn btn-success btn-sm d-flex align-items-center gap-1" style="background-color: #198754; border-color: #198754; padding: 0.3rem 0.6rem; font-size: 0.75rem;">
+        <i class="bi bi-arrow-left"></i> Back
     </a>
-    <div class="card border-0 shadow-sm">
-        <div class="card-body p-2">
-            <div class="mb-2">
-                <h6 class="fw-bold mb-0" style="font-size: 0.9rem;">Edit Resident</h6>
-                <p class="text-muted mb-0" style="font-size: 0.7rem;">Update resident information</p>
-            </div>
+</div>
 
             <form action="{{ route('residents.update', $resident['id']) }}" method="POST" enctype="multipart/form-data">
                 @csrf
@@ -68,9 +64,11 @@
                     </div>
 
                     <div class="col-md-4">
-                        <label for="nationality" class="form-label" style="font-size: 0.65rem;">Nationality</label>
-                        <input type="text" class="form-control form-control-sm @error('nationality') is-invalid @enderror" id="nationality" name="nationality" value="{{ old('nationality', $resident['nationality']) }}" style="font-size: 0.8rem;">
-                        @error('nationality') <div class="invalid-feedback" style="font-size: 0.65rem;">{{ $message }}</div> @enderror
+                        <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Nationality</label>
+                        <select class="form-select form-select-sm" name="nationality" style="font-size: 0.8rem;">
+                            <option value="Filipino" {{ old('nationality', $resident['nationality']) === 'Filipino' ? 'selected' : '' }}>Filipino</option>
+                            <option value="Other" {{ old('nationality', $resident['nationality']) === 'Other' ? 'selected' : '' }}>Other</option>
+                        </select>
                     </div>
 
                     <div class="col-md-4">
@@ -90,14 +88,15 @@
                     </div>
 
                     <div class="col-md-4">
-                        <label for="special_sector" class="form-label" style="font-size: 0.65rem;">Special Sector</label>
-                        <select class="form-select form-select-sm @error('special_sector') is-invalid @enderror" id="special_sector" name="special_sector" style="font-size: 0.8rem;">
-                            <option value="">Select...</option>
-                            <option value="Senior Citizen" @selected(old('special_sector', $resident['special_sector']) == 'Senior Citizen')>Senior Citizen</option>
-                            <option value="PWD" @selected(old('special_sector', $resident['special_sector']) == 'PWD')>PWD</option>
-                            <option value="Solo Parent" @selected(old('special_sector', $resident['special_sector']) == 'Solo Parent')>Solo Parent</option>
+                        <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Special Sector</label>
+                        <select class="form-select form-select-sm" name="special_sector" style="font-size: 0.8rem;">
+                            <option value="" {{ old('special_sector', $resident['special_sector']) === '' ? 'selected' : '' }}>Select...</option>
+                            <option value="None" {{ old('special_sector', $resident['special_sector']) === 'None' ? 'selected' : '' }}>None</option>
+                            <option value="Senior Citizen" {{ old('special_sector', $resident['special_sector']) === 'Senior Citizen' ? 'selected' : '' }}>Senior Citizen</option>
+                            <option value="PWD" {{ old('special_sector', $resident['special_sector']) === 'PWD' ? 'selected' : '' }}>PWD</option>
+                            <option value="Solo Parent" {{ old('special_sector', $resident['special_sector']) === 'Solo Parent' ? 'selected' : '' }}>Solo Parent</option>
+                            <option value="LGBTQ" {{ old('special_sector', $resident['special_sector']) === 'LGBTQ' ? 'selected' : '' }}>LGBTQ</option>
                         </select>
-                        @error('special_sector') <div class="invalid-feedback" style="font-size: 0.65rem;">{{ $message }}</div> @enderror
                     </div>
 
                     <div class="col-md-4">
@@ -110,86 +109,87 @@
                 </div>
 
                 <!-- Contact Information -->
-                <h6 class="fw-bold text-dark mt-2 mb-1" style="font-size: 0.8rem;">Contact Information</h6>
+                <h6 class="fw-bold mb-2 mt-2" style="font-size: 0.8rem;">Contact Information</h6>
                 <div class="row g-2 mb-2">
-                    <div class="col-md-4">
-                        <label for="contact_number" class="form-label required-field" style="font-size: 0.65rem;">Mobile Number</label>
-                        <input type="tel" class="form-control form-control-sm @error('contact_number') is-invalid @enderror" id="contact_number" name="contact_number" value="{{ old('contact_number', $resident['contact_number']) }}" required style="font-size: 0.8rem;">
-                        @error('contact_number') <div class="invalid-feedback" style="font-size: 0.65rem;">{{ $message }}</div> @enderror
+                    <div class="col-md-6">
+                        <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Mobile Number</label>
+                        <input type="text" class="form-control form-control-sm mobile-number @error('contact_number') is-invalid @enderror" name="contact_number" value="{{ old('contact_number', $resident['contact_number']) }}" placeholder="e.g., 09123456789" inputmode="numeric" maxlength="11" pattern="[0-9]{11}" style="font-size: 0.8rem;">
+                        <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Must be exactly 11 digits</small>
+                        @error('contact_number')<div class="text-danger small" style="font-size: 0.65rem;">{{ $message }}</div>@enderror
                     </div>
-
-                    <div class="col-md-4">
-                        <label for="telephone_no" class="form-label" style="font-size: 0.65rem;">Telephone Number</label>
-                        <input type="tel" class="form-control form-control-sm @error('telephone_no') is-invalid @enderror" id="telephone_no" name="telephone_no" value="{{ old('telephone_no', $resident['telephone_no']) }}" style="font-size: 0.8rem;">
-                        @error('telephone_no') <div class="invalid-feedback" style="font-size: 0.65rem;">{{ $message }}</div> @enderror
+                    <div class="col-md-6">
+                        <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Telephone No</label>
+                        <input type="text" class="form-control form-control-sm telephone-number" name="telephone_no" value="{{ old('telephone_no', $resident['telephone_no']) }}" placeholder="Optional" style="font-size: 0.8rem;">
                     </div>
-
-                    <div class="col-md-4">
-                        <label for="email" class="form-label" style="font-size: 0.65rem;">Email Address</label>
-                        <input type="email" class="form-control form-control-sm @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email', $resident['email']) }}" style="font-size: 0.8rem;">
-                        @error('email') <div class="invalid-feedback" style="font-size: 0.65rem;">{{ $message }}</div> @enderror
+                    <div class="col-md-12">
+                        <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Email</label>
+                        <input type="email" class="form-control form-control-sm @error('email') is-invalid @enderror" name="email" value="{{ old('email', $resident['email']) }}" placeholder="Optional" style="font-size: 0.8rem;">
+                        @error('email')<div class="text-danger small" style="font-size: 0.65rem;">{{ $message }}</div>@enderror
                     </div>
                 </div>
 
-                <!-- Address Information -->
-                <h6 class="fw-bold text-dark mt-2 mb-1" style="font-size: 0.8rem;">Address Information</h6>
+                <h6 class="fw-bold mb-2 mt-2" style="font-size: 0.8rem;">Address</h6>
                 <div class="row g-2 mb-2">
-                    <div class="col-md-4">
-                        <label for="street_name" class="form-label" style="font-size: 0.65rem;">Street Name</label>
-                        <input type="text" class="form-control form-control-sm @error('street_name') is-invalid @enderror address-field-edit" id="street_name" name="street_name" value="{{ old('street_name', $resident['street_name']) }}" style="font-size: 0.8rem;">
-                        @error('street_name') <div class="invalid-feedback" style="font-size: 0.65rem;">{{ $message }}</div> @enderror
+                    <div class="col-md-6">
+                        <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Street Name</label>
+                        <select class="form-select form-select-sm address-field" name="street_name" style="font-size: 0.8rem;">
+                            <option value="" {{ old('street_name', $resident['street_name']) === '' ? 'selected' : '' }}>Select Street...</option>
+                            <option value="Roxas St." {{ old('street_name', $resident['street_name']) === 'Roxas St.' ? 'selected' : '' }}>Roxas St.</option>
+                            <option value="Osmena St." {{ old('street_name', $resident['street_name']) === 'Osmena St.' ? 'selected' : '' }}>Osmena St.</option>
+                            <option value="Del Pilar St." {{ old('street_name', $resident['street_name']) === 'Del Pilar St.' ? 'selected' : '' }}>Del Pilar St.</option>
+                        </select>
                     </div>
-
-                    <div class="col-md-4">
-                        <label for="barangay" class="form-label" style="font-size: 0.65rem;">Barangay</label>
-                        <input type="text" class="form-control form-control-sm @error('barangay') is-invalid @enderror" id="barangay" name="barangay" value="{{ old('barangay', $resident['barangay']) }}" style="font-size: 0.8rem;">
-                        @error('barangay') <div class="invalid-feedback" style="font-size: 0.65rem;">{{ $message }}</div> @enderror
+                    <div class="col-md-6">
+                        <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Province</label>
+                        <select class="form-select form-select-sm address-field" name="province" style="font-size: 0.8rem;">
+                            <option value="Metro Manila" {{ old('province', $resident['province']) === 'Metro Manila' ? 'selected' : '' }}>Metro Manila</option>
+                        </select>
+                        <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Fixed to Metro Manila</small>
                     </div>
-
-                    <div class="col-md-4">
-                        <label for="province" class="form-label" style="font-size: 0.65rem;">Province</label>
-                        <input type="text" class="form-control form-control-sm @error('province') is-invalid @enderror address-field-edit" id="province" name="province" value="{{ old('province', $resident['province']) }}" style="font-size: 0.8rem;">
-                        @error('province') <div class="invalid-feedback" style="font-size: 0.65rem;">{{ $message }}</div> @enderror
+                    <div class="col-md-6">
+                        <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Zip Code</label>
+                        <input type="text" class="form-control form-control-sm address-field" name="zip_code" value="1600" readonly style="font-size: 0.8rem;">
                     </div>
-
-                    <div class="col-md-4">
-                        <label for="zip_code" class="form-label" style="font-size: 0.65rem;">ZIP Code</label>
-                        <input type="text" class="form-control form-control-sm @error('zip_code') is-invalid @enderror address-field-edit" id="zip_code" name="zip_code" value="{{ old('zip_code', $resident['zip_code']) }}" style="font-size: 0.8rem;">
-                        @error('zip_code') <div class="invalid-feedback" style="font-size: 0.65rem;">{{ $message }}</div> @enderror
-                    </div>
-
                     <div class="col-md-12">
-                        <label for="full_address_display_edit" class="form-label" style="font-size: 0.65rem;">Full Address</label>
-                        <textarea class="form-control form-control-sm" id="full_address_display_edit" rows="2" readonly style="font-size: 0.8rem; background-color: #f8f9fa;"></textarea>
+                        <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Full Address</label>
+                        <textarea class="form-control form-control-sm" id="full_address_display" rows="2" readonly style="font-size: 0.8rem; background-color: #f8f9fa;"></textarea>
                         <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Auto-filled from street name and province above</small>
                     </div>
                 </div>
 
                 <!-- Emergency Contact -->
-                <h6 class="fw-bold text-dark mt-2 mb-1" style="font-size: 0.8rem;">Emergency Contact</h6>
+                <h6 class="fw-bold mb-2 mt-2" style="font-size: 0.8rem;">Emergency Contact</h6>
                 <div class="row g-2 mb-2">
                     <div class="col-md-6">
-                        <label for="emergency_contact_name" class="form-label" style="font-size: 0.65rem;">Contact Name</label>
-                        <input type="text" class="form-control form-control-sm @error('emergency_contact_name') is-invalid @enderror" id="emergency_contact_name" name="emergency_contact_name" value="{{ old('emergency_contact_name', $resident['emergency_contact_name']) }}" style="font-size: 0.8rem;">
-                        @error('emergency_contact_name') <div class="invalid-feedback" style="font-size: 0.65rem;">{{ $message }}</div> @enderror
+                        <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Name</label>
+                        <input type="text" class="form-control form-control-sm" name="emergency_contact_name" value="{{ old('emergency_contact_name', $resident['emergency_contact_name']) }}" style="font-size: 0.8rem;">
                     </div>
-
                     <div class="col-md-6">
-                        <label for="emergency_contact_relationship" class="form-label" style="font-size: 0.65rem;">Relationship</label>
-                        <input type="text" class="form-control form-control-sm @error('emergency_contact_relationship') is-invalid @enderror" id="emergency_contact_relationship" name="emergency_contact_relationship" value="{{ old('emergency_contact_relationship', $resident['emergency_contact_relationship']) }}" style="font-size: 0.8rem;">
-                        @error('emergency_contact_relationship') <div class="invalid-feedback" style="font-size: 0.65rem;">{{ $message }}</div> @enderror
+                        <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Relationship</label>
+                        <select class="form-select form-select-sm" name="emergency_contact_relationship" style="font-size: 0.8rem;">
+                            <option value="" {{ old('emergency_contact_relationship', $resident['emergency_contact_relationship']) === '' ? 'selected' : '' }}>Select...</option>
+                            <option value="Mother" {{ old('emergency_contact_relationship', $resident['emergency_contact_relationship']) === 'Mother' ? 'selected' : '' }}>Mother</option>
+                            <option value="Father" {{ old('emergency_contact_relationship', $resident['emergency_contact_relationship']) === 'Father' ? 'selected' : '' }}>Father</option>
+                            <option value="Sibling" {{ old('emergency_contact_relationship', $resident['emergency_contact_relationship']) === 'Sibling' ? 'selected' : '' }}>Sibling</option>
+                            <option value="Grandparent" {{ old('emergency_contact_relationship', $resident['emergency_contact_relationship']) === 'Grandparent' ? 'selected' : '' }}>Grandparent</option>
+                            <option value="Cousin" {{ old('emergency_contact_relationship', $resident['emergency_contact_relationship']) === 'Cousin' ? 'selected' : '' }}>Cousin</option>
+                            <option value="Other" {{ old('emergency_contact_relationship', $resident['emergency_contact_relationship']) === 'Other' ? 'selected' : '' }}>Other</option>
+                        </select>
                     </div>
-
                     <div class="col-md-6">
-                        <label for="emergency_contact_no" class="form-label" style="font-size: 0.65rem;">Contact Number</label>
-                        <input type="tel" class="form-control form-control-sm @error('emergency_contact_no') is-invalid @enderror" id="emergency_contact_no" name="emergency_contact_no" value="{{ old('emergency_contact_no', $resident['emergency_contact_no']) }}" style="font-size: 0.8rem;">
-                        @error('emergency_contact_no') <div class="invalid-feedback" style="font-size: 0.65rem;">{{ $message }}</div> @enderror
+                        <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Contact Number</label>
+                        <input type="text" class="form-control form-control-sm mobile-number" name="emergency_contact_no" value="{{ old('emergency_contact_no', $resident['emergency_contact_no']) }}" placeholder="e.g., 09123456789" inputmode="numeric" maxlength="11" pattern="[0-9]{11}" style="font-size: 0.8rem;">
+                        <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Must be exactly 11 digits</small>
                     </div>
-
-                    <div class="col-md-6">
-                        <label for="emergency_contact_address" class="form-label" style="font-size: 0.65rem;">Address</label>
-                        <input type="text" class="form-control form-control-sm @error('emergency_contact_address') is-invalid @enderror" id="emergency_contact_address" name="emergency_contact_address" value="{{ old('emergency_contact_address', $resident['emergency_contact_address']) }}" style="font-size: 0.8rem;">
-                        @error('emergency_contact_address') <div class="invalid-feedback" style="font-size: 0.65rem;">{{ $message }}</div> @enderror
+                    <div class="col-md-12">
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="same_as_above_address" name="same_as_above_address" {{ old('same_as_above_address') ? 'checked' : '' }}>
+                            <label class="form-check-label text-muted" for="same_as_above_address" style="font-size: 0.75rem;">
+                                Same as above (use main address)
+                            </label>
+                        </div>
+                        <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Address</label>
+                        <textarea class="form-control form-control-sm" id="emergency_address_display" name="emergency_contact_address" rows="2" style="font-size: 0.8rem;">{{ old('emergency_contact_address', $resident['emergency_contact_address']) }}</textarea>
                     </div>
                 </div>
 
@@ -267,11 +267,8 @@
                     </button>
                 </div>
             </form>
-        </div>
-    </div>
-</div>
-
-<!-- Signature Large Canvas Modal -->
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-2">
 <div class="modal fade" id="signatureLargeModal" tabindex="-1" aria-labelledby="signatureLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content">
@@ -307,8 +304,8 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Auto-select Senior Citizen for birthdate >= 60 years old
-    const birthDateInput = document.getElementById('birth_date');
-    const specialSectorSelect = document.getElementById('special_sector');
+    const birthDateInput = document.querySelector('input[name="birth_date"]');
+    const specialSectorSelect = document.querySelector('select[name="special_sector"]');
     
     function calculateAge(birthDate) {
         const today = new Date();
@@ -335,31 +332,88 @@ document.addEventListener('DOMContentLoaded', function() {
     birthDateInput.addEventListener('change', checkAndSetSeniorCitizen);
     
     // Auto-fill full address from address components
-    const addressFieldsEdit = document.querySelectorAll('.address-field-edit');
-    const fullAddressDisplayEdit = document.getElementById('full_address_display_edit');
+    const addressFields = document.querySelectorAll('.address-field');
+    const fullAddressDisplay = document.getElementById('full_address_display');
     
-    function updateFullAddressEdit() {
-        const houseNo = document.getElementById('house_no').value;
-        const streetName = document.getElementById('street_name').value;
-        const purok = document.getElementById('purok').value;
-        const province = document.getElementById('province').value;
+    function updateFullAddress() {
+        const streetName = document.querySelector('select[name="street_name"]').value;
+        const province = document.querySelector('select[name="province"]').value;
         
         const addressParts = [];
-        if (houseNo) addressParts.push(houseNo);
         if (streetName) addressParts.push(streetName);
-        if (purok) addressParts.push(purok);
         if (province) addressParts.push(province);
         
-        fullAddressDisplayEdit.value = addressParts.join(', ') || '';
+        fullAddressDisplay.value = addressParts.join(', ') || '';
     }
     
-    addressFieldsEdit.forEach(field => {
-        field.addEventListener('change', updateFullAddressEdit);
-        field.addEventListener('input', updateFullAddressEdit);
+    addressFields.forEach(field => {
+        field.addEventListener('change', updateFullAddress);
+        field.addEventListener('input', updateFullAddress);
     });
     
     // Initialize on page load
-    updateFullAddressEdit();
+    updateFullAddress();
+    
+    // Handle "Same as above" checkbox for emergency contact address
+    const sameAsAboveCheckbox = document.getElementById('same_as_above_address');
+    const emergencyAddressDisplay = document.getElementById('emergency_address_display');
+    
+    if (sameAsAboveCheckbox) {
+        sameAsAboveCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                emergencyAddressDisplay.value = fullAddressDisplay.value;
+                emergencyAddressDisplay.readOnly = true;
+                emergencyAddressDisplay.style.backgroundColor = '#f8f9fa';
+                emergencyAddressDisplay.style.cursor = 'default';
+            } else {
+                emergencyAddressDisplay.value = '';
+                emergencyAddressDisplay.readOnly = false;
+                emergencyAddressDisplay.style.backgroundColor = 'white';
+                emergencyAddressDisplay.style.cursor = 'auto';
+            }
+        });
+    }
+    
+    // Ensure emergency_contact_address is populated on form submit if checkbox is checked
+    document.querySelector('form').addEventListener('submit', function() {
+        if (sameAsAboveCheckbox && sameAsAboveCheckbox.checked) {
+            emergencyAddressDisplay.value = fullAddressDisplay.value;
+        }
+    });
+    
+    // Mobile number validation - only numbers and 11 digits
+    document.querySelectorAll('.mobile-number').forEach(field => {
+        field.addEventListener('input', function(e) {
+            // Remove any non-numeric characters
+            this.value = this.value.replace(/[^0-9]/g, '');
+            
+            // Limit to 11 digits
+            if (this.value.length > 11) {
+                this.value = this.value.slice(0, 11);
+            }
+        });
+        
+        field.addEventListener('blur', function() {
+            // Validate on blur
+            if (this.value && this.value.length !== 11) {
+                this.classList.add('is-invalid');
+            } else {
+                this.classList.remove('is-invalid');
+            }
+        });
+        
+        field.addEventListener('focus', function() {
+            this.classList.remove('is-invalid');
+        });
+    });
+
+    // Telephone number validation - only numbers
+    document.querySelectorAll('.telephone-number').forEach(field => {
+        field.addEventListener('input', function(e) {
+            // Remove any non-numeric characters
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+    });
 
     // Signature functionality
     const uploadSignatureBtn = document.getElementById('upload-signature-btn');
@@ -489,7 +543,6 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('signature-base64').value = dataURL;
         
         signaturePreview.style.display = 'block';
-        drawSignatureSection.style.display = 'none';
         
         // Close modal
         signatureLargeModal.hide();

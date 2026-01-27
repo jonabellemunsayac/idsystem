@@ -85,19 +85,6 @@
     .appointment-item:last-child {
         margin-bottom: 0;
     }
-    .cert-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding-bottom: 0.75rem;
-        margin-bottom: 0.75rem;
-        border-bottom: 1px solid #e5e7eb;
-    }
-    .cert-item:last-child {
-        border-bottom: none;
-        padding-bottom: 0;
-        margin-bottom: 0;
-    }
     .status-badge {
         padding: 0.25rem 0.75rem;
         border-radius: 9999px;
@@ -183,16 +170,6 @@
     <a href="{{ route('resident.appointments') }}" class="view-all-link">View Details →</a>
 </div>
 
-<!-- Pending Certificates Card -->
-<div class="info-card" id="pendingCertificatesCard" style="display:none;">
-    <div class="info-card-header">
-        <i class="bi bi-exclamation-triangle fs-5 text-warning"></i>
-        <h6>Pending Certificates</h6>
-    </div>
-    <div id="pendingCertificatesList"></div>
-    <a href="{{ route('resident.certificates') }}" class="view-all-link">View All Requests →</a>
-</div>
-
 <!-- Loading State -->
 <div class="info-card text-center" id="loadingCard">
     <div class="spinner-border text-primary" role="status">
@@ -210,25 +187,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
 async function fetchDashboardData() {
     try {
-        const [appointmentsRes, certificatesRes] = await Promise.all([
-            fetch('/api/resident/appointments', {
-                headers: {
-                    'Accept': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest',
-                },
-                credentials: 'same-origin',
-            }),
-            fetch('/api/resident/certificates', {
-                headers: {
-                    'Accept': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest',
-                },
-                credentials: 'same-origin',
-            })
-        ]);
+        const appointmentsRes = await fetch('/api/resident/appointments', {
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            credentials: 'same-origin',
+        });
 
         const appointments = await appointmentsRes.json();
-        const certificates = await certificatesRes.json();
 
         // Hide loading
         document.getElementById('loadingCard').style.display = 'none';
@@ -248,47 +215,12 @@ async function fetchDashboardData() {
             statusBadge.textContent = nextAppointment.status;
             statusBadge.className = 'status-badge status-' + nextAppointment.status;
         }
-
-        // Show pending certificates
-        const pendingCertificates = certificates.filter(cert => 
-            cert.status === 'pending' || cert.status === 'processing'
-        );
-        
-        if (pendingCertificates.length > 0) {
-            document.getElementById('pendingCertificatesCard').style.display = 'block';
-            const certList = document.getElementById('pendingCertificatesList');
-            certList.innerHTML = pendingCertificates.map(cert => {
-                const certName = getCertificateName(cert.type);
-                const requestDate = new Date(cert.created_at).toLocaleDateString();
-                return `
-                    <div class="cert-item">
-                        <div>
-                            <p class="fw-medium small mb-1">${certName}</p>
-                            <p class="text-muted" style="font-size: 0.75rem; margin: 0;">Requested: ${requestDate}</p>
-                        </div>
-                        <span class="status-badge status-${cert.status}">${cert.status}</span>
-                    </div>
-                `;
-            }).join('');
-        }
     } catch (err) {
         console.error('Failed to fetch dashboard data:', err);
         document.getElementById('loadingCard').innerHTML = `
             <p class="text-danger mb-0">Failed to load dashboard data</p>
         `;
     }
-}
-
-function getCertificateName(type) {
-    const names = {
-        barangay_clearance: 'Barangay Clearance',
-        certificate_of_indigency: 'Certificate of Indigency',
-        certificate_of_residency: 'Certificate of Residency',
-        business_permit: 'Business Permit',
-        community_tax_certificate: 'Community Tax Certificate',
-        other: 'Other Certificate'
-    };
-    return names[type] || type;
 }
 </script>
 @endsection

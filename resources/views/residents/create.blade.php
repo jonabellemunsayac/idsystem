@@ -91,6 +91,58 @@
 
 <div class="card border-0 shadow-sm">
     <div class="card-body p-2">
+        @if (session('success'))
+            <!-- Success Message Page -->
+            <div class="text-center py-4">
+                <div class="mb-4">
+                    <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
+                </div>
+                <h4 class="fw-bold text-success mb-1">Resident Added Successfully!</h4>
+                <p class="text-muted mb-3" style="font-size: 0.9rem;">{{ session('success') }}</p>
+                
+                @if (session('generated_account'))
+                    <div class="alert alert-info mb-3 text-start" role="alert" style="font-size: 0.8rem; max-width: 500px; margin: 0 auto;">
+                        <div class="mb-2">
+                            <h6 class="fw-bold mb-2">Account Credentials</h6>
+                            <p class="mb-2 text-muted">Save these credentials and share with the resident. Password can be changed after login.</p>
+                        </div>
+                        <div class="row g-2 mb-2">
+                            <div class="col-md-6">
+                                <label class="form-label small text-muted mb-0" style="font-size: 0.7rem;">Username</label>
+                                <div class="input-group input-group-sm">
+                                    <input type="text" class="form-control form-control-sm" id="username-field" value="{{ session('generated_account')['username'] ?? '' }}" readonly style="font-size: 0.75rem;">
+                                    <button class="btn btn-outline-secondary btn-copy btn-sm" type="button" data-field="username-field" style="font-size: 0.7rem; padding: 0.2rem 0.4rem;">
+                                        <i class="bi bi-clipboard"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small text-muted mb-0" style="font-size: 0.7rem;">Password</label>
+                                <div class="input-group input-group-sm">
+                                    <input type="password" class="form-control form-control-sm" id="password-field" value="{{ session('generated_account')['password'] ?? '' }}" readonly style="font-size: 0.75rem;">
+                                    <button class="btn btn-outline-secondary btn-toggle-password btn-sm" type="button" data-field="password-field" style="font-size: 0.7rem; padding: 0.2rem 0.4rem;">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                    <button class="btn btn-outline-secondary btn-copy btn-sm" type="button" data-field="password-field" style="font-size: 0.7rem; padding: 0.2rem 0.4rem;">
+                                        <i class="bi bi-clipboard"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+                
+                <div class="d-flex gap-2 justify-content-center mt-4">
+                    <a href="{{ route('residents.index') }}" class="btn btn-secondary btn-sm" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">
+                        <i class="bi bi-arrow-left"></i> Back to Residents
+                    </a>
+                    <a href="{{ route('residents.create') }}" class="btn btn-primary btn-sm" style="background-color: #0038A8; border-color: #0038A8; padding: 0.4rem 0.8rem; font-size: 0.8rem;">
+                        <i class="bi bi-plus-circle"></i> Add Another Resident
+                    </a>
+                </div>
+            </div>
+        @else
+            <!-- Resident Creation Form -->
         <form action="{{ route('residents.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
@@ -140,6 +192,7 @@
                     <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Special Sector</label>
                     <select class="form-select form-select-sm" name="special_sector" style="font-size: 0.8rem;">
                         <option value="">Select...</option>
+                        <option value="None">None</option>
                         <option value="Senior Citizen">Senior Citizen</option>
                         <option value="PWD">PWD</option>
                         <option value="Solo Parent">Solo Parent</option>
@@ -214,7 +267,7 @@
                 </div>
                 <div class="col-md-6">
                     <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Telephone No</label>
-                    <input type="text" class="form-control form-control-sm" name="telephone_no" placeholder="Optional" style="font-size: 0.8rem;">
+                    <input type="text" class="form-control form-control-sm telephone-number" name="telephone_no" placeholder="Optional" style="font-size: 0.8rem;">
                 </div>
                 <div class="col-md-12">
                     <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Email</label>
@@ -399,6 +452,7 @@
                 <button type="submit" class="btn btn-primary btn-sm px-3" style="background-color: #0038A8; border-color: #0038A8; padding: 0.4rem 0.8rem; font-size: 0.8rem;">Save</button>
             </div>
         </form>
+        @endif
     </div>
 </div>
 
@@ -522,27 +576,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }, { passive: true });
     }
-    
-    // Copy to clipboard functionality
-    document.querySelectorAll('.btn-copy').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const fieldId = this.getAttribute('data-field');
-            const field = document.getElementById(fieldId);
-            
-            navigator.clipboard.writeText(field.value).then(() => {
-                const originalIcon = this.innerHTML;
-                this.innerHTML = '<i class="bi bi-check"></i>';
-                this.classList.add('btn-success');
-                this.classList.remove('btn-outline-secondary');
-                
-                setTimeout(() => {
-                    this.innerHTML = originalIcon;
-                    this.classList.remove('btn-success');
-                    this.classList.add('btn-outline-secondary');
-                }, 2000);
-            });
-        });
-    });
 
     // Mobile number validation - only numbers and 11 digits
     document.querySelectorAll('.mobile-number').forEach(field => {
@@ -570,17 +603,31 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Toggle password visibility
-    document.querySelectorAll('.btn-toggle-password').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const fieldId = this.getAttribute('data-field');
-            const field = document.getElementById(fieldId);
-            const isPassword = field.type === 'password';
-            
-            field.type = isPassword ? 'text' : 'password';
-            this.innerHTML = isPassword ? '<i class="bi bi-eye-slash"></i>' : '<i class="bi bi-eye"></i>';
+    // Telephone number validation - only numbers allowed
+    document.querySelectorAll('.telephone-number').forEach(field => {
+        field.addEventListener('input', function(e) {
+            // Remove any non-numeric characters
+            this.value = this.value.replace(/[^0-9]/g, '');
         });
     });
+
+    // Toggle password visibility using event delegation
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.btn-toggle-password')) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const btn = e.target.closest('.btn-toggle-password');
+            const fieldId = btn.getAttribute('data-field');
+            const field = document.getElementById(fieldId);
+            
+            if (field) {
+                const isPassword = field.type === 'password';
+                field.type = isPassword ? 'text' : 'password';
+                btn.innerHTML = isPassword ? '<i class="bi bi-eye-slash"></i>' : '<i class="bi bi-eye"></i>';
+            }
+        }
+    }, false);
 
     const uploadBtn = document.getElementById('upload-btn');
     const captureBtn = document.getElementById('capture-btn');
@@ -900,6 +947,51 @@ document.addEventListener('DOMContentLoaded', function() {
         signatureLargeModal.hide();
     });
 });
+
+// Event delegation for copy buttons - attached OUTSIDE DOMContentLoaded for immediate activation
+document.addEventListener('click', function(e) {
+    if (e.target.closest('.btn-copy')) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const btn = e.target.closest('.btn-copy');
+        const fieldId = btn.getAttribute('data-field');
+        const field = document.getElementById(fieldId);
+        
+        if (field && field.value) {
+            navigator.clipboard.writeText(field.value).then(() => {
+                const originalIcon = btn.innerHTML;
+                btn.innerHTML = '<i class="bi bi-check"></i>';
+                btn.classList.add('btn-success');
+                btn.classList.remove('btn-outline-secondary');
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalIcon;
+                    btn.classList.remove('btn-success');
+                    btn.classList.add('btn-outline-secondary');
+                }, 2000);
+            }).catch(err => console.error('Copy failed:', err));
+        }
+    }
+}, false);
+
+// Event delegation for toggle password buttons - attached OUTSIDE DOMContentLoaded for immediate activation
+document.addEventListener('click', function(e) {
+    if (e.target.closest('.btn-toggle-password')) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const btn = e.target.closest('.btn-toggle-password');
+        const fieldId = btn.getAttribute('data-field');
+        const field = document.getElementById(fieldId);
+        
+        if (field) {
+            const isPassword = field.type === 'password';
+            field.type = isPassword ? 'text' : 'password';
+            btn.innerHTML = isPassword ? '<i class="bi bi-eye-slash"></i>' : '<i class="bi bi-eye"></i>';
+        }
+    }
+}, false);
 </script>
 
 @endsection

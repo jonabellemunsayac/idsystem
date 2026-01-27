@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Appointment;
+use App\Models\BlotterRecord;
 use App\Models\Clan;
 use App\Models\Resident;
 use App\Models\ResidentAccount;
@@ -106,51 +108,223 @@ class ResidentController extends Controller
             'emergency_contact_address' => ['nullable', 'string', 'max:500'],
             'email' => ['nullable', 'email', 'max:255'],
             'is_head_of_family' => ['nullable', 'boolean'],
-            'profile_image' => ['nullable'],
-            'profile_image_base64' => ['nullable', 'string'],
-            'signature' => ['nullable'],
-            'signature_base64' => ['nullable', 'string'],
+            'profile_image' => ['nullable', 'image', 'max:2048'],
+            'profile_image_base64' => ['nullable', 'string', 'max:2097152'],
+            'signature' => ['nullable', 'image', 'max:1024'],
+            'signature_base64' => ['nullable', 'string', 'max:1048576'],
         ]);
 
         $profileImagePath = null;
         if ($request->hasFile('profile_image')) {
-            $file = $request->file('profile_image');
-            $filename = strtolower($validated['first_name'] . '.' . $validated['last_name'] . '.' . $file->getClientOriginalExtension());
-            $profileImagePath = $file->storeAs('profile_images', $filename, 'public');
+            try {
+                $file = $request->file('profile_image');
+                
+                // Validate file is actually an image
+                if (!$file->isValid()) {
+                    return redirect()->back()
+                        ->withErrors(['profile_image' => 'The uploaded file is invalid or corrupted.'])
+                        ->withInput();
+                }
+                
+                // Validate MIME type
+                $mimeType = $file->getMimeType();
+                $allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                if (!in_array($mimeType, $allowedMimes)) {
+                    return redirect()->back()
+                        ->withErrors(['profile_image' => 'Profile image must be a JPEG, PNG, GIF, or WebP file.'])
+                        ->withInput();
+                }
+                
+                // Validate file size (max 2MB)
+                if ($file->getSize() > 2097152) {
+                    return redirect()->back()
+                        ->withErrors(['profile_image' => 'Profile image must be less than 2MB.'])
+                        ->withInput();
+                }
+                
+                // Generate safe filename
+                $filename = strtolower($validated['first_name'] . '.' . $validated['last_name'] . '.' . $file->getClientOriginalExtension());
+                
+                // Ensure storage directory exists and is writable
+                if (!Storage::disk('public')->exists('profile_images')) {
+                    Storage::disk('public')->makeDirectory('profile_images', 0755, true);
+                }
+                
+                $profileImagePath = $file->storeAs('profile_images', $filename, 'public');
+                
+                if (!$profileImagePath) {
+                    Log::error('Failed to store profile image: path is null');
+                    return redirect()->back()
+                        ->withErrors(['profile_image' => 'Failed to save profile image. Please check server storage.'])
+                        ->withInput();
+                }
+            } catch (\Throwable $e) {
+                Log::error('Profile image upload error: ' . $e->getMessage(), [
+                    'file' => $request->file('profile_image')?->getClientOriginalName(),
+                    'exception' => get_class($e),
+                ]);
+                return redirect()->back()
+                    ->withErrors(['profile_image' => 'Error uploading profile image: ' . $e->getMessage()])
+                    ->withInput();
+            }
         } elseif (!empty($validated['profile_image_base64'])) {
             try {
                 $base64Data = $validated['profile_image_base64'];
                 if (strpos($base64Data, ',') !== false) {
-                    $base64Data = explode(',', $base64Data)[1];
+                    list($header, $base64Data) = explode(',', $base64Data);
                 }
-                $imageData = base64_decode($base64Data);
+                
+                // Validate base64 string
+                $imageData = base64_decode($base64Data, true);
+                if ($imageData === false) {
+                    return redirect()->back()
+                        ->withErrors(['profile_image' => 'Invalid image data format.'])
+                        ->withInput();
+                }
+                
+                // Validate size after decode (max 2MB)
+                if (strlen($imageData) > 2097152) {
+                    return redirect()->back()
+                        ->withErrors(['profile_image' => 'Profile image must be less than 2MB.'])
+                        ->withInput();
+                }
+                
+                // Verify it's actually an image
+                $finfo = finfo_open(FILEINFO_MIME_TYPE);
+                $mimeType = finfo_buffer($finfo, $imageData);
+                finfo_close($finfo);
+                
+                $allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                if (!in_array($mimeType, $allowedMimes)) {
+                    return redirect()->back()
+                        ->withErrors(['profile_image' => 'Profile image must be a valid image file (JPEG, PNG, GIF, or WebP).'])
+                        ->withInput();
+                }
+                
                 $filename = strtolower($validated['first_name'] . '.' . $validated['last_name'] . '.png');
                 $profileImagePath = 'profile_images/' . $filename;
+                
+                // Ensure storage directory exists
+                if (!Storage::disk('public')->exists('profile_images')) {
+                    Storage::disk('public')->makeDirectory('profile_images', 0755, true);
+                }
+                
                 Storage::disk('public')->put($profileImagePath, $imageData);
-            } catch (\Exception $e) {
-                Log::error('Failed to save profile image: ' . $e->getMessage());
-                $profileImagePath = null;
+            } catch (\Throwable $e) {
+                Log::error('Profile image base64 processing error: ' . $e->getMessage(), [
+                    'exception' => get_class($e),
+                    'size' => strlen($validated['profile_image_base64'] ?? ''),
+                ]);
+                return redirect()->back()
+                    ->withErrors(['profile_image' => 'Error processing captured image: ' . $e->getMessage()])
+                    ->withInput();
             }
         }
 
         $signaturePath = null;
         if ($request->hasFile('signature')) {
-            $file = $request->file('signature');
-            $filename = strtolower($validated['first_name'] . '.' . $validated['last_name'] . '_signature.' . $file->getClientOriginalExtension());
-            $signaturePath = $file->storeAs('signatures', $filename, 'public');
+            try {
+                $file = $request->file('signature');
+                
+                // Validate file is actually an image
+                if (!$file->isValid()) {
+                    return redirect()->back()
+                        ->withErrors(['signature' => 'The uploaded signature file is invalid or corrupted.'])
+                        ->withInput();
+                }
+                
+                // Validate MIME type
+                $mimeType = $file->getMimeType();
+                $allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                if (!in_array($mimeType, $allowedMimes)) {
+                    return redirect()->back()
+                        ->withErrors(['signature' => 'Signature must be a JPEG, PNG, GIF, or WebP file.'])
+                        ->withInput();
+                }
+                
+                // Validate file size (max 1MB)
+                if ($file->getSize() > 1048576) {
+                    return redirect()->back()
+                        ->withErrors(['signature' => 'Signature file must be less than 1MB.'])
+                        ->withInput();
+                }
+                
+                // Generate safe filename
+                $filename = strtolower($validated['first_name'] . '.' . $validated['last_name'] . '_signature.' . $file->getClientOriginalExtension());
+                
+                // Ensure storage directory exists and is writable
+                if (!Storage::disk('public')->exists('signatures')) {
+                    Storage::disk('public')->makeDirectory('signatures', 0755, true);
+                }
+                
+                $signaturePath = $file->storeAs('signatures', $filename, 'public');
+                
+                if (!$signaturePath) {
+                    Log::error('Failed to store signature: path is null');
+                    return redirect()->back()
+                        ->withErrors(['signature' => 'Failed to save signature. Please check server storage.'])
+                        ->withInput();
+                }
+            } catch (\Throwable $e) {
+                Log::error('Signature upload error: ' . $e->getMessage(), [
+                    'file' => $request->file('signature')?->getClientOriginalName(),
+                    'exception' => get_class($e),
+                ]);
+                return redirect()->back()
+                    ->withErrors(['signature' => 'Error uploading signature: ' . $e->getMessage()])
+                    ->withInput();
+            }
         } elseif (!empty($validated['signature_base64'])) {
             try {
                 $base64Data = $validated['signature_base64'];
                 if (strpos($base64Data, ',') !== false) {
-                    $base64Data = explode(',', $base64Data)[1];
+                    list($header, $base64Data) = explode(',', $base64Data);
                 }
-                $imageData = base64_decode($base64Data);
+                
+                // Validate base64 string
+                $imageData = base64_decode($base64Data, true);
+                if ($imageData === false) {
+                    return redirect()->back()
+                        ->withErrors(['signature' => 'Invalid signature data format.'])
+                        ->withInput();
+                }
+                
+                // Validate size after decode (max 1MB)
+                if (strlen($imageData) > 1048576) {
+                    return redirect()->back()
+                        ->withErrors(['signature' => 'Signature file must be less than 1MB.'])
+                        ->withInput();
+                }
+                
+                // Verify it's actually an image
+                $finfo = finfo_open(FILEINFO_MIME_TYPE);
+                $mimeType = finfo_buffer($finfo, $imageData);
+                finfo_close($finfo);
+                
+                $allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                if (!in_array($mimeType, $allowedMimes)) {
+                    return redirect()->back()
+                        ->withErrors(['signature' => 'Signature must be a valid image file (JPEG, PNG, GIF, or WebP).'])
+                        ->withInput();
+                }
+                
                 $filename = strtolower($validated['first_name'] . '.' . $validated['last_name'] . '_signature.png');
                 $signaturePath = 'signatures/' . $filename;
+                
+                // Ensure storage directory exists
+                if (!Storage::disk('public')->exists('signatures')) {
+                    Storage::disk('public')->makeDirectory('signatures', 0755, true);
+                }
+                
                 Storage::disk('public')->put($signaturePath, $imageData);
-            } catch (\Exception $e) {
-                Log::error('Failed to save signature: ' . $e->getMessage());
-                $signaturePath = null;
+            } catch (\Throwable $e) {
+                Log::error('Signature base64 processing error: ' . $e->getMessage(), [
+                    'exception' => get_class($e),
+                    'size' => strlen($validated['signature_base64'] ?? ''),
+                ]);
+                return redirect()->back()
+                    ->withErrors(['signature' => 'Error processing signature: ' . $e->getMessage()])
+                    ->withInput();
             }
         }
 
@@ -209,17 +383,34 @@ class ResidentController extends Controller
         ]);
 
         // If marked as head of family, update the clan with resident_id and head_of_family name
-        if ($validated['is_head_of_family']) {
+        if ($validated['is_head_of_family'] ?? false) {
             $clan->update([
                 'resident_id' => $resident->id,
                 'head_of_family' => $resident->first_name . ' ' . $resident->last_name,
             ]);
         }
 
-        // Generate username
-        $firstName = strtolower(trim($resident->first_name));
+        // Generate username with counter for duplicate first names
+        $firstName = strtolower(trim(str_replace(' ', '', $resident->first_name)));
         $lastName = strtolower(trim($resident->last_name));
-        $baseUsername = $firstName . '.' . $lastName;
+        
+        // Check if this first name already exists (with or without counter)
+        $firstNamePattern = $firstName . '\\d*\\.';
+        $existingCount = ResidentAccount::where('username', 'regexp', $firstNamePattern)->count();
+        
+        if ($existingCount > 0) {
+            // Find the highest counter for this first name
+            $maxCounter = 0;
+            $accounts = ResidentAccount::whereRaw("username REGEXP ?", [$firstNamePattern])->get();
+            foreach ($accounts as $account) {
+                if (preg_match("/^{$firstName}(\d+)\./", $account->username, $matches)) {
+                    $maxCounter = max($maxCounter, (int)$matches[1]);
+                }
+            }
+            $baseUsername = $firstName . ($maxCounter + 1) . '.' . $lastName;
+        } else {
+            $baseUsername = $firstName . '.' . $lastName;
+        }
 
         $username = $baseUsername;
         $counter = 1;
@@ -264,6 +455,17 @@ class ResidentController extends Controller
     public function show(Resident $resident)
     {
         $account = ResidentAccount::where('resident_id', $resident->id)->first();
+        
+        // Fetch appointments/request history for this resident
+        $appointments = Appointment::where('resident_id', $resident->id)
+            ->orderBy('scheduled_time', 'desc')
+            ->get();
+        
+        // Fetch blotter records where resident is respondent/accused
+        $blotterRecords = BlotterRecord::where('respondent_name', 'LIKE', '%' . $resident->first_name . '%')
+            ->where('respondent_name', 'LIKE', '%' . $resident->last_name . '%')
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         return view('residents.show', [
             'resident' => [
@@ -301,6 +503,8 @@ class ResidentController extends Controller
                 'username' => $account->username,
                 'created_at' => $account->created_at,
             ] : null,
+            'appointments' => $appointments,
+            'blotterRecords' => $blotterRecords,
         ]);
     }
 
@@ -367,55 +571,197 @@ class ResidentController extends Controller
             'emergency_contact_address' => ['nullable', 'string', 'max:500'],
             'email' => ['nullable', 'email', 'max:255'],
             'is_head_of_family' => ['nullable', 'in:0,1'],
-            'profile_image' => ['nullable'],
-            'profile_image_base64' => ['nullable', 'string'],
-            'signature' => ['nullable'],
-            'signature_base64' => ['nullable', 'string'],
+            'profile_image' => ['nullable', 'image', 'max:2048'],
+            'profile_image_base64' => ['nullable', 'string', 'max:2097152'],
+            'signature' => ['nullable', 'image', 'max:1024'],
+            'signature_base64' => ['nullable', 'string', 'max:1048576'],
         ]);
 
         if ($request->hasFile('profile_image')) {
-            $file = $request->file('profile_image');
-            $filename = strtolower($validated['first_name'] . '.' . $validated['last_name'] . '.' . $file->getClientOriginalExtension());
-            $validated['profile_image'] = $file->storeAs('profile_images', $filename, 'public');
+            try {
+                $file = $request->file('profile_image');
+                
+                if (!$file->isValid()) {
+                    return redirect()->back()
+                        ->withErrors(['profile_image' => 'The uploaded file is invalid or corrupted.'])
+                        ->withInput();
+                }
+                
+                $mimeType = $file->getMimeType();
+                $allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                if (!in_array($mimeType, $allowedMimes)) {
+                    return redirect()->back()
+                        ->withErrors(['profile_image' => 'Profile image must be a JPEG, PNG, GIF, or WebP file.'])
+                        ->withInput();
+                }
+                
+                if ($file->getSize() > 2097152) {
+                    return redirect()->back()
+                        ->withErrors(['profile_image' => 'Profile image must be less than 2MB.'])
+                        ->withInput();
+                }
+                
+                $filename = strtolower($validated['first_name'] . '.' . $validated['last_name'] . '.' . $file->getClientOriginalExtension());
+                
+                if (!Storage::disk('public')->exists('profile_images')) {
+                    Storage::disk('public')->makeDirectory('profile_images', 0755, true);
+                }
+                
+                $validated['profile_image'] = $file->storeAs('profile_images', $filename, 'public');
+            } catch (\Throwable $e) {
+                Log::error('Profile image update error: ' . $e->getMessage(), [
+                    'file' => $request->file('profile_image')?->getClientOriginalName(),
+                    'exception' => get_class($e),
+                ]);
+                return redirect()->back()
+                    ->withErrors(['profile_image' => 'Error uploading profile image: ' . $e->getMessage()])
+                    ->withInput();
+            }
         } elseif (!empty($validated['profile_image_base64'])) {
             try {
                 $base64Data = $validated['profile_image_base64'];
                 if (strpos($base64Data, ',') !== false) {
-                    $base64Data = explode(',', $base64Data)[1];
+                    list($header, $base64Data) = explode(',', $base64Data);
                 }
-                $imageData = base64_decode($base64Data);
+                
+                $imageData = base64_decode($base64Data, true);
+                if ($imageData === false) {
+                    return redirect()->back()
+                        ->withErrors(['profile_image' => 'Invalid image data format.'])
+                        ->withInput();
+                }
+                
+                if (strlen($imageData) > 2097152) {
+                    return redirect()->back()
+                        ->withErrors(['profile_image' => 'Profile image must be less than 2MB.'])
+                        ->withInput();
+                }
+                
+                $finfo = finfo_open(FILEINFO_MIME_TYPE);
+                $mimeType = finfo_buffer($finfo, $imageData);
+                finfo_close($finfo);
+                
+                $allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                if (!in_array($mimeType, $allowedMimes)) {
+                    return redirect()->back()
+                        ->withErrors(['profile_image' => 'Profile image must be a valid image file (JPEG, PNG, GIF, or WebP).'])
+                        ->withInput();
+                }
+                
                 $filename = strtolower($validated['first_name'] . '.' . $validated['last_name'] . '.png');
                 $validated['profile_image'] = 'profile_images/' . $filename;
+                
+                if (!Storage::disk('public')->exists('profile_images')) {
+                    Storage::disk('public')->makeDirectory('profile_images', 0755, true);
+                }
+                
                 Storage::disk('public')->put($validated['profile_image'], $imageData);
-            } catch (\Exception $e) {
-                Log::error('Failed to save profile image: ' . $e->getMessage());
-                unset($validated['profile_image']);
+            } catch (\Throwable $e) {
+                Log::error('Profile image base64 update error: ' . $e->getMessage(), [
+                    'exception' => get_class($e),
+                    'size' => strlen($validated['profile_image_base64'] ?? ''),
+                ]);
+                return redirect()->back()
+                    ->withErrors(['profile_image' => 'Error processing captured image: ' . $e->getMessage()])
+                    ->withInput();
             }
         } else {
             unset($validated['profile_image']);
         }
 
         if ($request->hasFile('signature')) {
-            $file = $request->file('signature');
-            $filename = strtolower($validated['first_name'] . '.' . $validated['last_name'] . '_signature.' . $file->getClientOriginalExtension());
-            $validated['signature'] = $file->storeAs('signatures', $filename, 'public');
+            try {
+                $file = $request->file('signature');
+                
+                if (!$file->isValid()) {
+                    return redirect()->back()
+                        ->withErrors(['signature' => 'The uploaded signature file is invalid or corrupted.'])
+                        ->withInput();
+                }
+                
+                $mimeType = $file->getMimeType();
+                $allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                if (!in_array($mimeType, $allowedMimes)) {
+                    return redirect()->back()
+                        ->withErrors(['signature' => 'Signature must be a JPEG, PNG, GIF, or WebP file.'])
+                        ->withInput();
+                }
+                
+                if ($file->getSize() > 1048576) {
+                    return redirect()->back()
+                        ->withErrors(['signature' => 'Signature file must be less than 1MB.'])
+                        ->withInput();
+                }
+                
+                $filename = strtolower($validated['first_name'] . '.' . $validated['last_name'] . '_signature.' . $file->getClientOriginalExtension());
+                
+                if (!Storage::disk('public')->exists('signatures')) {
+                    Storage::disk('public')->makeDirectory('signatures', 0755, true);
+                }
+                
+                $validated['signature'] = $file->storeAs('signatures', $filename, 'public');
+            } catch (\Throwable $e) {
+                Log::error('Signature update error: ' . $e->getMessage(), [
+                    'file' => $request->file('signature')?->getClientOriginalName(),
+                    'exception' => get_class($e),
+                ]);
+                return redirect()->back()
+                    ->withErrors(['signature' => 'Error uploading signature: ' . $e->getMessage()])
+                    ->withInput();
+            }
         } elseif (!empty($validated['signature_base64'])) {
             try {
                 $base64Data = $validated['signature_base64'];
                 if (strpos($base64Data, ',') !== false) {
-                    $base64Data = explode(',', $base64Data)[1];
+                    list($header, $base64Data) = explode(',', $base64Data);
                 }
-                $imageData = base64_decode($base64Data);
+                
+                $imageData = base64_decode($base64Data, true);
+                if ($imageData === false) {
+                    return redirect()->back()
+                        ->withErrors(['signature' => 'Invalid signature data format.'])
+                        ->withInput();
+                }
+                
+                if (strlen($imageData) > 1048576) {
+                    return redirect()->back()
+                        ->withErrors(['signature' => 'Signature file must be less than 1MB.'])
+                        ->withInput();
+                }
+                
+                $finfo = finfo_open(FILEINFO_MIME_TYPE);
+                $mimeType = finfo_buffer($finfo, $imageData);
+                finfo_close($finfo);
+                
+                $allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                if (!in_array($mimeType, $allowedMimes)) {
+                    return redirect()->back()
+                        ->withErrors(['signature' => 'Signature must be a valid image file (JPEG, PNG, GIF, or WebP).'])
+                        ->withInput();
+                }
+                
                 $filename = strtolower($validated['first_name'] . '.' . $validated['last_name'] . '_signature.png');
                 $validated['signature'] = 'signatures/' . $filename;
+                
+                if (!Storage::disk('public')->exists('signatures')) {
+                    Storage::disk('public')->makeDirectory('signatures', 0755, true);
+                }
+                
                 Storage::disk('public')->put($validated['signature'], $imageData);
-            } catch (\Exception $e) {
-                Log::error('Failed to save signature: ' . $e->getMessage());
-                unset($validated['signature']);
+            } catch (\Throwable $e) {
+                Log::error('Signature base64 update error: ' . $e->getMessage(), [
+                    'exception' => get_class($e),
+                    'size' => strlen($validated['signature_base64'] ?? ''),
+                ]);
+                return redirect()->back()
+                    ->withErrors(['signature' => 'Error processing signature: ' . $e->getMessage()])
+                    ->withInput();
             }
         } else {
             unset($validated['signature']);
         }
+
+        $validated['is_head_of_family'] = $validated['is_head_of_family'] ?? false;
 
         $resident->update($validated);
 
@@ -490,24 +836,96 @@ class ResidentController extends Controller
             'emergency_contact_no' => 'nullable|string|max:20',
             'emergency_contact_address' => 'nullable|string|max:255',
             'profile_image' => 'nullable|image|max:2048',
-            'signature' => 'nullable|image|max:2048',
+            'signature' => 'nullable|image|max:1024',
             'is_head_of_family' => 'nullable|boolean',
         ]);
 
         // Handle profile image upload
         $profileImagePath = null;
         if ($request->hasFile('profile_image')) {
-            $file = $request->file('profile_image');
-            $filename = strtolower($validated['first_name'] . '.' . $validated['last_name'] . '.' . $file->getClientOriginalExtension());
-            $profileImagePath = $file->storeAs('profile_images', $filename, 'public');
+            try {
+                $file = $request->file('profile_image');
+                
+                if (!$file->isValid()) {
+                    return redirect()->back()
+                        ->withErrors(['profile_image' => 'The uploaded file is invalid or corrupted.'])
+                        ->withInput();
+                }
+                
+                $mimeType = $file->getMimeType();
+                $allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                if (!in_array($mimeType, $allowedMimes)) {
+                    return redirect()->back()
+                        ->withErrors(['profile_image' => 'Profile image must be a JPEG, PNG, GIF, or WebP file.'])
+                        ->withInput();
+                }
+                
+                if ($file->getSize() > 2097152) {
+                    return redirect()->back()
+                        ->withErrors(['profile_image' => 'Profile image must be less than 2MB.'])
+                        ->withInput();
+                }
+                
+                $filename = strtolower($validated['first_name'] . '.' . $validated['last_name'] . '.' . $file->getClientOriginalExtension());
+                
+                if (!Storage::disk('public')->exists('profile_images')) {
+                    Storage::disk('public')->makeDirectory('profile_images', 0755, true);
+                }
+                
+                $profileImagePath = $file->storeAs('profile_images', $filename, 'public');
+            } catch (\Throwable $e) {
+                Log::error('Public registration profile image error: ' . $e->getMessage(), [
+                    'file' => $request->file('profile_image')?->getClientOriginalName(),
+                    'exception' => get_class($e),
+                ]);
+                return redirect()->back()
+                    ->withErrors(['profile_image' => 'Error uploading profile image: ' . $e->getMessage()])
+                    ->withInput();
+            }
         }
 
         // Handle signature upload
         $signaturePath = null;
         if ($request->hasFile('signature')) {
-            $file = $request->file('signature');
-            $filename = strtolower($validated['first_name'] . '.' . $validated['last_name'] . '.signature.' . $file->getClientOriginalExtension());
-            $signaturePath = $file->storeAs('signatures', $filename, 'public');
+            try {
+                $file = $request->file('signature');
+                
+                if (!$file->isValid()) {
+                    return redirect()->back()
+                        ->withErrors(['signature' => 'The uploaded signature file is invalid or corrupted.'])
+                        ->withInput();
+                }
+                
+                $mimeType = $file->getMimeType();
+                $allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                if (!in_array($mimeType, $allowedMimes)) {
+                    return redirect()->back()
+                        ->withErrors(['signature' => 'Signature must be a JPEG, PNG, GIF, or WebP file.'])
+                        ->withInput();
+                }
+                
+                if ($file->getSize() > 1048576) {
+                    return redirect()->back()
+                        ->withErrors(['signature' => 'Signature file must be less than 1MB.'])
+                        ->withInput();
+                }
+                
+                $filename = strtolower($validated['first_name'] . '.' . $validated['last_name'] . '_signature.' . $file->getClientOriginalExtension());
+                
+                if (!Storage::disk('public')->exists('signatures')) {
+                    Storage::disk('public')->makeDirectory('signatures', 0755, true);
+                }
+                
+                $signaturePath = $file->storeAs('signatures', $filename, 'public');
+            } catch (\Throwable $e) {
+                Log::error('Public registration signature error: ' . $e->getMessage(), [
+                    'file' => $request->file('signature')?->getClientOriginalName(),
+                    'exception' => get_class($e),
+                ]);
+                return redirect()->back()
+                    ->withErrors(['signature' => 'Error uploading signature: ' . $e->getMessage()])
+                    ->withInput();
+            }
         }
 
         // Build address from parts
@@ -576,12 +994,27 @@ class ResidentController extends Controller
             ]);
         }
 
-        // Generate username
-        $baseUsername = Str::of($resident->first_name)
-            ->lower()
-            ->trim()
-            ->append('.')
-            ->append(Str::of($resident->last_name)->lower()->trim());
+        // Generate username with counter for duplicate first names
+        $firstName = strtolower(trim(str_replace(' ', '', $resident->first_name)));
+        $lastName = strtolower(trim($resident->last_name));
+        
+        // Check if this first name already exists (with or without counter)
+        $firstNamePattern = $firstName . '\\d*\\.';
+        $existingCount = ResidentAccount::where('username', 'regexp', $firstNamePattern)->count();
+        
+        if ($existingCount > 0) {
+            // Find the highest counter for this first name
+            $maxCounter = 0;
+            $accounts = ResidentAccount::whereRaw("username REGEXP ?", [$firstNamePattern])->get();
+            foreach ($accounts as $account) {
+                if (preg_match("/^{$firstName}(\d+)\./", $account->username, $matches)) {
+                    $maxCounter = max($maxCounter, (int)$matches[1]);
+                }
+            }
+            $baseUsername = $firstName . ($maxCounter + 1) . '.' . $lastName;
+        } else {
+            $baseUsername = $firstName . '.' . $lastName;
+        }
 
         $username = $baseUsername;
         $counter = 1;
