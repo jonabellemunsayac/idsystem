@@ -534,6 +534,7 @@
                 <a href="{{ route('audit-logs.index') }}" class="list-group-item {{ request()->routeIs('audit-logs.*') ? 'active' : '' }}">
                     <i class="bi bi-clock-history"></i> Audit Logs
                 </a>
+                
                 @endif
 
                 <!-- Settings Group -->

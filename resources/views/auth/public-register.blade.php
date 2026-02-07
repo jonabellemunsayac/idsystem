@@ -432,23 +432,23 @@
 
 <!-- Signature Large Canvas Modal -->
 <div class="modal fade" id="signatureLargeModal" tabindex="-1" aria-labelledby="signatureLargeModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="signatureLargeModalLabel">Draw Signature</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body p-2 p-md-3">
                 <div class="text-center">
-                    <div style="border: 2px solid #dee2e6; border-radius: 4px; background: transparent; overflow: hidden; display: inline-block;">
-                        <canvas id="signature-canvas-large" width="800" height="400" style="display: block; cursor: crosshair; background: transparent;"></canvas>
+                    <div style="border: 2px solid #dee2e6; border-radius: 4px; background: transparent; overflow: hidden; display: inline-block; width: 100%; max-width: 800px;">
+                        <canvas id="signature-canvas-large" style="display: block; cursor: crosshair; background: transparent; width: 100%; height: auto; max-width: 100%; touch-action: none;"></canvas>
                     </div>
                     <p class="text-muted mt-2 mb-0" style="font-size: 0.85rem;">
                         <i class="bi bi-info-circle"></i> Draw your signature using your mouse or touch screen
                     </p>
                 </div>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer flex-wrap gap-2">
                 <button type="button" class="btn btn-warning" id="clear-signature-large-btn">
                     <i class="bi bi-arrow-counterclockwise"></i> Clear
                 </button>
@@ -795,13 +795,32 @@ document.addEventListener('DOMContentLoaded', function() {
     let isDrawingLarge = false;
     let ctxLarge = signatureCanvasLarge.getContext('2d');
     
+    // Function to resize canvas for responsive design
+    function resizeSignatureCanvas() {
+        const container = signatureCanvasLarge.parentElement;
+        const width = Math.min(container.clientWidth - 4, 800); // 4px for border
+        const height = Math.min(width * 0.5, 400); // Maintain aspect ratio
+        
+        if (signatureCanvasLarge.width !== width || signatureCanvasLarge.height !== height) {
+            signatureCanvasLarge.width = width;
+            signatureCanvasLarge.height = height;
+            ctxLarge.clearRect(0, 0, signatureCanvasLarge.width, signatureCanvasLarge.height);
+        }
+    }
+    
     // Initialize large canvas
-    ctxLarge.clearRect(0, 0, signatureCanvasLarge.width, signatureCanvasLarge.height);
+    resizeSignatureCanvas();
+    window.addEventListener('resize', resizeSignatureCanvas);
+    
+    // Resize canvas when modal is shown
+    document.getElementById('signatureLargeModal').addEventListener('shown.bs.modal', function() {
+        resizeSignatureCanvas();
+        ctxLarge.clearRect(0, 0, signatureCanvasLarge.width, signatureCanvasLarge.height);
+    });
     
     // Open large canvas modal
     drawSignatureLargeBtn.addEventListener('click', function() {
         signatureLargeModal.show();
-        ctxLarge.clearRect(0, 0, signatureCanvasLarge.width, signatureCanvasLarge.height);
     });
     
     // Mouse events for large canvas

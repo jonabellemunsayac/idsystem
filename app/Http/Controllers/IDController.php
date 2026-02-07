@@ -79,6 +79,9 @@ class IDController extends Controller
         $residents = Resident::where('first_name', 'like', "%{$query}%")
             ->orWhere('last_name', 'like', "%{$query}%")
             ->orWhere('middle_name', 'like', "%{$query}%")
+            ->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$query}%"])
+            ->orWhereRaw("CONCAT(last_name, ', ', first_name) LIKE ?", ["%{$query}%"])
+            ->orWhereRaw("CONCAT(first_name, ' ', middle_name, ' ', last_name) LIKE ?", ["%{$query}%"])
             ->limit(10)
             ->get()
             ->map(fn($r) => [

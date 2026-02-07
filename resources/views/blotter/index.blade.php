@@ -158,7 +158,7 @@
                         </div>
                         <div class="col-md-6">
                             <label for="complainantContact" class="form-label fw-bold text-dark">Contact Number</label>
-                            <input type="tel" class="form-control" id="complainantContact" placeholder="(+63) XXX-XXX-XXXX">
+                            <input type="tel" class="form-control" id="complainantContact" placeholder="09XXXXXXXXX" pattern="09[0-9]{9}" maxlength="11" title="Must start with 09 and contain exactly 11 digits">
                         </div>
                     </div>
 
@@ -170,7 +170,7 @@
                         </div>
                         <div class="col-md-6">
                             <label for="respondentContact" class="form-label fw-bold text-dark">Respondent Contact</label>
-                            <input type="tel" class="form-control" id="respondentContact" placeholder="(+63) XXX-XXX-XXXX">
+                            <input type="tel" class="form-control" id="respondentContact" placeholder="09XXXXXXXXX" pattern="09[0-9]{9}" maxlength="11" title="Must start with 09 and contain exactly 11 digits">
                         </div>
                     </div>
 
@@ -552,6 +552,15 @@
         // Generate sample Case ID
         const caseNumber = String(Math.floor(Math.random() * 1000000)).padStart(6, '0');
         document.getElementById('caseId').value = 'BLT-' + caseNumber;
+        
+        // Filter contact number inputs - only allow digits
+        document.getElementById('complainantContact').addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+        
+        document.getElementById('respondentContact').addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
     });
 
     // Handle form submission
