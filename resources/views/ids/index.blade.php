@@ -152,6 +152,7 @@
                             
                             <div class="d-flex flex-column align-items-center justify-content-end" style="width: 80px; flex-shrink: 0;">
                                 <div class="text-center w-100">
+                                    <img src="{{ asset('public/storage/signatures/johnh.asdkoa_signature.png') }}" alt="Signature" style="max-width: 75px; max-height: 25px; object-fit: contain; margin-bottom: 3px;">
                                     <div style="border-top: 1px solid #000; margin: 8px auto; width: 90%;"></div>
                                     <div style="font-size: 0.65rem; font-weight: bold; color: #0038A8; line-height: 1.2;">BARANGAY<br>CHAIRMAN</div>
                                 </div>
@@ -772,6 +773,7 @@ document.addEventListener('DOMContentLoaded', function() {
                       </div>
                   </div>
                   <div class="back-right">
+                      <img src="{{ asset('public/storage/signatures/johnh.asdkoa_signature.png') }}" alt="Signature" style="max-width: 75px; max-height: 25px; object-fit: contain; display: block; margin: 0 auto 2px; width: 100%;">
                       <div class="chairman-line"></div>
                       <div class="chairman-label">BARANGAY<br>CHAIRMAN</div>
                   </div>

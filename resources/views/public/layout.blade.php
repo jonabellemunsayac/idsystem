@@ -84,10 +84,14 @@
                         <i class="bi bi-telephone me-2"></i>
                         (02) 8643-1111
                     </p>
-                    <p class="footer-text">
+                    <p class="footer-text mb-3">
                         <i class="bi bi-envelope me-2"></i>
                         brgykalawaan.gov@gmail.com
                     </p>
+                    <h6 class="fw-bold mb-3">Follow Us</h6>
+                    <a href="https://www.facebook.com/barangay.kalawaan.2024" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-light">
+                        <i class="bi bi-facebook"></i> Facebook
+                    </a>
                 </div>
             </div>
             <hr class="my-4">
