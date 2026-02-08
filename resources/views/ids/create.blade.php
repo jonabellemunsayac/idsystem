@@ -87,51 +87,65 @@
                                     <span id="preview-id-no" style="font-weight: bold;">PENDING</span>
                                 </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <!-- BACK PREVIEW -->
-                    <div class="id-card-preview position-relative overflow-hidden shadow-sm" style="aspect-ratio: 1.586/1; background-color: #1a3a5c; border-radius: 8px; container-type: inline-size;">
-                        <div class="text-center text-white fw-bold" style="background-color: #0f2741; padding: 1cqw; font-size: 2.8cqw; letter-spacing: 0.1em;">
-                            EMERGENCY CONTACT
-                        </div>
-                        
-                        <div class="d-flex gap-3 p-3" style="padding: 4cqw !important; gap: 4cqw !important;">
-                            <div class="flex-grow-1 d-flex flex-column gap-2" style="gap: 2cqw !important;">
-                                <div>
-                                    <div style="font-size: 2.2cqw; font-weight: bold; color: #fcd34d; margin-bottom: 0.5cqw;">NAME</div>
-                                    <div id="preview-ec-name" style="font-size: 2.2cqw; color: white; font-weight: bold;">_____________________</div>
-                                </div>
-                                <div>
-                                    <div style="font-size: 2.2cqw; font-weight: bold; color: #fcd34d; margin-bottom: 0.5cqw;">ADDRESS</div>
-                                    <div id="preview-ec-address" style="font-size: 2.2cqw; color: white; font-weight: bold; line-height: 1.2;">_____________________</div>
-                                </div>
-                                <div>
-                                    <div style="font-size: 2.2cqw; font-weight: bold; color: #fcd34d; margin-bottom: 0.5cqw;">CONTACT NO.</div>
-                                    <div id="preview-ec-no" style="font-size: 2.2cqw; color: white; font-weight: bold;">_____________________</div>
-                                </div>
-                                
-                                <div class="mt-auto text-center text-white" style="font-size: 1.8cqw; line-height: 1.2;">
-                                    This card is non-transferable.<br>Please report lost or found cards<br>to the Barangay Hall immediately.
-                                </div>
-                            </div>
-                            
+                            <!-- Barangay Chairman Signature -->
                             <div class="d-flex flex-column align-items-center justify-content-center" style="width: 25cqw; gap: 2cqw;">
-                                <div class="bg-white p-1 rounded" style="width: 22cqw; height: 22cqw;">
-                                    <img id="preview-qr" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E" alt="QR" style="width: 100%; height: 100%;">
-                                </div>
-                                
-                                <div class="text-center" style="font-size: 2cqw; color: #fcd34d; font-weight: bold; line-height: 1.2;">
-                                    Valid Until<br>
-                                    <span id="preview-validity" style="color: white;">N/A</span>
-                                </div>
-
                                 <div class="text-center w-100 mt-auto">
-                                    <img src="{{ asset('public/storage/signatures/johnh.asdkoa_signature.png') }}" alt="Signature" style="max-width: 22cqw; max-height: 5cqw; object-fit: contain; margin-bottom: 0.5cqw; display: block; margin-left: auto; margin-right: auto;">
+                                    <img src="{{ asset('storage/signatures/johnh.asdkoa_signature.png') }}" alt="Signature" style="max-width: 22cqw; max-height: 5cqw; object-fit: contain; margin-bottom: 0.5cqw; display: block; margin-left: auto; margin-right: auto;">
                                     <div style="border-top: 1px solid white; margin: 1cqw auto; width: 80%;"></div>
                                     <div style="font-size: 2cqw; font-weight: bold; color: white;">BARANGAY<br>CHAIRMAN</div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- BACK PREVIEW -->
+                    <div class="id-card-preview position-relative overflow-hidden shadow-sm" style="aspect-ratio: 1.586/1; background-color: #f8f9fa; border-radius: 8px; container-type: inline-size;">
+                        <!-- Top Section: Emergency Contact Info -->
+                        <div style="padding: 3.5cqw 4cqw; position: relative; z-index: 1;">
+                            <div style="text-align: center; font-weight: bold; color: #CE1126; font-size: 2cqw; letter-spacing: 0.1em; margin-bottom: 2.5cqw; line-height: 1.2;">IN CASE OF EMERGENCY,<br>KINDLY NOTIFY:</div>
+                            
+                            <table style="width: 100%; font-size: 1.8cqw; border-collapse: collapse; margin-bottom: 1.5cqw;">
+                                <tr style="line-height: 1.6;">
+                                    <td style="font-weight: bold; color: #000; width: 18cqw; padding: 0 0.5cqw 0.8cqw 0;">NAME:</td>
+                                    <td style="color: #000; font-weight: bold; padding: 0 0 0.8cqw 0;" id="preview-ec-name">_________________</td>
+                                </tr>
+                                <tr style="line-height: 1.6;">
+                                    <td style="font-weight: bold; color: #000; width: 18cqw; padding: 0 0.5cqw 0.8cqw 0;">RELATION:</td>
+                                    <td style="color: #000; font-weight: bold; padding: 0 0 0.8cqw 0;" id="preview-ec-relation">_________________</td>
+                                </tr>
+                                <tr style="line-height: 1.6;">
+                                    <td style="font-weight: bold; color: #000; width: 18cqw; padding: 0 0.5cqw 0.8cqw 0;">ADDRESS:</td>
+                                    <td style="color: #000; font-weight: bold; padding: 0 0 0.8cqw 0;" id="preview-ec-address">_________________</td>
+                                </tr>
+                                <tr style="line-height: 1.6;">
+                                    <td style="font-weight: bold; color: #000; width: 18cqw; padding: 0 0.5cqw 0 0;">CONTACT NO.:</td>
+                                    <td style="color: #000; font-weight: bold; padding: 0 0 0 0;" id="preview-ec-no">_________________</td>
+                                </tr>
+                            </table>
+
+                            <!-- Emergency Hotline Section -->
+                            <div style="text-align: center; font-weight: bold; color: #CE1126; font-size: 2cqw; letter-spacing: 0.1em; margin-top: 1.5cqw; margin-bottom: 1.5cqw; line-height: 1.2;">EMERGENCY HOTLINE</div>
+                            
+                            <div style="font-size: 1.6cqw; line-height: 1.5; text-align: center; color: #000; margin-bottom: 1.5cqw;">
+                                <div style="font-weight: bold;">BARANGAY: (02) 874-26641</div>
+                                <div style="font-weight: bold;">PASIG CITY: 643-0000</div>
+                                <div style="font-weight: bold;">PNP: 911</div>
+                                <div style="font-weight: bold;">BFP: 0932-779-8621</div>
+                                <div style="font-weight: bold;">MERALCO: 16211</div>
+                            </div>
+
+                            <div style="text-align: center; font-size: 1.4cqw; color: #666;">
+                                IF FOUND, PLEASE RETURN TO<br>KALAWAAN BARANGAY HALL
+                            </div>
+                        </div>
+
+                        <!-- QR Code Section -->
+                        <div style="position: absolute; bottom: 3cqw; right: 3cqw; text-align: center;">
+                            <div class="bg-white p-1 rounded" style="width: 20cqw; height: 20cqw; display: flex; align-items: center; justify-content: center; border: 0.3cqw solid #000;">
+                                <img id="preview-qr" alt="QR Code" style="width: 100%; height: 100%; object-fit: contain;">
+                            </div>
+                            <div id="preview-id-no-back" class="font-monospace fw-bold text-center" style="font-size: 1.2cqw; letter-spacing: 0.1em; color: #212529; width: 20cqw; margin-top: 0.5cqw;">QR CODE</div>
                         </div>
                     </div>
                 </div>
@@ -307,6 +321,12 @@ document.addEventListener('DOMContentLoaded', function() {
         previewEcName.textContent = resident.emergency_contact_name || '_____________________';
         previewEcAddress.textContent = resident.emergency_contact_address || '_____________________';
         previewEcNo.textContent = resident.emergency_contact_no || '_____________________';
+        
+        // Handle emergency contact relation
+        const previewEcRelation = document.getElementById('preview-ec-relation');
+        if (previewEcRelation) {
+            previewEcRelation.textContent = resident.emergency_contact_relationship || '_____________________';
+        }
 
         if (resident.profile_image) {
             previewPhoto.src = `/storage/${resident.profile_image}`;
@@ -319,11 +339,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (idData) {
             previewIdNo.textContent = idData.id_number;
-            previewQr.src = idData.qr_code;
+            if (idData.qr_code) {
+                previewQr.src = idData.qr_code;
+            }
             previewValidity.textContent = idData.expiration_date;
         } else {
             previewIdNo.textContent = 'PENDING';
-            previewQr.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E";
+            previewQr.src = '';
             previewValidity.textContent = 'N/A';
         }
     }
@@ -533,7 +555,7 @@ document.addEventListener('DOMContentLoaded', function() {
                       </div>
 
                       <div class="chairman-sig">
-                        <img src="{{ asset('public/storage/signatures/johnh.asdkoa_signature.png') }}" alt="Signature" style="max-width: 75px; max-height: 35px; object-fit: contain; display: block; margin: 0 auto 4px;">
+                        <img src="{{ asset('storage/signatures/johnh.asdkoa_signature.png') }}" alt="Signature" style="max-width: 75px; max-height: 35px; object-fit: contain; display: block; margin: 0 auto 4px;">
                         <div class="chairman-line"></div>
                         <div class="chairman-label">BARANGAY<br>CHAIRMAN</div>
                       </div>

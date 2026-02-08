@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ID;
 use App\Models\Resident;
 use App\Services\ActivityLogger;
+use App\Services\QRCodeGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
@@ -166,9 +167,9 @@ class IDController extends Controller
         // Generate ID Number: BRGY-YEAR-RANDOM
         $idNumber = 'BRGY-' . date('Y') . '-' . strtoupper(Str::random(6));
         
-        // Create QR code URL using the qr.authenticate route
+        // Create QR code URL using the qr.authenticate route with QRCodeGenerator service
         $qrUrl = route('qr.authenticate', ['token' => $qrToken]);
-        $qrCodeImage = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' . urlencode($qrUrl);
+        $qrCodeImage = QRCodeGenerator::generateQRCode($qrUrl);
 
         $id = ID::create([
             'resident_id' => $resident->id,

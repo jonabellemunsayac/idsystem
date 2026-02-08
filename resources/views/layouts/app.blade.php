@@ -526,6 +526,12 @@
                     <i class="bi bi-box-seam-fill"></i> Assets Management
                 </a>
                 
+                @if(auth()->user()->role === 'admin' || auth()->user()->role === 'superadmin')
+                <a href="{{ route('certificates.index') }}" class="list-group-item {{ request()->routeIs('certificates.*') ? 'active' : '' }}">
+                    <i class="bi bi-award-fill"></i> Certificates
+                </a>
+                @endif
+                
                 <a href="{{ route('reports.index') }}" class="list-group-item {{ request()->routeIs('reports.*') ? 'active' : '' }}">
                     <i class="bi bi-bar-chart-fill"></i> Reports & Analytics
                 </a>
