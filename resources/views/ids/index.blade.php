@@ -110,12 +110,13 @@
                                     </div>
                                 </div>
 
-                                <!-- QR Code & ID No -->
+                                <!-- Barangay Chairman Signature -->
                                 <div class="position-absolute" style="bottom: 0; right: 0; text-align: center;">
-                                    <div class="bg-white p-1 mb-1 border border-2 border-dark" style="width: 75px; height: 75px; display: flex; align-items: center; justify-content: center;">
-                                        <img id="preview-qr" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E" alt="QR" style="width: 100%; height: 100%; object-fit: contain;">
+                                    <div class="text-center w-100">
+                                        <img src="{{ asset('storage/signatures/johnh.asdkoa_signature.png') }}" alt="Signature" style="max-width: 75px; max-height: 25px; object-fit: contain; margin-bottom: 3px;">
+                                        <div style="border-top: 1px solid #000; margin: 8px auto; width: 90%;"></div>
+                                        <div style="font-size: 0.65rem; font-weight: bold; color: #0038A8; line-height: 1.2;">BARANGAY<br>CHAIRMAN</div>
                                     </div>
-                                    <div id="preview-id-no" class="font-monospace fw-bold" style="font-size: 0.5rem; letter-spacing: 0.3px; color: #212529;">PENDING</div>
                                 </div>
                             </div>
                         </div>
@@ -126,37 +127,51 @@
                         <!-- Background Pattern -->
                         <div class="position-absolute w-100 h-100" style="opacity: 0.6; background: repeating-radial-gradient(circle at 0 100%, transparent 0, transparent 10px, rgba(0,56,168,0.03) 11px, rgba(0,56,168,0.03) 12px), repeating-radial-gradient(circle at 100% 0, transparent 0, transparent 10px, rgba(206,17,38,0.03) 11px, rgba(206,17,38,0.03) 12px); pointer-events: none;"></div>
 
-                        <div class="text-center fw-bold py-2" style="background: linear-gradient(90deg, rgba(38,143,255,0.85) 0%, rgba(255,255,255,0.85) 50%, rgba(0,48,103,0.85) 100%), url('/images/sil.jpg') center/cover; color: #003067; font-size: 0.9rem; letter-spacing: 0.1em; padding: 8px 12px;">
-                            EMERGENCY CONTACT
-                        </div>
-                        
-                        <div class="d-flex p-3 position-relative" style="gap: 15px; min-height: 240px;">
-                            <div class="flex-grow-1 d-flex flex-column" style="gap: 10px; min-width: 0;">
-                                <div>
-                                    <div style="font-size: 0.7rem; font-weight: bold; color: #0038A8; margin-bottom: 2px;">NAME</div>
-                                    <div id="preview-ec-name" style="font-size: 0.8rem; color: #333; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 2px; word-break: break-word;">_____________________</div>
-                                </div>
-                                <div>
-                                    <div style="font-size: 0.7rem; font-weight: bold; color: #0038A8; margin-bottom: 2px;">ADDRESS</div>
-                                    <div id="preview-ec-address" style="font-size: 0.8rem; color: #333; font-weight: bold; line-height: 1.2; border-bottom: 1px solid #ccc; padding-bottom: 2px; word-break: break-word;">_____________________</div>
-                                </div>
-                                <div>
-                                    <div style="font-size: 0.7rem; font-weight: bold; color: #0038A8; margin-bottom: 2px;">CONTACT NO.</div>
-                                    <div id="preview-ec-no" style="font-size: 0.8rem; color: #333; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 2px; word-break: break-word;">_____________________</div>
-                                </div>
-                                
-                                <div class="mt-auto text-center text-muted" style="font-size: 0.6rem; line-height: 1.3; padding-top: 10px;">
-                                    This card is non-transferable.<br>Please report lost or found cards<br>to the Barangay Hall immediately.
-                                </div>
-                            </div>
+                        <!-- Top Section: Emergency Contact Info -->
+                        <div style="padding: 10px 12px; position: relative; z-index: 1;">
+                            <div style="text-align: center; font-weight: bold; color: #CE1126; font-size: 0.95rem; letter-spacing: 0.5px; margin-bottom: 6px; line-height: 1.2;">IN CASE OF EMERGENCY,<br>KINDLY NOTIFY:</div>
                             
-                            <div class="d-flex flex-column align-items-center justify-content-end" style="width: 80px; flex-shrink: 0;">
-                                <div class="text-center w-100">
-                                    <img src="{{ asset('public/storage/signatures/johnh.asdkoa_signature.png') }}" alt="Signature" style="max-width: 75px; max-height: 25px; object-fit: contain; margin-bottom: 3px;">
-                                    <div style="border-top: 1px solid #000; margin: 8px auto; width: 90%;"></div>
-                                    <div style="font-size: 0.65rem; font-weight: bold; color: #0038A8; line-height: 1.2;">BARANGAY<br>CHAIRMAN</div>
-                                </div>
+                            <table style="width: 100%; font-size: 0.85rem; border-collapse: collapse; margin-bottom: 5px;">
+                                <tr style="line-height: 1.5;">
+                                    <td style="font-weight: bold; color: #000; width: 80px; padding: 0 5px 2px 0; white-space: nowrap;">NAME:</td>
+                                    <td style="color: #000; font-weight: bold; padding: 0 0 2px 0;" id="preview-ec-name">_________________</td>
+                                </tr>
+                                <tr style="line-height: 1.5;">
+                                    <td style="font-weight: bold; color: #000; width: 80px; padding: 0 5px 2px 0; white-space: nowrap;">RELATION:</td>
+                                    <td style="color: #000; font-weight: bold; padding: 0 0 2px 0;" id="preview-ec-relation">_________________</td>
+                                </tr>
+                                <tr style="line-height: 1.5;">
+                                    <td style="font-weight: bold; color: #000; width: 80px; padding: 0 5px 2px 0; white-space: nowrap;">ADDRESS:</td>
+                                    <td style="color: #000; font-weight: bold; padding: 0 0 2px 0;" id="preview-ec-address">_________________</td>
+                                </tr>
+                                <tr style="line-height: 1.5;">
+                                    <td style="font-weight: bold; color: #000; width: 80px; padding: 0 5px 0 0; white-space: nowrap;">CONTACT NO.:</td>
+                                    <td style="color: #000; font-weight: bold; padding: 0 0 0 0;" id="preview-ec-no">_________________</td>
+                                </tr>
+                            </table>
+
+                            <!-- Emergency Hotline Section -->
+                            <div style="text-align: center; font-weight: bold; color: #CE1126; font-size: 0.95rem; letter-spacing: 0.5px; margin-top: 4px; margin-bottom: 4px; line-height: 1.2;">EMERGENCY HOTLINE</div>
+                            
+                            <div style="font-size: 0.8rem; line-height: 1.4; text-align: center; color: #000; margin-bottom: 4px;">
+                                <div style="font-weight: bold;">BARANGAY: (02) 874-26641</div>
+                                <div style="font-weight: bold;">PASIG CITY: 643-0000</div>
+                                <div style="font-weight: bold;">PNP: 911</div>
+                                <div style="font-weight: bold;">BFP: 0932-779-8621</div>
+                                <div style="font-weight: bold;">MERALCO: 16211</div>
                             </div>
+
+                            <div style="text-align: center; font-size: 0.7rem; color: #666; padding-top: 4px; margin-top: 4px;">
+                                IF FOUND, PLEASE RETURN TO KALAWAAN<br>BARANGAY HALL INFORMATION CENTER
+                            </div>
+                        </div>
+
+                        <!-- QR Code Section -->
+                        <div style="position: absolute; bottom: 10px; right: 10px; text-align: center;">
+                            <div style="width: 55px; height: 55px; background: white; border: 2px solid #000; display: flex; align-items: center; justify-content: center;">
+                                <img id="preview-qr" alt="QR Code" style="width: 100%; height: 100%; object-fit: contain;">
+                            </div>
+                            <div id="preview-id-no-back" class="font-monospace fw-bold text-center" style="font-size: 0.65rem; letter-spacing: 0.2px; color: #212529; width: 55px; margin-top: 2px;">QR CODE</div>
                         </div>
                     </div>
                 </div>
@@ -251,7 +266,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const previewStatus = document.getElementById('preview-status');
     const previewSpecialSector = document.getElementById('preview-special-sector');
     const previewAddress = document.getElementById('preview-address');
-    const previewIdNo = document.getElementById('preview-id-no');
+    const previewIdNoBack = document.getElementById('preview-id-no-back');
     const previewEcName = document.getElementById('preview-ec-name');
     const previewEcAddress = document.getElementById('preview-ec-address');
     const previewEcNo = document.getElementById('preview-ec-no');
@@ -347,6 +362,12 @@ document.addEventListener('DOMContentLoaded', function() {
         previewEcName.textContent = resident.emergency_contact_name || '_____________________';
         previewEcAddress.textContent = resident.emergency_contact_address || '_____________________';
         previewEcNo.textContent = resident.emergency_contact_no || '_____________________';
+        
+        // Handle emergency contact relation
+        const previewEcRelation = document.getElementById('preview-ec-relation');
+        if (previewEcRelation) {
+            previewEcRelation.textContent = resident.emergency_contact_relationship || '_____________________';
+        }
 
         // Handle photo display
         if (resident.profile_image && resident.profile_image.trim()) {
@@ -382,14 +403,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Handle ID data
         if (idData) {
-            previewIdNo.textContent = idData.id_number || 'PENDING';
+            if (previewIdNoBack) previewIdNoBack.textContent = idData.id_number || 'PENDING';
             if (idData.qr_code) {
                 previewQr.src = idData.qr_code;
             }
             previewValidity.textContent = idData.expiration_date || 'N/A';
         } else {
-            previewIdNo.textContent = 'PENDING';
-            previewQr.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E";
+            if (previewIdNoBack) previewIdNoBack.textContent = 'PENDING';
+            previewQr.src = '';
             // Calculate validity: resident created_at + 3 years
             if (resident.created_at) {
                 const createdDate = new Date(resident.created_at);
@@ -753,30 +774,48 @@ document.addEventListener('DOMContentLoaded', function() {
         const backCardHTML = `
               <div class="id-card">
                 <div class="bg-pattern"></div>
-                <div class="back-header">EMERGENCY CONTACT</div>
-                <div class="back-body">
-                  <div class="back-left">
-                      <div>
-                          <div class="ec-label">NAME</div>
-                          <div class="ec-value">${currentResident.emergency_contact_name || ''}</div>
-                      </div>
-                      <div>
-                          <div class="ec-label">ADDRESS</div>
-                          <div class="ec-value" style="line-height: 1;">${currentResident.emergency_contact_address || ''}</div>
-                      </div>
-                      <div>
-                          <div class="ec-label">CONTACT NO.</div>
-                          <div class="ec-value">${currentResident.emergency_contact_no || ''}</div>
-                      </div>
-                      <div class="disclaimer">
-                          This card is non-transferable.<br>Please report lost or found cards<br>to the Barangay Hall immediately.
-                      </div>
+                <div style="padding: 10px 12px; position: relative; z-index: 1;">
+                  <div style="text-align: center; font-weight: bold; color: #CE1126; font-size: 9px; letter-spacing: 0.5px; margin-bottom: 6px; line-height: 1.2;">IN CASE OF EMERGENCY,<br>KINDLY NOTIFY:</div>
+                  
+                  <table style="width: 100%; font-size: 8px; border-collapse: collapse; margin-bottom: 5px;">
+                    <tr style="line-height: 1.5;">
+                      <td style="font-weight: bold; color: #000; width: 70px; padding: 0 3px 2px 0; white-space: nowrap;">NAME:</td>
+                      <td style="color: #000; font-weight: bold; padding: 0 0 2px 0;">${currentResident.emergency_contact_name || '_________________'}</td>
+                    </tr>
+                    <tr style="line-height: 1.5;">
+                      <td style="font-weight: bold; color: #000; width: 70px; padding: 0 3px 2px 0; white-space: nowrap;">RELATION:</td>
+                      <td style="color: #000; font-weight: bold; padding: 0 0 2px 0;">${currentResident.emergency_contact_relationship || '_________________'}</td>
+                    </tr>
+                    <tr style="line-height: 1.5;">
+                      <td style="font-weight: bold; color: #000; width: 70px; padding: 0 3px 2px 0; white-space: nowrap;">ADDRESS:</td>
+                      <td style="color: #000; font-weight: bold; padding: 0 0 2px 0;">${currentResident.emergency_contact_address || '_________________'}</td>
+                    </tr>
+                    <tr style="line-height: 1.5;">
+                      <td style="font-weight: bold; color: #000; width: 70px; padding: 0 3px 0 0; white-space: nowrap;">CONTACT NO.:</td>
+                      <td style="color: #000; font-weight: bold; padding: 0 0 0 0;">${currentResident.emergency_contact_no || '_________________'}</td>
+                    </tr>
+                  </table>
+
+                  <div style="text-align: center; font-weight: bold; color: #CE1126; font-size: 9px; letter-spacing: 0.5px; margin-top: 4px; margin-bottom: 4px; line-height: 1.2;">EMERGENCY HOTLINE</div>
+                  
+                  <div style="font-size: 7.5px; line-height: 1.4; text-align: center; color: #000; margin-bottom: 4px;">
+                    <div style="font-weight: bold;">BARANGAY: (02) 874-26641</div>
+                    <div style="font-weight: bold;">PASIG CITY: 643-0000</div>
+                    <div style="font-weight: bold;">PNP: 911</div>
+                    <div style="font-weight: bold;">BFP: 0932-779-8621</div>
+                    <div style="font-weight: bold;">MERALCO: 16211</div>
                   </div>
-                  <div class="back-right">
-                      <img src="{{ asset('public/storage/signatures/johnh.asdkoa_signature.png') }}" alt="Signature" style="max-width: 75px; max-height: 25px; object-fit: contain; display: block; margin: 0 auto 2px; width: 100%;">
-                      <div class="chairman-line"></div>
-                      <div class="chairman-label">BARANGAY<br>CHAIRMAN</div>
+
+                  <div style="text-align: center; font-size: 6.5px; color: #666; padding-top: 4px; margin-top: 4px;">
+                    IF FOUND, PLEASE RETURN TO KALAWAAN<br>BARANGAY HALL INFORMATION CENTER
                   </div>
+                </div>
+
+                <div style="position: absolute; bottom: 10px; right: 10px; text-align: center;">
+                  <div style="width: 55px; height: 55px; background: white; border: 2px solid #000; display: flex; align-items: center; justify-content: center;">
+                    <img src="${currentID.qr_code}" alt="QR" style="width: 100%; height: 100%; object-fit: contain;">
+                  </div>
+                  <div style="font-family: monospace; font-weight: bold; font-size: 6px; text-align: center; margin-top: 2px; color: #000;">QR CODE</div>
                 </div>
               </div>
         `;

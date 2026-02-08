@@ -19,20 +19,31 @@ class CertificateController extends Controller
             });
         }
 
-        $certificates = $query->orderBy('issued_date', 'desc')
+        $certificates = $query->orderBy('approved_date', 'desc')
             ->paginate(10)
             ->through(fn($cert) => [
                 'id' => $cert->id,
                 'resident_id' => $cert->resident_id,
                 'resident_name' => $cert->resident->first_name . ' ' . $cert->resident->last_name,
-                'certificate_type' => $cert->certificate_type,
-                'issued_date' => $cert->issued_date,
+                'type' => $cert->type,
+                'approved_date' => $cert->approved_date,
                 'status' => $cert->status,
                 'created_at' => $cert->created_at,
             ])
             ->withQueryString();
 
-        return view('certificates.index', ['certificates' => $certificates]);
+        // Get certificate counts by type
+        $certificateCounts = [
+            'indigency' => Certificate::where('type', 'indigency')->count(),
+            'residency' => Certificate::where('type', 'residency')->count(),
+            'clearance' => Certificate::where('type', 'clearance')->count(),
+            'low_income' => Certificate::where('type', 'low_income')->count(),
+        ];
+
+        return view('certificates.index', [
+            'certificates' => $certificates,
+            'certificateCounts' => $certificateCounts,
+        ]);
     }
 
     public function create()
@@ -50,13 +61,22 @@ class CertificateController extends Controller
     {
         $validated = $request->validate([
             'resident_id' => ['required', 'exists:residents,id'],
-            'certificate_type' => ['required', 'string', 'max:255'],
+            'certificate_type' => ['required', 'in:indigency,residency,clearance,low_income'],
             'issued_date' => ['required', 'date'],
-            'status' => ['required', 'in:active,inactive'],
+            'status' => ['required', 'in:active,inactive,draft,pending,approved'],
             'remarks' => ['nullable', 'string', 'max:500'],
         ]);
 
-        Certificate::create($validated);
+        // Map certificate_type to type field
+        $data = [
+            'resident_id' => $validated['resident_id'],
+            'type' => $validated['certificate_type'],
+            'approved_date' => $validated['issued_date'],
+            'status' => $validated['status'],
+            'notes' => $validated['remarks'],
+        ];
+
+        Certificate::create($data);
 
         return redirect()->route('certificates.index')->with('success', 'Certificate issued successfully!');
     }
