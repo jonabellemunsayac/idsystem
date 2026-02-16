@@ -119,6 +119,71 @@
     .cert-id { background-color: #f3f4f6; padding: 4px 8px; border-radius: 4px; font-family: monospace; font-size: 12px; font-weight: 500; }
     .action-btn { padding: 6px 10px; font-size: 12px; border-radius: 6px; }
     .empty-recent { padding: 40px 20px; text-align: center; color: #6b7280; }
+    .download-template-btn { 
+        background: rgba(255, 255, 255, 0.2); 
+        color: white; 
+        border: 1px solid rgba(255, 255, 255, 0.4); 
+        padding: 6px 12px; 
+        border-radius: 6px; 
+        font-size: 11px; 
+        font-weight: 600; 
+        cursor: pointer; 
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+    }
+    .download-template-btn:hover {
+        background: rgba(255, 255, 255, 0.35);
+        color: white;
+        transform: scale(1.05);
+    }
+    .download-template-btn i {
+        margin-right: 4px;
+    }
+    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 9999; }
+    .modal-overlay.active { display: flex; }
+    .modal-content { background: white; border-radius: 12px; padding: 32px; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto; }
+    .modal-header { margin-bottom: 24px; }
+    .modal-title { font-size: 20px; font-weight: 700; color: #1f2937; margin: 0 0 8px 0; }
+    .modal-subtitle { color: #6b7280; font-size: 14px; margin: 0; }
+    .modal-body { margin-bottom: 24px; }
+    .modal-footer { display: flex; gap: 12px; justify-content: flex-end; }
+    .btn-modal { padding: 10px 20px; border-radius: 6px; font-weight: 600; cursor: pointer; border: none; transition: all 0.3s ease; }
+    .btn-modal-primary { background-color: #0038A8; color: white; }
+    .btn-modal-primary:hover { background-color: #002B88; }
+    .btn-modal-secondary { background-color: #e5e7eb; color: #374151; }
+    .btn-modal-secondary:hover { background-color: #d1d5db; }
+
+    /* ===== Mobile Responsive ===== */
+    @media (max-width: 768px) {
+        .certificates-header { margin-bottom: 24px; }
+        .certificates-header .h4 { font-size: 18px; }
+        .cert-template-grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 24px; }
+        .cert-template-card { padding: 20px 16px; min-height: 280px; }
+        .cert-icon { font-size: 32px; }
+        .cert-template-name { font-size: 16px; }
+        .cert-template-desc { font-size: 12px; margin-bottom: 16px; }
+        .cert-btn { padding: 8px 14px; font-size: 12px; }
+        .download-template-btn { padding: 6px 10px; font-size: 10px; }
+        .recent-certs { margin-top: 24px; }
+        .recent-certs h5 { font-size: 15px; margin-bottom: 12px; }
+        .table thead th { padding: 10px 8px; font-size: 11px; }
+        .table tbody td { padding: 10px 8px; font-size: 13px; }
+        .cert-id { font-size: 10px; padding: 3px 6px; }
+        .action-btn { padding: 5px 8px; font-size: 11px; }
+        .modal-content { padding: 20px; width: 95%; }
+        .modal-title { font-size: 18px; }
+        .modal-footer { flex-direction: column; }
+        .modal-footer .btn-modal { width: 100%; text-align: center; }
+        .search-card { padding: 16px; }
+    }
+
+    @media (max-width: 480px) {
+        .cert-template-grid { grid-template-columns: 1fr; gap: 12px; }
+        .cert-template-card { min-height: auto; padding: 16px; }
+        .cert-template-card:hover { transform: none; }
+        .table-responsive { margin: 0 -8px; }
+    }
 </style>
 @endsection
 
@@ -131,64 +196,84 @@
 <!-- Certificate Templates -->
 <div class="cert-template-grid">
     <!-- Certificate of Indigency -->
-    <a href="{{ route('certificates.create') }}?type=indigency" class="cert-template-card">
+    <div class="cert-template-card" style="cursor: default;">
         <div class="cert-template-content">
             <div>
                 <span class="cert-icon">📄</span>
                 <div class="cert-template-name">Certificate of<br>Indigency</div>
                 <div class="cert-template-desc">For individuals with low income status</div>
             </div>
-            <div class="cert-template-footer">
+            <div class="cert-template-footer" style="flex-direction: column; gap: 8px; align-items: stretch;">
                 <span class="cert-count">Issued: {{ $certificateCounts['indigency'] ?? 0 }}</span>
-                <button class="cert-btn"><i class="bi bi-plus me-1"></i> Create</button>
+                <a href="{{ route('certificates.editor') }}?type=indigency" class="cert-btn" style="text-align: center; border: none; text-decoration: none; display: block;">
+                    <i class="bi bi-pencil-square me-1"></i> Edit & Print
+                </a>
+                <a href="{{ route('certificates.template.download', 'indigency') }}" class="download-template-btn" style="text-align: center;">
+                    <i class="bi bi-download"></i> Download Template
+                </a>
             </div>
         </div>
-    </a>
+    </div>
     
     <!-- Certificate of Residency -->
-    <a href="{{ route('certificates.create') }}?type=residency" class="cert-template-card">
+    <div class="cert-template-card" style="cursor: default;">
         <div class="cert-template-content">
             <div>
                 <span class="cert-icon">🏠</span>
                 <div class="cert-template-name">Certificate of<br>Residency</div>
                 <div class="cert-template-desc">Proof of residential address</div>
             </div>
-            <div class="cert-template-footer">
+            <div class="cert-template-footer" style="flex-direction: column; gap: 8px; align-items: stretch;">
                 <span class="cert-count">Issued: {{ $certificateCounts['residency'] ?? 0 }}</span>
-                <button class="cert-btn"><i class="bi bi-plus me-1"></i> Create</button>
+                <a href="{{ route('certificates.editor') }}?type=residency" class="cert-btn" style="text-align: center; border: none; text-decoration: none; display: block;">
+                    <i class="bi bi-pencil-square me-1"></i> Edit & Print
+                </a>
+                <a href="{{ route('certificates.template.download', 'residency') }}" class="download-template-btn" style="text-align: center;">
+                    <i class="bi bi-download"></i> Download Template
+                </a>
             </div>
         </div>
-    </a>
+    </div>
     
     <!-- Certificate of Clearance -->
-    <a href="{{ route('certificates.create') }}?type=clearance" class="cert-template-card">
+    <div class="cert-template-card" style="cursor: default;">
         <div class="cert-template-content">
             <div>
                 <span class="cert-icon">✅</span>
                 <div class="cert-template-name">Certificate of<br>Clearance</div>
                 <div class="cert-template-desc">Barangay clearance certificate</div>
             </div>
-            <div class="cert-template-footer">
+            <div class="cert-template-footer" style="flex-direction: column; gap: 8px; align-items: stretch;">
                 <span class="cert-count">Issued: {{ $certificateCounts['clearance'] ?? 0 }}</span>
-                <button class="cert-btn"><i class="bi bi-plus me-1"></i> Create</button>
+                <a href="{{ route('certificates.editor') }}?type=clearance" class="cert-btn" style="text-align: center; border: none; text-decoration: none; display: block;">
+                    <i class="bi bi-pencil-square me-1"></i> Edit & Print
+                </a>
+                <a href="{{ route('certificates.template.download', 'clearance') }}" class="download-template-btn" style="text-align: center;">
+                    <i class="bi bi-download"></i> Download Template
+                </a>
             </div>
         </div>
-    </a>
+    </div>
     
     <!-- Certificate of Low Income -->
-    <a href="{{ route('certificates.create') }}?type=low_income" class="cert-template-card">
+    <div class="cert-template-card" style="cursor: default;">
         <div class="cert-template-content">
             <div>
                 <span class="cert-icon">💰</span>
                 <div class="cert-template-name">Certificate of<br>Low Income</div>
                 <div class="cert-template-desc">Income assistance and benefits</div>
             </div>
-            <div class="cert-template-footer">
+            <div class="cert-template-footer" style="flex-direction: column; gap: 8px; align-items: stretch;">
                 <span class="cert-count">Issued: {{ $certificateCounts['low_income'] ?? 0 }}</span>
-                <button class="cert-btn"><i class="bi bi-plus me-1"></i> Create</button>
+                <a href="{{ route('certificates.editor') }}?type=low_income" class="cert-btn" style="text-align: center; border: none; text-decoration: none; display: block;">
+                    <i class="bi bi-pencil-square me-1"></i> Edit & Print
+                </a>
+                <a href="{{ route('certificates.template.download', 'low_income') }}" class="download-template-btn" style="text-align: center;">
+                    <i class="bi bi-download"></i> Download Template
+                </a>
             </div>
         </div>
-    </a>
+    </div>
 </div>
 
 <!-- Search Filter -->
@@ -267,5 +352,7 @@
         <p>No certificates issued yet. Create one by selecting a certificate type above.</p>
     </div>
 @endif
+
+
 
 @endsection

@@ -2,15 +2,50 @@
 
 @section('title', 'Certificate Details')
 
+@section('extra-styles')
+<style>
+    @media print {
+        body * { visibility: hidden; }
+        #certificateContent, #certificateContent * { visibility: visible; }
+        #certificateContent { position: absolute; left: 0; top: 0; width: 100%; }
+        .no-print { display: none !important; }
+        .cert-editable { color: #000; font-weight: normal; background: transparent !important; }
+    }
+    .certificate-display { background: white; padding: 40px; border: 1px solid #e5e7eb; border-radius: 8px; margin: 20px 0; overflow-x: auto; }
+    .certificate-display .cert-editable { pointer-events: none; color: #000; font-weight: normal; }
+
+    /* ===== Mobile Responsive ===== */
+    @media (max-width: 768px) {
+        .certificate-display { padding: 16px; margin: 12px 0; }
+        .card-body { padding: 16px; }
+        .card-body h3 { font-size: 18px; }
+        .btn { font-size: 13px; padding: 8px 12px; }
+    }
+</style>
+@endsection
+
 @section('content')
-<div class="mb-4">
-    <a href="{{ route('appointments.index') }}" class="btn btn-secondary mb-3">
-        <i class="bi bi-arrow-left me-2"></i> Back to Appointments
+<div class="mb-4 no-print">
+    <a href="{{ route('certificates.index') }}" class="btn btn-secondary mb-3">
+        <i class="bi bi-arrow-left me-2"></i> Back to Certificates
     </a>
+
+    @if($certificate['content'])
+    <button onclick="window.print()" class="btn btn-primary mb-3 ms-2">
+        <i class="bi bi-printer me-2"></i> Print Certificate
+    </button>
+    @endif
 
     <div class="card">
         <div class="card-body">
             <h3 class="mb-4">{{ ucfirst(str_replace('_', ' ', $certificate['type'])) }} Certificate</h3>
+
+            @if($certificate['content'])
+            <div class="certificate-display" id="certificateContent">
+                {!! $certificate['content'] !!}
+            </div>
+            <hr>
+            @endif
 
             <div class="row">
                 <div class="col-md-6 mb-3">
