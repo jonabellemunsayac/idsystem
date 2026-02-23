@@ -20,16 +20,18 @@ use App\Http\Controllers\Admin\AppointmentController as AdminAppointmentControll
 use App\Http\Controllers\Admin\CertificateController as AdminCertificateController;
 use App\Http\Controllers\Auth\AdminLoginController;
 use App\Http\Controllers\Auth\ResidentLoginController;
+use App\Http\Controllers\SiteEditorController;
+use App\Http\Controllers\PublicPageController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 
-// Public website routes
-Route::view('/', 'public.home')->name('public.home');
-Route::view('/about', 'public.about')->name('public.about');
-Route::view('/services', 'public.services')->name('public.services');
-Route::view('/news', 'public.news')->name('public.news');
-Route::view('/contact', 'public.contact')->name('public.contact');
+// Public website routes (dynamic from database)
+Route::get('/', [PublicPageController::class, 'home'])->name('public.home');
+Route::get('/about', fn () => app(PublicPageController::class)->show('about'))->name('public.about');
+Route::get('/services', fn () => app(PublicPageController::class)->show('services'))->name('public.services');
+Route::get('/news', fn () => app(PublicPageController::class)->show('news'))->name('public.news');
+Route::get('/contact', fn () => app(PublicPageController::class)->show('contact'))->name('public.contact');
 
 // Admin and resident portals
 Route::get('/portal', function () {
@@ -92,6 +94,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::patch('appointments/{appointment}/approve', [AppointmentController::class, 'approve'])->name('appointments.approve');
 
     // Certificates Management
+    Route::get('certificates/template/download/{type}', [CertificateController::class, 'downloadTemplate'])->name('certificates.template.download');
+    Route::get('certificates/template/file/{type}', [CertificateController::class, 'getTemplateFile'])->name('certificates.template.file');
+    Route::get('certificates/word-template/{type}/{resident?}', [CertificateController::class, 'wordTemplate'])->name('certificates.word.template');
+    Route::get('certificates/editor', [CertificateController::class, 'editor'])->name('certificates.editor');
     Route::resource('certificates', CertificateController::class);
     Route::patch('certificates/{certificate}/approve', [CertificateController::class, 'approve'])->name('certificates.approve');
 
@@ -143,6 +149,16 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/api/reports/export/pdf', [ReportController::class, 'exportPDF'])->name('api.reports.export.pdf');
     Route::get('/api/reports/export/excel', [ReportController::class, 'exportExcel'])->name('api.reports.export.excel');
 
+    // Site Editor (public website management)
+    Route::get('site-editor', [SiteEditorController::class, 'index'])->name('site-editor.index');
+    Route::get('site-editor/{sitePage}/edit', [SiteEditorController::class, 'edit'])->name('site-editor.edit');
+    Route::put('site-editor/{sitePage}', [SiteEditorController::class, 'update'])->name('site-editor.update');
+    Route::post('site-editor/upload-image', [SiteEditorController::class, 'uploadImage'])->name('site-editor.upload-image');
+    Route::post('site-editor/{sitePage}/add-section', [SiteEditorController::class, 'addSection'])->name('site-editor.add-section');
+    Route::post('site-editor/{sitePage}/remove-section', [SiteEditorController::class, 'removeSection'])->name('site-editor.remove-section');
+    Route::post('site-editor/{sitePage}/meta', [SiteEditorController::class, 'updateMeta'])->name('site-editor.update-meta');
+    Route::get('site-editor/{sitePage}/preview', [SiteEditorController::class, 'preview'])->name('site-editor.preview');
+
     // Audit Logs
     Route::resource('audit-logs', AuditLogController::class)->only(['index', 'show']);
 
@@ -169,6 +185,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::resource('appointments', AdminAppointmentController::class);
         Route::patch('appointments/{appointment}/status', [AdminAppointmentController::class, 'updateStatus'])->name('appointments.updateStatus');
 
+        Route::get('certificates/template/download/{type}', [AdminCertificateController::class, 'downloadTemplate'])->name('certificates.template.download');
         Route::resource('certificates', AdminCertificateController::class);
         Route::patch('certificates/{certificate}/status', [AdminCertificateController::class, 'updateStatus'])->name('certificates.updateStatus');
     });

@@ -536,6 +536,12 @@
                     <i class="bi bi-bar-chart-fill"></i> Reports & Analytics
                 </a>
 
+                @if(auth()->user()->role === 'admin' || auth()->user()->role === 'superadmin')
+                <a href="{{ route('site-editor.index') }}" class="list-group-item {{ request()->routeIs('site-editor.*') ? 'active' : '' }}">
+                    <i class="bi bi-brush-fill"></i> Site Editor
+                </a>
+                @endif
+
                 @if(auth()->user()->role === 'superadmin')
                 <a href="{{ route('audit-logs.index') }}" class="list-group-item {{ request()->routeIs('audit-logs.*') ? 'active' : '' }}">
                     <i class="bi bi-clock-history"></i> Audit Logs

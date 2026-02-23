@@ -22,6 +22,23 @@
     .back-link { color: #0038A8; text-decoration: none; font-size: 14px; margin-bottom: 24px; display: inline-flex; align-items: center; gap: 6px; }
     .back-link:hover { text-decoration: underline; }
     .cert-type-preview { background: linear-gradient(135deg, #0038A8 0%, #003A9E 100%); color: white; padding: 16px; border-radius: 8px; margin-top: 12px; font-size: 13px; text-align: center; }
+    .template-info-box { background: #f0f9ff; border-left: 4px solid #0038A8; padding: 16px; border-radius: 6px; margin-bottom: 24px; }
+    .template-info-box h6 { color: #0038A8; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+    .template-info-box p { color: #374151; font-size: 13px; margin-bottom: 8px; line-height: 1.5; }
+    .template-download-link { color: #0038A8; font-weight: 600; text-decoration: none; font-size: 13px; }
+    .template-download-link:hover { text-decoration: underline; }
+
+    /* ===== Mobile Responsive ===== */
+    @media (max-width: 768px) {
+        .form-card { padding: 18px; }
+        .form-header { margin-bottom: 20px; }
+        .form-title { font-size: 20px; }
+        .form-section-title { font-size: 15px; margin-top: 20px; margin-bottom: 12px; }
+        .form-actions { flex-direction: column; }
+        .form-actions .btn-cancel,
+        .form-actions .btn-submit { width: 100%; text-align: center; }
+        .template-info-box { padding: 12px; }
+    }
 </style>
 @endsection
 
@@ -32,6 +49,14 @@
     <div class="form-header">
         <h1 class="form-title">Issue New Certificate</h1>
         <p class="form-subtitle">Select a resident and certificate type to create a new certificate</p>
+    </div>
+
+    <div class="template-info-box">
+        <h6><i class="bi bi-info-circle me-2"></i>Certificate Templates Available</h6>
+        <p>Official certificate templates in Word format are available for download. These templates can be customized and printed for official use.</p>
+        <a href="{{ route('certificates.index') }}" class="template-download-link">
+            <i class="bi bi-download me-1"></i> View and download templates from certificate list
+        </a>
     </div>
 
     <form action="{{ route('certificates.store') }}" method="POST">

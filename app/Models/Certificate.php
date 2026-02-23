@@ -22,6 +22,7 @@ class Certificate extends Model
         'released_by',
         'rejection_reason',
         'notes',
+        'content',
     ];
 
     protected $casts = [

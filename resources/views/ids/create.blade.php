@@ -46,10 +46,16 @@
 
                         <!-- Body -->
                         <div class="d-flex gap-3 p-3" style="padding: 3cqw !important; gap: 3cqw !important;">
-                            <!-- Photo -->
-                            <div class="bg-secondary border border-2 border-white d-flex align-items-center justify-content-center overflow-hidden rounded flex-shrink-0" style="width: 25cqw; height: 30cqw; background-color: #ddd;">
-                                <img id="preview-photo" src="" alt="Photo" style="width: 100%; height: 100%; object-fit: cover; display: none;">
-                                <span id="preview-no-photo" style="font-size: 2.5cqw; color: #666;">NO PHOTO</span>
+                            <!-- Photo + ID No -->
+                            <div class="d-flex flex-column align-items-center flex-shrink-0" style="width: 25cqw;">
+                                <div class="bg-secondary border border-2 border-white d-flex align-items-center justify-content-center overflow-hidden rounded" style="width: 25cqw; height: 28cqw; background-color: #ddd;">
+                                    <img id="preview-photo" src="" alt="Photo" style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                                    <span id="preview-no-photo" style="font-size: 2.5cqw; color: #666;">NO PHOTO</span>
+                                </div>
+                                <div class="text-center text-white" style="font-size: 1.6cqw; margin-top: 1cqw;">
+                                    <span style="color: #fcd34d; font-weight: bold;">I.D. No.:</span>
+                                    <span id="preview-id-no" style="font-weight: bold;">PENDING</span>
+                                </div>
                             </div>
 
                             <!-- Details -->
@@ -82,18 +88,26 @@
                                     <span style="color: #fcd34d; font-weight: bold; width: 16cqw;">Address</span>
                                     <span id="preview-address" style="font-weight: 600; font-size: 1.8cqw; line-height: 1.2;">-</span>
                                 </div>
-                                <div class="d-flex align-items-baseline mt-auto" style="font-size: 2.5cqw;">
-                                    <span style="color: #fcd34d; font-weight: bold; margin-right: 1cqw;">ID No:</span>
-                                    <span id="preview-id-no" style="font-weight: bold;">PENDING</span>
+                                <!-- Resident Signature -->
+                                <div class="mt-auto" style="margin-top: 1cqw;">
+                                    <div style="border-top: 1px solid white; width: 70%; margin: 1cqw 0 0.3cqw 0;"></div>
+                                    <div style="font-size: 1.5cqw; color: white;">Signature of Resident</div>
                                 </div>
                             </div>
 
-                            <!-- Barangay Chairman Signature -->
-                            <div class="d-flex flex-column align-items-center justify-content-center" style="width: 25cqw; gap: 2cqw;">
-                                <div class="text-center w-100 mt-auto">
-                                    <img src="{{ asset('storage/signatures/johnh.asdkoa_signature.png') }}" alt="Signature" style="max-width: 22cqw; max-height: 5cqw; object-fit: contain; margin-bottom: 0.5cqw; display: block; margin-left: auto; margin-right: auto;">
-                                    <div style="border-top: 1px solid white; margin: 1cqw auto; width: 80%;"></div>
-                                    <div style="font-size: 2cqw; font-weight: bold; color: white;">BARANGAY<br>CHAIRMAN</div>
+                            <!-- Punong Barangay Signature -->
+                            <div class="d-flex flex-column align-items-center justify-content-end" style="width: 25cqw;">
+                                <div class="text-center w-100 mt-auto" style="position: relative;">
+                                    <!-- Signature as background -->
+                                    <div style="position: absolute; top: -1.5cqw; left: 50%; transform: translateX(-50%); width: 22cqw; height: 3.5cqw; opacity: 1; z-index: 0;">
+                                        <img src="{{ asset('storage/signatures/chairman.png') }}" alt="Signature" style="width: 100%; height: 100%; object-fit: contain;">
+                                    </div>
+                                    <!-- Text overlay -->
+                                    <div style="position: relative; z-index: 1;">
+                                        <div style="font-size: 1.8cqw; font-weight: bold; color: white; padding-top: 0cqw;">HON. JESSIE B. GAVIOLA</div>
+                                        <div style="border-top: 2px solid white; margin: 0.5cqw auto; width: 100%;"></div>
+                                        <div style="font-size: 1.5cqw; color: white;">PUNONG BARANGAY</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -107,20 +121,20 @@
                             
                             <table style="width: 100%; font-size: 1.8cqw; border-collapse: collapse; margin-bottom: 1.5cqw;">
                                 <tr style="line-height: 1.6;">
-                                    <td style="font-weight: bold; color: #000; width: 18cqw; padding: 0 0.5cqw 0.8cqw 0;">NAME:</td>
-                                    <td style="color: #000; font-weight: bold; padding: 0 0 0.8cqw 0;" id="preview-ec-name">_________________</td>
+                                    <td style="font-weight: bold; color: #000; width: 18cqw; padding: 0 0.5cqw 0.8cqw 0; text-align: right;">NAME:</td>
+                                    <td style="color: #000; font-weight: bold; padding: 0 0 0.8cqw 1cqw;" id="preview-ec-name">_________________</td>
                                 </tr>
                                 <tr style="line-height: 1.6;">
-                                    <td style="font-weight: bold; color: #000; width: 18cqw; padding: 0 0.5cqw 0.8cqw 0;">RELATION:</td>
-                                    <td style="color: #000; font-weight: bold; padding: 0 0 0.8cqw 0;" id="preview-ec-relation">_________________</td>
+                                    <td style="font-weight: bold; color: #000; width: 18cqw; padding: 0 0.5cqw 0.8cqw 0; text-align: right;">RELATION:</td>
+                                    <td style="color: #000; font-weight: bold; padding: 0 0 0.8cqw 1cqw;" id="preview-ec-relation">_________________</td>
                                 </tr>
                                 <tr style="line-height: 1.6;">
-                                    <td style="font-weight: bold; color: #000; width: 18cqw; padding: 0 0.5cqw 0.8cqw 0;">ADDRESS:</td>
-                                    <td style="color: #000; font-weight: bold; padding: 0 0 0.8cqw 0;" id="preview-ec-address">_________________</td>
+                                    <td style="font-weight: bold; color: #000; width: 18cqw; padding: 0 0.5cqw 0.8cqw 0; text-align: right;">ADDRESS:</td>
+                                    <td style="color: #000; font-weight: bold; padding: 0 0 0.8cqw 1cqw;" id="preview-ec-address">_________________</td>
                                 </tr>
                                 <tr style="line-height: 1.6;">
-                                    <td style="font-weight: bold; color: #000; width: 18cqw; padding: 0 0.5cqw 0 0;">CONTACT NO.:</td>
-                                    <td style="color: #000; font-weight: bold; padding: 0 0 0 0;" id="preview-ec-no">_________________</td>
+                                    <td style="font-weight: bold; color: #000; width: 18cqw; padding: 0 0.5cqw 0 0; text-align: right;">CONTACT NO.:</td>
+                                    <td style="color: #000; font-weight: bold; padding: 0 0 0 1cqw;" id="preview-ec-no">_________________</td>
                                 </tr>
                             </table>
 
@@ -421,17 +435,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 .header-text h2 { font-size: 12px; font-weight: bold; margin: 2px 0; color: white; }
                 .header-text h3 { font-size: 9px; font-weight: normal; color: white; }
 
-                .front-body { flex: 1; padding: 10px 12px; display: flex; gap: 12px; background-color: #1a3a5c; }
-                .photo-box { width: 85px; height: 110px; background-color: #ddd; border: 2px solid white; overflow: hidden; display: flex; align-items: center; justify-content: center; border-radius: 4px; }
+                .front-body { flex: 1; padding: 10px 12px; display: flex; gap: 10px; background-color: #1a3a5c; }
+                .photo-col { display: flex; flex-direction: column; align-items: center; width: 85px; flex-shrink: 0; }
+                .photo-box { width: 85px; height: 100px; background-color: #ddd; border: 2px solid white; overflow: hidden; display: flex; align-items: center; justify-content: center; border-radius: 4px; }
                 .photo-box img { width: 100%; height: 100%; object-fit: cover; }
+                .id-number-below { font-size: 7px; color: white; text-align: center; margin-top: 4px; }
+                .id-number-below .id-label { color: #fcd34d; font-weight: bold; }
+                .id-number-below .id-value { font-weight: bold; }
                 .details-col { flex: 1; display: flex; flex-direction: column; justify-content: center; }
                 .resident-name { font-size: 13px; font-weight: bold; color: white; text-transform: uppercase; margin-bottom: 4px; border-bottom: 2px solid #fbbf24; padding-bottom: 3px; }
                 .detail-row { display: flex; margin-bottom: 2px; font-size: 8px; align-items: baseline; }
                 .detail-label { color: #fcd34d; font-weight: bold; margin-right: 6px; min-width: 55px; white-space: nowrap; }
                 .detail-value { flex: 1; font-weight: 600; color: white; }
-                .signature-area { margin-top: 6px; text-align: center; }
-                .signature-line { border-top: 1px solid white; width: 90%; margin: 8px auto 2px; }
+                .front-bottom { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 4px; }
+                .signature-area { text-align: left; }
+                .signature-line { border-top: 1px solid white; width: 100px; margin: 6px 0 2px 0; }
                 .signature-label { font-size: 7px; color: white; }
+                .punong-area { text-align: center; position: relative; }
+                .punong-sig-img { max-width: 75px; max-height: 25px; object-fit: contain; display: block; margin: 0 auto 2px; }
+                .punong-line { border-top: 1.5px solid white; margin: 1px auto 2px; width: 100%; }
+                .punong-name { font-size: 7px; font-weight: bold; color: white; }
+                .punong-title { font-size: 6px; color: white; }
 
                 /* BACK SIDE STYLES */
                 .back-header { background-color: #0f2741; color: white; padding: 8px; text-align: center; font-size: 11px; font-weight: bold; letter-spacing: 1px; }
@@ -474,8 +498,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                   </div>
                   <div class="front-body">
-                    <div class="photo-box">
-                      ${currentResident.profile_image ? `<img src="/storage/${currentResident.profile_image}" alt="Photo" />` : '<span style="font-size: 9px; color: #999;">NO PHOTO</span>'}
+                    <div class="photo-col">
+                      <div class="photo-box">
+                        ${currentResident.profile_image ? `<img src="/storage/${currentResident.profile_image}" alt="Photo" />` : '<span style="font-size: 9px; color: #999;">NO PHOTO</span>'}
+                      </div>
+                      <div class="id-number-below">
+                        <span class="id-label">I.D. No.: </span>
+                        <span class="id-value">${currentID.id_number}</span>
+                      </div>
                     </div>
                     <div class="details-col">
                       <div class="resident-name">
@@ -508,14 +538,24 @@ document.addEventListener('DOMContentLoaded', function() {
                           ${currentResident.address || '-'}
                         </span>
                       </div>
-                      <div class="detail-row">
-                        <span class="detail-label">ID No:</span>
-                        <span class="detail-value" style="color: white; font-size: 9px;">${currentID.id_number}</span>
-                      </div>
 
-                      <div class="signature-area">
-                        <div class="signature-line"></div>
-                        <div class="signature-label">Signature of Resident</div>
+                      <div class="front-bottom">
+                        <div class="signature-area">
+                          <div class="signature-line"></div>
+                          <div class="signature-label">Signature of Resident</div>
+                        </div>
+                        <div class="punong-area" style="position: relative;">
+                          <!-- Signature as background -->
+                          <div style="position: absolute; top: -5px; left: 50%; transform: translateX(-50%); width: 65px; height: 14px; opacity: 1; z-index: 0;">
+                            <img src="{{ asset('storage/signatures/chairman.png') }}" alt="Signature" style="width: 100%; height: 100%; object-fit: contain;">
+                          </div>
+                          <!-- Text overlay -->
+                          <div style="position: relative; z-index: 1;">
+                            <div class="punong-name" style="padding-top: 0px;">HON. JESSIE B. GAVIOLA</div>
+                            <div class="punong-line" style="width: 100%; border-top-width: 1.5px;"></div>
+                            <div class="punong-title">PUNONG BARANGAY</div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -526,18 +566,24 @@ document.addEventListener('DOMContentLoaded', function() {
                   <div class="back-header">EMERGENCY CONTACT</div>
                   <div class="back-body">
                     <div class="emergency-col">
-                      <div>
-                        <div class="emergency-title">NAME</div>
-                        <div class="emergency-value">${currentResident.emergency_contact_name || '_____________________'}</div>
-                      </div>
-                      <div>
-                        <div class="emergency-title">ADDRESS</div>
-                        <div class="emergency-value" style="min-height: 24px; line-height: 1.2;">${currentResident.emergency_contact_address || '_____________________'}</div>
-                      </div>
-                      <div>
-                        <div class="emergency-title">CONTACT NO.</div>
-                        <div class="emergency-value">${currentResident.emergency_contact_no || '_____________________'}</div>
-                      </div>
+                      <table style="width: 100%; border-collapse: collapse;">
+                        <tr>
+                          <td class="emergency-title" style="text-align: right; padding-right: 6px; white-space: nowrap; vertical-align: top;">NAME:</td>
+                          <td class="emergency-value">${currentResident.emergency_contact_name || '_____________________'}</td>
+                        </tr>
+                        <tr>
+                          <td class="emergency-title" style="text-align: right; padding-right: 6px; white-space: nowrap; vertical-align: top;">RELATION:</td>
+                          <td class="emergency-value">${currentResident.emergency_contact_relationship || '_____________________'}</td>
+                        </tr>
+                        <tr>
+                          <td class="emergency-title" style="text-align: right; padding-right: 6px; white-space: nowrap; vertical-align: top;">ADDRESS:</td>
+                          <td class="emergency-value" style="min-height: 24px; line-height: 1.2;">${currentResident.emergency_contact_address || '_____________________'}</td>
+                        </tr>
+                        <tr>
+                          <td class="emergency-title" style="text-align: right; padding-right: 6px; white-space: nowrap; vertical-align: top;">CONTACT NO.:</td>
+                          <td class="emergency-value">${currentResident.emergency_contact_no || '_____________________'}</td>
+                        </tr>
+                      </table>
                       
                       <div class="disclaimer">
                         This card is non-transferable.<br>Please report lost or found cards<br>to the Barangay Hall immediately.
@@ -555,9 +601,7 @@ document.addEventListener('DOMContentLoaded', function() {
                       </div>
 
                       <div class="chairman-sig">
-                        <img src="{{ asset('storage/signatures/johnh.asdkoa_signature.png') }}" alt="Signature" style="max-width: 75px; max-height: 35px; object-fit: contain; display: block; margin: 0 auto 4px;">
-                        <div class="chairman-line"></div>
-                        <div class="chairman-label">BARANGAY<br>CHAIRMAN</div>
+                        <div class="chairman-label">BARANGAY<br>KALAWAAN</div>
                       </div>
                     </div>
                   </div>

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', 'ID Management')
 
@@ -30,7 +30,7 @@
                         <div class="position-absolute w-100 h-100" style="opacity: 0.6; background: repeating-radial-gradient(circle at 0 100%, transparent 0, transparent 10px, rgba(0,56,168,0.03) 11px, rgba(0,56,168,0.03) 12px), repeating-radial-gradient(circle at 100% 0, transparent 0, transparent 10px, rgba(206,17,38,0.03) 11px, rgba(206,17,38,0.03) 12px); pointer-events: none;"></div>
                         
                         <!-- Header -->
-                        <div class="position-relative d-flex align-items-center px-3 py-2" style="background: linear-gradient(90deg, rgba(38,143,255,0.85) 0%, rgba(255,255,255,0.85) 50%, rgba(0,48,103,0.85) 100%), url('/images/sil.jpg') center/cover; min-height: 60px; color: #003067;">
+                        <div class="position-relative d-flex align-items-center px-3 py-2" style="background: linear-gradient(90deg, rgba(38,143,255,0.85) 0%, rgba(255,255,255,0.85) 50%, rgba(0,48,103,0.85) 100%), url('/images/kalawaan_hall.jpg') center/cover; min-height: 60px; color: #003067;">
                             <div class="d-flex align-items-center gap-2 w-100" style="position: relative; z-index: 1;">
                                 <div class="d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; flex-shrink: 0;">
                                     <img src="/images/OIP.jpg" alt="Barangay Logo" style="width: 100%; height: 100%; object-fit: contain; border-radius: 50%;">
@@ -50,16 +50,20 @@
 
                         <!-- Body -->
                         <div class="d-flex p-3 position-relative" style="gap: 12px; min-height: 240px;">
-                            <!-- Left Column: Photo & Signature -->
-                            <div class="d-flex flex-column align-items-center" style="width: auto; flex-shrink: 0; gap: 8px;">
+                            <!-- Left Column: Photo, ID No & Signature -->
+                            <div class="d-flex flex-column align-items-center" style="width: auto; flex-shrink: 0; gap: 4px;">
                                 <div class="bg-white d-flex align-items-center justify-content-center overflow-hidden rounded" style="width: 90px; height: 110px; background-color: #e9ecef;">
                                     <img id="preview-photo" src="" alt="Photo" style="width: 100%; height: 100%; object-fit: cover; display: none;">
                                     <span id="preview-no-photo" style="font-size: 0.9rem; color: #adb5bd;">PHOTO</span>
                                 </div>
-                                <div class="d-flex align-items-center justify-content-center position-relative" style="width: 100px; height: 50px; overflow: hidden; background: transparent;">
-                                    <img id="preview-signature" src="" alt="Signature" style="max-width: 95px; max-height: 45px; object-fit: contain; display: none; background: transparent;">
+                                <div class="text-center" style="font-size: 0.55rem; color: #333; margin-top: 2px;">
+                                    <span id="preview-id-no-front" class="fw-bold">-</span>
+                                </div>
+                                <div class="d-flex align-items-center justify-content-center position-relative" style="width: 100px; height: 40px; overflow: hidden; background: transparent;">
+                                    <img id="preview-signature" src="" alt="Signature" style="max-width: 95px; max-height: 38px; object-fit: contain; display: none; background: transparent;">
                                     <span id="preview-no-signature" style="font-family: cursive; font-size: 0.8rem; display: block; color: #999;">Signature</span>
                                 </div>
+                                <div style="border-top: 1px solid #000; width: 80px; margin-top: -2px;"></div>
                                 <div class="text-center fw-bold" style="font-size: 0.75rem; letter-spacing: 0.5px; color: #0038A8;">RESIDENT</div>
                             </div>
 
@@ -67,55 +71,62 @@
                             <div class="flex-grow-1 d-flex flex-column position-relative" style="min-width: 0; padding-right: 90px;">
                                 <!-- Name -->
                                 <div class="mb-2">
-                                    <div class="text-muted text-uppercase" style="font-size: 0.55rem; line-height: 1;">Last Name, First Name, Middle Name</div>
-                                    <div id="preview-name" class="fw-bold text-uppercase text-dark" style="font-size: 0.85rem; line-height: 1.1; color: #0038A8 !important; word-break: break-word;">
+                                    <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1;">Last Name, First Name, Middle Name</div>
+                                    <div id="preview-name" class="fw-bold text-uppercase text-dark" style="font-size: 1rem; line-height: 1.15; color: #0038A8 !important; word-break: break-word; overflow-wrap: break-word;">
                                         RESIDENT NAME
                                     </div>
                                 </div>
 
                                 <!-- Grid Details -->
-                                <div class="d-flex flex-wrap mb-2" style="gap: 4px; row-gap: 6px;">
+                                <div class="d-flex flex-wrap mb-2" style="gap: 4px; row-gap: 7px;">
                                     <div style="width: calc(25% - 3px);">
-                                        <div class="text-muted text-uppercase" style="font-size: 0.5rem; line-height: 1;">Sex</div>
-                                        <div id="preview-sex" class="fw-bold text-dark" style="font-size: 0.7rem; line-height: 1.1;">-</div>
+                                        <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1;">Sex</div>
+                                        <div id="preview-sex" class="fw-bold text-dark" style="font-size: 0.85rem; line-height: 1.15;">-</div>
                                     </div>
                                     <div style="width: calc(37% - 3px);">
-                                        <div class="text-muted text-uppercase" style="font-size: 0.5rem; line-height: 1;">Date of Birth</div>
-                                        <div id="preview-dob" class="fw-bold text-dark" style="font-size: 0.7rem; line-height: 1.1;">-</div>
+                                        <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1;">Date of Birth</div>
+                                        <div id="preview-dob" class="fw-bold text-dark" style="font-size: 0.85rem; line-height: 1.15; overflow-wrap: break-word;">-</div>
                                     </div>
                                     <div style="width: calc(38% - 3px);">
-                                        <div class="text-muted text-uppercase" style="font-size: 0.5rem; line-height: 1;">Civil Status</div>
-                                        <div id="preview-status" class="fw-bold text-dark" style="font-size: 0.7rem; line-height: 1.1;">-</div>
+                                        <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1;">Civil Status</div>
+                                        <div id="preview-status" class="fw-bold text-dark" style="font-size: 0.85rem; line-height: 1.15;">-</div>
                                     </div>
                                     
                                     <div style="width: calc(25% - 3px);">
-                                        <div class="text-muted text-uppercase" style="font-size: 0.5rem; line-height: 1;">Special Sector</div>
-                                        <div id="preview-special-sector" class="fw-bold text-dark" style="font-size: 0.7rem; line-height: 1.1;">-</div>
+                                        <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1;">Special Sector</div>
+                                        <div id="preview-special-sector" class="fw-bold text-dark" style="font-size: 0.85rem; line-height: 1.15; overflow-wrap: break-word;">-</div>
                                     </div>
                                     <div style="width: calc(37% - 3px);">
-                                        <div class="text-muted text-uppercase" style="font-size: 0.5rem; line-height: 1;">Nationality</div>
-                                        <div id="preview-nationality" class="fw-bold text-dark" style="font-size: 0.7rem; line-height: 1.1;">-</div>
+                                        <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1;">Nationality</div>
+                                        <div id="preview-nationality" class="fw-bold text-dark" style="font-size: 0.85rem; line-height: 1.15;">-</div>
                                     </div>
                                     <div style="width: calc(38% - 3px);">
-                                        <div class="text-muted text-uppercase" style="font-size: 0.5rem; line-height: 1;">Valid Until</div>
-                                        <div id="preview-validity" class="fw-bold text-dark" style="font-size: 0.7rem; line-height: 1.1;">-</div>
+                                        <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1;">Valid Until</div>
+                                        <div id="preview-validity" class="fw-bold text-dark" style="font-size: 0.85rem; line-height: 1.15; overflow-wrap: break-word;">-</div>
                                     </div>
                                 </div>
 
                                 <!-- Address -->
                                 <div class="mb-2">
-                                    <div class="text-muted text-uppercase" style="font-size: 0.5rem; line-height: 1;">Address</div>
-                                    <div id="preview-address" class="fw-bold text-dark text-uppercase" style="font-size: 0.7rem; line-height: 1.2; word-break: break-word; margin-bottom: 8px;">
+                                    <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1;">Address</div>
+                                    <div id="preview-address" class="fw-bold text-dark text-uppercase" style="font-size: 0.8rem; line-height: 1.25; word-break: break-word; overflow-wrap: break-word; margin-bottom: 8px;">
                                         -
                                     </div>
                                 </div>
 
-                                <!-- Barangay Chairman Signature -->
+                                <!-- Punong Barangay Signature -->
                                 <div class="position-absolute" style="bottom: 0; right: 0; text-align: center;">
-                                    <div class="text-center w-100">
-                                        <img src="{{ asset('storage/signatures/johnh.asdkoa_signature.png') }}" alt="Signature" style="max-width: 75px; max-height: 25px; object-fit: contain; margin-bottom: 3px;">
-                                        <div style="border-top: 1px solid #000; margin: 8px auto; width: 90%;"></div>
-                                        <div style="font-size: 0.65rem; font-weight: bold; color: #0038A8; line-height: 1.2;">BARANGAY<br>CHAIRMAN</div>
+                                    <div class="text-center w-100" style="position: relative;">
+                                        <!-- Signature as background -->
+                                        <div style="position: absolute; top: -6px; left: 50%; transform: translateX(-50%); width: 75px; height: 16px; opacity: 1; z-index: 0;">
+                                            <img src="{{ asset('storage/signatures/chairman.png') }}" alt="Signature" style="width: 100%; height: 100%; object-fit: contain;">
+                                        </div>
+                                        <!-- Text overlay -->
+                                        <div style="position: relative; z-index: 1;">
+                                            <div style="font-size: 0.55rem; font-weight: bold; color: #0038A8; line-height: 1.2; padding-top: 0px;">JESSIE B. GAVIOLA</div>
+                                            <div style="border-top: 2px solid #000; margin: 2px auto 4px auto; width: 100%;"></div>
+                                            <div style="font-size: 0.5rem; font-weight: bold; color: #0038A8; line-height: 1.2;">PUNONG BARANGAY</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -128,40 +139,43 @@
                         <div class="position-absolute w-100 h-100" style="opacity: 0.6; background: repeating-radial-gradient(circle at 0 100%, transparent 0, transparent 10px, rgba(0,56,168,0.03) 11px, rgba(0,56,168,0.03) 12px), repeating-radial-gradient(circle at 100% 0, transparent 0, transparent 10px, rgba(206,17,38,0.03) 11px, rgba(206,17,38,0.03) 12px); pointer-events: none;"></div>
 
                         <!-- Top Section: Emergency Contact Info -->
-                        <div style="padding: 10px 12px; position: relative; z-index: 1;">
-                            <div style="text-align: center; font-weight: bold; color: #CE1126; font-size: 0.95rem; letter-spacing: 0.5px; margin-bottom: 6px; line-height: 1.2;">IN CASE OF EMERGENCY,<br>KINDLY NOTIFY:</div>
+                        <div style="padding: 12px 14px; position: relative; z-index: 1;">
+                            <div style="text-align: center; font-weight: bold; color: #0038A8; font-size: 1.05rem; letter-spacing: 0.5px; margin-bottom: 8px; line-height: 1.2;">IN CASE OF EMERGENCY, KINDLY NOTIFY:</div>
                             
-                            <table style="width: 100%; font-size: 0.85rem; border-collapse: collapse; margin-bottom: 5px;">
-                                <tr style="line-height: 1.5;">
-                                    <td style="font-weight: bold; color: #000; width: 80px; padding: 0 5px 2px 0; white-space: nowrap;">NAME:</td>
-                                    <td style="color: #000; font-weight: bold; padding: 0 0 2px 0;" id="preview-ec-name">_________________</td>
+                            <table style="width: 100%; font-size: 0.95rem; border-collapse: collapse; margin-bottom: 6px;">
+                                <tr style="line-height: 1.6;">
+                                    <td style="font-weight: bold; color: #000; width: 120px; padding: 0 4px 3px 0; text-align: right; white-space: nowrap;">NAME :</td>
+                                    <td style="color: #000; font-weight: bold; padding: 0 0 3px 4px;" id="preview-ec-name">_________________</td>
                                 </tr>
-                                <tr style="line-height: 1.5;">
-                                    <td style="font-weight: bold; color: #000; width: 80px; padding: 0 5px 2px 0; white-space: nowrap;">RELATION:</td>
-                                    <td style="color: #000; font-weight: bold; padding: 0 0 2px 0;" id="preview-ec-relation">_________________</td>
+                                <tr style="line-height: 1.6;">
+                                    <td style="font-weight: bold; color: #000; width: 120px; padding: 0 4px 3px 0; text-align: right; white-space: nowrap;">RELATION :</td>
+                                    <td style="color: #000; font-weight: bold; padding: 0 0 3px 4px;" id="preview-ec-relation">_________________</td>
                                 </tr>
-                                <tr style="line-height: 1.5;">
-                                    <td style="font-weight: bold; color: #000; width: 80px; padding: 0 5px 2px 0; white-space: nowrap;">ADDRESS:</td>
-                                    <td style="color: #000; font-weight: bold; padding: 0 0 2px 0;" id="preview-ec-address">_________________</td>
+                                <tr style="line-height: 1.6;">
+                                    <td style="font-weight: bold; color: #000; width: 120px; padding: 0 4px 3px 0; text-align: right; white-space: nowrap;">ADDRESS :</td>
+                                    <td style="color: #000; font-weight: bold; padding: 0 0 3px 4px;" id="preview-ec-address">_________________</td>
                                 </tr>
-                                <tr style="line-height: 1.5;">
-                                    <td style="font-weight: bold; color: #000; width: 80px; padding: 0 5px 0 0; white-space: nowrap;">CONTACT NO.:</td>
-                                    <td style="color: #000; font-weight: bold; padding: 0 0 0 0;" id="preview-ec-no">_________________</td>
+                                <tr style="line-height: 1.6;">
+                                    <td style="font-weight: bold; color: #000; width: 120px; padding: 0 4px 0 0; text-align: right; white-space: nowrap;">CONTACT NO. :</td>
+                                    <td style="color: #000; font-weight: bold; padding: 0 0 0 4px;" id="preview-ec-no">_________________</td>
                                 </tr>
                             </table>
 
                             <!-- Emergency Hotline Section -->
-                            <div style="text-align: center; font-weight: bold; color: #CE1126; font-size: 0.95rem; letter-spacing: 0.5px; margin-top: 4px; margin-bottom: 4px; line-height: 1.2;">EMERGENCY HOTLINE</div>
+                            <div style="text-align: center; font-weight: bold; color: #0038A8; font-size: 0.95rem; letter-spacing: 0.5px; margin-top: 5px; margin-bottom: 3px; line-height: 1.1;">EMERGENCY HOTLINE</div>
                             
-                            <div style="font-size: 0.8rem; line-height: 1.4; text-align: center; color: #000; margin-bottom: 4px;">
-                                <div style="font-weight: bold;">BARANGAY: (02) 874-26641</div>
-                                <div style="font-weight: bold;">PASIG CITY: 643-0000</div>
+                            <div style="font-size: 0.75rem; line-height: 1.3; text-align: center; color: #000; margin-bottom: 2px;">
+                                <div style="font-weight: bold;">BARANGAY: (02) 874-26641 / 0966-007-7440</div>
+                                <div style="font-weight: bold;">PASIG CITY HOTLINE: 643-0000</div>
                                 <div style="font-weight: bold;">PNP: 911</div>
-                                <div style="font-weight: bold;">BFP: 0932-779-8621</div>
+                                <div style="font-weight: bold;">BFP-PASIG HOTLINE: 0932-779-8621</div>
                                 <div style="font-weight: bold;">MERALCO: 16211</div>
                             </div>
+                        </div>
 
-                            <div style="text-align: center; font-size: 0.7rem; color: #666; padding-top: 4px; margin-top: 4px;">
+                        <!-- IF FOUND Text - Bottom Section -->
+                        <div style="position: absolute; bottom: 3px; left: 10px; right: 10px; text-align: center; z-index: 2;">
+                            <div style="font-size: 0.5rem; color: #666; line-height: 1.2;">
                                 IF FOUND, PLEASE RETURN TO KALAWAAN<br>BARANGAY HALL INFORMATION CENTER
                             </div>
                         </div>
@@ -171,7 +185,7 @@
                             <div style="width: 55px; height: 55px; background: white; border: 2px solid #000; display: flex; align-items: center; justify-content: center;">
                                 <img id="preview-qr" alt="QR Code" style="width: 100%; height: 100%; object-fit: contain;">
                             </div>
-                            <div id="preview-id-no-back" class="font-monospace fw-bold text-center" style="font-size: 0.65rem; letter-spacing: 0.2px; color: #212529; width: 55px; margin-top: 2px;">QR CODE</div>
+                            <div id="preview-id-no-back" class="font-monospace fw-bold text-center" style="font-size: 0.5rem; letter-spacing: 0.2px; color: #212529; width: 55px; margin-top: 2px;">-</div>
                         </div>
                     </div>
                 </div>
@@ -402,14 +416,17 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Handle ID data
+        const previewIdNoFront = document.getElementById('preview-id-no-front');
         if (idData) {
             if (previewIdNoBack) previewIdNoBack.textContent = idData.id_number || 'PENDING';
+            if (previewIdNoFront) previewIdNoFront.textContent = idData.id_number || 'PENDING';
             if (idData.qr_code) {
                 previewQr.src = idData.qr_code;
             }
             previewValidity.textContent = idData.expiration_date || 'N/A';
         } else {
             if (previewIdNoBack) previewIdNoBack.textContent = 'PENDING';
+            if (previewIdNoFront) previewIdNoFront.textContent = 'PENDING';
             previewQr.src = '';
             // Calculate validity: resident created_at + 3 years
             if (resident.created_at) {
@@ -619,7 +636,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 .header { 
                   position: relative; 
                   z-index: 1; 
-                  background: linear-gradient(90deg, rgba(38,143,255,0.85) 0%, rgba(255,255,255,0.85) 50%, rgba(0,48,103,0.85) 100%), url('/images/sil.jpg') center/cover; 
+                  background: linear-gradient(90deg, rgba(38,143,255,0.85) 0%, rgba(255,255,255,0.85) 50%, rgba(0,48,103,0.85) 100%), url('/images/kalawaan_hall.jpg') center/cover; 
                   height: 45px; 
                   display: flex; 
                   align-items: center; 
@@ -666,9 +683,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 /* Right Col */
                 .right-col { flex: 1; display: flex; flex-direction: column; position: relative; min-width: 0; padding-right: 72px; padding-bottom: 4px; }
-                .field-label { font-size: 5px; color: #6c757d; text-transform: uppercase; margin-bottom: 0.5px; }
-                .field-value { font-size: 8px; font-weight: bold; color: #212529; line-height: 1; word-break: break-word; }
-                .name-value { font-size: 8px; color: #0038A8; text-transform: uppercase; margin-bottom: 6px; line-height: 1.1; }
+                .field-label { font-size: 6px; color: #6c757d; text-transform: uppercase; margin-bottom: 0.5px; }
+                .field-value { font-size: 9px; font-weight: bold; color: #212529; line-height: 1; word-break: break-word; }
+                .name-value { font-size: 9px; color: #0038A8; text-transform: uppercase; margin-bottom: 6px; line-height: 1.1; }
 
                 .grid-container { display: flex; flex-wrap: wrap; gap: 2px; row-gap: 4px; margin-bottom: 4px; }
                 .grid-item { flex-shrink: 0; }
@@ -679,7 +696,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 .id-no { font-family: monospace; font-weight: bold; font-size: 7px; letter-spacing: 0.3px; }
 
                 /* Back Side */
-                .back-header { background: linear-gradient(90deg, rgba(38,143,255,0.85) 0%, rgba(255,255,255,0.85) 50%, rgba(0,48,103,0.85) 100%), url('/images/sil.jpg') center/cover; color: #003067; text-align: center; font-weight: bold; font-size: 9px; padding: 4px; letter-spacing: 0.5px; flex-shrink: 0; }
+                .back-header { background: linear-gradient(90deg, rgba(38,143,255,0.85) 0%, rgba(255,255,255,0.85) 50%, rgba(0,48,103,0.85) 100%), url('/images/kalawaan_hall.jpg') center/cover; color: #003067; text-align: center; font-weight: bold; font-size: 9px; padding: 4px; letter-spacing: 0.5px; flex-shrink: 0; }
                 .back-body { padding: 10px; display: flex; gap: 10px; flex: 1; overflow: hidden; }
                 .back-left { flex: 1; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
                 .ec-label { font-size: 6px; font-weight: bold; color: #0038A8; margin-bottom: 0.5px; }
@@ -707,8 +724,8 @@ document.addEventListener('DOMContentLoaded', function() {
                   <div class="header-text">
                       <h2>Republic of the Philippines</h2>
                       <h2>National Capital Region</h2>
-                      <h3>City of Pasig</h3>
-                      <h3>Barangay Kalawaan</h3>
+                      <h2>City of Pasig</h2>
+                      <h2>Barangay Kalawaan</h2>
                   </div>
                   <div class="header-logo">
                       <img src="${window.location.origin}/images/Pasig_City_Seal_Logo.svg" alt="Logo">
@@ -720,15 +737,17 @@ document.addEventListener('DOMContentLoaded', function() {
                       <div class="photo-box">
                           ${photoSrc ? `<img src="${photoSrc}" alt="Photo">` : '<span style="font-size: 7px; color: #adb5bd;">PHOTO</span>'}
                       </div>
+                      <div style="font-size: 5.5px; font-weight: bold; color: #333; text-align: center; margin-bottom: 2px;">${currentID.id_number || '-'}</div>
                       <div class="signature-area">
                           ${signatureSrc ? `<img src="${signatureSrc}" alt="Signature" style="max-width: 75px; max-height: 22px; object-fit: contain; background: transparent;">` : '<span style="font-family: cursive; font-size: 7px; color: #999;">Signature</span>'}
                       </div>
+                      <div style="border-top: 1px solid #000; width: 65px; margin-bottom: 2px;"></div>
                       <div class="resident-label">RESIDENT</div>
                   </div>
                   
                   <div class="right-col">
                       <div class="field-label">Last Name, First Name, Middle Name</div>
-                      <div class="field-value name-value" style="font-size: 8px;">${currentResident.last_name}, ${currentResident.first_name}${currentResident.middle_name ? ', ' + currentResident.middle_name : ''}</div>
+                      <div class="field-value name-value">${currentResident.last_name}, ${currentResident.first_name}${currentResident.middle_name ? ', ' + currentResident.middle_name : ''}</div>
                       
                       <div class="grid-container">
                           <div class="grid-item" style="width: 25%">
@@ -758,13 +777,21 @@ document.addEventListener('DOMContentLoaded', function() {
                       </div>
 
                       <div class="field-label">Address</div>
-                      <div class="field-value" style="font-size: 7px; line-height: 1.2; text-transform: uppercase; margin-bottom: 8px; word-break: break-word; max-width: 100%; overflow-wrap: break-word;">${currentResident.address || '-'}</div>
+                      <div class="field-value" style="font-size: 8.5px; line-height: 1.25; text-transform: uppercase; margin-bottom: 8px; word-break: break-word; max-width: 100%; overflow-wrap: break-word;">${currentResident.address || '-'}</div>
 
-                      <div class="qr-section">
-                          <div class="qr-box">
-                              <img src="${currentID.qr_code}" alt="QR">
+                      <div style="position: absolute; bottom: 4px; right: 8px; text-align: center;">
+                          <div style="text-align: center; width: 70px; position: relative;">
+                              <!-- Signature as background -->
+                              <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 75px; height: 24px; opacity: 1; z-index: 0;">
+                                  <img src="${window.location.origin}/storage/signatures/chairman.png" alt="Signature" style="width: 100%; height: 100%; object-fit: contain;">
+                              </div>
+                              <!-- Text overlay -->
+                              <div style="position: relative; z-index: 1;">
+                                  <div style="font-size: 7px; font-weight: bold; color: #0038A8; line-height: 1.1; padding-top: 0px;">JESSIE B. GAVIOLA</div>
+                                  <div style="border-top: 1.5px solid #000; margin: 1px auto 2px auto; width: 100%;"></div>
+                                  <div style="font-size: 5.5px; font-weight: bold; color: #0038A8; line-height: 1.1;">PUNONG BARANGAY</div>
+                              </div>
                           </div>
-                          <div class="id-no">${currentID.id_number}</div>
                       </div>
                   </div>
                 </div>
@@ -774,39 +801,42 @@ document.addEventListener('DOMContentLoaded', function() {
         const backCardHTML = `
               <div class="id-card">
                 <div class="bg-pattern"></div>
-                <div style="padding: 10px 12px; position: relative; z-index: 1;">
-                  <div style="text-align: center; font-weight: bold; color: #CE1126; font-size: 9px; letter-spacing: 0.5px; margin-bottom: 6px; line-height: 1.2;">IN CASE OF EMERGENCY,<br>KINDLY NOTIFY:</div>
+                <div style="padding: 12px 14px; position: relative; z-index: 1;">
+                  <div style="text-align: center; font-weight: bold; color: #0038A8; font-size: 11px; letter-spacing: 0.5px; margin-bottom: 8px; line-height: 1.2;">IN CASE OF EMERGENCY, KINDLY NOTIFY:</div>
                   
-                  <table style="width: 100%; font-size: 8px; border-collapse: collapse; margin-bottom: 5px;">
-                    <tr style="line-height: 1.5;">
-                      <td style="font-weight: bold; color: #000; width: 70px; padding: 0 3px 2px 0; white-space: nowrap;">NAME:</td>
-                      <td style="color: #000; font-weight: bold; padding: 0 0 2px 0;">${currentResident.emergency_contact_name || '_________________'}</td>
+                  <table style="width: 100%; font-size: 10px; border-collapse: collapse; margin-bottom: 6px;">
+                    <tr style="line-height: 1.6;">
+                      <td style="font-weight: bold; color: #000; width: 85px; padding: 0 4px 3px 0; text-align: right; white-space: nowrap;">NAME :</td>
+                      <td style="color: #000; font-weight: bold; padding: 0 0 3px 4px;">${currentResident.emergency_contact_name || '_________________'}</td>
                     </tr>
-                    <tr style="line-height: 1.5;">
-                      <td style="font-weight: bold; color: #000; width: 70px; padding: 0 3px 2px 0; white-space: nowrap;">RELATION:</td>
-                      <td style="color: #000; font-weight: bold; padding: 0 0 2px 0;">${currentResident.emergency_contact_relationship || '_________________'}</td>
+                    <tr style="line-height: 1.6;">
+                      <td style="font-weight: bold; color: #000; width: 85px; padding: 0 4px 3px 0; text-align: right; white-space: nowrap;">RELATION :</td>
+                      <td style="color: #000; font-weight: bold; padding: 0 0 3px 4px;">${currentResident.emergency_contact_relationship || '_________________'}</td>
                     </tr>
-                    <tr style="line-height: 1.5;">
-                      <td style="font-weight: bold; color: #000; width: 70px; padding: 0 3px 2px 0; white-space: nowrap;">ADDRESS:</td>
-                      <td style="color: #000; font-weight: bold; padding: 0 0 2px 0;">${currentResident.emergency_contact_address || '_________________'}</td>
+                    <tr style="line-height: 1.6;">
+                      <td style="font-weight: bold; color: #000; width: 85px; padding: 0 4px 3px 0; text-align: right; white-space: nowrap;">ADDRESS :</td>
+                      <td style="color: #000; font-weight: bold; padding: 0 0 3px 4px;">${currentResident.emergency_contact_address || '_________________'}</td>
                     </tr>
-                    <tr style="line-height: 1.5;">
-                      <td style="font-weight: bold; color: #000; width: 70px; padding: 0 3px 0 0; white-space: nowrap;">CONTACT NO.:</td>
-                      <td style="color: #000; font-weight: bold; padding: 0 0 0 0;">${currentResident.emergency_contact_no || '_________________'}</td>
+                    <tr style="line-height: 1.6;">
+                      <td style="font-weight: bold; color: #000; width: 85px; padding: 0 4px 0 0; text-align: right; white-space: nowrap;">CONTACT NO. :</td>
+                      <td style="color: #000; font-weight: bold; padding: 0 0 0 4px;">${currentResident.emergency_contact_no || '_________________'}</td>
                     </tr>
                   </table>
 
-                  <div style="text-align: center; font-weight: bold; color: #CE1126; font-size: 9px; letter-spacing: 0.5px; margin-top: 4px; margin-bottom: 4px; line-height: 1.2;">EMERGENCY HOTLINE</div>
+                  <div style="text-align: center; font-weight: bold; color: #0038A8; font-size: 10px; letter-spacing: 0.5px; margin-top: 5px; margin-bottom: 3px; line-height: 1.1;">EMERGENCY HOTLINE</div>
                   
-                  <div style="font-size: 7.5px; line-height: 1.4; text-align: center; color: #000; margin-bottom: 4px;">
-                    <div style="font-weight: bold;">BARANGAY: (02) 874-26641</div>
-                    <div style="font-weight: bold;">PASIG CITY: 643-0000</div>
+                  <div style="font-size: 8px; line-height: 1.3; text-align: center; color: #000; margin-bottom: 2px;">
+                    <div style="font-weight: bold;">BARANGAY: (02) 874-26641 / 0966-007-7440</div>
+                    <div style="font-weight: bold;">PASIG CITY HOTLINE: 643-0000</div>
                     <div style="font-weight: bold;">PNP: 911</div>
-                    <div style="font-weight: bold;">BFP: 0932-779-8621</div>
+                    <div style="font-weight: bold;">BFP-PASIG HOTLINE: 0932-779-8621</div>
                     <div style="font-weight: bold;">MERALCO: 16211</div>
                   </div>
+                </div>
 
-                  <div style="text-align: center; font-size: 6.5px; color: #666; padding-top: 4px; margin-top: 4px;">
+                <!-- IF FOUND Text - Bottom Section -->
+                <div style="position: absolute; bottom: 3px; left: 10px; right: 10px; text-align: center; z-index: 2;">
+                  <div style="font-size: 5px; color: #666; line-height: 1.2;">
                     IF FOUND, PLEASE RETURN TO KALAWAAN<br>BARANGAY HALL INFORMATION CENTER
                   </div>
                 </div>
@@ -815,7 +845,7 @@ document.addEventListener('DOMContentLoaded', function() {
                   <div style="width: 55px; height: 55px; background: white; border: 2px solid #000; display: flex; align-items: center; justify-content: center;">
                     <img src="${currentID.qr_code}" alt="QR" style="width: 100%; height: 100%; object-fit: contain;">
                   </div>
-                  <div style="font-family: monospace; font-weight: bold; font-size: 6px; text-align: center; margin-top: 2px; color: #000;">QR CODE</div>
+                  <div style="font-family: monospace; font-weight: bold; font-size: 5px; text-align: center; margin-top: 2px; color: #000;">${currentID.id_number}</div>
                 </div>
               </div>
         `;
@@ -864,7 +894,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 .header { 
                   position: relative; 
                   z-index: 1; 
-                  background: linear-gradient(90deg, rgba(38,143,255,0.85) 0%, rgba(255,255,255,0.85) 50%, rgba(0,48,103,0.85) 100%), url('/images/sil.jpg') center/cover; 
+                  background: linear-gradient(90deg, rgba(38,143,255,0.85) 0%, rgba(255,255,255,0.85) 50%, rgba(0,48,103,0.85) 100%), url('/images/kalawaan_hall.jpg') center/cover; 
                   height: 45px; 
                   display: flex; 
                   align-items: center; 
@@ -910,7 +940,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 .resident-label { font-size: 8px; font-weight: bold; color: #0038A8; letter-spacing: 0.5px; }
 
                 /* Right Col */
-                .right-col { flex: 1; display: flex; flex-direction: column; position: relative; min-width: 0; padding-right: 72px; padding-bottom: 4px; }
+                .right-col { flex: 1; display: flex; flex-direction: column; position: relative; min-width: 0; padding-right: 30px; padding-bottom: 4px; }
                 .field-label { font-size: 5px; color: #6c757d; text-transform: uppercase; margin-bottom: 0.5px; }
                 .field-value { font-size: 8px; font-weight: bold; color: #212529; line-height: 1; word-break: break-word; }
                 .name-value { font-size: 8px; color: #0038A8; text-transform: uppercase; margin-bottom: 6px; line-height: 1.1; }
@@ -924,7 +954,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 .id-no { font-family: monospace; font-weight: bold; font-size: 7px; letter-spacing: 0.3px; }
 
                 /* Back Side */
-                .back-header { background: linear-gradient(90deg, rgba(38,143,255,0.85) 0%, rgba(255,255,255,0.85) 50%, rgba(0,48,103,0.85) 100%), url('/images/sil.jpg') center/cover; color: #003067; text-align: center; font-weight: bold; font-size: 9px; padding: 4px; letter-spacing: 0.5px; flex-shrink: 0; }
+                .back-header { background: linear-gradient(90deg, rgba(38,143,255,0.85) 0%, rgba(255,255,255,0.85) 50%, rgba(0,48,103,0.85) 100%), url('/images/kalawaan_hall.jpg') center/cover; color: #003067; text-align: center; font-weight: bold; font-size: 9px; padding: 4px; letter-spacing: 0.5px; flex-shrink: 0; }
                 .back-body { padding: 10px; display: flex; gap: 10px; flex: 1; overflow: hidden; }
                 .back-left { flex: 1; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
                 .ec-label { font-size: 6px; font-weight: bold; color: #0038A8; margin-bottom: 0.5px; }

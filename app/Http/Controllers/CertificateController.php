@@ -40,9 +40,17 @@ class CertificateController extends Controller
             'low_income' => Certificate::where('type', 'low_income')->count(),
         ];
 
+        // Get all residents for the modal
+        $residents = Resident::all()->map(fn($r) => [
+            'id' => $r->id,
+            'first_name' => $r->first_name,
+            'last_name' => $r->last_name,
+        ])->toArray();
+
         return view('certificates.index', [
             'certificates' => $certificates,
             'certificateCounts' => $certificateCounts,
+            'residents' => $residents,
         ]);
     }
 
@@ -57,23 +65,49 @@ class CertificateController extends Controller
         return view('certificates.create', ['residents' => $residents]);
     }
 
+    public function editor(Request $request)
+    {
+        $certificateType = $request->input('type');
+
+        // Validate certificate type
+        $validTypes = ['indigency', 'residency', 'clearance', 'low_income', 'no_income'];
+        if (!$certificateType || !in_array($certificateType, $validTypes)) {
+            return redirect()->route('certificates.index')->with('error', 'Invalid certificate type.');
+        }
+
+        // Get current date parts for the issuance line
+        $issueDay = date('jS');
+        $issueMonth = date('F');
+        $issueYear = date('Y');
+
+        // Return blank editor - user will fill in everything manually
+        return view('certificates.editor', [
+            'certificateType' => $certificateType,
+            'issueDay' => $issueDay,
+            'issueMonth' => $issueMonth,
+            'issueYear' => $issueYear,
+        ]);
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'resident_id' => ['required', 'exists:residents,id'],
-            'certificate_type' => ['required', 'in:indigency,residency,clearance,low_income'],
+            'resident_id' => ['nullable', 'exists:residents,id'],
+            'certificate_type' => ['required', 'in:indigency,residency,clearance,low_income,no_income'],
             'issued_date' => ['required', 'date'],
             'status' => ['required', 'in:active,inactive,draft,pending,approved'],
             'remarks' => ['nullable', 'string', 'max:500'],
+            'certificate_content' => ['nullable', 'string'],
         ]);
 
         // Map certificate_type to type field
         $data = [
-            'resident_id' => $validated['resident_id'],
+            'resident_id' => $validated['resident_id'] ?? null,
             'type' => $validated['certificate_type'],
             'approved_date' => $validated['issued_date'],
             'status' => $validated['status'],
-            'notes' => $validated['remarks'],
+            'notes' => $validated['remarks'] ?? null,
+            'content' => $validated['certificate_content'] ?? null,
         ];
 
         Certificate::create($data);
@@ -87,7 +121,9 @@ class CertificateController extends Controller
             'certificate' => [
                 'id' => $certificate->id,
                 'resident_id' => $certificate->resident_id,
-                'resident_name' => $certificate->resident->first_name . ' ' . $certificate->resident->last_name,
+                'resident_name' => $certificate->resident 
+                    ? $certificate->resident->first_name . ' ' . $certificate->resident->last_name 
+                    : 'N/A',
                 'type' => $certificate->type,
                 'purpose' => $certificate->purpose,
                 'purpose_details' => $certificate->purpose_details,
@@ -98,6 +134,7 @@ class CertificateController extends Controller
                 'released_date' => $certificate->released_date,
                 'rejection_reason' => $certificate->rejection_reason,
                 'notes' => $certificate->notes,
+                'content' => $certificate->content,
                 'reference_number' => $certificate->reference_number,
                 'created_at' => $certificate->created_at,
             ]
@@ -215,5 +252,108 @@ class CertificateController extends Controller
         $certificate->update(['status' => 'cancelled']);
 
         return response()->json(['message' => 'Certificate request cancelled']);
+    }
+
+    /**
+     * Download certificate template
+     */
+    public function downloadTemplate($type)
+    {
+        $templates = [
+            'indigency' => '2026 - CERTIFICATE OF INDIGENCY.docx',
+            'residency' => '2026 - CERTIFICATE OF RESIDENCY.docx',
+            'clearance' => '2026 - BARANGAY CLEARANCE.docx',
+            'low_income' => '2026 - CERTIFICATON OF LOW INCOME.docx',
+            'no_income' => '2026 - CERTIFICATION OF NO INCOME.docx',
+        ];
+
+        if (!isset($templates[$type])) {
+            abort(404, 'Template not found');
+        }
+
+        $filename = $templates[$type];
+        $path = public_path('templates/' . $filename);
+
+        if (!file_exists($path)) {
+            abort(404, 'Template file not found');
+        }
+
+        return response()->download($path, $filename);
+    }
+
+    /**
+     * Get template file for zero-download solution (serves raw file)
+     */
+    public function getTemplateFile($type)
+    {
+        $templates = [
+            'indigency' => '2026 - CERTIFICATE OF INDIGENCY.docx',
+            'residency' => '2026 - CERTIFICATE OF RESIDENCY.docx',
+            'clearance' => '2026 - BARANGAY CLEARANCE.docx',
+            'low_income' => '2026 - CERTIFICATON OF LOW INCOME.docx',
+            'no_income' => '2026 - CERTIFICATION OF NO INCOME.docx',
+        ];
+
+        if (!isset($templates[$type])) {
+            abort(404, 'Template not found');
+        }
+
+        $filename = $templates[$type];
+        $path = public_path('templates/' . $filename);
+
+        if (!file_exists($path)) {
+            abort(404, 'Template file not found');
+        }
+
+        // Serve the file with proper headers for in-memory loading
+        return response()->file($path, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'Cache-Control' => 'public, max-age=3600', // Cache for 1 hour
+            'Access-Control-Allow-Origin' => '*', // Allow fetch from same origin
+        ]);
+    }
+
+    /**
+     * Serve Word template for opening in Word (not downloading)
+     */
+    public function wordTemplate($type, $residentId = null)
+    {
+        $templates = [
+            'indigency' => '2026 - CERTIFICATE OF INDIGENCY.docx',
+            'residency' => '2026 - CERTIFICATE OF RESIDENCY.docx',
+            'clearance' => '2026 - BARANGAY CLEARANCE.docx',
+            'low_income' => '2026 - CERTIFICATON OF LOW INCOME.docx',
+            'no_income' => '2026 - CERTIFICATION OF NO INCOME.docx',
+        ];
+
+        if (!isset($templates[$type])) {
+            abort(404, 'Template not found');
+        }
+
+        $filename = $templates[$type];
+        $path = public_path('templates/' . $filename);
+
+        if (!file_exists($path)) {
+            abort(404, 'Template file not found');
+        }
+
+        // Generate a descriptive filename
+        $certTypeName = ucfirst(str_replace('_', ' ', $type));
+        
+        if ($residentId) {
+            $resident = Resident::findOrFail($residentId);
+            $residentName = $resident->last_name . '_' . $resident->first_name;
+            $tempFilename = 'Certificate_' . str_replace(' ', '_', $certTypeName) . '_' . $residentName . '_' . date('Ymd') . '.docx';
+        } else {
+            $tempFilename = 'Certificate_' . str_replace(' ', '_', $certTypeName) . '_' . date('Ymd') . '.docx';
+        }
+        
+        // Clean filename
+        $tempFilename = preg_replace('/[^A-Za-z0-9_\-\.]/', '', $tempFilename);
+
+        // Return the file for download - browser will open it with default .docx application
+        return response()->download($path, $tempFilename, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        ]);
     }
 }
