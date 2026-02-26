@@ -154,8 +154,16 @@
             <textarea data-field="description" placeholder="About text..." rows="5">{{ $data['description'] ?? '' }}</textarea>
         </div>
         <div class="field-group">
-            <label>Image Path</label>
-            <input type="text" data-field="image" value="{{ $data['image'] ?? '' }}" placeholder="images/kalawaan.jpg">
+            <label>Image</label>
+            <div class="ve-img-upload" id="about-img-upload">
+                @if(!empty($data['image']))
+                    <img src="/{{ ltrim($data['image'], '/') }}" alt="">
+                    <button class="ve-img-remove" type="button" onclick="clearFieldImage('image','about-img-upload')"><i class="bi bi-x"></i></button>
+                @else
+                    <div class="ve-img-placeholder"><i class="bi bi-cloud-arrow-up" style="font-size:24px;display:block;margin-bottom:4px;"></i><div>Click to upload</div></div>
+                @endif
+                <input type="file" accept="image/*" onchange="uploadFieldImage(this,'image','about-img-upload')">
+            </div>
         </div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
             <div class="field-group" style="margin-bottom: 0;">

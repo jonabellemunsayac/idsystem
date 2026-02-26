@@ -10,7 +10,7 @@
     @switch($type)
 
         @case('hero')
-            <section class="hero-section">
+            <section class="hero-section">      
                 <div class="hero-overlay"></div>
                 <div class="hero-content">
                     @if(!empty($d['badge']))
@@ -63,7 +63,7 @@
                         @php $imgLeft = ($d['image_position'] ?? 'left') === 'left'; @endphp
                         <div class="col-lg-6 {{ $imgLeft ? '' : 'order-lg-2' }}">
                             @if(!empty($d['image']))
-                                <img src="{{ asset($d['image']) }}" alt="{{ $d['heading'] ?? '' }}" class="img-fluid rounded-4 shadow w-100">
+                                <img src="{{ str_starts_with($d['image'], 'http') ? $d['image'] : asset(ltrim($d['image'], '/')) }}" alt="{{ $d['heading'] ?? '' }}" class="img-fluid rounded-4 shadow w-100">
                             @else
                                 <div class="bg-light rounded-4 d-flex align-items-center justify-content-center" style="height: 350px;">
                                     <i class="bi bi-image text-muted" style="font-size: 4rem;"></i>
