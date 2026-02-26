@@ -30,11 +30,7 @@
         <i class="bi bi-arrow-left me-2"></i> Back to Certificates
     </a>
 
-    @if($certificate['content'])
-    <button onclick="window.print()" class="btn btn-primary mb-3 ms-2">
-        <i class="bi bi-printer me-2"></i> Print Certificate
-    </button>
-    @endif
+
 
     <div class="card">
         <div class="card-body">

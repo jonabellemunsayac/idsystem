@@ -672,9 +672,17 @@
             if (itemType === 'service') {
                 h += itemField('Icon','icon',item.icon,sIdx,i)+itemField('Title','title',item.title,sIdx,i)+itemField('Description','description',item.description,sIdx,i);
             } else {
+                const nimgId = `img_news_${sIdx}_${i}`;
+                const nhasImg = !!(item.image);
                 h += itemField('Date','date',item.date,sIdx,i)+itemField('Title','title',item.title,sIdx,i)+
                     itemTextarea('Excerpt','excerpt',item.excerpt,sIdx,i)+
-                    imageField('Image','image',item.image,sIdx+'.news.'+i, `items.${i}.`)+
+                    `<div class="ve-field" style="margin-bottom:8px"><label style="display:block;font-size:11px;font-weight:600;color:#6b7280;margin-bottom:5px;text-transform:uppercase;letter-spacing:.3px">Image</label>
+                    <div class="ve-img-upload ${nhasImg?'has-image':''}" id="${nimgId}">
+                        ${nhasImg
+                            ?`<img src="${imgSrc(item.image)}"><button class="ve-img-remove" onclick="event.stopPropagation();clearImage(${sIdx},'image','items.${i}.','${nimgId}')" title="Remove"><i class="bi bi-x"></i></button>`
+                            :`<div class="ve-img-placeholder"><i class="bi bi-cloud-arrow-up"></i><div>Click to upload</div></div>`}
+                        <input type="file" accept="image/*" onchange="uploadImage(this,${sIdx},'image','items.${i}.','${nimgId}')">
+                    </div></div>`+
                     `<div class="ve-field" style="margin-bottom:0"><label style="display:flex;align-items:center;gap:6px;text-transform:none;letter-spacing:0;cursor:pointer">
                     <input type="checkbox" style="width:auto" ${item.featured?'checked':''} onchange="updateItemField(${sIdx},${i},'featured',this.checked)"> Featured</label></div>`;
             }
@@ -890,8 +898,9 @@
     function escAttr(str) { return (str||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
     function imgSrc(url) {
         if (!url) return '';
-        if (url.startsWith('http') || url.startsWith('/')) return url;
-        return '/' + url;
+        if (url.startsWith('http')) return url;
+        // Ensure exactly one leading slash
+        return '/' + url.replace(/^\/+/, '');
     }
 
     // ========== KEYBOARD ==========

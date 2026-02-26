@@ -80,8 +80,8 @@ class CertificateController extends Controller
         $issueMonth = date('F');
         $issueYear = date('Y');
 
-        // Return blank editor - user will fill in everything manually
-        return view('certificates.editor', [
+        // Load the dedicated template view for the requested certificate type
+        return view('certificates.templates.' . $certificateType, [
             'certificateType' => $certificateType,
             'issueDay' => $issueDay,
             'issueMonth' => $issueMonth,
