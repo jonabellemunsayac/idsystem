@@ -498,6 +498,7 @@ class ResidentController extends Controller
                 'emergency_contact_address' => $resident->emergency_contact_address,
                 'status' => $resident->status ?? 'active',
                 'created_at' => $resident->created_at,
+                'updated_at' => $resident->updated_at->timestamp,
             ],
             'account' => $account ? [
                 'username' => $account->username,
@@ -540,6 +541,7 @@ class ResidentController extends Controller
                 'emergency_contact_no' => $resident->emergency_contact_no,
                 'emergency_contact_relationship' => $resident->emergency_contact_relationship,
                 'emergency_contact_address' => $resident->emergency_contact_address,
+                'updated_at' => $resident->updated_at->timestamp,
             ]
         ]);
     }
