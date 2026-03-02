@@ -292,7 +292,7 @@
                                     @if($resident['profile_image'])
                                         <div id="image-preview" class="mt-2">
                                             <p class="mb-1" style="font-size: 0.65rem; color: #6c757d;">Current Photo:</p>
-                                            <img id="preview-img" src="{{ asset('storage/' . $resident['profile_image']) }}" alt="Current Profile Image" style="max-width: 150px; max-height: 150px; border-radius: 6px; border: 2px solid #dee2e6;">
+                                            <img id="preview-img" src="{{ asset('storage/' . $resident['profile_image']) }}?v={{ $resident['updated_at'] }}" alt="Current Profile Image" style="max-width: 150px; max-height: 150px; border-radius: 6px; border: 2px solid #dee2e6;">
                                             <div class="mt-1">
                                                 <button type="button" class="btn btn-sm btn-danger" id="remove-photo-btn" style="font-size: 0.7rem; padding: 0.2rem 0.4rem;">
                                                     <i class="bi bi-trash"></i> Remove
@@ -350,7 +350,7 @@
                                     @if($resident['signature'])
                                         <div id="signature-preview" class="mt-2">
                                             <p class="mb-1" style="font-size: 0.65rem; color: #6c757d;">Current Signature:</p>
-                                            <img id="preview-signature" src="{{ asset('storage/' . $resident['signature']) }}" alt="Signature Preview" style="max-width: 200px; max-height: 100px; border: 2px solid #dee2e6; border-radius: 4px; background: transparent; padding: 5px;">
+                                            <img id="preview-signature" src="{{ asset('storage/' . $resident['signature']) }}?v={{ $resident['updated_at'] }}" alt="Signature Preview" style="max-width: 200px; max-height: 100px; border: 2px solid #dee2e6; border-radius: 4px; background: transparent; padding: 5px;">
                                             <div class="mt-1">
                                                 <button type="button" class="btn btn-sm btn-danger" id="remove-signature-btn" style="font-size: 0.7rem; padding: 0.2rem 0.4rem;">
                                                     <i class="bi bi-trash"></i> Remove
