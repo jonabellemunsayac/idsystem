@@ -38,6 +38,7 @@ class CertificateController extends Controller
             'residency' => Certificate::where('type', 'residency')->count(),
             'clearance' => Certificate::where('type', 'clearance')->count(),
             'low_income' => Certificate::where('type', 'low_income')->count(),
+            'no_income' => Certificate::where('type', 'no_income')->count(),
         ];
 
         // Get all residents for the modal

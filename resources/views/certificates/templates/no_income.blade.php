@@ -32,24 +32,24 @@
     .cert-paper-bg { background: #c9cdd4; padding: 28px 28px 36px 28px; border-radius: 10px; display: flex; justify-content: center; width: 100%; box-sizing: border-box; overflow-x: auto; }
 
     /* ===== Certificate Paper ===== */
-    .cert-paper { width: 8.5in; min-height: 11in; background: white; box-shadow: 0 4px 24px rgba(0,0,0,0.18); padding: 0 1in 1.5in 1in; font-family: 'Times New Roman', Times, serif; color: #000; box-sizing: border-box; position: relative; flex-shrink: 0; }
+    .cert-paper { width: 8.5in; min-height: 11in; background: white; box-shadow: 0 4px 24px rgba(0,0,0,0.18); padding: 0 1in 1in 1in; font-family: 'Times New Roman', Times, serif; color: #000; box-sizing: border-box; position: relative; flex-shrink: 0; }
 
     /* ===== Header ===== */
     .cert-header { text-align: center; margin: 0 -1in; padding: 0 1in 12px 1in; border-bottom: 2px solid #000; }
     .cert-header-logos { display: flex; align-items: center; justify-content: center; gap: 16px; }
-    .cert-header-logo { width: 95px; height: 95px; object-fit: contain; flex-shrink: 0; }
+    .cert-header-logo { width: 110px; height: 110px; object-fit: contain; flex-shrink: 0; }
     .cert-header-text { text-align: center; flex: 1; }
     .cert-header-text .republic,
-    .cert-header-text .city    { font-size: 11pt; margin: 0; letter-spacing: 0.5px; }
-    .cert-header-text .barangay { font-size: 18pt; font-weight: bold; margin: 4px 0; letter-spacing: 1px; }
-    .cert-header-text .phone   { font-size: 10pt; margin: 0; }
+    .cert-header-text .city    { font-size: 13pt; margin: 0; letter-spacing: 0.5px; }
+    .cert-header-text .barangay { font-size: 22pt; font-weight: bold; margin: 4px 0; letter-spacing: 1px; }
+    .cert-header-text .phone   { font-size: 11pt; margin: 0; }
 
     /* ===== ID Row with photo ===== */
-    .cert-id-row { display: flex; justify-content: space-between; align-items: center; margin-top: 120px; margin-bottom: 24px; }
+    .cert-id-row { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; margin-bottom: 16px; }
     .cert-id-label { font-size: 14pt; }
 
     /* ===== Photo Box ===== */
-    .cert-photo-box { width: 1.3in; height: 1.6in; border: 1px solid #000; flex-shrink: 0; position: relative; overflow: hidden; cursor: pointer; display: flex; align-items: center; justify-content: center; background: #f9f9f9; }
+    .cert-photo-box { width: 1.2in; height: 1.2in; border: 1px solid #000; flex-shrink: 0; position: relative; overflow: hidden; cursor: pointer; display: flex; align-items: center; justify-content: center; background: #f9f9f9; }
     .cert-photo-box img { width: 100%; height: 100%; object-fit: cover; display: block; position: absolute; top: 0; left: 0; }
     .cert-photo-hint { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; color: #9ca3af; font-size: 8pt; font-family: sans-serif; text-align: center; pointer-events: none; line-height: 1.3; padding: 4px; position: relative; z-index: 1; }
     .cert-photo-hint i { font-size: 18px; }
@@ -57,23 +57,26 @@
     .cert-photo-box input[type="file"] { display: none; }
 
     /* ===== Title ===== */
-    .cert-title { text-align: center; margin: 4px 0 18px 0; }
-    .cert-title h1 { font-size: 16pt; font-weight: bold; margin: 0; letter-spacing: 2px; }
+    .cert-title { text-align: center; margin: 4px 0 12px 0; }
+    .cert-title h1 { font-size: 22pt; font-weight: bold; margin: 0; letter-spacing: 3px; text-transform: uppercase; word-spacing: 6px; }
 
     /* ===== Body ===== */
-    .cert-body { font-size: 14pt; line-height: 2; text-align: justify; outline: none; }
-    .cert-body p { margin: 0; text-indent: 48px; }
+    .cert-body { font-size: 14pt; line-height: 1.8; text-align: justify; word-spacing: -0.5pt; outline: none; }
+    .cert-body p { margin: 0; text-indent: 48px; text-align-last: left; }
     .cert-body p.no-indent { text-indent: 0; }
     .cert-body p + p { margin-top: 0; }
 
     /* ===== Editable blanks ===== */
-    .blank { display: inline; font-weight: bold; border-bottom: 1px solid #000; min-width: 80px; outline: none; color: #1a1aff; cursor: text; white-space: nowrap; }
+    .blank { display: inline; font-weight: bold; border-bottom: 1px solid #000; padding: 0 2px; outline: none; color: #1a1aff; cursor: text; white-space: normal; }
     .blank:focus { background: #eef4ff; }
 
     /* ===== Signatory ===== */
-    .cert-signatory { margin-top: 56px; text-align: center; }
+    .cert-signatory { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; min-height: 0; }
     .cert-signatory .name    { font-size: 16pt; font-weight: bold; margin: 0; text-decoration: underline; }
     .cert-signatory .position { font-size: 14pt; margin: 4px 0 0 0; }
+
+    /* ===== Content wrapper for flex layout ===== */
+    .cert-content-area { display: flex; flex-direction: column; min-height: calc(11in - 1in - 130px - 1in); }
 
     /* ===== Note ===== */
     .cert-note { position: absolute; bottom: 1in; left: 1in; right: 1in; margin: 0; font-size: 12pt; font-style: italic; text-align: center; }
@@ -161,6 +164,7 @@
                     </div>
 
                     <!-- ID row with photo box -->
+                    <div class="cert-content-area">
                     <div class="cert-id-row">
                         <div class="cert-id-label">Barangay I.D. No.: <span class="blank" contenteditable="true" spellcheck="false">___________</span></div>
                         <div class="cert-photo-box" id="photoBox" onclick="document.getElementById('photoInput').click()" title="Click to upload photo">
@@ -175,7 +179,7 @@
 
                     <!-- Title -->
                     <div class="cert-title">
-                        <h1>CERTIFICATION &nbsp; OF &nbsp; NO INCOME</h1>
+                        <h1>CERTIFICATION OF NO INCOME</h1>
                     </div>
 
                     <!-- Body -->
@@ -204,6 +208,7 @@
                         <p class="name">JESSIE B. GAVIOLA</p>
                         <p class="position">Barangay Chairman</p>
                     </div>
+                    </div><!-- /.cert-content-area -->
 
                     <!-- Note -->
                     <div class="cert-note">
@@ -277,10 +282,18 @@
             + '@page{size:letter portrait;margin:0;}'
             + '*,*::before,*::after{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;box-sizing:border-box;}'
             + 'html,body{margin:0;padding:0;background:white;}'
-            + '.cert-paper{width:8.5in!important;min-height:11in!important;padding:0 1in 1.5in 1in!important;margin:0 auto!important;box-shadow:none!important;border:none!important;background:white!important;position:relative!important;}'
+            + '.cert-paper{width:8.5in!important;min-height:11in!important;padding:0 1in 1in 1in!important;margin:0 auto!important;box-shadow:none!important;border:none!important;background:white!important;position:relative!important;}'
             + '.cert-header{margin:0 -1in!important;padding:0.2in 1in 12px 1in!important;}'
+            + '.cert-header-logo{width:110px!important;height:110px!important;}'
+            + '.cert-header-text .republic,.cert-header-text .city{font-size:13pt!important;}'
+            + '.cert-header-text .barangay{font-size:22pt!important;}'
+            + '.cert-title h1{font-size:22pt!important;letter-spacing:3px!important;word-spacing:6px!important;}'
+            + '.cert-content-area{display:flex!important;flex-direction:column!important;min-height:calc(11in - 1in - 130px - 1in)!important;}'
+            + '.cert-signatory{flex:1!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;}'
             + '.cert-note{position:absolute!important;bottom:1in!important;left:1in!important;right:1in!important;margin:0!important;}'
-            + '.blank{color:#000!important;border-bottom-color:#000!important;}'
+            + '.cert-body{font-size:14pt!important;line-height:1.8!important;text-align:justify!important;word-spacing:-0.5pt!important;}'
+            + '.cert-body p{text-align-last:left!important;}'
+            + '.blank{color:#000!important;border-bottom-color:#000!important;white-space:normal!important;}'
             + '</style>'
             + '</head><body>' + clone.outerHTML
             + '<script>window.onload=function(){window.focus();window.print();window.onafterprint=function(){window.close();};setTimeout(function(){window.close();},8000);};<\/script>'
