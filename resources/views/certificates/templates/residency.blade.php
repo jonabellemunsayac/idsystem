@@ -37,15 +37,15 @@
     /* ===== Header ===== */
     .cert-header { text-align: center; margin: 0 -1in; padding: 0 1in 12px 1in; border-bottom: 2px solid #000; }
     .cert-header-logos { display: flex; align-items: center; justify-content: center; gap: 16px; }
-    .cert-header-logo { width: 95px; height: 95px; object-fit: contain; flex-shrink: 0; }
+    .cert-header-logo { width: 110px; height: 110px; object-fit: contain; flex-shrink: 0; }
     .cert-header-text { text-align: center; flex: 1; }
     .cert-header-text .republic,
-    .cert-header-text .city    { font-size: 11pt; margin: 0; letter-spacing: 0.5px; }
-    .cert-header-text .barangay { font-size: 18pt; font-weight: bold; margin: 4px 0; letter-spacing: 1px; }
-    .cert-header-text .phone   { font-size: 10pt; margin: 0; }
+    .cert-header-text .city    { font-size: 13pt; margin: 0; letter-spacing: 0.5px; }
+    .cert-header-text .barangay { font-size: 22pt; font-weight: bold; margin: 4px 0; letter-spacing: 1px; }
+    .cert-header-text .phone   { font-size: 11pt; margin: 0; }
 
     /* ===== ID Row with photo ===== */
-    .cert-id-row { display: flex; justify-content: space-between; align-items: center; margin-top: 140px; margin-bottom: 24px; }
+    .cert-id-row { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; margin-bottom: 24px; }
     .cert-id-label { font-size: 14pt; }
 
     /* ===== Photo Box ===== */
@@ -58,16 +58,16 @@
 
     /* ===== Title ===== */
     .cert-title { text-align: center; margin: 4px 0 18px 0; }
-    .cert-title h1 { font-size: 16pt; font-weight: bold; margin: 0; letter-spacing: 2px; }
+    .cert-title h1 { font-size: 22pt; font-weight: bold; margin: 0; letter-spacing: 3px; text-transform: uppercase; }
 
     /* ===== Body ===== */
-    .cert-body { font-size: 14pt; line-height: 2; text-align: justify; outline: none; }
-    .cert-body p { margin: 0; text-indent: 48px; }
+    .cert-body { font-size: 14pt; line-height: 2; text-align: justify; word-spacing: normal; outline: none; }
+    .cert-body p { margin: 0; text-indent: 48px; text-align-last: left; }
     .cert-body p.no-indent { text-indent: 0; }
     .cert-body p + p { margin-top: 0; }
 
     /* ===== Editable blanks ===== */
-    .blank { display: inline; font-weight: bold; border-bottom: 1px solid #000; min-width: 80px; outline: none; color: #1a1aff; cursor: text; white-space: nowrap; }
+    .blank { display: inline; font-weight: bold; border-bottom: 1px solid #000; min-width: 80px; outline: none; color: #1a1aff; cursor: text; white-space: normal; }
     .blank:focus { background: #eef4ff; }
 
     /* ===== Signatory ===== */
@@ -278,8 +278,14 @@
             + 'html,body{margin:0;padding:0;background:white;}'
             + '.cert-paper{width:8.5in!important;min-height:11in!important;padding:0 1in 1.5in 1in!important;margin:0 auto!important;box-shadow:none!important;border:none!important;background:white!important;position:relative!important;}'
             + '.cert-header{margin:0 -1in!important;padding:0.2in 1in 12px 1in!important;}'
+            + '.cert-header-logo{width:110px!important;height:110px!important;}'
+            + '.cert-header-text .republic,.cert-header-text .city{font-size:13pt!important;}'
+            + '.cert-header-text .barangay{font-size:22pt!important;}'
+            + '.cert-title h1{font-size:22pt!important;letter-spacing:3px!important;}'
             + '.cert-note{position:absolute!important;bottom:1in!important;left:1in!important;right:1in!important;margin:0!important;}'
-            + '.blank{color:#000!important;border-bottom-color:#000!important;}'
+            + '.cert-body{font-size:14pt!important;line-height:2!important;text-align:justify!important;word-spacing:normal!important;}'
+            + '.cert-body p{text-align-last:left!important;}'
+            + '.blank{color:#000!important;border-bottom-color:#000!important;white-space:normal!important;}'
             + '</style>'
             + '</head><body>' + clone.outerHTML
             + '<script>window.onload=function(){window.focus();window.print();window.onafterprint=function(){window.close();};setTimeout(function(){window.close();},8000);};<\/script>'

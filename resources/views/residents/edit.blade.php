@@ -134,9 +134,85 @@
                         <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Street Name</label>
                         <select class="form-select form-select-sm address-field" name="street_name" style="font-size: 0.8rem;">
                             <option value="" {{ old('street_name', $resident['street_name']) === '' ? 'selected' : '' }}>Select Street...</option>
-                            <option value="Roxas St." {{ old('street_name', $resident['street_name']) === 'Roxas St.' ? 'selected' : '' }}>Roxas St.</option>
-                            <option value="Osmena St." {{ old('street_name', $resident['street_name']) === 'Osmena St.' ? 'selected' : '' }}>Osmena St.</option>
-                            <option value="Del Pilar St." {{ old('street_name', $resident['street_name']) === 'Del Pilar St.' ? 'selected' : '' }}>Del Pilar St.</option>
+                            <option value="A.V Jimenez St" {{ old('street_name', $resident['street_name']) === 'A.V Jimenez St' ? 'selected' : '' }}>A.V Jimenez St</option>
+                            <option value="Acacia St" {{ old('street_name', $resident['street_name']) === 'Acacia St' ? 'selected' : '' }}>Acacia St</option>
+                            <option value="Alley 1 St" {{ old('street_name', $resident['street_name']) === 'Alley 1 St' ? 'selected' : '' }}>Alley 1 St</option>
+                            <option value="Alley 2 St" {{ old('street_name', $resident['street_name']) === 'Alley 2 St' ? 'selected' : '' }}>Alley 2 St</option>
+                            <option value="Anonas St" {{ old('street_name', $resident['street_name']) === 'Anonas St' ? 'selected' : '' }}>Anonas St</option>
+                            <option value="Atis St" {{ old('street_name', $resident['street_name']) === 'Atis St' ? 'selected' : '' }}>Atis St</option>
+                            <option value="Avocado St" {{ old('street_name', $resident['street_name']) === 'Avocado St' ? 'selected' : '' }}>Avocado St</option>
+                            <option value="Axis Road" {{ old('street_name', $resident['street_name']) === 'Axis Road' ? 'selected' : '' }}>Axis Road</option>
+                            <option value="Balimbing St" {{ old('street_name', $resident['street_name']) === 'Balimbing St' ? 'selected' : '' }}>Balimbing St</option>
+                            <option value="Bayabas St" {{ old('street_name', $resident['street_name']) === 'Bayabas St' ? 'selected' : '' }}>Bayabas St</option>
+                            <option value="Bornay Hoa" {{ old('street_name', $resident['street_name']) === 'Bornay Hoa' ? 'selected' : '' }}>Bornay Hoa</option>
+                            <option value="C. Bornay St" {{ old('street_name', $resident['street_name']) === 'C. Bornay St' ? 'selected' : '' }}>C. Bornay St</option>
+                            <option value="Calachuchi St" {{ old('street_name', $resident['street_name']) === 'Calachuchi St' ? 'selected' : '' }}>Calachuchi St</option>
+                            <option value="Camachile St" {{ old('street_name', $resident['street_name']) === 'Camachile St' ? 'selected' : '' }}>Camachile St</option>
+                            <option value="Camia St" {{ old('street_name', $resident['street_name']) === 'Camia St' ? 'selected' : '' }}>Camia St</option>
+                            <option value="Carnation St" {{ old('street_name', $resident['street_name']) === 'Carnation St' ? 'selected' : '' }}>Carnation St</option>
+                            <option value="Casoy St" {{ old('street_name', $resident['street_name']) === 'Casoy St' ? 'selected' : '' }}>Casoy St</option>
+                            <option value="Castillo St" {{ old('street_name', $resident['street_name']) === 'Castillo St' ? 'selected' : '' }}>Castillo St</option>
+                            <option value="Chico St" {{ old('street_name', $resident['street_name']) === 'Chico St' ? 'selected' : '' }}>Chico St</option>
+                            <option value="D.M Tuazon St" {{ old('street_name', $resident['street_name']) === 'D.M Tuazon St' ? 'selected' : '' }}>D.M Tuazon St</option>
+                            <option value="Dalandan St" {{ old('street_name', $resident['street_name']) === 'Dalandan St' ? 'selected' : '' }}>Dalandan St</option>
+                            <option value="Dhalia St" {{ old('street_name', $resident['street_name']) === 'Dhalia St' ? 'selected' : '' }}>Dhalia St</option>
+                            <option value="Dolmar Subd." {{ old('street_name', $resident['street_name']) === 'Dolmar Subd.' ? 'selected' : '' }}>Dolmar Subd.</option>
+                            <option value="Duhat St" {{ old('street_name', $resident['street_name']) === 'Duhat St' ? 'selected' : '' }}>Duhat St</option>
+                            <option value="Durian St" {{ old('street_name', $resident['street_name']) === 'Durian St' ? 'selected' : '' }}>Durian St</option>
+                            <option value="Elisco Road" {{ old('street_name', $resident['street_name']) === 'Elisco Road' ? 'selected' : '' }}>Elisco Road</option>
+                            <option value="Gumamela St" {{ old('street_name', $resident['street_name']) === 'Gumamela St' ? 'selected' : '' }}>Gumamela St</option>
+                            <option value="Guyabano St" {{ old('street_name', $resident['street_name']) === 'Guyabano St' ? 'selected' : '' }}>Guyabano St</option>
+                            <option value="Ilang Ilang St" {{ old('street_name', $resident['street_name']) === 'Ilang Ilang St' ? 'selected' : '' }}>Ilang Ilang St</option>
+                            <option value="Ipil St" {{ old('street_name', $resident['street_name']) === 'Ipil St' ? 'selected' : '' }}>Ipil St</option>
+                            <option value="Ismar" {{ old('street_name', $resident['street_name']) === 'Ismar' ? 'selected' : '' }}>Ismar</option>
+                            <option value="Jabson1" {{ old('street_name', $resident['street_name']) === 'Jabson1' ? 'selected' : '' }}>Jabson1</option>
+                            <option value="Jabson2" {{ old('street_name', $resident['street_name']) === 'Jabson2' ? 'selected' : '' }}>Jabson2</option>
+                            <option value="Javier Comp St" {{ old('street_name', $resident['street_name']) === 'Javier Comp St' ? 'selected' : '' }}>Javier Comp St</option>
+                            <option value="Kamias St" {{ old('street_name', $resident['street_name']) === 'Kamias St' ? 'selected' : '' }}>Kamias St</option>
+                            <option value="Kamagong St" {{ old('street_name', $resident['street_name']) === 'Kamagong St' ? 'selected' : '' }}>Kamagong St</option>
+                            <option value="Kayumito St" {{ old('street_name', $resident['street_name']) === 'Kayumito St' ? 'selected' : '' }}>Kayumito St</option>
+                            <option value="Langka St" {{ old('street_name', $resident['street_name']) === 'Langka St' ? 'selected' : '' }}>Langka St</option>
+                            <option value="Lansones St" {{ old('street_name', $resident['street_name']) === 'Lansones St' ? 'selected' : '' }}>Lansones St</option>
+                            <option value="M. Castillo St" {{ old('street_name', $resident['street_name']) === 'M. Castillo St' ? 'selected' : '' }}>M. Castillo St</option>
+                            <option value="M. Jimenez St" {{ old('street_name', $resident['street_name']) === 'M. Jimenez St' ? 'selected' : '' }}>M. Jimenez St</option>
+                            <option value="Maasikaso St" {{ old('street_name', $resident['street_name']) === 'Maasikaso St' ? 'selected' : '' }}>Maasikaso St</option>
+                            <option value="Maayos St" {{ old('street_name', $resident['street_name']) === 'Maayos St' ? 'selected' : '' }}>Maayos St</option>
+                            <option value="Macopa St" {{ old('street_name', $resident['street_name']) === 'Macopa St' ? 'selected' : '' }}>Macopa St</option>
+                            <option value="Mahogany St" {{ old('street_name', $resident['street_name']) === 'Mahogany St' ? 'selected' : '' }}>Mahogany St</option>
+                            <option value="Mangga Ave St" {{ old('street_name', $resident['street_name']) === 'Mangga Ave St' ? 'selected' : '' }}>Mangga Ave St</option>
+                            <option value="Mansanas St" {{ old('street_name', $resident['street_name']) === 'Mansanas St' ? 'selected' : '' }}>Mansanas St</option>
+                            <option value="Mapag Mahal St" {{ old('street_name', $resident['street_name']) === 'Mapag Mahal St' ? 'selected' : '' }}>Mapag Mahal St</option>
+                            <option value="Masipag St" {{ old('street_name', $resident['street_name']) === 'Masipag St' ? 'selected' : '' }}>Masipag St</option>
+                            <option value="Masunurin St" {{ old('street_name', $resident['street_name']) === 'Masunurin St' ? 'selected' : '' }}>Masunurin St</option>
+                            <option value="Maunawain St" {{ old('street_name', $resident['street_name']) === 'Maunawain St' ? 'selected' : '' }}>Maunawain St</option>
+                            <option value="Melon St" {{ old('street_name', $resident['street_name']) === 'Melon St' ? 'selected' : '' }}>Melon St</option>
+                            <option value="N. Cuevas St" {{ old('street_name', $resident['street_name']) === 'N. Cuevas St' ? 'selected' : '' }}>N. Cuevas St</option>
+                            <option value="Nara St" {{ old('street_name', $resident['street_name']) === 'Nara St' ? 'selected' : '' }}>Nara St</option>
+                            <option value="Orchids St" {{ old('street_name', $resident['street_name']) === 'Orchids St' ? 'selected' : '' }}>Orchids St</option>
+                            <option value="Pag Asa St" {{ old('street_name', $resident['street_name']) === 'Pag Asa St' ? 'selected' : '' }}>Pag Asa St</option>
+                            <option value="Papaya St" {{ old('street_name', $resident['street_name']) === 'Papaya St' ? 'selected' : '' }}>Papaya St</option>
+                            <option value="Paulino St" {{ old('street_name', $resident['street_name']) === 'Paulino St' ? 'selected' : '' }}>Paulino St</option>
+                            <option value="Pinya St" {{ old('street_name', $resident['street_name']) === 'Pinya St' ? 'selected' : '' }}>Pinya St</option>
+                            <option value="R. Castillo St" {{ old('street_name', $resident['street_name']) === 'R. Castillo St' ? 'selected' : '' }}>R. Castillo St</option>
+                            <option value="R.Tatco St" {{ old('street_name', $resident['street_name']) === 'R.Tatco St' ? 'selected' : '' }}>R.Tatco St</option>
+                            <option value="Rambutan St" {{ old('street_name', $resident['street_name']) === 'Rambutan St' ? 'selected' : '' }}>Rambutan St</option>
+                            <option value="Rose St" {{ old('street_name', $resident['street_name']) === 'Rose St' ? 'selected' : '' }}>Rose St</option>
+                            <option value="S. Cuevas St" {{ old('street_name', $resident['street_name']) === 'S. Cuevas St' ? 'selected' : '' }}>S. Cuevas St</option>
+                            <option value="Sampaloc St" {{ old('street_name', $resident['street_name']) === 'Sampaloc St' ? 'selected' : '' }}>Sampaloc St</option>
+                            <option value="Sampaguita St" {{ old('street_name', $resident['street_name']) === 'Sampaguita St' ? 'selected' : '' }}>Sampaguita St</option>
+                            <option value="San Agustin Road" {{ old('street_name', $resident['street_name']) === 'San Agustin Road' ? 'selected' : '' }}>San Agustin Road</option>
+                            <option value="San Flower St" {{ old('street_name', $resident['street_name']) === 'San Flower St' ? 'selected' : '' }}>San Flower St</option>
+                            <option value="San Pedro St" {{ old('street_name', $resident['street_name']) === 'San Pedro St' ? 'selected' : '' }}>San Pedro St</option>
+                            <option value="Santan St" {{ old('street_name', $resident['street_name']) === 'Santan St' ? 'selected' : '' }}>Santan St</option>
+                            <option value="Santol St" {{ old('street_name', $resident['street_name']) === 'Santol St' ? 'selected' : '' }}>Santol St</option>
+                            <option value="Sikap Compound St" {{ old('street_name', $resident['street_name']) === 'Sikap Compound St' ? 'selected' : '' }}>Sikap Compound St</option>
+                            <option value="Suha St" {{ old('street_name', $resident['street_name']) === 'Suha St' ? 'selected' : '' }}>Suha St</option>
+                            <option value="Talisay St" {{ old('street_name', $resident['street_name']) === 'Talisay St' ? 'selected' : '' }}>Talisay St</option>
+                            <option value="Tanguile St" {{ old('street_name', $resident['street_name']) === 'Tanguile St' ? 'selected' : '' }}>Tanguile St</option>
+                            <option value="Ubas St" {{ old('street_name', $resident['street_name']) === 'Ubas St' ? 'selected' : '' }}>Ubas St</option>
+                            <option value="Ugong St" {{ old('street_name', $resident['street_name']) === 'Ugong St' ? 'selected' : '' }}>Ugong St</option>
+                            <option value="Uyvico St" {{ old('street_name', $resident['street_name']) === 'Uyvico St' ? 'selected' : '' }}>Uyvico St</option>
+                            <option value="Visitacion St" {{ old('street_name', $resident['street_name']) === 'Visitacion St' ? 'selected' : '' }}>Visitacion St</option>
                         </select>
                     </div>
                     <div class="col-md-6">

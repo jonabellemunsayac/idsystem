@@ -274,6 +274,26 @@
             </div>
         </div>
     </div>
+    
+    <!-- Certification of No Income -->
+    <div class="cert-template-card" style="cursor: default;">
+        <div class="cert-template-content">
+            <div>
+                <span class="cert-icon">🚫</span>
+                <div class="cert-template-name">Certification of<br>No Income</div>
+                <div class="cert-template-desc">For individuals with no source of income</div>
+            </div>
+            <div class="cert-template-footer" style="flex-direction: column; gap: 8px; align-items: stretch;">
+                <span class="cert-count">Issued: {{ $certificateCounts['no_income'] ?? 0 }}</span>
+                <a href="{{ route('certificates.editor') }}?type=no_income" class="cert-btn" style="text-align: center; border: none; text-decoration: none; display: block;">
+                    <i class="bi bi-pencil-square me-1"></i> Edit & Print
+                </a>
+                <a href="{{ route('certificates.template.download', 'no_income') }}" class="download-template-btn" style="text-align: center;">
+                    <i class="bi bi-download"></i> Download Template
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Search Filter -->

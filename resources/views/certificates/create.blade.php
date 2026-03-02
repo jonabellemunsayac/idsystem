@@ -94,6 +94,9 @@
                     <option value="low_income" @selected(old('certificate_type') == 'low_income' || request('type') == 'low_income')>
                         💰 Certificate of Low Income
                     </option>
+                    <option value="no_income" @selected(old('certificate_type') == 'no_income' || request('type') == 'no_income')>
+                        🚫 Certification of No Income
+                    </option>
                 </select>
                 @error('certificate_type') <div class="invalid-feedback">{{ $message }}</div> @enderror
             </div>
