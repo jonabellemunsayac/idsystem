@@ -108,8 +108,8 @@ class ResidentController extends Controller
             'emergency_contact_address' => ['nullable', 'string', 'max:500'],
             'email' => ['nullable', 'email', 'max:255'],
             'is_head_of_family' => ['nullable', 'boolean'],
-            'profile_image' => ['nullable', 'image', 'max:2048'],
-            'profile_image_base64' => ['nullable', 'string', 'max:2097152'],
+            'profile_image' => ['nullable', 'image', 'max:10240'],
+            'profile_image_base64' => ['nullable', 'string', 'max:10485760'],
             'signature' => ['nullable', 'image', 'max:1024'],
             'signature_base64' => ['nullable', 'string', 'max:1048576'],
         ]);
@@ -135,10 +135,10 @@ class ResidentController extends Controller
                         ->withInput();
                 }
                 
-                // Validate file size (max 2MB)
-                if ($file->getSize() > 2097152) {
+                // Validate file size (max 10MB)
+                if ($file->getSize() > 10485760) {
                     return redirect()->back()
-                        ->withErrors(['profile_image' => 'Profile image must be less than 2MB.'])
+                        ->withErrors(['profile_image' => 'Profile image must be less than 10MB.'])
                         ->withInput();
                 }
                 
@@ -182,10 +182,10 @@ class ResidentController extends Controller
                         ->withInput();
                 }
                 
-                // Validate size after decode (max 2MB)
-                if (strlen($imageData) > 2097152) {
+                // Validate size after decode (max 10MB)
+                if (strlen($imageData) > 10485760) {
                     return redirect()->back()
-                        ->withErrors(['profile_image' => 'Profile image must be less than 2MB.'])
+                        ->withErrors(['profile_image' => 'Profile image must be less than 10MB.'])
                         ->withInput();
                 }
                 
@@ -571,8 +571,8 @@ class ResidentController extends Controller
             'emergency_contact_address' => ['nullable', 'string', 'max:500'],
             'email' => ['nullable', 'email', 'max:255'],
             'is_head_of_family' => ['nullable', 'in:0,1'],
-            'profile_image' => ['nullable', 'image', 'max:2048'],
-            'profile_image_base64' => ['nullable', 'string', 'max:2097152'],
+            'profile_image' => ['nullable', 'image', 'max:10240'],
+            'profile_image_base64' => ['nullable', 'string', 'max:10485760'],
             'signature' => ['nullable', 'image', 'max:1024'],
             'signature_base64' => ['nullable', 'string', 'max:1048576'],
         ]);
@@ -595,9 +595,9 @@ class ResidentController extends Controller
                         ->withInput();
                 }
                 
-                if ($file->getSize() > 2097152) {
+                if ($file->getSize() > 10485760) {
                     return redirect()->back()
-                        ->withErrors(['profile_image' => 'Profile image must be less than 2MB.'])
+                        ->withErrors(['profile_image' => 'Profile image must be less than 10MB.'])
                         ->withInput();
                 }
                 
@@ -631,9 +631,9 @@ class ResidentController extends Controller
                         ->withInput();
                 }
                 
-                if (strlen($imageData) > 2097152) {
+                if (strlen($imageData) > 10485760) {
                     return redirect()->back()
-                        ->withErrors(['profile_image' => 'Profile image must be less than 2MB.'])
+                        ->withErrors(['profile_image' => 'Profile image must be less than 10MB.'])
                         ->withInput();
                 }
                 

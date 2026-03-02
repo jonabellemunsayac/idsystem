@@ -277,15 +277,55 @@
                         <div class="card border-light bg-light h-100">
                             <div class="card-body p-2">
                                 <h6 class="fw-bold mb-2" style="font-size: 0.75rem;">Profile Image</h6>
-                                @if($resident['profile_image'])
-                                    <div class="mb-2">
-                                        <img src="{{ asset('storage/' . $resident['profile_image']) }}" alt="Current Profile Image" class="img-thumbnail" style="max-height: 150px; max-width: 150px;">
+                                <div id="profile-image-section">
+                                    <div class="d-flex gap-1 flex-wrap mb-2">
+                                        <button type="button" class="btn btn-outline-primary btn-sm" id="upload-photo-btn" style="font-size: 0.75rem; padding: 0.3rem 0.6rem;">
+                                            <i class="bi bi-cloud-upload"></i> Upload
+                                        </button>
+                                        <button type="button" class="btn btn-outline-info btn-sm" id="capture-photo-btn-edit" style="font-size: 0.75rem; padding: 0.3rem 0.6rem;">
+                                            <i class="bi bi-camera"></i> Capture
+                                        </button>
                                     </div>
-                                @endif
-                                <label for="profile_image" class="form-label" style="font-size: 0.65rem;">Update Photo</label>
-                                <input type="file" class="form-control form-control-sm @error('profile_image') is-invalid @enderror" id="profile_image" name="profile_image" accept="image/*" style="font-size: 0.8rem;">
-                                <div class="form-text" style="font-size: 0.6rem;">Supported formats: JPEG, PNG, JPG. Max size: 2MB.</div>
-                                @error('profile_image') <div class="invalid-feedback" style="font-size: 0.65rem;">{{ $message }}</div> @enderror
+                                    <input type="file" id="photo-file-input" name="profile_image" accept="image/*" style="display: none;">
+                                    <input type="hidden" id="profile-image-base64" name="profile_image_base64" value="">
+                                    
+                                    @if($resident['profile_image'])
+                                        <div id="image-preview" class="mt-2">
+                                            <p class="mb-1" style="font-size: 0.65rem; color: #6c757d;">Current Photo:</p>
+                                            <img id="preview-img" src="{{ asset('storage/' . $resident['profile_image']) }}" alt="Current Profile Image" style="max-width: 150px; max-height: 150px; border-radius: 6px; border: 2px solid #dee2e6;">
+                                            <div class="mt-1">
+                                                <button type="button" class="btn btn-sm btn-danger" id="remove-photo-btn" style="font-size: 0.7rem; padding: 0.2rem 0.4rem;">
+                                                    <i class="bi bi-trash"></i> Remove
+                                                </button>
+                                            </div>
+                                        </div>
+                                    @else
+                                        <div id="image-preview" style="display: none;" class="mt-2">
+                                            <img id="preview-img" src="" alt="Preview" style="max-width: 150px; max-height: 150px; border-radius: 6px; border: 2px solid #dee2e6;">
+                                            <div class="mt-1">
+                                                <button type="button" class="btn btn-sm btn-danger" id="remove-photo-btn" style="font-size: 0.7rem; padding: 0.2rem 0.4rem;">
+                                                    <i class="bi bi-trash"></i> Remove
+                                                </button>
+                                            </div>
+                                        </div>
+                                    @endif
+
+                                    <div id="camera-section" style="display: none;" class="mt-2">
+                                        <div class="position-relative d-inline-block">
+                                            <video id="video-stream" width="300" height="300" style="border-radius: 6px; background: #000; object-fit: cover;" autoplay></video>
+                                        </div>
+                                        <canvas id="capture-canvas" style="display: none;"></canvas>
+                                        <div class="mt-1 d-flex gap-1">
+                                            <button type="button" class="btn btn-sm btn-success" id="capture-snap-btn" style="font-size: 0.7rem; padding: 0.2rem 0.4rem;">
+                                                <i class="bi bi-camera-fill"></i> Capture
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-secondary" id="close-camera-btn" style="font-size: 0.7rem; padding: 0.2rem 0.4rem;">
+                                                <i class="bi bi-x-lg"></i> Close
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-text" style="font-size: 0.6rem;">Supported formats: JPEG, PNG, JPG. Max size: 10MB.</div>
                             </div>
                         </div>
                     </div>
@@ -376,6 +416,10 @@
         </div>
     </div>
 </div>
+
+<!-- Cropper.js -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -623,5 +667,182 @@ document.addEventListener('DOMContentLoaded', function() {
         // Close modal
         signatureLargeModal.hide();
     });
-});</script>
+});
+
+// Profile Image with Cropping functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const uploadPhotoBtn = document.getElementById('upload-photo-btn');
+    const capturePhotoBtnEdit = document.getElementById('capture-photo-btn-edit');
+    const photoFileInput = document.getElementById('photo-file-input');
+    const imagePreview = document.getElementById('image-preview');
+    const previewImg = document.getElementById('preview-img');
+    const removePhotoBtn = document.getElementById('remove-photo-btn');
+    const cameraSection = document.getElementById('camera-section');
+    const videoStream = document.getElementById('video-stream');
+    const captureCanvas = document.getElementById('capture-canvas');
+    const captureSnapBtn = document.getElementById('capture-snap-btn');
+    const closeCameraBtn = document.getElementById('close-camera-btn');
+    let stream = null;
+
+    // Upload button click
+    uploadPhotoBtn.addEventListener('click', function() {
+        photoFileInput.click();
+    });
+
+    // File input change - open crop modal
+    photoFileInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            if (file.size > 10485760) {
+                alert('File size must be less than 10MB');
+                photoFileInput.value = '';
+                return;
+            }
+            openCropModal(file);
+        }
+    });
+
+    // Remove photo
+    removePhotoBtn.addEventListener('click', function() {
+        previewImg.src = '';
+        imagePreview.style.display = 'none';
+        photoFileInput.value = '';
+        document.getElementById('profile-image-base64').value = '';
+    });
+
+    // Capture photo button
+    capturePhotoBtnEdit.addEventListener('click', function() {
+        cameraSection.style.display = 'block';
+        startCamera();
+    });
+
+    // Start camera
+    function startCamera() {
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } })
+            .then(function(mediaStream) {
+                stream = mediaStream;
+                videoStream.srcObject = stream;
+            })
+            .catch(function(err) {
+                alert('Unable to access camera: ' + err.message);
+            });
+    }
+
+    // Capture snapshot
+    captureSnapBtn.addEventListener('click', function() {
+        const canvas = captureCanvas;
+        canvas.width = videoStream.videoWidth;
+        canvas.height = videoStream.videoHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(videoStream, 0, 0);
+        
+        canvas.toBlob(function(blob) {
+            const file = new File([blob], 'camera_capture.jpg', { type: 'image/jpeg' });
+            stopCamera();
+            cameraSection.style.display = 'none';
+            openCropModal(file);
+        }, 'image/jpeg', 0.95);
+    });
+
+    // Close camera
+    closeCameraBtn.addEventListener('click', function() {
+        stopCamera();
+        cameraSection.style.display = 'none';
+    });
+
+    // Stop camera
+    function stopCamera() {
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+            stream = null;
+        }
+    }
+
+    // Crop Modal Functions
+    function openCropModal(file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const modal = createCropModal(e.target.result);
+            document.body.appendChild(modal);
+            
+            // Initialize Cropper
+            const image = modal.querySelector('#crop-image');
+            const cropper = new Cropper(image, {
+                aspectRatio: 5 / 6,
+                viewMode: 1,
+                autoCropArea: 1,
+                responsive: true,
+                background: false,
+            });
+
+            // Handle Apply
+            const cropApply = modal.querySelector('#crop-apply');
+            cropApply.addEventListener('click', function() {
+                cropper.getCroppedCanvas({
+                    width: 300,
+                    height: 360,
+                    imageSmoothingQuality: 'high',
+                }).toBlob((blob) => {
+                    // Create a new file from the blob
+                    const croppedFile = new File([blob], "profile_photo.jpg", { type: "image/jpeg" });
+                    
+                    // Update the file input with the cropped file
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(croppedFile);
+                    photoFileInput.files = dataTransfer.files;
+
+                    // Update preview
+                    previewImg.src = URL.createObjectURL(croppedFile);
+                    imagePreview.style.display = 'block';
+                    
+                    // Cleanup
+                    modal.remove();
+                }, 'image/jpeg', 0.95);
+            });
+
+            // Handle Cancel
+            const cropCancel = modal.querySelector('#crop-cancel');
+            const closeBtn = modal.querySelector('.btn-close');
+            const closeModal = () => {
+                modal.remove();
+                if (photoFileInput.files.length === 0 || photoFileInput.files[0] === file) {
+                     photoFileInput.value = '';
+                }
+            };
+            
+            cropCancel.addEventListener('click', closeModal);
+            closeBtn.addEventListener('click', closeModal);
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function createCropModal(imageSrc) {
+        const modal = document.createElement('div');
+        modal.className = 'modal fade show';
+        modal.style.display = 'block';
+        modal.style.backgroundColor = 'rgba(0,0,0,0.5)';
+        modal.setAttribute('role', 'dialog');
+        modal.innerHTML = `
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Preview & Crop Image</h5>
+                        <button type="button" class="btn-close" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="img-container" style="max-height: 60vh; overflow: hidden;">
+                            <img id="crop-image" src="${imageSrc}" style="max-width: 100%; display: block;">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" id="crop-cancel">Cancel</button>
+                        <button type="button" class="btn btn-success" id="crop-apply">Apply Crop</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        return modal;
+    }
+});
+</script>
 @endsection

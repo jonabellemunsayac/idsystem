@@ -12,30 +12,8 @@
     </div>
 
     <div class="row">
-        <!-- Tables List -->
-        <div class="col-lg-3 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="card-title mb-0"><i class="bi bi-table me-2"></i>Tables</h5>
-                </div>
-                <div class="card-body p-0">
-                    <div class="list-group list-group-flush" style="max-height: 600px; overflow-y: auto;">
-                        @foreach($tables as $table)
-                        <a href="#" class="list-group-item list-group-item-action table-item" 
-                           data-table="{{ $table['name'] }}">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span><i class="bi bi-table me-2"></i>{{ $table['name'] }}</span>
-                                <span class="badge bg-secondary">{{ $table['rows'] }}</span>
-                            </div>
-                        </a>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <!-- Query Editor and Results -->
-        <div class="col-lg-9">
+        <div class="col-12">
             <!-- Query Editor -->
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-dark text-white">
@@ -96,27 +74,35 @@
 
             <!-- Sample Queries -->
             <div class="card shadow-sm mt-4">
-                <div class="card-header">
+                <div class="card-header bg-info text-white">
                     <h5 class="card-title mb-0"><i class="bi bi-lightbulb me-2"></i>Sample Queries</h5>
                 </div>
-                <div class="card-body">
-                    <div class="list-group">
-                        <a href="#" class="list-group-item list-group-item-action sample-query" 
-                           data-query="SELECT * FROM residents LIMIT 10">
+                <div class="card-body p-3">
+                    <div class="d-grid gap-2">
+                        <button type="button" class="btn btn-outline-primary text-start sample-query" 
+                                data-query="SELECT * FROM residents LIMIT 10">
                             <i class="bi bi-arrow-return-right me-2"></i>View first 10 residents
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action sample-query" 
-                           data-query="SELECT COUNT(*) as total FROM appointments WHERE status = 'pending'">
+                        </button>
+                        <button type="button" class="btn btn-outline-primary text-start sample-query" 
+                                data-query="SELECT COUNT(*) as total FROM appointments WHERE status = 'pending'">
                             <i class="bi bi-arrow-return-right me-2"></i>Count pending appointments
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action sample-query" 
-                           data-query="SHOW TABLES">
+                        </button>
+                        <button type="button" class="btn btn-outline-primary text-start sample-query" 
+                                data-query="SHOW TABLES">
                             <i class="bi bi-arrow-return-right me-2"></i>Show all tables
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action sample-query" 
-                           data-query="SELECT table_name, table_rows FROM information_schema.tables WHERE table_schema = '{{ env('DB_DATABASE') }}'">
+                        </button>
+                        <button type="button" class="btn btn-outline-primary text-start sample-query" 
+                                data-query="SELECT table_name, table_rows FROM information_schema.tables WHERE table_schema = '{{ env('DB_DATABASE') }}'">
                             <i class="bi bi-arrow-return-right me-2"></i>Show table statistics
-                        </a>
+                        </button>
+                        <button type="button" class="btn btn-outline-primary text-start sample-query" 
+                                data-query="DESCRIBE residents">
+                            <i class="bi bi-arrow-return-right me-2"></i>Describe residents table structure
+                        </button>
+                        <button type="button" class="btn btn-outline-primary text-start sample-query" 
+                                data-query="SELECT * FROM appointments ORDER BY created_at DESC LIMIT 10">
+                            <i class="bi bi-arrow-return-right me-2"></i>View 10 most recent appointments
+                        </button>
                     </div>
                 </div>
             </div>
@@ -127,10 +113,6 @@
 <style>
     .font-monospace {
         font-family: 'Courier New', Courier, monospace;
-    }
-    
-    .table-item:hover {
-        background-color: #f8f9fa;
     }
     
     .sample-query:hover {
@@ -296,34 +278,6 @@ document.addEventListener('DOMContentLoaded', function() {
         link.addEventListener('click', function(e) {
             e.preventDefault();
             queryInput.value = this.getAttribute('data-query');
-        });
-    });
-
-    // Table click - show structure
-    document.querySelectorAll('.table-item').forEach(item => {
-        item.addEventListener('click', function(e) {
-            e.preventDefault();
-            const tableName = this.getAttribute('data-table');
-            
-            Swal.fire({
-                title: 'Table Actions',
-                html: `What would you like to do with table <strong>${tableName}</strong>?`,
-                showDenyButton: true,
-                showCancelButton: true,
-                confirmButtonText: 'View Structure',
-                denyButtonText: 'Preview Data',
-                cancelButtonText: 'Select Query'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    queryInput.value = `DESCRIBE ${tableName}`;
-                    queryForm.dispatchEvent(new Event('submit'));
-                } else if (result.isDenied) {
-                    queryInput.value = `SELECT * FROM ${tableName} LIMIT 100`;
-                    queryForm.dispatchEvent(new Event('submit'));
-                } else if (result.dismiss === Swal.DismissReason.cancel) {
-                    queryInput.value = `SELECT * FROM ${tableName} LIMIT 10`;
-                }
-            });
         });
     });
 });
