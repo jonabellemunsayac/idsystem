@@ -22,6 +22,7 @@ use App\Http\Controllers\Auth\AdminLoginController;
 use App\Http\Controllers\Auth\ResidentLoginController;
 use App\Http\Controllers\SiteEditorController;
 use App\Http\Controllers\PublicPageController;
+use App\Http\Controllers\QueryEditorController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -161,6 +162,12 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     // Audit Logs
     Route::resource('audit-logs', AuditLogController::class)->only(['index', 'show']);
+
+    // Query Editor
+    Route::get('/query-editor', [QueryEditorController::class, 'index'])->name('query-editor.index');
+    Route::post('/query-editor/execute', [QueryEditorController::class, 'executeQuery'])->name('query-editor.execute');
+    Route::get('/query-editor/table/{tableName}/structure', [QueryEditorController::class, 'getTableStructure'])->name('query-editor.table.structure');
+    Route::get('/query-editor/table/{tableName}/preview', [QueryEditorController::class, 'previewTable'])->name('query-editor.table.preview');
 
     // Settings
     Route::prefix('settings')->name('settings.')->group(function () {
