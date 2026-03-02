@@ -50,17 +50,31 @@ class QueryEditorController extends Controller
         $query = trim($request->input('query'));
         
         try {
-            // Check if query is a SELECT statement
-            $queryType = strtoupper(substr(ltrim($query), 0, 6));
+            // Check if query is a read-only statement
+            $queryType = strtoupper(preg_replace('/\s+/', ' ', substr(ltrim($query), 0, 10)));
             
-            if ($queryType === 'SELECT' || $queryType === 'SHOW D' || $queryType === 'DESCRI') {
+            // List of read-only query types
+            $readOnlyTypes = ['SELECT', 'SHOW', 'DESCRIBE', 'EXPLAIN', 'DESC'];
+            $isReadOnly = false;
+            
+            foreach ($readOnlyTypes as $type) {
+                if (strpos($queryType, $type) === 0) {
+                    $isReadOnly = true;
+                    break;
+                }
+            }
+            
+            if ($isReadOnly) {
                 // Read-only queries
                 $results = DB::select($query);
+                
+                // Convert stdClass objects to arrays for better JSON handling
+                $resultsArray = json_decode(json_encode($results), true);
                 
                 return response()->json([
                     'success' => true,
                     'type' => 'select',
-                    'data' => $results,
+                    'data' => $resultsArray,
                     'count' => count($results),
                     'message' => 'Query executed successfully. ' . count($results) . ' row(s) returned.'
                 ]);
