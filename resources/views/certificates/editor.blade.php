@@ -269,7 +269,7 @@
                 <button class="btn-action btn-print" onclick="printCertificate()">
                     <i class="bi bi-printer-fill"></i> Print Certificate
                 </button>
-                <a href="{{ route('certificates.word.template', ['type' => $certificateType]) }}" class="btn-action btn-download">
+                <a href="{{ route('certificates.word.template', ['type' => $certificateType, 'resident' => $residentPrefill['resident_id'] ?? null]) }}" class="btn-action btn-download">
                     <i class="bi bi-file-earmark-word-fill"></i> Download Word Template
                 </a>
                 <button class="btn-action btn-back-action" id="backBtnAction">
@@ -301,7 +301,7 @@
 
                     @if(in_array($certificateType, ['clearance','residency']))
                     <div class="cert-id-row">
-                        <div class="cert-id-label">Barangay I.D. No.: <span class="blank" contenteditable="true" spellcheck="false">___________</span></div>
+                        <div class="cert-id-label">Barangay I.D. No.: <span class="blank" data-field="barangay_id" contenteditable="true" spellcheck="false">___________</span></div>
                         <div class="cert-photo-box" id="photoBox" onclick="document.getElementById('photoInput').click()" title="Click to upload photo">
                             <input type="file" id="photoInput" accept="image/*">
                             <img id="photoPreview" src="" alt="" style="display:none;">
@@ -313,7 +313,7 @@
                     </div>
                     @else
                     <div style="margin-bottom:14px;">
-                        <span class="cert-id-label">Barangay I.D. No.: <span class="blank" contenteditable="true" spellcheck="false">___________</span></span>
+                        <span class="cert-id-label">Barangay I.D. No.: <span class="blank" data-field="barangay_id" contenteditable="true" spellcheck="false">___________</span></span>
                     </div>
                     @endif
 
@@ -331,61 +331,63 @@
                     <div class="cert-body">
 
                         @if($certificateType === 'clearance')
-                        <p>This is to certify that <span class="blank" contenteditable="true" spellcheck="false">Full Name</span>,
-                        of legal age, (<span class="blank" contenteditable="true" spellcheck="false">Single</span>),
-                        Filipino, is a resident of <span class="blank" contenteditable="true" spellcheck="false">Street / Purok Address</span>,
+                        <p>This is to certify that <span class="blank" data-field="full_name" contenteditable="true" spellcheck="false">Full Name</span>,
+                        of legal age, (<span class="blank" data-field="civil_status" contenteditable="true" spellcheck="false">Single</span>),
+                        Filipino, is a resident of <span class="blank" data-field="address" contenteditable="true" spellcheck="false">Street / Purok Address</span>,
                         Barangay Kalawaan, Pasig City, and is known to be of good moral character and has no
                         derogatory record on file in this barangay as of this date.</p>
 
                         <p>This certification is being issued upon the request of the above-named person for the
-                        purpose of <span class="blank" contenteditable="true" spellcheck="false">state purpose here</span>.</p>
+                        purpose of <span class="blank" data-field="purpose" contenteditable="true" spellcheck="false">state purpose here</span>.</p>
 
                         @elseif($certificateType === 'indigency')
-                        <p>This is to certify that <span class="blank" contenteditable="true" spellcheck="false">Full Name</span>,
-                        of legal age, (<span class="blank" contenteditable="true" spellcheck="false">Single</span>),
-                        Filipino, is a bona-fide resident of <span class="blank" contenteditable="true" spellcheck="false">Street / Purok Address</span>,
-                        Barangay Kalawaan, Pasig City since <span class="blank" contenteditable="true" spellcheck="false">year</span>
+                        <p>This is to certify that <span class="blank" data-field="full_name" contenteditable="true" spellcheck="false">Full Name</span>,
+                        of legal age, (<span class="blank" data-field="civil_status" contenteditable="true" spellcheck="false">Single</span>),
+                        Filipino, is a bona-fide resident of <span class="blank" data-field="address" contenteditable="true" spellcheck="false">Street / Purok Address</span>,
+                        Barangay Kalawaan, Pasig City since <span class="blank" data-field="resident_since_year" contenteditable="true" spellcheck="false">year</span>
                         up to the present, and belongs to one of the indigent families of this barangay.</p>
 
                         <p>This certification is being issued upon the request of the above-named person for the
-                        purpose of <span class="blank" contenteditable="true" spellcheck="false">state purpose here</span>.</p>
+                        purpose of <span class="blank" data-field="purpose" contenteditable="true" spellcheck="false">state purpose here</span>.</p>
 
                         @elseif($certificateType === 'residency')
-                        <p>This is to certify that <span class="blank" contenteditable="true" spellcheck="false">Full Name</span>,
-                        of legal age, (<span class="blank" contenteditable="true" spellcheck="false">Single</span>),
-                        Filipino, is a bona fide resident of <span class="blank" contenteditable="true" spellcheck="false">Street / Purok Address</span>,
-                        Barangay Kalawaan, Pasig City since <span class="blank" contenteditable="true" spellcheck="false">year</span>
+                        <p>This is to certify that <span class="blank" data-field="full_name" contenteditable="true" spellcheck="false">Full Name</span>,
+                        of legal age, (<span class="blank" data-field="civil_status" contenteditable="true" spellcheck="false">Single</span>),
+                        Filipino, is a bona fide resident of <span class="blank" data-field="address" contenteditable="true" spellcheck="false">Street / Purok Address</span>,
+                        Barangay Kalawaan, Pasig City since <span class="blank" data-field="resident_since_year" contenteditable="true" spellcheck="false">year</span>
                         up to the present.</p>
 
                         <p>This certification is being issued upon the request of the above-named person for the
-                        purpose of <span class="blank" contenteditable="true" spellcheck="false">state purpose here</span>.</p>
+                        purpose of <span class="blank" data-field="purpose" contenteditable="true" spellcheck="false">state purpose here</span>.</p>
 
                         @elseif($certificateType === 'no_income')
-                        <p>This is to certify that <span class="blank" contenteditable="true" spellcheck="false">Full Name</span>,
-                        of legal age, (<span class="blank" contenteditable="true" spellcheck="false">Single</span>),
-                        Filipino, is a resident of <span class="blank" contenteditable="true" spellcheck="false">Street / Purok Address</span>,
+                        <p>This is to certify that <span class="blank" data-field="full_name" contenteditable="true" spellcheck="false">Full Name</span>,
+                        of legal age, (<span class="blank" data-field="civil_status" contenteditable="true" spellcheck="false">Single</span>),
+                        Filipino, is a resident of <span class="blank" data-field="address" contenteditable="true" spellcheck="false">Street / Purok Address</span>,
                         Barangay Kalawaan, Pasig City.</p>
 
                         <p>Based on the verification of this Barangay, the aforementioned individual is unemployed
-                        and has no regular source of income and belongs to one of the indigent families in this
+                        and has no regular source of income with an estimated monthly earnings amount of
+                        <span class="blank" data-field="monthly_income" contenteditable="true" spellcheck="false">0.00</span>
+                        and belongs to one of the indigent families in this
                         Barangay.</p>
 
                         <p>This certification is being issued upon the request of the above-named person for the
-                        purpose of <span class="blank" contenteditable="true" spellcheck="false">state purpose here</span>.</p>
+                        purpose of <span class="blank" data-field="purpose" contenteditable="true" spellcheck="false">state purpose here</span>.</p>
 
                         @elseif($certificateType === 'low_income')
-                        <p>This is to certify that <span class="blank" contenteditable="true" spellcheck="false">Full Name</span>,
-                        of legal age, (<span class="blank" contenteditable="true" spellcheck="false">Single</span>),
-                        Filipino, is a resident of <span class="blank" contenteditable="true" spellcheck="false">Street / Purok Address</span>,
+                        <p>This is to certify that <span class="blank" data-field="full_name" contenteditable="true" spellcheck="false">Full Name</span>,
+                        of legal age, (<span class="blank" data-field="civil_status" contenteditable="true" spellcheck="false">Single</span>),
+                        Filipino, is a resident of <span class="blank" data-field="address" contenteditable="true" spellcheck="false">Street / Purok Address</span>,
                         Barangay Kalawaan, Pasig City.</p>
 
                         <p>Based on the assessment of this Barangay, the aforementioned individual is a low-income
                         earner and has an estimated monthly income of
-                        <span class="blank" contenteditable="true" spellcheck="false">amount</span>
+                        <span class="blank" data-field="monthly_income" contenteditable="true" spellcheck="false">amount</span>
                         which falls below the minimum wage requirements.</p>
 
                         <p>This certification is being issued upon the request of the above-named person for the
-                        purpose of <span class="blank" contenteditable="true" spellcheck="false">state purpose here</span>.</p>
+                        purpose of <span class="blank" data-field="purpose" contenteditable="true" spellcheck="false">state purpose here</span>.</p>
 
                         @endif
 
@@ -415,6 +417,33 @@
     </div>
 
 </div>
+
+<div class="modal fade" id="printDetailsModal" tabindex="-1" aria-labelledby="printDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="printDetailsForm">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="printDetailsModalLabel">Print Certificate Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="modalPurposeInput" class="form-label">Purpose</label>
+                        <input type="text" class="form-control" id="modalPurposeInput" maxlength="255" required>
+                    </div>
+                    <div class="mb-3 d-none" id="modalAmountGroup">
+                        <label for="modalAmountInput" class="form-label">Amount</label>
+                        <input type="text" class="form-control" id="modalAmountInput" maxlength="100" placeholder="e.g. 0.00">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Continue to Print</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('extra-scripts')
@@ -427,11 +456,196 @@
         window.location.href = '{{ route("certificates.index") }}';
     }
 
+    var residentPrefill = @json($residentPrefill ?? null);
+    var certificateType = @json($certificateType ?? null);
+    var printLogUrl = @json(route('certificates.print-log'));
+    var csrfMeta = document.querySelector('meta[name="csrf-token"]');
+    var csrfToken = csrfMeta ? csrfMeta.getAttribute('content') : '';
+    var pendingPrintLogPayload = null;
+
+    function applyResidentPrefill() {
+        if (!residentPrefill) return;
+
+        Object.keys(residentPrefill).forEach(function (key) {
+            var target = document.querySelector('.blank[data-field="' + key + '"]');
+            if (!target) return;
+
+            var value = residentPrefill[key];
+            if (value === null || value === undefined || value === '') return;
+            target.textContent = value;
+        });
+
+        applyResidentPhotoPrefill();
+    }
+
+    function applyResidentPhotoPrefill() {
+        if (!residentPrefill || !residentPrefill.photo_url) return;
+
+        var photoPreview = document.getElementById('photoPreview');
+        var photoHint = document.getElementById('photoHint');
+        if (!photoPreview) return;
+
+        photoPreview.src = residentPrefill.photo_url;
+        photoPreview.style.display = 'block';
+        if (photoHint) photoHint.style.display = 'none';
+    }
+
+    function getBlankValue(fieldName) {
+        var target = document.querySelector('.blank[data-field="' + fieldName + '"]');
+        if (!target) return '';
+        return (target.textContent || '').trim();
+    }
+
+    function setBlankValue(fieldName, value) {
+        var target = document.querySelector('.blank[data-field="' + fieldName + '"]');
+        if (!target) return;
+        target.textContent = value;
+    }
+
+    function requiresPrePrintModal() {
+        return ['clearance', 'residency', 'indigency', 'no_income', 'low_income'].indexOf(certificateType) !== -1;
+    }
+
+    function requiresAmountInput() {
+        return ['no_income', 'low_income'].indexOf(certificateType) !== -1;
+    }
+
+    function buildPrintLogPayload() {
+        var paper = document.getElementById('certificatePaper');
+        return {
+            resident_id: residentPrefill && residentPrefill.resident_id ? residentPrefill.resident_id : null,
+            certificate_type: certificateType,
+            purpose: getBlankValue('purpose'),
+            amount: requiresAmountInput() ? getBlankValue('monthly_income') : null,
+            content: paper ? paper.innerText.trim() : null,
+        };
+    }
+
+    async function logPrintedCertificate(payload) {
+        if (!payload || !payload.certificate_type || !payload.purpose) return;
+
+        try {
+            await fetch(printLogUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                },
+                body: JSON.stringify(payload),
+            });
+        } catch (error) {
+            console.error('Failed to log printed certificate:', error);
+        }
+    }
+
+    function openPrePrintModal() {
+        var modalEl = document.getElementById('printDetailsModal');
+        var purposeInput = document.getElementById('modalPurposeInput');
+        var amountInput = document.getElementById('modalAmountInput');
+        var amountGroup = document.getElementById('modalAmountGroup');
+
+        if (!modalEl || !purposeInput) {
+            // Fallback when modal dependencies are unavailable.
+            var promptedPurpose = window.prompt('Enter purpose before printing:');
+            if (!promptedPurpose) return;
+            setBlankValue('purpose', promptedPurpose);
+
+            if (requiresAmountInput()) {
+                var promptedAmount = window.prompt('Enter amount:');
+                if (!promptedAmount) return;
+                setBlankValue('monthly_income', promptedAmount);
+            }
+
+            printCertificate();
+            return;
+        }
+
+        purposeInput.value = getBlankValue('purpose');
+        purposeInput.focus();
+
+        if (requiresAmountInput()) {
+            amountGroup.classList.remove('d-none');
+            amountInput.value = getBlankValue('monthly_income');
+            amountInput.required = true;
+        } else {
+            amountGroup.classList.add('d-none');
+            amountInput.required = false;
+            amountInput.value = '';
+        }
+
+        if (window.bootstrap && window.bootstrap.Modal) {
+            window.bootstrap.Modal.getOrCreateInstance(modalEl).show();
+            return;
+        }
+
+        // Fallback when Bootstrap modal JS is not available.
+        var fallbackPurpose = window.prompt('Enter purpose before printing:', purposeInput.value || '');
+        if (!fallbackPurpose) return;
+        setBlankValue('purpose', fallbackPurpose);
+        if (requiresAmountInput()) {
+            var fallbackAmount = window.prompt('Enter amount:', amountInput.value || '');
+            if (!fallbackAmount) return;
+            setBlankValue('monthly_income', fallbackAmount);
+        }
+        printCertificate();
+    }
+
+    function handlePrintAction() {
+        if (requiresPrePrintModal()) {
+            openPrePrintModal();
+            return;
+        }
+
+        printCertificate();
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         var b1 = document.getElementById('backBtn');
         var b2 = document.getElementById('backBtnAction');
         if (b1) b1.addEventListener('click', goBack);
         if (b2) b2.addEventListener('click', goBack);
+
+        var printBtn = document.querySelector('.btn-action.btn-print');
+        if (printBtn) {
+            printBtn.removeAttribute('onclick');
+            printBtn.addEventListener('click', handlePrintAction);
+        }
+
+        var printDetailsForm = document.getElementById('printDetailsForm');
+        if (printDetailsForm) {
+            printDetailsForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                var purposeInput = document.getElementById('modalPurposeInput');
+                var amountInput = document.getElementById('modalAmountInput');
+                var purpose = (purposeInput && purposeInput.value ? purposeInput.value : '').trim();
+                var amount = (amountInput && amountInput.value ? amountInput.value : '').trim();
+
+                if (!purpose) return;
+                if (requiresAmountInput() && !amount) return;
+
+                setBlankValue('purpose', purpose);
+                if (requiresAmountInput()) {
+                    setBlankValue('monthly_income', amount);
+                }
+
+                var modalEl = document.getElementById('printDetailsModal');
+                if (modalEl && window.bootstrap && window.bootstrap.Modal) {
+                    window.bootstrap.Modal.getOrCreateInstance(modalEl).hide();
+                }
+
+                printCertificate();
+            });
+        }
+
+        window.addEventListener('message', function (event) {
+            if (!event.data || event.data.type !== 'certificate-printed') return;
+            if (!pendingPrintLogPayload) return;
+
+            logPrintedCertificate(pendingPrintLogPayload);
+            pendingPrintLogPayload = null;
+        });
 
         /* ---------- Photo upload ---------- */
         var photoInput   = document.getElementById('photoInput');
@@ -450,6 +664,15 @@
                 reader.readAsDataURL(file);
             });
         }
+
+        if (photoPreview) {
+            photoPreview.addEventListener('error', function () {
+                photoPreview.style.display = 'none';
+                if (photoHint) photoHint.style.display = 'flex';
+            });
+        }
+
+        applyResidentPrefill();
 
         /* Select-all on blank focus for easy replacement */
         document.querySelectorAll('.blank').forEach(function (el) {
@@ -471,6 +694,7 @@
     function printCertificate() {
         var paper = document.getElementById('certificatePaper');
         if (!paper) return;
+        pendingPrintLogPayload = buildPrintLogPayload();
 
         var clone = paper.cloneNode(true);
         /* Remove contenteditable and turn blue blanks black */
@@ -502,7 +726,7 @@
             + '</style>'
             + '</head><body>'
             + clone.outerHTML
-            + '<script>window.onload=function(){window.focus();window.print();window.onafterprint=function(){window.close();};setTimeout(function(){window.close();},8000);};<\/script>'
+            + '<script>window.onload=function(){window.focus();window.print();window.onafterprint=function(){if(window.opener){window.opener.postMessage({type:\"certificate-printed\"},\"*\");}window.close();};setTimeout(function(){window.close();},8000);};<\/script>'
             + '</body></html>'
         );
         win.document.close();
