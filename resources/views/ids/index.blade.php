@@ -162,14 +162,31 @@
                             </table>
 
                             <!-- Emergency Hotline Section -->
-                            <div style="text-align: center; font-weight: bold; color: #0038A8; font-size: 0.95rem; letter-spacing: 0.5px; margin-top: 5px; margin-bottom: 3px; line-height: 1.1;">EMERGENCY HOTLINE</div>
+                            <div style="text-align: center; font-weight: bold; color: #0038A8; font-size: 0.95rem; letter-spacing: 0.5px; margin-top: 5px; margin-bottom: 3px; line-height: 1.1; padding-right: 75px;">EMERGENCY HOTLINE</div>
                             
-                            <div style="font-size: 0.75rem; line-height: 1.3; text-align: center; color: #000; margin-bottom: 2px;">
-                                <div style="font-weight: bold;">BARANGAY: (02) 874-26641 / 0966-007-7440</div>
-                                <div style="font-weight: bold;">PASIG CITY HOTLINE: 643-0000</div>
-                                <div style="font-weight: bold;">PNP: 911</div>
-                                <div style="font-weight: bold;">BFP-PASIG HOTLINE: 0932-779-8621</div>
-                                <div style="font-weight: bold;">MERALCO: 16211</div>
+                            <div style="display: flex; justify-content: center; padding-right: 75px;">
+                                <table style="font-size: 0.75rem; border-collapse: collapse; margin-bottom: 2px;">
+                                    <tr style="line-height: 1.4;">
+                                        <td style="font-weight: bold; color: #000; padding: 0 4px 2px 0; text-align: right; white-space: nowrap;">BARANGAY :</td>
+                                        <td style="color: #000; font-weight: bold; padding: 0 0 2px 4px;">(02) 874-26641 / 0966-007-7440</td>
+                                    </tr>
+                                    <tr style="line-height: 1.4;">
+                                        <td style="font-weight: bold; color: #000; padding: 0 4px 2px 0; text-align: right; white-space: nowrap;">PASIG CITY HOTLINE :</td>
+                                        <td style="color: #000; font-weight: bold; padding: 0 0 2px 4px;">643-0000</td>
+                                    </tr>
+                                    <tr style="line-height: 1.4;">
+                                        <td style="font-weight: bold; color: #000; padding: 0 4px 2px 0; text-align: right; white-space: nowrap;">PNP :</td>
+                                        <td style="color: #000; font-weight: bold; padding: 0 0 2px 4px;">911</td>
+                                    </tr>
+                                    <tr style="line-height: 1.4;">
+                                        <td style="font-weight: bold; color: #000; padding: 0 4px 2px 0; text-align: right; white-space: nowrap;">BFP-PASIG HOTLINE :</td>
+                                        <td style="color: #000; font-weight: bold; padding: 0 0 2px 4px;">0932-779-8621</td>
+                                    </tr>
+                                    <tr style="line-height: 1.4;">
+                                        <td style="font-weight: bold; color: #000; padding: 0 4px 0 0; text-align: right; white-space: nowrap;">MERALCO :</td>
+                                        <td style="color: #000; font-weight: bold; padding: 0 0 0 4px;">16211</td>
+                                    </tr>
+                                </table>
                             </div>
                         </div>
 
@@ -679,7 +696,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 .photo-box img { width: 100%; height: 100%; object-fit: cover; }
                 .signature-area { width: 100%; height: 25px; margin-bottom: 2px; display: flex; align-items: flex-end; justify-content: center; flex-shrink: 0; }
                 .signature-text { font-family: cursive; font-size: 7px; }
-                .resident-label { font-size: 8px; font-weight: bold; color: #0038A8; letter-spacing: 0.5px; }
+                .resident-label { font-size: 5.5px; font-weight: bold; color: #0038A8; letter-spacing: 0.5px; line-height: 1.1; }
 
                 /* Right Col */
                 .right-col { flex: 1; display: flex; flex-direction: column; position: relative; min-width: 0; padding-right: 72px; padding-bottom: 4px; }
@@ -741,8 +758,8 @@ document.addEventListener('DOMContentLoaded', function() {
                       <div class="signature-area">
                           ${signatureSrc ? `<img src="${signatureSrc}" alt="Signature" style="max-width: 75px; max-height: 22px; object-fit: contain; background: transparent;">` : '<span style="font-family: cursive; font-size: 7px; color: #999;">Signature</span>'}
                       </div>
-                      <div style="border-top: 1px solid #000; width: 65px; margin-bottom: 2px;"></div>
-                      <div class="resident-label">RESIDENT</div>
+                      <div style="border-top: 1.5px solid #000; width: 65px; margin: 1px auto 2px auto;"></div>
+                      <div class="resident-label" style="margin-bottom: 3px;">RESIDENT</div>
                   </div>
                   
                   <div class="right-col">
@@ -825,27 +842,43 @@ document.addEventListener('DOMContentLoaded', function() {
 
                   <div style="text-align: center; font-weight: bold; color: #0038A8; font-size: 10px; letter-spacing: 0.5px; margin-top: 5px; margin-bottom: 3px; line-height: 1.1;">EMERGENCY HOTLINE</div>
                   
-                  <div style="font-size: 8px; line-height: 1.3; text-align: center; color: #000; margin-bottom: 2px;">
-                    <div style="font-weight: bold;">BARANGAY: (02) 874-26641 / 0966-007-7440</div>
-                    <div style="font-weight: bold;">PASIG CITY HOTLINE: 643-0000</div>
-                    <div style="font-weight: bold;">PNP: 911</div>
-                    <div style="font-weight: bold;">BFP-PASIG HOTLINE: 0932-779-8621</div>
-                    <div style="font-weight: bold;">MERALCO: 16211</div>
+                  <div style="display: flex; justify-content: center; padding-right: 30px;">
+                    <table style="font-size: 8px; border-collapse: collapse; margin-bottom: 2px;">
+                      <tr style="line-height: 1.4;">
+                        <td style="font-weight: bold; color: #000; padding: 0 4px 2px 0; text-align: right; white-space: nowrap;">BARANGAY :</td>
+                        <td style="color: #000; font-weight: bold; padding: 0 0 2px 4px;">(02) 874-26641 / 0966-007-7440</td>
+                      </tr>
+                      <tr style="line-height: 1.4;">
+                        <td style="font-weight: bold; color: #000; padding: 0 4px 2px 0; text-align: right; white-space: nowrap;">PASIG CITY HOTLINE :</td>
+                        <td style="color: #000; font-weight: bold; padding: 0 0 2px 4px;">643-0000</td>
+                      </tr>
+                      <tr style="line-height: 1.4;">
+                        <td style="font-weight: bold; color: #000; padding: 0 4px 2px 0; text-align: right; white-space: nowrap;">PNP :</td>
+                        <td style="color: #000; font-weight: bold; padding: 0 0 2px 4px;">911</td>
+                      </tr>
+                      <tr style="line-height: 1.4;">
+                        <td style="font-weight: bold; color: #000; padding: 0 4px 2px 0; text-align: right; white-space: nowrap;">BFP-PASIG HOTLINE :</td>
+                        <td style="color: #000; font-weight: bold; padding: 0 0 2px 4px;">0932-779-8621</td>
+                      </tr>
+                      <tr style="line-height: 1.4;">
+                        <td style="font-weight: bold; color: #000; padding: 0 4px 0 0; text-align: right; white-space: nowrap;">MERALCO :</td>
+                        <td style="color: #000; font-weight: bold; padding: 0 0 0 4px;">16211</td>
+                      </tr>
+                    </table>
                   </div>
                 </div>
 
                 <!-- IF FOUND Text - Bottom Section -->
-                <div style="position: absolute; bottom: 3px; left: 10px; right: 10px; text-align: center; z-index: 2;">
+                <div style="position: absolute; bottom: 5px; left: 10px; right: 10px; text-align: center; z-index: 2;">
                   <div style="font-size: 5px; color: #666; line-height: 1.2;">
-                    IF FOUND, PLEASE RETURN TO KALAWAAN<br>BARANGAY HALL INFORMATION CENTER
+                    IF FOUND, PLEASE RETURN TO KALAWAAN BARANGAY HALL INFORMATION CENTER
                   </div>
                 </div>
 
-                <div style="position: absolute; bottom: 10px; right: 10px; text-align: center;">
+                <div style="position: absolute; bottom: 20px; right: 10px; text-align: center;">
                   <div style="width: 55px; height: 55px; background: white; border: 2px solid #000; display: flex; align-items: center; justify-content: center;">
                     <img src="${currentID.qr_code}" alt="QR" style="width: 100%; height: 100%; object-fit: contain;">
                   </div>
-                  <div style="font-family: monospace; font-weight: bold; font-size: 5px; text-align: center; margin-top: 2px; color: #000;">${currentID.id_number}</div>
                 </div>
               </div>
         `;
@@ -937,7 +970,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 .photo-box img { width: 100%; height: 100%; object-fit: cover; }
                 .signature-area { width: 100%; height: 25px; margin-bottom: 2px; display: flex; align-items: flex-end; justify-content: center; flex-shrink: 0; }
                 .signature-text { font-family: cursive; font-size: 7px; }
-                .resident-label { font-size: 8px; font-weight: bold; color: #0038A8; letter-spacing: 0.5px; }
+                .resident-label { font-size: 5.5px; font-weight: bold; color: #0038A8; letter-spacing: 0.5px; line-height: 1.1; }
 
                 /* Right Col */
                 .right-col { flex: 1; display: flex; flex-direction: column; position: relative; min-width: 0; padding-right: 30px; padding-bottom: 4px; }
