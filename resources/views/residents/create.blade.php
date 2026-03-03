@@ -161,7 +161,7 @@
                 </div>
                 <div class="col-md-4">
                     <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Birth Date</label>
-                    <input type="date" class="form-control form-control-sm" name="birth_date" required style="font-size: 0.8rem;">
+                    <input type="date" class="form-control form-control-sm" name="birth_date" required max="{{ date('Y-m-d') }}" style="font-size: 0.8rem;">
                 </div>
                 <div class="col-md-4">
                     <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Gender</label>
@@ -228,6 +228,11 @@
 
             <h6 class="fw-bold mb-2 mt-2" style="font-size: 0.8rem;">Address</h6>
             <div class="row g-2 mb-2">
+                <div class="col-md-6">
+                    <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">House No</label>
+                    <input type="text" class="form-control form-control-sm address-field" name="house_no" placeholder="Optional" style="font-size: 0.8rem;">
+                    <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Optional</small>
+                </div>
                 <div class="col-md-6">
                     <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Street Name</label>
                     <select class="form-select form-select-sm address-field" name="street_name" style="font-size: 0.8rem;">
@@ -327,7 +332,7 @@
                 <div class="col-md-12">
                     <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Full Address</label>
                     <textarea class="form-control form-control-sm" id="full_address_display" rows="2" readonly style="font-size: 0.8rem; background-color: #f8f9fa;"></textarea>
-                    <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Auto-filled from street name and province above</small>
+                    <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Auto-filled from house no, street name and province above</small>
                 </div>
             </div>
 
@@ -364,6 +369,8 @@
                     <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Relationship</label>
                     <select class="form-select form-select-sm" name="emergency_contact_relationship" style="font-size: 0.8rem;">
                         <option value="">Select...</option>
+                        <option value="Husband">Husband</option>
+                        <option value="Wife">Wife</option>
                         <option value="Mother">Mother</option>
                         <option value="Father">Father</option>
                         <option value="Sibling">Sibling</option>
@@ -406,7 +413,7 @@
                                     </button>
                                 </div>
                                 <input type="file" id="photo-file-input" name="profile_image" accept="image/*" style="display: none;">
-                                <input type="hidden" id="profile-image-base64" name="profile_image_base64" value="">
+                                <input type="hidden" id="profile-image-base64" name="profile_image_base64" value="{{ old('profile_image_base64') }}">
                                 
                                 <div id="image-preview" style="display: none;" class="mt-2">
                                     <img id="preview-img" src="" alt="Preview" style="max-width: 150px; max-height: 150px; border-radius: 6px; border: 2px solid #dee2e6;">
@@ -452,7 +459,7 @@
                                     </button>
                                 </div>
                                 <input type="file" id="signature-file-input" name="signature" accept="image/*" style="display: none;">
-                                <input type="hidden" id="signature-base64" name="signature_base64" value="">
+                                <input type="hidden" id="signature-base64" name="signature_base64" value="{{ old('signature_base64') }}">
                                 
                                 <div id="signature-preview" style="display: none;" class="mt-2">
                                     <img id="preview-signature" src="" alt="Signature Preview" style="max-width: 200px; max-height: 100px; border: 2px solid #dee2e6; border-radius: 4px; background: transparent; padding: 5px;">
@@ -571,9 +578,35 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Restore profile image and signature from old() values if present
+    const profileImageBase64 = document.getElementById('profile-image-base64').value;
+    const signatureBase64 = document.getElementById('signature-base64').value;
+    
+    if (profileImageBase64) {
+        const previewImg = document.getElementById('preview-img');
+        const imagePreview = document.getElementById('image-preview');
+        previewImg.src = profileImageBase64;
+        imagePreview.style.display = 'block';
+    }
+    
+    if (signatureBase64) {
+        const previewSignature = document.getElementById('preview-signature');
+        const signaturePreview = document.getElementById('signature-preview');
+        previewSignature.src = signatureBase64;
+        signaturePreview.style.display = 'block';
+    }
+    
     // Auto-select Senior Citizen for birthdate >= 60 years old
     const birthDateInput = document.querySelector('input[name="birth_date"]');
     const specialSectorSelect = document.querySelector('select[name="special_sector"]');
+    
+    // Add input validation to restrict birth date input length
+    birthDateInput.addEventListener('input', function(e) {
+        // Ensure the input doesn't exceed 10 characters (YYYY-MM-DD format)
+        if (this.value.length > 10) {
+            this.value = this.value.slice(0, 10);
+        }
+    });
     
     function calculateAge(birthDate) {
         const today = new Date();
@@ -587,27 +620,44 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function checkAndSetSeniorCitizen() {
-        if (birthDateInput.value) {
+        // Only proceed if we have a complete date (10 characters in YYYY-MM-DD format)
+        if (birthDateInput.value && birthDateInput.value.length === 10) {
             const birthDate = new Date(birthDateInput.value);
+            
+            // Validate that the date is valid and not in the future
+            if (isNaN(birthDate.getTime()) || birthDate > new Date()) {
+                return;
+            }
+            
             const age = calculateAge(birthDate);
             
+            // Automatically set or clear Senior Citizen based on age
             if (age >= 60) {
                 specialSectorSelect.value = 'Senior Citizen';
+            } else {
+                // Reset to default if not a senior citizen
+                if (specialSectorSelect.value === 'Senior Citizen') {
+                    specialSectorSelect.value = '';
+                }
             }
         }
     }
     
+    // Trigger validation on both change and blur events for better responsiveness
     birthDateInput.addEventListener('change', checkAndSetSeniorCitizen);
+    birthDateInput.addEventListener('blur', checkAndSetSeniorCitizen);
     
     // Auto-fill full address from address components
     const addressFields = document.querySelectorAll('.address-field');
     const fullAddressDisplay = document.getElementById('full_address_display');
     
     function updateFullAddress() {
+        const houseNo = document.querySelector('input[name="house_no"]').value;
         const streetName = document.querySelector('select[name="street_name"]').value;
         const province = document.querySelector('select[name="province"]').value;
         
         const addressParts = [];
+        if (houseNo) addressParts.push(houseNo);
         if (streetName) addressParts.push(streetName);
         if (province) addressParts.push(province);
         
@@ -880,10 +930,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const privacyAgreement = document.getElementById('privacyAgreement');
     const acceptPrivacyBtn = document.getElementById('acceptPrivacyBtn');
     
-    // Check if privacy has been accepted (using sessionStorage)
-    if (!sessionStorage.getItem('privacyAccepted')) {
+    // Always show the modal on page load, except when success message is displayed
+    @if (!session('success'))
         dataPrivacyModal.show();
-    }
+    @endif
     
     // Toggle accept button based on checkbox
     privacyAgreement.addEventListener('change', function() {
@@ -893,7 +943,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Handle accept button
     acceptPrivacyBtn.addEventListener('click', function() {
         if (privacyAgreement.checked) {
-            sessionStorage.setItem('privacyAccepted', 'true');
             dataPrivacyModal.hide();
         }
     });

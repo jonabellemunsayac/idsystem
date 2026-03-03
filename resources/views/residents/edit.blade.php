@@ -131,6 +131,11 @@
                 <h6 class="fw-bold mb-2 mt-2" style="font-size: 0.8rem;">Address</h6>
                 <div class="row g-2 mb-2">
                     <div class="col-md-6">
+                        <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">House No</label>
+                        <input type="text" class="form-control form-control-sm address-field" name="house_no" value="{{ old('house_no', $resident['house_no']) }}" placeholder="Optional" style="font-size: 0.8rem;">
+                        <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Optional</small>
+                    </div>
+                    <div class="col-md-6">
                         <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Street Name</label>
                         <select class="form-select form-select-sm address-field" name="street_name" style="font-size: 0.8rem;">
                             <option value="" {{ old('street_name', $resident['street_name']) === '' ? 'selected' : '' }}>Select Street...</option>
@@ -229,7 +234,7 @@
                     <div class="col-md-12">
                         <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Full Address</label>
                         <textarea class="form-control form-control-sm" id="full_address_display" rows="2" readonly style="font-size: 0.8rem; background-color: #f8f9fa;"></textarea>
-                        <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Auto-filled from street name and province above</small>
+                        <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Auto-filled from house no, street name and province above</small>
                     </div>
                 </div>
 
@@ -244,6 +249,8 @@
                         <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Relationship</label>
                         <select class="form-select form-select-sm" name="emergency_contact_relationship" style="font-size: 0.8rem;">
                             <option value="" {{ old('emergency_contact_relationship', $resident['emergency_contact_relationship']) === '' ? 'selected' : '' }}>Select...</option>
+                            <option value="Husband" {{ old('emergency_contact_relationship', $resident['emergency_contact_relationship']) === 'Husband' ? 'selected' : '' }}>Husband</option>
+                            <option value="Wife" {{ old('emergency_contact_relationship', $resident['emergency_contact_relationship']) === 'Wife' ? 'selected' : '' }}>Wife</option>
                             <option value="Mother" {{ old('emergency_contact_relationship', $resident['emergency_contact_relationship']) === 'Mother' ? 'selected' : '' }}>Mother</option>
                             <option value="Father" {{ old('emergency_contact_relationship', $resident['emergency_contact_relationship']) === 'Father' ? 'selected' : '' }}>Father</option>
                             <option value="Sibling" {{ old('emergency_contact_relationship', $resident['emergency_contact_relationship']) === 'Sibling' ? 'selected' : '' }}>Sibling</option>
@@ -269,14 +276,12 @@
                     </div>
                 </div>
 
-                <!-- Profile Image & Signature -->
-                <h6 class="fw-bold text-dark mt-2 mb-1" style="font-size: 0.8rem;">Profile Image & Signature</h6>
+                <!-- Profile Image -->
+                <h6 class="fw-bold text-dark mt-2 mb-1" style="font-size: 0.8rem;">Profile Image</h6>
                 <div class="row g-2 mb-2">
-                    <!-- Profile Image (Left) -->
-                    <div class="col-md-6">
-                        <div class="card border-light bg-light h-100">
+                    <div class="col-md-12">
+                        <div class="card border-light bg-light">
                             <div class="card-body p-2">
-                                <h6 class="fw-bold mb-2" style="font-size: 0.75rem;">Profile Image</h6>
                                 <div id="profile-image-section">
                                     <div class="d-flex gap-1 flex-wrap mb-2">
                                         <button type="button" class="btn btn-outline-primary btn-sm" id="upload-photo-btn" style="font-size: 0.75rem; padding: 0.3rem 0.6rem;">
@@ -329,54 +334,64 @@
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Signature (Right) -->
+                <!-- User Account Credentials -->
+                @if($account)
+                <h6 class="fw-bold text-dark mt-3 mb-1" style="font-size: 0.8rem;">User Account Credentials</h6>
+                <div class="alert alert-warning mb-2" role="alert" style="font-size: 0.75rem; padding: 0.4rem 0.6rem;">
+                    <i class="bi bi-exclamation-triangle"></i> <strong>Important:</strong> Current password is encrypted and cannot be displayed. To record credentials, set a new password below, copy it, then save.
+                </div>
+                <div class="row g-2 mb-2">
                     <div class="col-md-6">
-                        <div class="card border-light bg-light h-100">
-                            <div class="card-body p-2">
-                                <h6 class="fw-bold mb-2" style="font-size: 0.75rem;">Signature</h6>
-                                <div id="signature-section">
-                                    <div class="d-flex gap-1 flex-wrap mb-2">
-                                        <button type="button" class="btn btn-outline-primary btn-sm" id="upload-signature-btn" style="font-size: 0.75rem; padding: 0.3rem 0.6rem;">
-                                            <i class="bi bi-cloud-upload"></i> Upload
-                                        </button>
-                                        <button type="button" class="btn btn-outline-info btn-sm" id="draw-signature-large-btn" style="font-size: 0.75rem; padding: 0.3rem 0.6rem;">
-                                            <i class="bi bi-pencil"></i> Draw
-                                        </button>
-                                    </div>
-                                    <input type="file" id="signature-file-input" name="signature" accept="image/*" style="display: none;">
-                                    <input type="hidden" id="signature-base64" name="signature_base64" value="">
-                                    
-                                    @if($resident['signature'])
-                                        <div id="signature-preview" class="mt-2">
-                                            <p class="mb-1" style="font-size: 0.65rem; color: #6c757d;">Current Signature:</p>
-                                            <img id="preview-signature" src="{{ asset('storage/' . $resident['signature']) }}?t={{ $resident['updated_at'] }}&v={{ time() }}" alt="Signature Preview" style="max-width: 200px; max-height: 100px; border: 2px solid #dee2e6; border-radius: 4px; background: transparent; padding: 5px;">
-                                            <div class="mt-1">
-                                                <button type="button" class="btn btn-sm btn-danger" id="remove-signature-btn" style="font-size: 0.7rem; padding: 0.2rem 0.4rem;">
-                                                    <i class="bi bi-trash"></i> Remove
-                                                </button>
-                                            </div>
-                                        </div>
-                                    @else
-                                        <div id="signature-preview" style="display: none;" class="mt-2">
-                                            <img id="preview-signature" src="" alt="Signature Preview" style="max-width: 200px; max-height: 100px; border: 2px solid #dee2e6; border-radius: 4px; background: transparent; padding: 5px;">
-                                            <div class="mt-1">
-                                                <button type="button" class="btn btn-sm btn-danger" id="remove-signature-btn" style="font-size: 0.7rem; padding: 0.2rem 0.4rem;">
-                                                    <i class="bi bi-trash"></i> Remove
-                                                </button>
-                                            </div>
-                                        </div>
-                                    @endif
-                                </div>
-                                @if ($errors->has('signature'))
-                                    <div class="alert alert-danger mt-1 mb-0" style="font-size: 0.75rem; padding: 0.4rem 0.6rem;">{{ $errors->first('signature') }}</div>
-                                @endif
-                            </div>
+                        <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Username</label>
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control form-control-sm bg-light" id="account-username-display" value="{{ $account['username'] }}" readonly style="font-size: 0.8rem; font-weight: 600;">
+                            <button type="button" class="btn btn-outline-secondary btn-sm btn-copy" data-field="account-username-display" title="Copy Username" style="font-size: 0.7rem; padding: 0.2rem 0.4rem;">
+                                <i class="bi bi-clipboard"></i>
+                            </button>
                         </div>
+                        <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Created: {{ $account['created_at']->format('M d, Y') }}</small>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Password (Encrypted)</label>
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control form-control-sm bg-light" value="••••••••••••" readonly style="font-size: 0.8rem; font-weight: 600; letter-spacing: 2px;">
+                            <button type="button" class="btn btn-outline-secondary btn-sm" disabled title="Cannot display encrypted password" style="font-size: 0.7rem; padding: 0.2rem 0.4rem;">
+                                <i class="bi bi-lock-fill"></i>
+                            </button>
+                        </div>
+                        <small class="text-danger d-block mt-1" style="font-size: 0.65rem;"><i class="bi bi-shield-lock"></i> Password is encrypted - cannot be displayed</small>
                     </div>
                 </div>
 
-                <div class="d-flex gap-1 mt-2 pt-2 border-top">
+                <div class="row g-2 mb-2">
+                    <div class="col-md-12">
+                        <label for="new_password" class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Set New Password (To Record Credentials)</label>
+                        <div class="input-group input-group-sm">
+                            <input type="password" class="form-control form-control-sm @error('new_password') is-invalid @enderror" id="new_password" name="new_password" placeholder="Enter new password to record" style="font-size: 0.8rem;">
+                            <button type="button" class="btn btn-outline-secondary btn-sm btn-toggle-password" data-field="new_password" title="Show/Hide" style="font-size: 0.7rem; padding: 0.2rem 0.4rem;">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                            <button type="button" class="btn btn-primary btn-sm btn-copy" data-field="new_password" title="Copy Password" style="font-size: 0.7rem; padding: 0.2rem 0.6rem;">
+                                <i class="bi bi-clipboard"></i> Copy
+                            </button>
+                        </div>
+                        <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">
+                            <strong>Workflow:</strong> 1) Enter new password 2) Click eye to view 3) Click Copy 4) Save record for resident
+                        </small>
+                        @error('new_password') <div class="invalid-feedback d-block" style="font-size: 0.65rem;">{{ $message }}</div> @enderror
+                    </div>
+                </div>
+                <input type="hidden" id="new_password_confirmation" name="new_password_confirmation">
+                @else
+                <div class="alert alert-warning mb-2 mt-3" role="alert" style="font-size: 0.75rem; padding: 0.4rem 0.6rem;">
+                    <i class="bi bi-exclamation-triangle"></i> This resident does not have an active account yet. Accounts are automatically created when adding new residents.
+                </div>
+                @endif
+
+                <div class="d-flex gap-1 mt-2 pt-2 border-top">"
                     <a href="{{ route('residents.index') }}" class="btn btn-secondary btn-sm" style="font-size: 0.75rem; padding: 0.3rem 0.6rem;">Cancel</a>
                     <button type="submit" class="btn btn-primary btn-sm" style="font-size: 0.75rem; padding: 0.3rem 0.6rem;">
                         <i class="bi bi-check me-1"></i> Save
@@ -456,10 +471,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const fullAddressDisplay = document.getElementById('full_address_display');
     
     function updateFullAddress() {
+        const houseNo = document.querySelector('input[name="house_no"]').value;
         const streetName = document.querySelector('select[name="street_name"]').value;
         const province = document.querySelector('select[name="province"]').value;
         
         const addressParts = [];
+        if (houseNo) addressParts.push(houseNo);
         if (streetName) addressParts.push(streetName);
         if (province) addressParts.push(province);
         
@@ -533,139 +550,6 @@ document.addEventListener('DOMContentLoaded', function() {
             // Remove any non-numeric characters
             this.value = this.value.replace(/[^0-9]/g, '');
         });
-    });
-
-    // Signature functionality
-    const uploadSignatureBtn = document.getElementById('upload-signature-btn');
-    const signatureFileInput = document.getElementById('signature-file-input');
-    const signaturePreview = document.getElementById('signature-preview');
-    const previewSignature = document.getElementById('preview-signature');
-    const removeSignatureBtn = document.getElementById('remove-signature-btn');
-    
-    // Upload signature functionality
-    uploadSignatureBtn.addEventListener('click', function() {
-        signatureFileInput.click();
-    });
-    
-    signatureFileInput.addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                previewSignature.src = e.target.result;
-                signaturePreview.style.display = 'block';
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-    
-    removeSignatureBtn.addEventListener('click', function() {
-        signatureFileInput.value = '';
-        previewSignature.src = '';
-        signaturePreview.style.display = 'none';
-        document.getElementById('signature-base64').value = '';
-    });
-    
-    // Large Canvas Modal Functionality
-    const drawSignatureLargeBtn = document.getElementById('draw-signature-large-btn');
-    const signatureLargeModal = new bootstrap.Modal(document.getElementById('signatureLargeModal'));
-    const signatureCanvasLarge = document.getElementById('signature-canvas-large');
-    const saveSignatureLargeBtn = document.getElementById('save-signature-large-btn');
-    const clearSignatureLargeBtn = document.getElementById('clear-signature-large-btn');
-    
-    let isDrawingLarge = false;
-    let ctxLarge = signatureCanvasLarge.getContext('2d');
-    
-    // Initialize large canvas
-    ctxLarge.clearRect(0, 0, signatureCanvasLarge.width, signatureCanvasLarge.height);
-    
-    // Open large canvas modal
-    drawSignatureLargeBtn.addEventListener('click', function() {
-        signatureLargeModal.show();
-        ctxLarge.clearRect(0, 0, signatureCanvasLarge.width, signatureCanvasLarge.height);
-    });
-    
-    // Mouse events for large canvas
-    signatureCanvasLarge.addEventListener('mousedown', function(e) {
-        isDrawingLarge = true;
-        const rect = signatureCanvasLarge.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        ctxLarge.beginPath();
-        ctxLarge.moveTo(x, y);
-    });
-    
-    signatureCanvasLarge.addEventListener('mousemove', function(e) {
-        if (!isDrawingLarge) return;
-        const rect = signatureCanvasLarge.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        ctxLarge.lineTo(x, y);
-        ctxLarge.strokeStyle = '#000000';
-        ctxLarge.lineWidth = 2;
-        ctxLarge.lineCap = 'round';
-        ctxLarge.lineJoin = 'round';
-        ctxLarge.stroke();
-    });
-    
-    signatureCanvasLarge.addEventListener('mouseup', function() {
-        isDrawingLarge = false;
-    });
-    
-    signatureCanvasLarge.addEventListener('mouseleave', function() {
-        isDrawingLarge = false;
-    });
-    
-    // Touch events for large canvas (mobile)
-    signatureCanvasLarge.addEventListener('touchstart', function(e) {
-        e.preventDefault();
-        isDrawingLarge = true;
-        const rect = signatureCanvasLarge.getBoundingClientRect();
-        const touch = e.touches[0];
-        const x = touch.clientX - rect.left;
-        const y = touch.clientY - rect.top;
-        ctxLarge.beginPath();
-        ctxLarge.moveTo(x, y);
-    });
-    
-    signatureCanvasLarge.addEventListener('touchmove', function(e) {
-        e.preventDefault();
-        if (!isDrawingLarge) return;
-        const rect = signatureCanvasLarge.getBoundingClientRect();
-        const touch = e.touches[0];
-        const x = touch.clientX - rect.left;
-        const y = touch.clientY - rect.top;
-        ctxLarge.lineTo(x, y);
-        ctxLarge.strokeStyle = '#000000';
-        ctxLarge.lineWidth = 2;
-        ctxLarge.lineCap = 'round';
-        ctxLarge.lineJoin = 'round';
-        ctxLarge.stroke();
-    });
-    
-    signatureCanvasLarge.addEventListener('touchend', function(e) {
-        e.preventDefault();
-        isDrawingLarge = false;
-    });
-    
-    // Clear large canvas
-    clearSignatureLargeBtn.addEventListener('click', function() {
-        ctxLarge.clearRect(0, 0, signatureCanvasLarge.width, signatureCanvasLarge.height);
-    });
-    
-    // Save large canvas signature
-    saveSignatureLargeBtn.addEventListener('click', function() {
-        const dataURL = signatureCanvasLarge.toDataURL('image/png');
-        previewSignature.src = dataURL;
-        previewSignature.style.background = 'transparent';
-        
-        // Store base64 in hidden input for form submission
-        document.getElementById('signature-base64').value = dataURL;
-        
-        signaturePreview.style.display = 'block';
-        
-        // Close modal
-        signatureLargeModal.hide();
     });
 });
 
@@ -842,6 +726,61 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         `;
         return modal;
+    }
+
+    // Copy to clipboard functionality
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.btn-copy')) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const btn = e.target.closest('.btn-copy');
+            const fieldId = btn.getAttribute('data-field');
+            const field = document.getElementById(fieldId);
+            
+            if (field && field.value) {
+                navigator.clipboard.writeText(field.value).then(() => {
+                    const originalIcon = btn.innerHTML;
+                    btn.innerHTML = '<i class="bi bi-check"></i>';
+                    btn.classList.add('btn-success');
+                    btn.classList.remove('btn-outline-secondary');
+                    
+                    setTimeout(() => {
+                        btn.innerHTML = originalIcon;
+                        btn.classList.remove('btn-success');
+                        btn.classList.add('btn-outline-secondary');
+                    }, 2000);
+                }).catch(err => console.error('Copy failed:', err));
+            }
+        }
+    }, false);
+
+    // Toggle password visibility
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.btn-toggle-password')) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const btn = e.target.closest('.btn-toggle-password');
+            const fieldId = btn.getAttribute('data-field');
+            const field = document.getElementById(fieldId);
+            
+            if (field) {
+                const isPassword = field.type === 'password';
+                field.type = isPassword ? 'text' : 'password';
+                btn.innerHTML = isPassword ? '<i class="bi bi-eye-slash"></i>' : '<i class="bi bi-eye"></i>';
+            }
+        }
+    }, false);
+
+    // Auto-fill confirmation field for password validation
+    const newPasswordField = document.getElementById('new_password');
+    const confirmationField = document.getElementById('new_password_confirmation');
+    
+    if (newPasswordField && confirmationField) {
+        newPasswordField.addEventListener('input', function() {
+            confirmationField.value = this.value;
+        });
     }
 });
 </script>

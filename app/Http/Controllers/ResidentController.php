@@ -511,6 +511,8 @@ class ResidentController extends Controller
 
     public function edit(Resident $resident)
     {
+        $account = ResidentAccount::where('resident_id', $resident->id)->first();
+
         return view('residents.edit', [
             'resident' => [
                 'id' => $resident->id,
@@ -542,7 +544,11 @@ class ResidentController extends Controller
                 'emergency_contact_relationship' => $resident->emergency_contact_relationship,
                 'emergency_contact_address' => $resident->emergency_contact_address,
                 'updated_at' => $resident->updated_at->timestamp,
-            ]
+            ],
+            'account' => $account ? [
+                'username' => $account->username,
+                'created_at' => $account->created_at,
+            ] : null
         ]);
     }
 
@@ -577,6 +583,7 @@ class ResidentController extends Controller
             'profile_image_base64' => ['nullable', 'string', 'max:10485760'],
             'signature' => ['nullable', 'image', 'max:1024'],
             'signature_base64' => ['nullable', 'string', 'max:1048576'],
+            'new_password' => ['nullable', 'string', 'min:8', 'confirmed'],
         ]);
 
         if ($request->hasFile('profile_image')) {
@@ -775,6 +782,17 @@ class ResidentController extends Controller
             ]);
         }
 
+        // Update password if new password is provided
+        if (!empty($validated['new_password'])) {
+            $account = ResidentAccount::where('resident_id', $resident->id)->first();
+            if ($account) {
+                $account->update([
+                    'password_hash' => bcrypt($validated['new_password']),
+                ]);
+                return redirect()->route('residents.show', $resident)->with('success', 'Resident and password updated successfully!');
+            }
+        }
+
         return redirect()->route('residents.show', $resident)->with('success', 'Resident updated successfully!');
     }
 
@@ -830,9 +848,9 @@ class ResidentController extends Controller
             'municipality' => 'nullable|string|max:100',
             'province' => 'nullable|string|max:100',
             'zip_code' => 'nullable|string|max:10',
-            'contact_number' => 'nullable|string|max:20|unique:residents,contact_number',
+            'contact_number' => 'nullable|string|max:20',
             'telephone_no' => 'nullable|string|max:20',
-            'email' => 'nullable|email|unique:residents,email',
+            'email' => 'nullable|email',
             'emergency_contact_name' => 'nullable|string|max:100',
             'emergency_contact_relationship' => 'nullable|string|max:50',
             'emergency_contact_no' => 'nullable|string|max:20',
