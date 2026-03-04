@@ -99,6 +99,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('certificates/template/file/{type}', [CertificateController::class, 'getTemplateFile'])->name('certificates.template.file');
     Route::get('certificates/word-template/{type}/{resident?}', [CertificateController::class, 'wordTemplate'])->name('certificates.word.template');
     Route::get('certificates/editor', [CertificateController::class, 'editor'])->name('certificates.editor');
+    Route::post('certificates/print-log', [CertificateController::class, 'logPrinted'])->name('certificates.print-log');
     Route::resource('certificates', CertificateController::class);
     Route::patch('certificates/{certificate}/approve', [CertificateController::class, 'approve'])->name('certificates.approve');
 
@@ -233,4 +234,3 @@ Route::middleware(['auth:resident'])->prefix('api/resident')->name('api.resident
     Route::get('/certificates/{id}', [CertificateController::class, 'apiShow'])->name('certificates.show');
     Route::post('/certificates/{id}/cancel', [CertificateController::class, 'apiCancel'])->name('certificates.cancel');
 });
-

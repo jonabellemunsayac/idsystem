@@ -3,11 +3,29 @@
 namespace App\Http\Controllers;
 
 use App\Models\Certificate;
+use App\Models\Appointment;
 use App\Models\Resident;
 use Illuminate\Http\Request;
 
 class CertificateController extends Controller
 {
+    private function formatResidentAddress(Resident $resident): string
+    {
+        $addressParts = [];
+
+        if ($resident->house_no) $addressParts[] = '#' . $resident->house_no;
+        if ($resident->street_name) $addressParts[] = $resident->street_name;
+        if ($resident->purok) $addressParts[] = 'Purok ' . $resident->purok;
+        if ($resident->barangay) $addressParts[] = 'Barangay ' . $resident->barangay;
+        if ($resident->municipality) $addressParts[] = $resident->municipality;
+        if ($resident->province) $addressParts[] = $resident->province;
+        if ($resident->zip_code) $addressParts[] = $resident->zip_code;
+
+        $formatted = implode(', ', array_filter($addressParts));
+
+        return $formatted ?: ($resident->address ?? 'Street / Purok Address');
+    }
+
     public function index(Request $request)
     {
         $query = Certificate::with('resident');
@@ -69,6 +87,7 @@ class CertificateController extends Controller
     public function editor(Request $request)
     {
         $certificateType = $request->input('type');
+        $residentId = $request->input('resident_id');
 
         // Validate certificate type
         $validTypes = ['indigency', 'residency', 'clearance', 'low_income', 'no_income'];
@@ -76,17 +95,39 @@ class CertificateController extends Controller
             return redirect()->route('certificates.index')->with('error', 'Invalid certificate type.');
         }
 
+        $residentPrefill = null;
+        if ($residentId) {
+            $resident = Resident::findOrFail($residentId);
+            $photoPath = $resident->profile_image;
+            $photoUrl = null;
+            if (!empty($photoPath)) {
+                $photoUrl = str_starts_with($photoPath, 'http://') || str_starts_with($photoPath, 'https://')
+                    ? $photoPath
+                    : asset('storage/' . ltrim($photoPath, '/'));
+            }
+
+            $residentPrefill = [
+                'resident_id' => $resident->id,
+                'full_name' => trim($resident->first_name . ' ' . ($resident->middle_name ? $resident->middle_name . ' ' : '') . $resident->last_name),
+                'civil_status' => $resident->civil_status ?: 'Single',
+                'address' => $this->formatResidentAddress($resident),
+                'resident_since_year' => optional($resident->created_at)->format('Y') ?? date('Y'),
+                'photo_url' => $photoUrl,
+            ];
+        }
+
         // Get current date parts for the issuance line
         $issueDay = date('jS');
         $issueMonth = date('F');
         $issueYear = date('Y');
 
-        // Load the dedicated template view for the requested certificate type
-        return view('certificates.templates.' . $certificateType, [
+        // Load the unified editor view that supports resident-prefilled blanks.
+        return view('certificates.editor', [
             'certificateType' => $certificateType,
             'issueDay' => $issueDay,
             'issueMonth' => $issueMonth,
             'issueYear' => $issueYear,
+            'residentPrefill' => $residentPrefill,
         ]);
     }
 
@@ -156,6 +197,96 @@ class CertificateController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Certificate approved successfully!'
+        ]);
+    }
+
+    private function mapEditorTypeToStoredType(string $certificateType): string
+    {
+        $map = [
+            'clearance' => 'barangay_clearance',
+            'indigency' => 'certificate_of_indigency',
+            'residency' => 'certificate_of_residency',
+            'low_income' => 'other',
+            'no_income' => 'other',
+        ];
+
+        return $map[$certificateType] ?? 'other';
+    }
+
+    private function mapEditorTypeToAppointmentServiceType(string $certificateType): string
+    {
+        $map = [
+            'clearance' => 'Barangay Clearance',
+            'indigency' => 'Certificate of Indigency',
+            'residency' => 'Certificate of Residency',
+            'low_income' => 'Certificate of Low Income',
+            'no_income' => 'Certificate of No Income',
+        ];
+
+        return $map[$certificateType] ?? 'Other Services';
+    }
+
+    public function logPrinted(Request $request)
+    {
+        $validated = $request->validate([
+            'resident_id' => ['nullable', 'exists:residents,id'],
+            'certificate_type' => ['required', 'in:indigency,residency,clearance,low_income,no_income'],
+            'purpose' => ['required', 'string', 'max:255'],
+            'amount' => ['nullable', 'string', 'max:100'],
+            'content' => ['nullable', 'string'],
+        ]);
+
+        if (in_array($validated['certificate_type'], ['no_income', 'low_income'], true) && empty($validated['amount'])) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Amount is required for this certificate print logging.',
+            ], 422);
+        }
+
+        $storedType = $this->mapEditorTypeToStoredType($validated['certificate_type']);
+        $isCustomIncomeType = in_array($validated['certificate_type'], ['low_income', 'no_income'], true);
+
+        $purposeDetails = null;
+        if ($isCustomIncomeType) {
+            $purposeDetails = 'Certificate subtype: ' . $validated['certificate_type'];
+            if (!empty($validated['amount'])) {
+                $purposeDetails .= '; Amount: ' . $validated['amount'];
+            }
+        }
+
+        $certificate = Certificate::create([
+            'resident_id' => $validated['resident_id'] ?? null,
+            'reference_number' => Certificate::generateReferenceNumber($storedType),
+            'type' => $storedType,
+            'purpose' => $validated['purpose'],
+            'purpose_details' => $purposeDetails,
+            'status' => 'released',
+            'pickup_or_delivery' => 'pickup',
+            'approved_date' => now()->toDateString(),
+            'released_date' => now()->toDateString(),
+            'approved_by' => auth()->id(),
+            'released_by' => auth()->id(),
+            'notes' => 'Logged automatically after certificate print.',
+            'content' => $validated['content'] ?? null,
+        ]);
+
+        if (!empty($validated['resident_id'])) {
+            $serviceType = $this->mapEditorTypeToAppointmentServiceType($validated['certificate_type']);
+
+            Appointment::create([
+                'resident_id' => $validated['resident_id'],
+                'service_type' => $serviceType,
+                'reference_number' => Appointment::generateReferenceNumber($serviceType),
+                'scheduled_time' => now(),
+                'status' => 'confirmed',
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Printed certificate logged successfully.',
+            'certificate_id' => $certificate->id,
+            'reference_number' => $certificate->reference_number,
         ]);
     }
 
