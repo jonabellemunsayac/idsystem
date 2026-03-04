@@ -130,7 +130,21 @@ class AppointmentController extends Controller
         $validated = $request->validate([
             'resident_id' => ['required', 'exists:residents,id'],
             'service_type' => ['required', 'string', 'max:255'],
-            'appointment_date' => ['required', 'date_format:Y-m-d\TH:i'],
+            'appointment_date' => [
+                'required',
+                'date_format:Y-m-d\TH:i',
+                'after_or_equal:today',
+                function ($attribute, $value, $fail) {
+                    try {
+                        $date = \Carbon\Carbon::parse($value);
+                        if ($date->isWeekend()) {
+                            $fail('Weekend appointments are not allowed.');
+                        }
+                    } catch (\Exception $e) {
+                        $fail('The appointment date is invalid.');
+                    }
+                },
+            ],
             'status' => ['required', 'in:pending,confirmed,cancelled'],
             'notes' => ['nullable', 'string', 'max:500'],
         ]);
