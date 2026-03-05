@@ -546,17 +546,40 @@ function checkTimeSlotAvailability(callback = null) {
     });
 }
 
-// Set minimum date to today
-document.getElementById('appointment_date').addEventListener('change', function() {
-    const selectedDate = new Date(this.value);
-    const day = selectedDate.getDay();
-    if (day === 0 || day === 6) {
-        showError('Weekends are not available. Please select a weekday.');
-        this.value = '';
-    } else {
+document.addEventListener('DOMContentLoaded', function () {
+    const appointmentDateInput = document.getElementById('appointment_date');
+    if (!appointmentDateInput) return;
+
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    const minDate = `${year}-${month}-${day}`;
+    appointmentDateInput.setAttribute('min', minDate);
+
+    appointmentDateInput.addEventListener('change', function() {
+        if (!this.value) return;
+
+        const selectedDate = new Date(this.value + 'T00:00:00');
+        const todayStart = new Date();
+        todayStart.setHours(0, 0, 0, 0);
+
+        if (selectedDate < todayStart) {
+            showError('Past dates are not available. Please select today or a future date.');
+            this.value = '';
+            return;
+        }
+
+        const selectedDay = selectedDate.getDay();
+        if (selectedDay === 0 || selectedDay === 6) {
+            showError('Weekends are not available. Please select a weekday.');
+            this.value = '';
+            return;
+        }
+
         hideError();
         loadBookedSlots();
-    }
+    });
 });
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>

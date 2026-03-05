@@ -191,6 +191,37 @@
                 </div>
             </div>
 
+            <!-- Print Certificates Card -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header border-bottom py-2 d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bold mb-0" style="font-size: 0.95rem;">Print Certificates</h5>
+                    <small class="text-muted">Auto-filled with resident details</small>
+                </div>
+                <div class="card-body p-3">
+                    <div class="row g-2">
+                        @php
+                            $certificateTypes = [
+                                'clearance' => 'Barangay Clearance',
+                                'residency' => 'Certificate of Residency',
+                                'indigency' => 'Certificate of Indigency',
+                                'low_income' => 'Certificate of Low Income',
+                                'no_income' => 'Certification of No Income',
+                            ];
+                        @endphp
+                        @foreach($certificateTypes as $certificateTypeKey => $certificateTypeLabel)
+                            <div class="col-md-6 col-lg-4">
+                                <a href="{{ route('certificates.editor', ['type' => $certificateTypeKey, 'resident_id' => $resident['id']]) }}"
+                                   class="btn btn-outline-primary w-100 d-flex align-items-center justify-content-center gap-2"
+                                   style="font-size: 0.8rem;">
+                                    <i class="bi bi-printer"></i>
+                                    <span>{{ $certificateTypeLabel }}</span>
+                                </a>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+
             <!-- Tabs for Blotter Record and Request History -->
             <div class="card border-0 shadow-sm">
                 <div class="card-body p-2 bg-light rounded">
