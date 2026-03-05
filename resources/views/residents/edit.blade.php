@@ -602,14 +602,36 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Start camera
     function startCamera() {
-        navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } })
-            .then(function(mediaStream) {
+        const constraints = { video: { facingMode: 'user' } };
+        const legacyGetUserMedia =
+            navigator.getUserMedia ||
+            navigator.webkitGetUserMedia ||
+            navigator.mozGetUserMedia ||
+            navigator.msGetUserMedia;
+
+        if (navigator.mediaDevices && typeof navigator.mediaDevices.getUserMedia === 'function') {
+            navigator.mediaDevices.getUserMedia(constraints)
+                .then(function(mediaStream) {
+                    stream = mediaStream;
+                    videoStream.srcObject = stream;
+                })
+                .catch(function(err) {
+                    alert('Unable to access camera: ' + err.message);
+                });
+            return;
+        }
+
+        if (legacyGetUserMedia) {
+            legacyGetUserMedia.call(navigator, constraints, function(mediaStream) {
                 stream = mediaStream;
                 videoStream.srcObject = stream;
-            })
-            .catch(function(err) {
+            }, function(err) {
                 alert('Unable to access camera: ' + err.message);
             });
+            return;
+        }
+
+        alert('Camera API is unavailable in this browser/context. Use HTTPS or localhost.');
     }
 
     // Capture snapshot
