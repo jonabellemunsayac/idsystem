@@ -21,9 +21,9 @@ class EnsureUserIsAdmin
             return redirect()->route('admin.login');
         }
 
-        // Ensure the authenticated user is an admin or superadmin
-        if (!in_array(auth()->guard('web')->user()->role, ['admin', 'superadmin'])) {
-            // If resident or non-admin tries to access, redirect to public website
+        // Ensure the authenticated user has a valid staff role
+        if (!in_array(auth()->guard('web')->user()->role, ['encoder', 'site_editor', 'admin', 'superadmin'])) {
+            // If resident or non-staff tries to access, redirect to public website
             return redirect()->route('public.home')->with('error', 'Access denied. This area is for administrators only.');
         }
 

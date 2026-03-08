@@ -13,20 +13,20 @@ class AdminLoginController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
+            'username' => 'required|string',
             'password' => 'required',
         ]);
 
-        if (Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
+        if (Auth::attempt(['username' => $request->username, 'password' => $request->password], $request->boolean('remember'))) {
             $request->session()->regenerate();
 
             $user = Auth::user();
             
-            // Check if user is admin or superadmin
-            if (!in_array($user->role, ['admin', 'superadmin'])) {
+            // Check if user has a valid staff role
+            if (!in_array($user->role, ['encoder', 'site_editor', 'admin', 'superadmin'])) {
                 Auth::logout();
                 throw ValidationException::withMessages([
-                    'email' => 'Only admin accounts can access this.',
+                    'username' => 'Only staff accounts can access this.',
                 ]);
             }
 
@@ -42,7 +42,7 @@ class AdminLoginController extends Controller
         }
 
         throw ValidationException::withMessages([
-            'email' => 'These credentials do not match our records.',
+            'username' => 'These credentials do not match our records.',
         ]);
     }
 }

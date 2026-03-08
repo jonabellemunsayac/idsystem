@@ -42,7 +42,7 @@ Route::get('/contact', fn () => app(PublicPageController::class)->show('contact'
 // Admin and resident portals
 Route::get('/portal', function () {
     if (auth()->check()) {
-        return in_array(auth()->user()->role, ['admin', 'superadmin']) 
+        return in_array(auth()->user()->role, ['encoder', 'site_editor', 'admin', 'superadmin'])
             ? redirect()->route('dashboard') 
             : redirect()->route('resident.dashboard');
     }
@@ -89,94 +89,101 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/dashboard/export/summary-csv', [DashboardController::class, 'exportSummaryCSV'])->name('dashboard.export.summary.csv');
     Route::get('/dashboard/export/summary-pdf', [DashboardController::class, 'exportSummaryPDF'])->name('dashboard.export.summary.pdf');
 
-    // Residents Management
-    Route::get('residents/search', [ResidentController::class, 'searchJson'])->name('residents.search');
-    Route::resource('residents', ResidentController::class);
-    Route::get('residents/export/excel', [ResidentController::class, 'export'])->name('residents.export');
+    // Residents Management (encoder, admin, superadmin)
+    Route::middleware('role:encoder,admin,superadmin')->group(function () {
+        Route::get('residents/search', [ResidentController::class, 'searchJson'])->name('residents.search');
+        Route::resource('residents', ResidentController::class);
+        Route::get('residents/export/excel', [ResidentController::class, 'export'])->name('residents.export');
 
-    // Appointments Management - Custom routes first (before resource route)
-    Route::post('/appointments/check-slot-availability', [AppointmentController::class, 'checkSlotAvailability'])->name('appointments.checkSlotAvailability');
-    Route::get('/appointments/booked-slots/{date}', [AppointmentController::class, 'getBookedSlots'])->name('appointments.getBookedSlots');
-    Route::resource('appointments', AppointmentController::class);
-    Route::patch('appointments/{appointment}/approve', [AppointmentController::class, 'approve'])->name('appointments.approve');
+        // Clans Management
+        Route::get('clans/{clan}/members', [ClanController::class, 'getMembers'])->name('clans.members');
+        Route::resource('clans', ClanController::class);
 
-    // Certificates Management
-    Route::get('certificates/template/download/{type}', [CertificateController::class, 'downloadTemplate'])->name('certificates.template.download');
-    Route::get('certificates/template/file/{type}', [CertificateController::class, 'getTemplateFile'])->name('certificates.template.file');
-    Route::get('certificates/word-template/{type}/{resident?}', [CertificateController::class, 'wordTemplate'])->name('certificates.word.template');
-    Route::get('certificates/editor', [CertificateController::class, 'editor'])->name('certificates.editor');
-    Route::post('certificates/print-log', [CertificateController::class, 'logPrinted'])->name('certificates.print-log');
-    Route::resource('certificates', CertificateController::class);
-    Route::patch('certificates/{certificate}/approve', [CertificateController::class, 'approve'])->name('certificates.approve');
+        // IDs Management
+        Route::get('/api/residents/search', [IDController::class, 'searchResidents'])->name('api.residents.search');
+        Route::post('/api/ids/generate', [IDController::class, 'generateID'])->name('api.ids.generate');
+        Route::post('/api/ids/log-print', [IDController::class, 'logPrint'])->name('api.ids.log-print');
+        Route::resource('ids', IDController::class);
+    });
 
-    // Clans Management
-    Route::get('clans/{clan}/members', [ClanController::class, 'getMembers'])->name('clans.members');
-    Route::resource('clans', ClanController::class);
+    // Appointments, Blotter, Assets, Certificates, Reports (admin, superadmin)
+    Route::middleware('role:admin,superadmin')->group(function () {
+        // Appointments Management
+        Route::post('/appointments/check-slot-availability', [AppointmentController::class, 'checkSlotAvailability'])->name('appointments.checkSlotAvailability');
+        Route::get('/appointments/booked-slots/{date}', [AppointmentController::class, 'getBookedSlots'])->name('appointments.getBookedSlots');
+        Route::resource('appointments', AppointmentController::class);
+        Route::patch('appointments/{appointment}/approve', [AppointmentController::class, 'approve'])->name('appointments.approve');
 
-    // IDs Management
-    Route::get('/api/residents/search', [IDController::class, 'searchResidents'])->name('api.residents.search');
-    Route::post('/api/ids/generate', [IDController::class, 'generateID'])->name('api.ids.generate');
-    Route::post('/api/ids/log-print', [IDController::class, 'logPrint'])->name('api.ids.log-print');
-    Route::resource('ids', IDController::class);
+        // Certificates Management
+        Route::get('certificates/template/download/{type}', [CertificateController::class, 'downloadTemplate'])->name('certificates.template.download');
+        Route::get('certificates/template/file/{type}', [CertificateController::class, 'getTemplateFile'])->name('certificates.template.file');
+        Route::get('certificates/word-template/{type}/{resident?}', [CertificateController::class, 'wordTemplate'])->name('certificates.word.template');
+        Route::get('certificates/editor', [CertificateController::class, 'editor'])->name('certificates.editor');
+        Route::post('certificates/print-log', [CertificateController::class, 'logPrinted'])->name('certificates.print-log');
+        Route::resource('certificates', CertificateController::class);
+        Route::patch('certificates/{certificate}/approve', [CertificateController::class, 'approve'])->name('certificates.approve');
 
-    // Blotter Records
-    Route::resource('blotter', BlotterController::class);
-    Route::get('/blotter', [BlotterController::class, 'index'])->name('blotter.index');
-    Route::get('/api/blotter/{id}', function ($id) {
-        $case = \App\Models\BlotterRecord::findOrFail($id);
-        return response()->json([
-            'success' => true,
-            'data' => $case
-        ]);
-    })->name('api.blotter.show');
+        // Blotter Records
+        Route::resource('blotter', BlotterController::class);
+        Route::get('/blotter', [BlotterController::class, 'index'])->name('blotter.index');
+        Route::get('/api/blotter/{id}', function ($id) {
+            $case = \App\Models\BlotterRecord::findOrFail($id);
+            return response()->json(['success' => true, 'data' => $case]);
+        })->name('api.blotter.show');
 
-    // Assets Management
-    Route::resource('assets', AssetController::class);
-    Route::get('/api/assets/{id}', function ($id) {
-        $asset = \App\Models\Asset::findOrFail($id);
-        return response()->json([
-            'success' => true,
-            'data' => $asset
-        ]);
-    })->name('api.assets.show');
+        // Assets Management
+        Route::resource('assets', AssetController::class);
+        Route::get('/api/assets/{id}', function ($id) {
+            $asset = \App\Models\Asset::findOrFail($id);
+            return response()->json(['success' => true, 'data' => $asset]);
+        })->name('api.assets.show');
 
-    // Reports & Analytics
-    Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
-    Route::get('/api/reports/demographics', [ReportController::class, 'getResidentDemographics'])->name('api.reports.demographics');
-    Route::get('/api/reports/demographic-stats', [ReportController::class, 'getDemographics'])->name('api.reports.demographic-stats');
-    Route::get('/api/reports/street-stats', [ReportController::class, 'getStreetStats'])->name('api.reports.street-stats');
-    Route::get('/api/reports/street-names', [ReportController::class, 'getStreetNames'])->name('api.reports.street-names');
-    Route::get('/api/reports/gender-distribution', [ReportController::class, 'getGenderDistribution'])->name('api.reports.gender-distribution');
-    Route::get('/api/reports/age-group-distribution', [ReportController::class, 'getAgeGroupDistribution'])->name('api.reports.age-group-distribution');
-    Route::get('/api/reports/special-sector-distribution', [ReportController::class, 'getSpecialSectorDistribution'])->name('api.reports.special-sector-distribution');
-    Route::get('/api/reports/street-distribution', [ReportController::class, 'getStreetDistribution'])->name('api.reports.street-distribution');
-    Route::get('/api/reports/appointments', [ReportController::class, 'getMonthlyAppointments'])->name('api.reports.appointments');
-    Route::get('/api/reports/blotter', [ReportController::class, 'getBlotterStatistics'])->name('api.reports.blotter');
-    Route::get('/api/reports/assets', [ReportController::class, 'getAssetUtilization'])->name('api.reports.assets');
-    Route::get('/api/reports/dashboard-stats', [ReportController::class, 'getDashboardStats'])->name('api.reports.dashboard-stats');
-    Route::get('/api/reports/export/pdf', [ReportController::class, 'exportPDF'])->name('api.reports.export.pdf');
-    Route::get('/api/reports/export/excel', [ReportController::class, 'exportExcel'])->name('api.reports.export.excel');
+        // Reports & Analytics
+        Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+        Route::get('/api/reports/demographics', [ReportController::class, 'getResidentDemographics'])->name('api.reports.demographics');
+        Route::get('/api/reports/demographic-stats', [ReportController::class, 'getDemographics'])->name('api.reports.demographic-stats');
+        Route::get('/api/reports/street-stats', [ReportController::class, 'getStreetStats'])->name('api.reports.street-stats');
+        Route::get('/api/reports/street-names', [ReportController::class, 'getStreetNames'])->name('api.reports.street-names');
+        Route::get('/api/reports/gender-distribution', [ReportController::class, 'getGenderDistribution'])->name('api.reports.gender-distribution');
+        Route::get('/api/reports/age-group-distribution', [ReportController::class, 'getAgeGroupDistribution'])->name('api.reports.age-group-distribution');
+        Route::get('/api/reports/special-sector-distribution', [ReportController::class, 'getSpecialSectorDistribution'])->name('api.reports.special-sector-distribution');
+        Route::get('/api/reports/street-distribution', [ReportController::class, 'getStreetDistribution'])->name('api.reports.street-distribution');
+        Route::get('/api/reports/appointments', [ReportController::class, 'getMonthlyAppointments'])->name('api.reports.appointments');
+        Route::get('/api/reports/blotter', [ReportController::class, 'getBlotterStatistics'])->name('api.reports.blotter');
+        Route::get('/api/reports/assets', [ReportController::class, 'getAssetUtilization'])->name('api.reports.assets');
+        Route::get('/api/reports/dashboard-stats', [ReportController::class, 'getDashboardStats'])->name('api.reports.dashboard-stats');
+        Route::get('/api/reports/export/pdf', [ReportController::class, 'exportPDF'])->name('api.reports.export.pdf');
+        Route::get('/api/reports/export/excel', [ReportController::class, 'exportExcel'])->name('api.reports.export.excel');
 
-    // Site Editor (public website management)
-    Route::get('site-editor', [SiteEditorController::class, 'index'])->name('site-editor.index');
-    Route::get('site-editor/{sitePage}/edit', [SiteEditorController::class, 'edit'])->name('site-editor.edit');
-    Route::put('site-editor/{sitePage}', [SiteEditorController::class, 'update'])->name('site-editor.update');
-    Route::post('site-editor/upload-image', [SiteEditorController::class, 'uploadImage'])->name('site-editor.upload-image');
-    Route::post('site-editor/{sitePage}/add-section', [SiteEditorController::class, 'addSection'])->name('site-editor.add-section');
-    Route::post('site-editor/{sitePage}/remove-section', [SiteEditorController::class, 'removeSection'])->name('site-editor.remove-section');
-    Route::post('site-editor/{sitePage}/meta', [SiteEditorController::class, 'updateMeta'])->name('site-editor.update-meta');
-    Route::get('site-editor/{sitePage}/preview', [SiteEditorController::class, 'preview'])->name('site-editor.preview');
+        // Query Editor
+        Route::get('/query-editor', [QueryEditorController::class, 'index'])->name('query-editor.index');
+        Route::post('/query-editor/execute', [QueryEditorController::class, 'executeQuery'])->name('query-editor.execute');
+        Route::get('/query-editor/table/{tableName}/structure', [QueryEditorController::class, 'getTableStructure'])->name('query-editor.table.structure');
+        Route::get('/query-editor/table/{tableName}/preview', [QueryEditorController::class, 'previewTable'])->name('query-editor.table.preview');
+    });
 
-    // Audit Logs
-    Route::resource('audit-logs', AuditLogController::class)->only(['index', 'show']);
+    // Site Editor (site_editor, admin, superadmin)
+    Route::middleware('role:site_editor,admin,superadmin')->group(function () {
+        Route::get('site-editor', [SiteEditorController::class, 'index'])->name('site-editor.index');
+        Route::get('site-editor/{sitePage}/edit', [SiteEditorController::class, 'edit'])->name('site-editor.edit');
+        Route::put('site-editor/{sitePage}', [SiteEditorController::class, 'update'])->name('site-editor.update');
+        Route::post('site-editor/upload-image', [SiteEditorController::class, 'uploadImage'])->name('site-editor.upload-image');
+        Route::post('site-editor/{sitePage}/add-section', [SiteEditorController::class, 'addSection'])->name('site-editor.add-section');
+        Route::post('site-editor/{sitePage}/remove-section', [SiteEditorController::class, 'removeSection'])->name('site-editor.remove-section');
+        Route::post('site-editor/{sitePage}/meta', [SiteEditorController::class, 'updateMeta'])->name('site-editor.update-meta');
+        Route::get('site-editor/{sitePage}/preview', [SiteEditorController::class, 'preview'])->name('site-editor.preview');
+    });
 
-    // Query Editor
-    Route::get('/query-editor', [QueryEditorController::class, 'index'])->name('query-editor.index');
-    Route::post('/query-editor/execute', [QueryEditorController::class, 'executeQuery'])->name('query-editor.execute');
-    Route::get('/query-editor/table/{tableName}/structure', [QueryEditorController::class, 'getTableStructure'])->name('query-editor.table.structure');
-    Route::get('/query-editor/table/{tableName}/preview', [QueryEditorController::class, 'previewTable'])->name('query-editor.table.preview');
+    // Superadmin-only routes
+    Route::middleware('role:superadmin')->group(function () {
+        // Audit Logs
+        Route::resource('audit-logs', AuditLogController::class)->only(['index', 'show']);
 
-    // Settings
+        // User Management
+        Route::resource('users', \App\Http\Controllers\UserManagementController::class)->except(['show']);
+    });
+
+    // Settings (all authenticated staff)
     Route::prefix('settings')->name('settings.')->group(function () {
         Route::get('profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -203,6 +210,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::resource('certificates', AdminCertificateController::class);
         Route::patch('certificates/{certificate}/status', [AdminCertificateController::class, 'updateStatus'])->name('certificates.updateStatus');
     });
+
 
     // Admin Logout
     Route::post('/logout', function (Request $request) {
