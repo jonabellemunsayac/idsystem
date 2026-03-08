@@ -160,6 +160,18 @@
                     <input type="text" class="form-control form-control-sm" name="last_name" required style="font-size: 0.8rem;">
                 </div>
                 <div class="col-md-4">
+                    <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Suffix <span class="text-muted">(Optional)</span></label>
+                    <select class="form-select form-select-sm" name="suffix" style="font-size: 0.8rem;">
+                        <option value="">None</option>
+                        <option value="Jr.">Jr.</option>
+                        <option value="Sr.">Sr.</option>
+                        <option value="II">II</option>
+                        <option value="III">III</option>
+                        <option value="IV">IV</option>
+                        <option value="V">V</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
                     <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Birth Date</label>
                     <input type="date" class="form-control form-control-sm" name="birth_date" required max="{{ date('Y-m-d') }}" style="font-size: 0.8rem;">
                 </div>
@@ -186,17 +198,6 @@
                     <select class="form-select form-select-sm" name="nationality" style="font-size: 0.8rem;">
                         <option value="Filipino">Filipino</option>
                         <option value="Other">Other</option>
-                    </select>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Special Sector</label>
-                    <select class="form-select form-select-sm" name="special_sector" style="font-size: 0.8rem;">
-                        <option value="">Select...</option>
-                        <option value="None">None</option>
-                        <option value="Senior Citizen">Senior Citizen</option>
-                        <option value="PWD">PWD</option>
-                        <option value="Solo Parent">Solo Parent</option>
-                        <option value="LGBTQ">LGBTQ</option>
                     </select>
                 </div>
                 <div class="col-md-4">
@@ -319,11 +320,11 @@
                     </select>
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Province</label>
+                    <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">City</label>
                     <select class="form-select form-select-sm address-field" name="province" style="font-size: 0.8rem;">
-                        <option value="Metro Manila" selected>Metro Manila</option>
+                        <option value="Pasig City" selected>Pasig City</option>
                     </select>
-                    <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Fixed to Metro Manila</small>
+                    <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Fixed to Pasig City</small>
                 </div>
                 <div class="col-md-6">
                     <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Zip Code</label>
@@ -332,7 +333,7 @@
                 <div class="col-md-12">
                     <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Full Address</label>
                     <textarea class="form-control form-control-sm" id="full_address_display" rows="2" readonly style="font-size: 0.8rem; background-color: #f8f9fa;"></textarea>
-                    <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Auto-filled from house no, street name and province above</small>
+                    <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Auto-filled from house no, street name and city above</small>
                 </div>
             </div>
 
@@ -371,6 +372,7 @@
                         <option value="">Select...</option>
                         <option value="Husband">Husband</option>
                         <option value="Wife">Wife</option>
+                        <option value="Partner">Partner</option>
                         <option value="Mother">Mother</option>
                         <option value="Father">Father</option>
                         <option value="Sibling">Sibling</option>

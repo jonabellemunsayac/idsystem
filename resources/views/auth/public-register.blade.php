@@ -179,6 +179,18 @@
                                 @error('last_name')<div class="text-danger small" style="font-size: 0.65rem;">{{ $message }}</div>@enderror
                             </div>
                             <div class="col-md-4">
+                                <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Suffix <span class="text-muted">(Optional)</span></label>
+                                <select class="form-select form-select-sm" name="suffix" style="font-size: 0.8rem;">
+                                    <option value="">None</option>
+                                    <option value="Jr." {{ old('suffix') === 'Jr.' ? 'selected' : '' }}>Jr.</option>
+                                    <option value="Sr." {{ old('suffix') === 'Sr.' ? 'selected' : '' }}>Sr.</option>
+                                    <option value="II" {{ old('suffix') === 'II' ? 'selected' : '' }}>II</option>
+                                    <option value="III" {{ old('suffix') === 'III' ? 'selected' : '' }}>III</option>
+                                    <option value="IV" {{ old('suffix') === 'IV' ? 'selected' : '' }}>IV</option>
+                                    <option value="V" {{ old('suffix') === 'V' ? 'selected' : '' }}>V</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
                                 <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Birth Date</label>
                                 <input type="date" class="form-control form-control-sm @error('birth_date') is-invalid @enderror" name="birth_date" value="{{ old('birth_date') }}" required max="{{ date('Y-m-d') }}" style="font-size: 0.8rem;">
                                 @error('birth_date')<div class="text-danger small" style="font-size: 0.65rem;">{{ $message }}</div>@enderror
@@ -208,17 +220,6 @@
                                 <select class="form-select form-select-sm" name="nationality" style="font-size: 0.8rem;">
                                     <option value="Filipino" {{ old('nationality', 'Filipino') === 'Filipino' ? 'selected' : '' }}>Filipino</option>
                                     <option value="Other" {{ old('nationality') === 'Other' ? 'selected' : '' }}>Other</option>
-                                </select>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Special Sector</label>
-                                <select class="form-select form-select-sm" name="special_sector" style="font-size: 0.8rem;">
-                                    <option value="">Select...</option>
-                                    <option value="None" {{ old('special_sector') === 'None' ? 'selected' : '' }}>None</option>
-                                    <option value="Senior Citizen" {{ old('special_sector') === 'Senior Citizen' ? 'selected' : '' }}>Senior Citizen</option>
-                                    <option value="PWD" {{ old('special_sector') === 'PWD' ? 'selected' : '' }}>PWD</option>
-                                    <option value="Solo Parent" {{ old('special_sector') === 'Solo Parent' ? 'selected' : '' }}>Solo Parent</option>
-                                    <option value="LGBTQ" {{ old('special_sector') === 'LGBTQ' ? 'selected' : '' }}>LGBTQ</option>
                                 </select>
                             </div>
                             <div class="col-md-4">
@@ -341,11 +342,11 @@
                                 </select>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Province</label>
+                                <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">City</label>
                                 <select class="form-select form-select-sm address-field" name="province" style="font-size: 0.8rem;">
-                                    <option value="Metro Manila" selected>Metro Manila</option>
+                                    <option value="Pasig City" selected>Pasig City</option>
                                 </select>
-                                <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Fixed to Metro Manila</small>
+                                <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Fixed to Pasig City</small>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Zip Code</label>
@@ -354,7 +355,7 @@
                             <div class="col-md-12">
                                 <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Full Address</label>
                                 <textarea class="form-control form-control-sm" id="full_address_display" rows="2" readonly style="font-size: 0.8rem; background-color: #f8f9fa;"></textarea>
-                                <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Auto-filled from house no, street name and province above</small>
+                                <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Auto-filled from house no, street name and city above</small>
                             </div>
                         </div>
 
@@ -389,6 +390,7 @@
                                     <option value="">Select...</option>
                                     <option value="Husband" {{ old('emergency_contact_relationship') === 'Husband' ? 'selected' : '' }}>Husband</option>
                                     <option value="Wife" {{ old('emergency_contact_relationship') === 'Wife' ? 'selected' : '' }}>Wife</option>
+                                    <option value="Partner" {{ old('emergency_contact_relationship') === 'Partner' ? 'selected' : '' }}>Partner</option>
                                     <option value="Mother" {{ old('emergency_contact_relationship') === 'Mother' ? 'selected' : '' }}>Mother</option>
                                     <option value="Father" {{ old('emergency_contact_relationship') === 'Father' ? 'selected' : '' }}>Father</option>
                                     <option value="Sibling" {{ old('emergency_contact_relationship') === 'Sibling' ? 'selected' : '' }}>Sibling</option>
@@ -599,7 +601,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Auto-select Senior Citizen for birthdate >= 60 years old
     const birthDateInput = document.querySelector('input[name="birth_date"]');
-    const specialSectorSelect = document.querySelector('select[name="special_sector"]');
     
     // Add input validation to restrict birth date input length
     birthDateInput.addEventListener('input', function(e) {
@@ -620,33 +621,9 @@ document.addEventListener('DOMContentLoaded', function() {
         return age;
     }
     
-    function checkAndSetSeniorCitizen() {
-        // Only proceed if we have a complete date (10 characters in YYYY-MM-DD format)
-        if (birthDateInput.value && birthDateInput.value.length === 10) {
-            const birthDate = new Date(birthDateInput.value);
-            
-            // Validate that the date is valid and not in the future
-            if (isNaN(birthDate.getTime()) || birthDate > new Date()) {
-                return;
-            }
-            
-            const age = calculateAge(birthDate);
-            
-            // Automatically set or clear Senior Citizen based on age
-            if (age >= 60) {
-                specialSectorSelect.value = 'Senior Citizen';
-            } else {
-                // Reset to default if not a senior citizen
-                if (specialSectorSelect.value === 'Senior Citizen') {
-                    specialSectorSelect.value = '';
-                }
-            }
-        }
-    }
-    
     // Trigger validation on both change and blur events for better responsiveness
-    birthDateInput.addEventListener('change', checkAndSetSeniorCitizen);
-    birthDateInput.addEventListener('blur', checkAndSetSeniorCitizen);
+    birthDateInput.addEventListener('change', function() {});
+    birthDateInput.addEventListener('blur', function() {});
     
     // Auto-fill full address from address components
     const addressFields = document.querySelectorAll('.address-field');

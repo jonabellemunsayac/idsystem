@@ -10,6 +10,7 @@ class Resident extends Model
         'first_name',
         'middle_name',
         'last_name',
+        'suffix',
         'gender',   
         'birth_date',
         'civil_status',

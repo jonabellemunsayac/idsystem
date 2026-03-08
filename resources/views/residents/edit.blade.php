@@ -36,6 +36,19 @@
                     </div>
 
                     <div class="col-md-4">
+                        <label for="suffix" class="form-label" style="font-size: 0.65rem;">Suffix</label>
+                        <select class="form-select form-select-sm" id="suffix" name="suffix" style="font-size: 0.8rem;">
+                            <option value="" {{ old('suffix', $resident['suffix']) === '' || old('suffix', $resident['suffix']) === null ? 'selected' : '' }}>None</option>
+                            <option value="Jr." {{ old('suffix', $resident['suffix']) === 'Jr.' ? 'selected' : '' }}>Jr.</option>
+                            <option value="Sr." {{ old('suffix', $resident['suffix']) === 'Sr.' ? 'selected' : '' }}>Sr.</option>
+                            <option value="II" {{ old('suffix', $resident['suffix']) === 'II' ? 'selected' : '' }}>II</option>
+                            <option value="III" {{ old('suffix', $resident['suffix']) === 'III' ? 'selected' : '' }}>III</option>
+                            <option value="IV" {{ old('suffix', $resident['suffix']) === 'IV' ? 'selected' : '' }}>IV</option>
+                            <option value="V" {{ old('suffix', $resident['suffix']) === 'V' ? 'selected' : '' }}>V</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
                         <label for="birth_date" class="form-label required-field" style="font-size: 0.65rem;">Birth Date</label>
                         <input type="date" class="form-control form-control-sm @error('birth_date') is-invalid @enderror" id="birth_date" name="birth_date" value="{{ old('birth_date', $resident['birth_date']) }}" required style="font-size: 0.8rem;">
                         @error('birth_date') <div class="invalid-feedback" style="font-size: 0.65rem;">{{ $message }}</div> @enderror
@@ -85,18 +98,6 @@
                             <option value="AB-" @selected(old('blood_type', $resident['blood_type']) == 'AB-')>AB-</option>
                         </select>
                         @error('blood_type') <div class="invalid-feedback" style="font-size: 0.65rem;">{{ $message }}</div> @enderror
-                    </div>
-
-                    <div class="col-md-4">
-                        <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Special Sector</label>
-                        <select class="form-select form-select-sm" name="special_sector" style="font-size: 0.8rem;">
-                            <option value="" {{ old('special_sector', $resident['special_sector']) === '' ? 'selected' : '' }}>Select...</option>
-                            <option value="None" {{ old('special_sector', $resident['special_sector']) === 'None' ? 'selected' : '' }}>None</option>
-                            <option value="Senior Citizen" {{ old('special_sector', $resident['special_sector']) === 'Senior Citizen' ? 'selected' : '' }}>Senior Citizen</option>
-                            <option value="PWD" {{ old('special_sector', $resident['special_sector']) === 'PWD' ? 'selected' : '' }}>PWD</option>
-                            <option value="Solo Parent" {{ old('special_sector', $resident['special_sector']) === 'Solo Parent' ? 'selected' : '' }}>Solo Parent</option>
-                            <option value="LGBTQ" {{ old('special_sector', $resident['special_sector']) === 'LGBTQ' ? 'selected' : '' }}>LGBTQ</option>
-                        </select>
                     </div>
 
                     <div class="col-md-4">
@@ -221,11 +222,11 @@
                         </select>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Province</label>
+                        <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">City</label>
                         <select class="form-select form-select-sm address-field" name="province" style="font-size: 0.8rem;">
-                            <option value="Metro Manila" {{ old('province', $resident['province']) === 'Metro Manila' ? 'selected' : '' }}>Metro Manila</option>
+                            <option value="Pasig City" {{ old('province', $resident['province']) === 'Pasig City' || old('province', $resident['province']) === 'Metro Manila' || !old('province', $resident['province']) ? 'selected' : '' }}>Pasig City</option>
                         </select>
-                        <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Fixed to Metro Manila</small>
+                        <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Fixed to Pasig City</small>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Zip Code</label>
@@ -234,7 +235,7 @@
                     <div class="col-md-12">
                         <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Full Address</label>
                         <textarea class="form-control form-control-sm" id="full_address_display" rows="2" readonly style="font-size: 0.8rem; background-color: #f8f9fa;"></textarea>
-                        <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Auto-filled from house no, street name and province above</small>
+                        <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Auto-filled from house no, street name and city above</small>
                     </div>
                 </div>
 
@@ -251,6 +252,7 @@
                             <option value="" {{ old('emergency_contact_relationship', $resident['emergency_contact_relationship']) === '' ? 'selected' : '' }}>Select...</option>
                             <option value="Husband" {{ old('emergency_contact_relationship', $resident['emergency_contact_relationship']) === 'Husband' ? 'selected' : '' }}>Husband</option>
                             <option value="Wife" {{ old('emergency_contact_relationship', $resident['emergency_contact_relationship']) === 'Wife' ? 'selected' : '' }}>Wife</option>
+                            <option value="Partner" {{ old('emergency_contact_relationship', $resident['emergency_contact_relationship']) === 'Partner' ? 'selected' : '' }}>Partner</option>
                             <option value="Mother" {{ old('emergency_contact_relationship', $resident['emergency_contact_relationship']) === 'Mother' ? 'selected' : '' }}>Mother</option>
                             <option value="Father" {{ old('emergency_contact_relationship', $resident['emergency_contact_relationship']) === 'Father' ? 'selected' : '' }}>Father</option>
                             <option value="Sibling" {{ old('emergency_contact_relationship', $resident['emergency_contact_relationship']) === 'Sibling' ? 'selected' : '' }}>Sibling</option>
