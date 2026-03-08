@@ -46,7 +46,9 @@ class ResidentController extends Controller
             $query->where(function ($q) use ($search) {
                 $q->where('first_name', 'like', "%{$search}%")
                   ->orWhere('last_name', 'like', "%{$search}%")
-                  ->orWhere('barangay', 'like', "%{$search}%");
+                  ->orWhere('barangay', 'like', "%{$search}%")
+                  // Allow searching by full name, e.g. "Test Ito"
+                  ->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$search}%"]);
             });
         }
 
@@ -75,6 +77,44 @@ class ResidentController extends Controller
         ]);
     }
 
+    /**
+     * JSON search endpoint for real-time resident search in the management table.
+     */
+    public function searchJson(Request $request)
+    {
+        $q = trim($request->input('q', ''));
+
+        $query = Resident::query();
+
+        if ($q !== '') {
+            $query->where(function ($clause) use ($q) {
+                $clause->where('first_name', 'like', "%{$q}%")
+                       ->orWhere('last_name', 'like', "%{$q}%")
+                       ->orWhere('middle_name', 'like', "%{$q}%")
+                       ->orWhere('barangay', 'like', "%{$q}%")
+                       ->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$q}%"])
+                       ->orWhereRaw("CONCAT(first_name, ' ', middle_name, ' ', last_name) LIKE ?", ["%{$q}%"]);
+            });
+        }
+
+        $residents = $query->orderByDesc('id')
+            ->limit(50)
+            ->get()
+            ->map(fn($r) => [
+                'id'             => $r->id,
+                'first_name'     => $r->first_name,
+                'last_name'      => $r->last_name,
+                'address'        => $this->formatAddress($r),
+                'contact_number' => $r->contact_number,
+                'email'          => $r->email,
+                'birth_date'     => $r->birth_date,
+                'gender'         => $r->gender,
+                'civil_status'   => $r->civil_status,
+            ]);
+
+        return response()->json(['residents' => $residents]);
+    }
+
     public function create()
     {
         return view('residents.create');
@@ -86,11 +126,11 @@ class ResidentController extends Controller
             'first_name' => ['required', 'string', 'max:255'],
             'middle_name' => ['nullable', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
+            'suffix' => ['nullable', 'string', 'max:20'],
             'gender' => ['required', 'in:Male,Female'],
             'birth_date' => ['required', 'date'],
             'civil_status' => ['required', 'string', 'max:255'],
             'nationality' => ['nullable', 'string', 'max:255'],
-            'special_sector' => ['nullable', 'string', 'max:255'],
             'barangay' => ['nullable', 'string', 'max:255'],
             'house_no' => ['nullable', 'string', 'max:255'],
             'street_name' => ['nullable', 'string', 'max:255'],
@@ -356,11 +396,11 @@ class ResidentController extends Controller
             'first_name' => $validated['first_name'],
             'middle_name' => $validated['middle_name'] ?? null,
             'last_name' => $validated['last_name'],
+            'suffix' => $validated['suffix'] ?? null,
             'gender' => $validated['gender'] ?? null,
             'birth_date' => $validated['birth_date'] ?? null,
             'civil_status' => $validated['civil_status'] ?? null,
             'nationality' => $validated['nationality'] ?? null,
-            'special_sector' => $validated['special_sector'] ?? null,
             'barangay' => $validated['barangay'] ?? null,
             'house_no' => $validated['house_no'] ?? null,
             'street_name' => $validated['street_name'] ?? null,
@@ -473,6 +513,7 @@ class ResidentController extends Controller
                 'first_name' => $resident->first_name,
                 'middle_name' => $resident->middle_name,
                 'last_name' => $resident->last_name,
+                'suffix' => $resident->suffix,
                 'gender' => $resident->gender,
                 'birth_date' => $resident->birth_date,
                 'age' => $resident->birth_date ? Carbon::parse($resident->birth_date)->age : null,
@@ -519,6 +560,7 @@ class ResidentController extends Controller
                 'first_name' => $resident->first_name,
                 'middle_name' => $resident->middle_name,
                 'last_name' => $resident->last_name,
+                'suffix' => $resident->suffix,
                 'gender' => $resident->gender,
                 'birth_date' => $resident->birth_date,
                 'civil_status' => $resident->civil_status,
@@ -558,6 +600,7 @@ class ResidentController extends Controller
             'first_name' => ['required', 'string', 'max:255'],
             'middle_name' => ['nullable', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
+            'suffix' => ['nullable', 'string', 'max:20'],
             'gender' => ['required', 'in:Male,Female'],
             'birth_date' => ['required', 'date'],
             'civil_status' => ['required', 'string', 'max:255'],
@@ -836,11 +879,11 @@ class ResidentController extends Controller
             'first_name' => 'required|string|max:100',
             'middle_name' => 'nullable|string|max:100',
             'last_name' => 'required|string|max:100',
+            'suffix' => 'nullable|string|max:20',
             'birth_date' => 'required|date|before:today',
             'gender' => 'required|in:Male,Female',
             'civil_status' => 'required|in:Single,Married,Widowed,Separated',
             'nationality' => 'nullable|string|max:50',
-            'special_sector' => 'nullable|string|max:50',
             'blood_type' => 'nullable|string|max:10',
             'house_no' => 'nullable|string|max:50',
             'street_name' => 'nullable|string|max:100',
@@ -979,11 +1022,11 @@ class ResidentController extends Controller
             'first_name' => $validated['first_name'],
             'middle_name' => $validated['middle_name'] ?? null,
             'last_name' => $validated['last_name'],
+            'suffix' => $validated['suffix'] ?? null,
             'birth_date' => $validated['birth_date'],
             'gender' => $validated['gender'],
             'civil_status' => $validated['civil_status'],
             'nationality' => $validated['nationality'] ?? 'Filipino',
-            'special_sector' => $validated['special_sector'] ?? null,
             'blood_type' => $validated['blood_type'] ?? null,
             'house_no' => $validated['house_no'] ?? null,
             'street_name' => $validated['street_name'] ?? null,

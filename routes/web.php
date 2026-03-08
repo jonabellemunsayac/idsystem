@@ -85,6 +85,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/dashboard/export/summary-pdf', [DashboardController::class, 'exportSummaryPDF'])->name('dashboard.export.summary.pdf');
 
     // Residents Management
+    Route::get('residents/search', [ResidentController::class, 'searchJson'])->name('residents.search');
     Route::resource('residents', ResidentController::class);
     Route::get('residents/export/excel', [ResidentController::class, 'export'])->name('residents.export');
 
