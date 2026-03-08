@@ -49,7 +49,7 @@
                         </div>
 
                         <!-- Body -->
-                        <div class="d-flex p-3 position-relative" style="gap: 12px; min-height: 240px;">
+                        <div class="d-flex p-3 position-relative" style="gap: 12px;">
                             <!-- Left Column: Photo, ID No & Signature -->
                             <div class="d-flex flex-column align-items-center" style="width: auto; flex-shrink: 0; gap: 4px;">
                                 <div class="bg-white d-flex align-items-center justify-content-center overflow-hidden rounded" style="width: 90px; height: 110px; background-color: #e9ecef;">
@@ -67,61 +67,64 @@
                                 <div class="text-center fw-bold" style="font-size: 0.75rem; letter-spacing: 0.5px; color: #0038A8;">RESIDENT</div>
                             </div>
 
-                            <!-- Right Column: Details -->
-                            <div class="flex-grow-1 d-flex flex-column position-relative" style="min-width: 0; padding-right: 90px;">
-                                <!-- Name -->
-                                <div class="mb-2">
-                                    <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1;">Last Name, First Name, Middle Name</div>
-                                    <div id="preview-name" class="fw-bold text-uppercase text-dark" style="font-size: 0.88rem; line-height: 1.15; color: #0038A8 !important; word-break: break-word; overflow-wrap: break-word;">
-                                        RESIDENT NAME
+                            <!-- Right Column: Details + QR/Sig -->
+                            <div class="flex-grow-1 d-flex" style="min-width: 0; gap: 8px;">
+                                <!-- Details -->
+                                <div class="d-flex flex-column flex-grow-1" style="min-width: 0;">
+                                    <!-- Name -->
+                                    <div class="mb-1">
+                                        <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1;">Last Name, First Name, Middle Name</div>
+                                        <div id="preview-name" class="fw-bold text-uppercase text-dark" style="font-size: 0.75rem; line-height: 1.15; color: #0038A8 !important; word-break: break-word; overflow-wrap: break-word;">
+                                            RESIDENT NAME
+                                        </div>
+                                    </div>
+
+                                    <!-- Grid Details -->
+                                    <div style="display: grid; grid-template-columns: auto auto auto; gap: 5px 8px; margin-bottom: 6px;">
+                                        <div>
+                                            <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1;">Sex</div>
+                                            <div id="preview-sex" class="fw-bold text-dark text-uppercase" style="font-size: 0.68rem; line-height: 1.2; white-space: nowrap;">-</div>
+                                        </div>
+                                        <div>
+                                            <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1;">Date of Birth</div>
+                                            <div id="preview-dob" class="fw-bold text-dark text-uppercase" style="font-size: 0.68rem; line-height: 1.2; white-space: nowrap;">-</div>
+                                        </div>
+                                        <div>
+                                            <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1;">Civil Status</div>
+                                            <div id="preview-status" class="fw-bold text-dark text-uppercase" style="font-size: 0.68rem; line-height: 1.2; white-space: nowrap;">-</div>
+                                        </div>
+                                        <div>
+                                            <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1;">Nationality</div>
+                                            <div id="preview-nationality" class="fw-bold text-dark text-uppercase" style="font-size: 0.68rem; line-height: 1.2; white-space: nowrap;">-</div>
+                                        </div>
+                                        <div>
+                                            <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1;">Valid Until</div>
+                                            <div id="preview-validity" class="fw-bold text-dark text-uppercase" style="font-size: 0.68rem; line-height: 1.2; white-space: nowrap;">-</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Address -->
+                                    <div>
+                                        <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1;">Address</div>
+                                        <div id="preview-address" class="fw-bold text-dark text-uppercase" style="font-size: 0.67rem; line-height: 1.25; word-break: break-word; overflow-wrap: break-word;">
+                                            -
+                                        </div>
                                     </div>
                                 </div>
 
-                                <!-- Grid Details -->
-                                <div style="display: grid; grid-template-columns: auto auto auto; gap: 5px 8px; margin-bottom: 6px;">
-                                    <div>
-                                        <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1;">Sex</div>
-                                        <div id="preview-sex" class="fw-bold text-dark text-uppercase" style="font-size: 0.8rem; line-height: 1.2; white-space: nowrap;">-</div>
-                                    </div>
-                                    <div>
-                                        <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1;">Date of Birth</div>
-                                        <div id="preview-dob" class="fw-bold text-dark text-uppercase" style="font-size: 0.8rem; line-height: 1.2; white-space: nowrap;">-</div>
-                                    </div>
-                                    <div>
-                                        <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1;">Civil Status</div>
-                                        <div id="preview-status" class="fw-bold text-dark text-uppercase" style="font-size: 0.8rem; line-height: 1.2; white-space: nowrap;">-</div>
-                                    </div>
-                                    <div>
-                                        <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1;">Nationality</div>
-                                        <div id="preview-nationality" class="fw-bold text-dark text-uppercase" style="font-size: 0.8rem; line-height: 1.2; white-space: nowrap;">-</div>
-                                    </div>
-                                    <div>
-                                        <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1;">Valid Until</div>
-                                        <div id="preview-validity" class="fw-bold text-dark text-uppercase" style="font-size: 0.8rem; line-height: 1.2; white-space: nowrap;">-</div>
-                                    </div>
-                                </div>
-
-                                <!-- Address -->
-                                <div class="mb-2">
-                                    <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1;">Address</div>
-                                    <div id="preview-address" class="fw-bold text-dark text-uppercase" style="font-size: 0.78rem; line-height: 1.25; word-break: break-word; overflow-wrap: break-word; margin-bottom: 8px;">
-                                        -
-                                    </div>
-                                </div>
-
-                                <!-- QR Code + Punong Barangay Signature -->
-                                <div class="position-absolute d-flex flex-column align-items-center" style="bottom: 8px; right: 0; text-align: center; width: 84px;">
-                                    <!-- QR Code -->
-                                    <div style="width: 52px; height: 52px; background: white; border: 2px solid #000; display: flex; align-items: center; justify-content: center; margin-bottom: 50px;">
+                                <!-- QR + Chairman Sig Column -->
+                                <div class="d-flex flex-column align-items-center flex-shrink-0" style="width: 72px; justify-content: space-between; padding-bottom: 4px;">
+                                    <!-- QR Code at top -->
+                                    <div style="width: 60px; height: 60px; background: white; border: 2px solid #000; display: flex; align-items: center; justify-content: center;">
                                         <img id="preview-qr" alt="QR Code" style="width: 100%; height: 100%; object-fit: contain;">
                                     </div>
-                                    <!-- Chairman Signature -->
+                                    <!-- Chairman Signature at bottom -->
                                     <div class="text-center w-100" style="position: relative;">
                                         <div style="position: absolute; top: -6px; left: 50%; transform: translateX(-50%); width: 75px; height: 16px; opacity: 1; z-index: 0;">
                                             <img src="{{ asset('storage/signatures/chairman.png') }}" alt="Signature" style="width: 100%; height: 100%; object-fit: contain;">
                                         </div>
                                         <div style="position: relative; z-index: 1;">
-                                            <div style="font-size: 0.55rem; font-weight: bold; color: #0038A8; line-height: 1.2; padding-top: 0px;">JESSIE B. GAVIOLA</div>
+                                            <div style="font-size: 0.55rem; font-weight: bold; color: #0038A8; line-height: 1.2; white-space: nowrap;">JESSIE B. GAVIOLA</div>
                                             <div style="border-top: 2px solid #000; margin: 2px auto 4px auto; width: 100%;"></div>
                                             <div style="font-size: 0.5rem; font-weight: bold; color: #0038A8; line-height: 1.2;">PUNONG BARANGAY</div>
                                         </div>
@@ -143,19 +146,19 @@
                             <table style="width: 100%; font-size: 0.95rem; border-collapse: collapse; margin-bottom: 6px;">
                                 <tr style="line-height: 1.6;">
                                     <td style="font-weight: bold; color: #000; width: 120px; padding: 0 4px 3px 0; text-align: right; white-space: nowrap;">NAME :</td>
-                                    <td style="color: #000; font-weight: bold; padding: 0 0 3px 4px;" id="preview-ec-name">_________________</td>
+                                    <td style="color: #000; font-weight: bold; padding: 0 0 3px 4px; text-transform: uppercase;" id="preview-ec-name">_________________</td>
                                 </tr>
                                 <tr style="line-height: 1.6;">
                                     <td style="font-weight: bold; color: #000; width: 120px; padding: 0 4px 3px 0; text-align: right; white-space: nowrap;">RELATION :</td>
-                                    <td style="color: #000; font-weight: bold; padding: 0 0 3px 4px;" id="preview-ec-relation">_________________</td>
+                                    <td style="color: #000; font-weight: bold; padding: 0 0 3px 4px; text-transform: uppercase;" id="preview-ec-relation">_________________</td>
                                 </tr>
                                 <tr style="line-height: 1.6;">
                                     <td style="font-weight: bold; color: #000; width: 120px; padding: 0 4px 3px 0; text-align: right; white-space: nowrap;">ADDRESS :</td>
-                                    <td style="color: #000; font-weight: bold; padding: 0 0 3px 4px;" id="preview-ec-address">_________________</td>
+                                    <td style="color: #000; font-weight: bold; padding: 0 0 3px 4px; text-transform: uppercase;" id="preview-ec-address">_________________</td>
                                 </tr>
                                 <tr style="line-height: 1.6;">
                                     <td style="font-weight: bold; color: #000; width: 120px; padding: 0 4px 0 0; text-align: right; white-space: nowrap;">CONTACT NO. :</td>
-                                    <td style="color: #000; font-weight: bold; padding: 0 0 0 4px;" id="preview-ec-no">_________________</td>
+                                    <td style="color: #000; font-weight: bold; padding: 0 0 0 4px; text-transform: uppercase;" id="preview-ec-no">_________________</td>
                                 </tr>
                             </table>
 
@@ -191,7 +194,7 @@
                         <!-- IF FOUND Text - Bottom Section -->
                         <div style="position: absolute; bottom: 3px; left: 10px; right: 10px; text-align: center; z-index: 2;">
                             <div style="font-size: 0.5rem; color: #666; line-height: 1.2;">
-                                IF FOUND, PLEASE RETURN TO KALAWAAN<br>BARANGAY HALL INFORMATION CENTER
+                                IF FOUND, PLEASE RETURN TO KALAWAAN BARANGAY HALL INFORMATION CENTER
                             </div>
                         </div>
 
@@ -692,10 +695,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 .resident-label { font-size: 5.5px; font-weight: bold; color: #0038A8; letter-spacing: 0.5px; line-height: 1.1; }
 
                 /* Right Col */
-                .right-col { flex: 1; display: flex; flex-direction: column; position: relative; min-width: 0; padding-right: 72px; padding-bottom: 4px; }
-                .field-label { font-size: 6px; color: #6c757d; text-transform: uppercase; margin-bottom: 0.5px; }
-                .field-value { font-size: 8.5px; font-weight: bold; color: #212529; line-height: 1.2; word-break: break-word; text-transform: uppercase; }
-                .name-value { font-size: 9.5px; color: #0038A8; text-transform: uppercase; margin-bottom: 5px; line-height: 1.1; }
+                .right-col { flex: 1; display: flex; flex-direction: row; min-width: 0; gap: 8px; }
+                .details-col { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+                .qr-col { width: 65px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding-bottom: 4px; }
+                .field-label { font-size: 5px; color: #6c757d; text-transform: uppercase; margin-bottom: 0.5px; }
+                .field-value { font-size: 7px; font-weight: bold; color: #212529; line-height: 1.2; word-break: break-word; text-transform: uppercase; }
+                .name-value { font-size: 8px; color: #0038A8; text-transform: uppercase; margin-bottom: 5px; line-height: 1.1; }
 
                 .grid-container { display: grid; grid-template-columns: auto auto auto; gap: 3px 8px; margin-bottom: 5px; }
                 .grid-item { }
@@ -756,47 +761,46 @@ document.addEventListener('DOMContentLoaded', function() {
                   </div>
                   
                   <div class="right-col">
-                      <div class="field-label">Last Name, First Name, Middle Name</div>
-                      <div class="field-value name-value">${currentResident.last_name}, ${currentResident.first_name}${currentResident.middle_name ? ', ' + currentResident.middle_name : ''}${currentResident.suffix ? ' ' + currentResident.suffix : ''}</div>
-                      
-                      <div class="grid-container">
-                          <div class="grid-item">
-                              <div class="field-label">Sex</div>
-                              <div class="field-value" style="white-space: nowrap;">${currentResident.gender || '-'}</div>
+                      <div class="details-col">
+                          <div class="field-label">Last Name, First Name, Middle Name</div>
+                          <div class="field-value name-value">${currentResident.last_name}, ${currentResident.first_name}${currentResident.middle_name ? ', ' + currentResident.middle_name : ''}${currentResident.suffix ? ' ' + currentResident.suffix : ''}</div>
+                          
+                          <div class="grid-container">
+                              <div class="grid-item">
+                                  <div class="field-label">Sex</div>
+                                  <div class="field-value" style="white-space: nowrap;">${currentResident.gender || '-'}</div>
+                              </div>
+                              <div class="grid-item">
+                                  <div class="field-label">Date of Birth</div>
+                                  <div class="field-value" style="white-space: nowrap;">${formatDate(currentResident.birth_date)}</div>
+                              </div>
+                              <div class="grid-item">
+                                  <div class="field-label">Status</div>
+                                  <div class="field-value" style="white-space: nowrap;">${currentResident.civil_status || '-'}</div>
+                              </div>
+                              <div class="grid-item">
+                                  <div class="field-label">Nationality</div>
+                                  <div class="field-value" style="white-space: nowrap;">${currentResident.nationality || 'FILIPINO'}</div>
+                              </div>
+                              <div class="grid-item">
+                                  <div class="field-label">Valid Until</div>
+                                  <div class="field-value" style="white-space: nowrap;">${formatDate(currentID.expiration_date)}</div>
+                              </div>
                           </div>
-                          <div class="grid-item">
-                              <div class="field-label">Date of Birth</div>
-                              <div class="field-value" style="white-space: nowrap;">${formatDate(currentResident.birth_date)}</div>
-                          </div>
-                          <div class="grid-item">
-                              <div class="field-label">Status</div>
-                              <div class="field-value" style="white-space: nowrap;">${currentResident.civil_status || '-'}</div>
-                          </div>
-                          <div class="grid-item">
-                              <div class="field-label">Nationality</div>
-                              <div class="field-value" style="white-space: nowrap;">${currentResident.nationality || 'FILIPINO'}</div>
-                          </div>
-                          <div class="grid-item">
-                              <div class="field-label">Valid Until</div>
-                              <div class="field-value" style="white-space: nowrap;">${formatDate(currentID.expiration_date)}</div>
-                          </div>
+
+                          <div class="field-label">Address</div>
+                          <div class="field-value" style="font-size: 7px; line-height: 1.25; text-transform: uppercase; word-break: break-word; max-width: 100%; overflow-wrap: break-word;">${currentResident.address || '-'}</div>
                       </div>
-
-                      <div class="field-label">Address</div>
-                      <div class="field-value" style="font-size: 8px; line-height: 1.25; text-transform: uppercase; margin-bottom: 6px; word-break: break-word; max-width: 100%; overflow-wrap: break-word;">${currentResident.address || '-'}</div>
-
-                      <div style="position: absolute; bottom: 8px; right: 8px; text-align: center; display: flex; flex-direction: column; align-items: center; width: 75px;">
-                          <!-- QR Code -->
-                          <div style="width: 50px; height: 50px; background: white; border: 1px solid #000; display: flex; align-items: center; justify-content: center; margin-bottom: 40px; margin-left: 10px;">
-                              <img src="${currentID.qr_code}" alt="QR" style="width: 100%; height: 100%; object-fit: contain;">
+                      <div class="qr-col">
+                          <div style="width: 56px; height: 56px;display: flex; align-items: center; justify-content: center;">
+                              <img src="${currentID.qr_code}" alt="QR" style="width: 90%; height: 90%; object-fit: contain;">
                           </div>
-                          <!-- Chairman Signature -->
-                          <div style="text-align: center; width: 70px; position: relative;">
+                          <div style="text-align: center; width: 65px; position: relative;">
                               <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 75px; height: 24px; opacity: 1; z-index: 0;">
                                   <img src="${window.location.origin}/storage/signatures/chairman.png" alt="Signature" style="width: 100%; height: 100%; object-fit: contain;">
                               </div>
                               <div style="position: relative; z-index: 1;">
-                                  <div style="font-size: 7px; font-weight: bold; color: #0038A8; line-height: 1.1; padding-top: 0px;">JESSIE B. GAVIOLA</div>
+                                  <div style="font-size: 7px; font-weight: bold; color: #0038A8; line-height: 1.1; white-space: nowrap;">JESSIE B. GAVIOLA</div>
                                   <div style="border-top: 1.5px solid #000; margin: 1px auto 2px auto; width: 100%;"></div>
                                   <div style="font-size: 5.5px; font-weight: bold; color: #0038A8; line-height: 1.1;">PUNONG BARANGAY</div>
                               </div>
@@ -816,19 +820,19 @@ document.addEventListener('DOMContentLoaded', function() {
                   <table style="width: 100%; font-size: 10px; border-collapse: collapse; margin-bottom: 6px;">
                     <tr style="line-height: 1.6;">
                       <td style="font-weight: bold; color: #000; width: 85px; padding: 0 4px 3px 0; text-align: right; white-space: nowrap;">NAME :</td>
-                      <td style="color: #000; font-weight: bold; padding: 0 0 3px 4px;">${currentResident.emergency_contact_name || '_________________'}</td>
+                      <td style="color: #000; font-weight: bold; padding: 0 0 3px 4px; text-transform: uppercase;">${currentResident.emergency_contact_name || '_________________'}</td>
                     </tr>
                     <tr style="line-height: 1.6;">
                       <td style="font-weight: bold; color: #000; width: 85px; padding: 0 4px 3px 0; text-align: right; white-space: nowrap;">RELATION :</td>
-                      <td style="color: #000; font-weight: bold; padding: 0 0 3px 4px;">${currentResident.emergency_contact_relationship || '_________________'}</td>
+                      <td style="color: #000; font-weight: bold; padding: 0 0 3px 4px; text-transform: uppercase;">${currentResident.emergency_contact_relationship || '_________________'}</td>
                     </tr>
                     <tr style="line-height: 1.6;">
                       <td style="font-weight: bold; color: #000; width: 85px; padding: 0 4px 3px 0; text-align: right; white-space: nowrap;">ADDRESS :</td>
-                      <td style="color: #000; font-weight: bold; padding: 0 0 3px 4px;">${currentResident.emergency_contact_address || '_________________'}</td>
+                      <td style="color: #000; font-weight: bold; padding: 0 0 3px 4px; text-transform: uppercase;">${currentResident.emergency_contact_address || '_________________'}</td>
                     </tr>
                     <tr style="line-height: 1.6;">
                       <td style="font-weight: bold; color: #000; width: 85px; padding: 0 4px 0 0; text-align: right; white-space: nowrap;">CONTACT NO. :</td>
-                      <td style="color: #000; font-weight: bold; padding: 0 0 0 4px;">${currentResident.emergency_contact_no || '_________________'}</td>
+                      <td style="color: #000; font-weight: bold; padding: 0 0 0 4px; text-transform: uppercase;">${currentResident.emergency_contact_no || '_________________'}</td>
                     </tr>
                   </table>
 
@@ -960,10 +964,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 .resident-label { font-size: 5.5px; font-weight: bold; color: #0038A8; letter-spacing: 0.5px; line-height: 1.1; }
 
                 /* Right Col */
-                .right-col { flex: 1; display: flex; flex-direction: column; position: relative; min-width: 0; padding-right: 30px; padding-bottom: 4px; }
-                .field-label { font-size: 5px; color: #6c757d; text-transform: uppercase; margin-bottom: 0.5px; }
-                .field-value { font-size: 8px; font-weight: bold; color: #212529; line-height: 1.2; word-break: break-word; text-transform: uppercase; }
-                .name-value { font-size: 8px; color: #0038A8; text-transform: uppercase; margin-bottom: 6px; line-height: 1.1; }
+                .right-col { flex: 1; display: flex; flex-direction: row; min-width: 0; gap: 8px; }
+                .details-col { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+                .qr-col { width: 65px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding-bottom: 4px; }
+                .field-label { font-size: 4.5px; color: #6c757d; text-transform: uppercase; margin-bottom: 0.5px; }
+                .field-value { font-size: 7px; font-weight: bold; color: #212529; line-height: 1.2; word-break: break-word; text-transform: uppercase; }
+                .name-value { font-size: 7px; color: #0038A8; text-transform: uppercase; margin-bottom: 6px; line-height: 1.1; }
 
                 .grid-container { display: grid; grid-template-columns: auto auto auto; gap: 3px 8px; margin-bottom: 4px; }
                 .grid-item { }
