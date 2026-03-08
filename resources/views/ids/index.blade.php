@@ -74,39 +74,39 @@
                                     <!-- Name -->
                                     <div class="mb-1">
                                         <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1;">Last Name, First Name, Middle Name</div>
-                                        <div id="preview-name" class="fw-bold text-uppercase text-dark" style="font-size: 0.82rem; line-height: 1.15; color: #0038A8 !important; word-break: break-word; overflow-wrap: break-word;">
+                                        <div id="preview-name" class="fw-bold text-uppercase text-dark" style="font-size: 0.82rem; line-height: 1.15; color: #0038A8 !important; overflow-wrap: break-word; letter-spacing: 0; word-spacing: 0;">
                                             RESIDENT NAME
                                         </div>
                                     </div>
 
                                     <!-- Grid Details -->
-                                    <div style="display: grid; grid-template-columns: auto auto auto; gap: 5px 8px; margin-bottom: 6px;">
+                                    <div style="display: grid; grid-template-columns: auto auto auto; justify-content: start; gap: 5px 12px; margin-bottom: 6px;">
                                         <div>
                                             <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1;">Sex</div>
-                                            <div id="preview-sex" class="fw-bold text-dark text-uppercase" style="font-size: 0.75rem; line-height: 1.2; white-space: nowrap;">-</div>
+                                            <div id="preview-sex" class="fw-bold text-dark text-uppercase" style="font-size: 0.75rem; line-height: 1.2; white-space: nowrap; letter-spacing: 0; word-spacing: 0;">-</div>
                                         </div>
                                         <div>
-                                            <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1;">Date of Birth</div>
-                                            <div id="preview-dob" class="fw-bold text-dark text-uppercase" style="font-size: 0.75rem; line-height: 1.2; white-space: nowrap;">-</div>
+                                            <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1; letter-spacing: 0;">Date of Birth</div>
+                                            <div id="preview-dob" class="fw-bold text-dark text-uppercase" style="font-size: 0.75rem; line-height: 1.2; white-space: nowrap; letter-spacing: 0; word-spacing: 0;">-</div>
                                         </div>
                                         <div>
-                                            <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1;">Civil Status</div>
-                                            <div id="preview-status" class="fw-bold text-dark text-uppercase" style="font-size: 0.75rem; line-height: 1.2; white-space: nowrap;">-</div>
+                                            <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1; letter-spacing: 0;">Civil Status</div>
+                                            <div id="preview-status" class="fw-bold text-dark text-uppercase" style="font-size: 0.75rem; line-height: 1.2; white-space: nowrap; letter-spacing: 0; word-spacing: 0;">-</div>
                                         </div>
                                         <div>
-                                            <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1;">Nationality</div>
-                                            <div id="preview-nationality" class="fw-bold text-dark text-uppercase" style="font-size: 0.75rem; line-height: 1.2; white-space: nowrap;">-</div>
+                                            <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1; letter-spacing: 0;">Nationality</div>
+                                            <div id="preview-nationality" class="fw-bold text-dark text-uppercase" style="font-size: 0.75rem; line-height: 1.2; white-space: nowrap; letter-spacing: 0; word-spacing: 0;">-</div>
                                         </div>
                                         <div>
-                                            <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1;">Valid Until</div>
-                                            <div id="preview-validity" class="fw-bold text-dark text-uppercase" style="font-size: 0.75rem; line-height: 1.2; white-space: nowrap;">-</div>
+                                            <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1; letter-spacing: 0;">Valid Until</div>
+                                            <div id="preview-validity" class="fw-bold text-dark text-uppercase" style="font-size: 0.75rem; line-height: 1.2; white-space: nowrap; letter-spacing: 0; word-spacing: 0;">-</div>
                                         </div>
                                     </div>
 
                                     <!-- Address -->
                                     <div>
                                         <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1;">Address</div>
-                                        <div id="preview-address" class="fw-bold text-dark text-uppercase" style="font-size: 0.74rem; line-height: 1.25; word-break: break-word; overflow-wrap: break-word;">
+                                        <div id="preview-address" class="fw-bold text-dark text-uppercase" style="font-size: 0.74rem; line-height: 1.25; overflow-wrap: break-word; letter-spacing: 0; word-spacing: 0;">
                                             -
                                         </div>
                                     </div>
@@ -741,11 +741,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 .right-col { flex: 1; display: flex; flex-direction: row; min-width: 0; gap: 8px; }
                 .details-col { flex: 1; min-width: 0; display: flex; flex-direction: column; }
                 .qr-col { width: 65px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding-bottom: 4px; }
-                .field-label { font-size: 6px; color: #6c757d; text-transform: uppercase; margin-bottom: 0.5px; }
-                .field-value { font-size: 8px; font-weight: bold; color: #212529; line-height: 1.2; word-break: break-word; text-transform: uppercase; }
-                .name-value { font-size: 9px; color: #0038A8; text-transform: uppercase; margin-bottom: 5px; line-height: 1.1; }
+                .field-label { font-size: 6px; color: #6c757d; text-transform: uppercase; margin-bottom: 0.5px; letter-spacing: 0; word-spacing: 0; }
+                .field-value { font-size: 8px; font-weight: bold; color: #212529; line-height: 1.2; overflow-wrap: break-word; text-transform: uppercase; letter-spacing: 0; word-spacing: 0; }
+                .name-value { font-size: 9px; color: #0038A8; text-transform: uppercase; margin-bottom: 5px; line-height: 1.1; letter-spacing: 0; word-spacing: 0; }
 
-                .grid-container { display: grid; grid-template-columns: auto auto auto; gap: 3px 8px; margin-bottom: 5px; }
+                .grid-container { display: grid; grid-template-columns: auto auto auto; justify-content: start; gap: 3px 12px; margin-bottom: 5px; }
                 .grid-item { }
                 
                 .qr-section { position: absolute; bottom: 0; right: 0; text-align: center; padding: 4px; }
@@ -832,10 +832,10 @@ document.addEventListener('DOMContentLoaded', function() {
                           </div>
 
                           <div class="field-label">Address</div>
-                          <div class="field-value" style="font-size: 8px; line-height: 1.25; text-transform: uppercase; word-break: break-word; max-width: 100%; overflow-wrap: break-word;">${currentResident.address || '-'}</div>
+                          <div class="field-value" style="font-size: 8px; line-height: 1.25; text-transform: uppercase; overflow-wrap: break-word; max-width: 100%;">${currentResident.address || '-'}</div>
                       </div>
                       <div class="qr-col">
-                          <div style="width: 56px; height: 56px;display: flex; align-items: center; justify-content: center;">
+                          <div style="width: 56px; height: 56px;display: flex; align-items: center; justify-content: center; margin-top: 27px;">
                               <img src="${currentID.qr_code}" alt="QR" style="width: 90%; height: 90%; object-fit: contain;">
                           </div>
                           <div style="text-align: center; width: 65px; position: relative;">
@@ -926,7 +926,7 @@ document.addEventListener('DOMContentLoaded', function() {
               <style>
                 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
                 html, body { margin: 0; padding: 0; height: 100%; }
-                body { font-family: sans-serif; background: white; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                body { font-family: Arial, Helvetica, sans-serif; background: white; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
                 
                 .id-card { 
                   position: relative; 
@@ -1010,11 +1010,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 .right-col { flex: 1; display: flex; flex-direction: row; min-width: 0; gap: 8px; }
                 .details-col { flex: 1; min-width: 0; display: flex; flex-direction: column; }
                 .qr-col { width: 65px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding-bottom: 4px; }
-                .field-label { font-size: 5.5px; color: #6c757d; text-transform: uppercase; margin-bottom: 0.5px; }
-                .field-value { font-size: 8px; font-weight: bold; color: #212529; line-height: 1.2; word-break: break-word; text-transform: uppercase; }
-                .name-value { font-size: 8px; color: #0038A8; text-transform: uppercase; margin-bottom: 6px; line-height: 1.1; }
+                .field-label { font-size: 5.5px; color: #6c757d; text-transform: uppercase; margin-bottom: 0.5px; letter-spacing: 0; word-spacing: 0; }
+                .field-value { font-size: 8px; font-weight: bold; color: #212529; line-height: 1.2; overflow-wrap: break-word; text-transform: uppercase; letter-spacing: 0; word-spacing: 0; }
+                .name-value { font-size: 8px; color: #0038A8; text-transform: uppercase; margin-bottom: 6px; line-height: 1.1; letter-spacing: 0; word-spacing: 0; }
 
-                .grid-container { display: grid; grid-template-columns: auto auto auto; gap: 3px 8px; margin-bottom: 4px; }
+                .grid-container { display: grid; grid-template-columns: auto auto auto; justify-content: start; gap: 3px 12px; margin-bottom: 4px; }
                 .grid-item { }
                 
                 .qr-section { position: absolute; bottom: 0; right: 0; text-align: center; padding: 4px; }
