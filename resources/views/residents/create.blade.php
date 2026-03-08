@@ -1138,6 +1138,18 @@ document.addEventListener('click', function(e) {
         }
     }
 }, false);
+
+// Refresh CSRF token every 30 minutes to prevent 419 on long form sessions
+setInterval(function () {
+    fetch('/csrf-refresh')
+        .then(r => r.json())
+        .then(data => {
+            document.querySelectorAll('input[name="_token"]').forEach(el => el.value = data.token);
+            const meta = document.querySelector('meta[name="csrf-token"]');
+            if (meta) meta.setAttribute('content', data.token);
+        })
+        .catch(() => {});
+}, 30 * 60 * 1000);
 </script>
 
 @endsection
