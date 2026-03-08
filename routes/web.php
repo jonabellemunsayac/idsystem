@@ -27,6 +27,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 
+// CSRF token refresh endpoint (keeps long forms alive)
+Route::get('/csrf-refresh', function () {
+    return response()->json(['token' => csrf_token()]);
+})->name('csrf.refresh');
+
 // Public website routes (dynamic from database)
 Route::get('/', [PublicPageController::class, 'home'])->name('public.home');
 Route::get('/about', fn () => app(PublicPageController::class)->show('about'))->name('public.about');
