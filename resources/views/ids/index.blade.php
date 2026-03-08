@@ -32,7 +32,7 @@
                         <!-- Header -->
                         <div class="position-relative d-flex align-items-center px-3 py-2" style="background: linear-gradient(90deg, rgba(38,143,255,0.85) 0%, rgba(255,255,255,0.85) 50%, rgba(0,48,103,0.85) 100%), url('/images/kalawaan_hall.jpg') center/cover; min-height: 60px; color: #003067;">
                             <div class="d-flex align-items-center gap-2 w-100" style="position: relative; z-index: 1;">
-                                <div class="d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; flex-shrink: 0;">
+                                <div class="d-flex align-items-center justify-content-center" style="width: 55px; height: 55px; flex-shrink: 0;">
                                     <img src="/images/OIP.jpg" alt="Barangay Logo" style="width: 100%; height: 100%; object-fit: contain; border-radius: 50%;">
                                 </div>
                                 <div class="flex-grow-1 text-center" style="line-height: 1.1;">
@@ -42,7 +42,7 @@
                                     <h3 style="font-size: 1rem; font-weight: 800; margin: 0; text-transform: uppercase; letter-spacing: 0.5px;">Barangay Kalawaan</h3>
                                     
                                 </div>
-                                <div class="d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; flex-shrink: 0;">
+                                <div class="d-flex align-items-center justify-content-center" style="width: 55px; height: 55px; flex-shrink: 0;">
                                     <img src="/images/Pasig_City_Seal_Logo.svg" alt="Pasig Logo" style="width: 90%; height: 90%; object-fit: contain;">
                                 </div>
                             </div>
@@ -74,7 +74,7 @@
                                     <!-- Name -->
                                     <div class="mb-1">
                                         <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1;">Last Name, First Name, Middle Name</div>
-                                        <div id="preview-name" class="fw-bold text-uppercase text-dark" style="font-size: 0.75rem; line-height: 1.15; color: #0038A8 !important; word-break: break-word; overflow-wrap: break-word;">
+                                        <div id="preview-name" class="fw-bold text-uppercase text-dark" style="font-size: 0.82rem; line-height: 1.15; color: #0038A8 !important; word-break: break-word; overflow-wrap: break-word;">
                                             RESIDENT NAME
                                         </div>
                                     </div>
@@ -83,30 +83,30 @@
                                     <div style="display: grid; grid-template-columns: auto auto auto; gap: 5px 8px; margin-bottom: 6px;">
                                         <div>
                                             <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1;">Sex</div>
-                                            <div id="preview-sex" class="fw-bold text-dark text-uppercase" style="font-size: 0.68rem; line-height: 1.2; white-space: nowrap;">-</div>
+                                            <div id="preview-sex" class="fw-bold text-dark text-uppercase" style="font-size: 0.75rem; line-height: 1.2; white-space: nowrap;">-</div>
                                         </div>
                                         <div>
                                             <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1;">Date of Birth</div>
-                                            <div id="preview-dob" class="fw-bold text-dark text-uppercase" style="font-size: 0.68rem; line-height: 1.2; white-space: nowrap;">-</div>
+                                            <div id="preview-dob" class="fw-bold text-dark text-uppercase" style="font-size: 0.75rem; line-height: 1.2; white-space: nowrap;">-</div>
                                         </div>
                                         <div>
                                             <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1;">Civil Status</div>
-                                            <div id="preview-status" class="fw-bold text-dark text-uppercase" style="font-size: 0.68rem; line-height: 1.2; white-space: nowrap;">-</div>
+                                            <div id="preview-status" class="fw-bold text-dark text-uppercase" style="font-size: 0.75rem; line-height: 1.2; white-space: nowrap;">-</div>
                                         </div>
                                         <div>
                                             <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1;">Nationality</div>
-                                            <div id="preview-nationality" class="fw-bold text-dark text-uppercase" style="font-size: 0.68rem; line-height: 1.2; white-space: nowrap;">-</div>
+                                            <div id="preview-nationality" class="fw-bold text-dark text-uppercase" style="font-size: 0.75rem; line-height: 1.2; white-space: nowrap;">-</div>
                                         </div>
                                         <div>
                                             <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1;">Valid Until</div>
-                                            <div id="preview-validity" class="fw-bold text-dark text-uppercase" style="font-size: 0.68rem; line-height: 1.2; white-space: nowrap;">-</div>
+                                            <div id="preview-validity" class="fw-bold text-dark text-uppercase" style="font-size: 0.75rem; line-height: 1.2; white-space: nowrap;">-</div>
                                         </div>
                                     </div>
 
                                     <!-- Address -->
                                     <div>
                                         <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1;">Address</div>
-                                        <div id="preview-address" class="fw-bold text-dark text-uppercase" style="font-size: 0.67rem; line-height: 1.25; word-break: break-word; overflow-wrap: break-word;">
+                                        <div id="preview-address" class="fw-bold text-dark text-uppercase" style="font-size: 0.74rem; line-height: 1.25; word-break: break-word; overflow-wrap: break-word;">
                                             -
                                         </div>
                                     </div>
@@ -253,6 +253,12 @@
                                 <i class="bi bi-printer me-2"></i> Print Back
                             </button>
                         </div>
+
+                        <!-- Under-18 warning -->
+                        <div id="age-warning" class="alert alert-danger d-flex align-items-center gap-2 py-2 px-3 mt-3 mb-0" style="display: none !important;">
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+                            <span class="small fw-bold">This resident is <strong>under 18 years old</strong>. Barangay ID printing is not allowed for minors.</span>
+                        </div>
                     </div>
                     
                     <div id="generating-loader" class="alert alert-info py-2 px-3 mb-0 text-center" style="display: none;">
@@ -300,6 +306,38 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentResident = null;
     let currentID = null;
     let debounceTimer;
+
+    function isUnder18(birthDate) {
+        if (!birthDate) return false;
+        const today = new Date();
+        const dob = new Date(birthDate + 'T00:00:00');
+        let age = today.getFullYear() - dob.getFullYear();
+        const m = today.getMonth() - dob.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) age--;
+        return age < 18;
+    }
+
+    function applyAgeRestriction(resident) {
+        const ageWarning = document.getElementById('age-warning');
+        const minor = isUnder18(resident.birth_date);
+        if (minor) {
+            printFrontBtn.disabled = true;
+            printFrontBtn.style.opacity = '0.5';
+            printFrontBtn.style.cursor = 'not-allowed';
+            printBackBtn.disabled = true;
+            printBackBtn.style.opacity = '0.5';
+            printBackBtn.style.cursor = 'not-allowed';
+            ageWarning.style.cssText = 'display: flex !important;';
+        } else {
+            printFrontBtn.disabled = false;
+            printFrontBtn.style.opacity = '';
+            printFrontBtn.style.cursor = '';
+            printBackBtn.disabled = false;
+            printBackBtn.style.opacity = '';
+            printBackBtn.style.cursor = '';
+            ageWarning.style.cssText = 'display: none !important;';
+        }
+    }
 
     // Search Handler
     searchInput.addEventListener('input', function(e) {
@@ -369,6 +407,9 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Update Preview
         updatePreview(resident);
+        
+        // Apply age restriction
+        applyAgeRestriction(resident);
         
         // Auto Generate ID
         generateID(resident);
@@ -552,12 +593,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // Print Front Handler
     printFrontBtn.addEventListener('click', function() {
         if (!currentResident || !currentID) return;
+        if (isUnder18(currentResident.birth_date)) return;
         printCard('front');
     });
 
     // Print Back Handler
     printBackBtn.addEventListener('click', function() {
         if (!currentResident || !currentID) return;
+        if (isUnder18(currentResident.birth_date)) return;
         printCard('back');
     });
 
@@ -698,9 +741,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 .right-col { flex: 1; display: flex; flex-direction: row; min-width: 0; gap: 8px; }
                 .details-col { flex: 1; min-width: 0; display: flex; flex-direction: column; }
                 .qr-col { width: 65px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding-bottom: 4px; }
-                .field-label { font-size: 5px; color: #6c757d; text-transform: uppercase; margin-bottom: 0.5px; }
-                .field-value { font-size: 7px; font-weight: bold; color: #212529; line-height: 1.2; word-break: break-word; text-transform: uppercase; }
-                .name-value { font-size: 8px; color: #0038A8; text-transform: uppercase; margin-bottom: 5px; line-height: 1.1; }
+                .field-label { font-size: 6px; color: #6c757d; text-transform: uppercase; margin-bottom: 0.5px; }
+                .field-value { font-size: 8px; font-weight: bold; color: #212529; line-height: 1.2; word-break: break-word; text-transform: uppercase; }
+                .name-value { font-size: 9px; color: #0038A8; text-transform: uppercase; margin-bottom: 5px; line-height: 1.1; }
 
                 .grid-container { display: grid; grid-template-columns: auto auto auto; gap: 3px 8px; margin-bottom: 5px; }
                 .grid-item { }
@@ -789,7 +832,7 @@ document.addEventListener('DOMContentLoaded', function() {
                           </div>
 
                           <div class="field-label">Address</div>
-                          <div class="field-value" style="font-size: 7px; line-height: 1.25; text-transform: uppercase; word-break: break-word; max-width: 100%; overflow-wrap: break-word;">${currentResident.address || '-'}</div>
+                          <div class="field-value" style="font-size: 8px; line-height: 1.25; text-transform: uppercase; word-break: break-word; max-width: 100%; overflow-wrap: break-word;">${currentResident.address || '-'}</div>
                       </div>
                       <div class="qr-col">
                           <div style="width: 56px; height: 56px;display: flex; align-items: center; justify-content: center;">
@@ -929,8 +972,8 @@ document.addEventListener('DOMContentLoaded', function() {
                   print-color-adjust: exact;
                 }
                 .header-logo { 
-                  width: 35px; 
-                  height: 35px; 
+                  width: 42px; 
+                  height: 42px; 
                   border-radius: 50%; 
                   display: flex; 
                   align-items: center; 
@@ -967,9 +1010,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 .right-col { flex: 1; display: flex; flex-direction: row; min-width: 0; gap: 8px; }
                 .details-col { flex: 1; min-width: 0; display: flex; flex-direction: column; }
                 .qr-col { width: 65px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding-bottom: 4px; }
-                .field-label { font-size: 4.5px; color: #6c757d; text-transform: uppercase; margin-bottom: 0.5px; }
-                .field-value { font-size: 7px; font-weight: bold; color: #212529; line-height: 1.2; word-break: break-word; text-transform: uppercase; }
-                .name-value { font-size: 7px; color: #0038A8; text-transform: uppercase; margin-bottom: 6px; line-height: 1.1; }
+                .field-label { font-size: 5.5px; color: #6c757d; text-transform: uppercase; margin-bottom: 0.5px; }
+                .field-value { font-size: 8px; font-weight: bold; color: #212529; line-height: 1.2; word-break: break-word; text-transform: uppercase; }
+                .name-value { font-size: 8px; color: #0038A8; text-transform: uppercase; margin-bottom: 6px; line-height: 1.1; }
 
                 .grid-container { display: grid; grid-template-columns: auto auto auto; gap: 3px 8px; margin-bottom: 4px; }
                 .grid-item { }
