@@ -90,6 +90,7 @@ class IDController extends Controller
                 'first_name' => $r->first_name,
                 'middle_name' => $r->middle_name,
                 'last_name' => $r->last_name,
+                'suffix' => $r->suffix,
                 'address' => $this->formatAddress($r),
                 'profile_image' => $r->profile_image,
                 'signature' => $r->signature,
