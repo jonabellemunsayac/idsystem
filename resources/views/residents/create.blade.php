@@ -201,6 +201,17 @@
                     </select>
                 </div>
                 <div class="col-md-4">
+                    <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Sector <span class="text-muted">(Optional)</span></label>
+                    <select class="form-select form-select-sm" name="special_sector" style="font-size: 0.8rem;">
+                        <option value="">Select...</option>
+                        <option value="Senior Citizen">Senior Citizen</option>
+                        <option value="PWD">PWD</option>
+                        <option value="LGBTQ">LGBTQ</option>
+                        <option value="Solo Parent">Solo Parent</option>
+                        <option value="None">None</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
                     <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Barangay</label>
                     <input type="text" class="form-control form-control-sm" name="barangay" value="Kalawaan" readonly style="font-size: 0.8rem;">
                 </div>
@@ -230,7 +241,7 @@
             <h6 class="fw-bold mb-2 mt-2" style="font-size: 0.8rem;">Address</h6>
             <div class="row g-2 mb-2">
                 <div class="col-md-6">
-                    <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">House No</label>
+                    <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">House No./Unit/Bldg</label>
                     <input type="text" class="form-control form-control-sm address-field" name="house_no" placeholder="Optional" style="font-size: 0.8rem;">
                     <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Optional</small>
                 </div>
@@ -239,6 +250,7 @@
                     <select class="form-select form-select-sm address-field" name="street_name" style="font-size: 0.8rem;">
                         <option value="">Select Street...</option>
                         <option value="A.V Jimenez St">A.V Jimenez St</option>
+                        <option value="AB. Kamagong">AB. Kamagong</option>
                         <option value="Acacia St">Acacia St</option>
                         <option value="Alley 1 St">Alley 1 St</option>
                         <option value="Alley 2 St">Alley 2 St</option>
@@ -257,6 +269,7 @@
                         <option value="Casoy St">Casoy St</option>
                         <option value="Castillo St">Castillo St</option>
                         <option value="Chico St">Chico St</option>
+                        <option value="Christian-Muslim Sarinas Comp.">Christian-Muslim Sarinas Comp.</option>
                         <option value="D.M Tuazon St">D.M Tuazon St</option>
                         <option value="Dalandan St">Dalandan St</option>
                         <option value="Dhalia St">Dhalia St</option>
@@ -275,6 +288,9 @@
                         <option value="Kamias St">Kamias St</option>
                         <option value="Kamagong St">Kamagong St</option>
                         <option value="Kayumito St">Kayumito St</option>
+                        <option value="Krovha Phase 1">Krovha Phase 1</option>
+                        <option value="Krovha Phase 2">Krovha Phase 2</option>
+                        <option value="Krovha Phase 3">Krovha Phase 3</option>
                         <option value="Langka St">Langka St</option>
                         <option value="Lansones St">Lansones St</option>
                         <option value="M. Castillo St">M. Castillo St</option>
@@ -291,6 +307,7 @@
                         <option value="Maunawain St">Maunawain St</option>
                         <option value="Melon St">Melon St</option>
                         <option value="N. Cuevas St">N. Cuevas St</option>
+                        <option value="Nabsala St. Sarinas Comp.">Nabsala St. Sarinas Comp.</option>
                         <option value="Nara St">Nara St</option>
                         <option value="Orchids St">Orchids St</option>
                         <option value="Pag Asa St">Pag Asa St</option>
@@ -304,6 +321,8 @@
                         <option value="S. Cuevas St">S. Cuevas St</option>
                         <option value="Sampaloc St">Sampaloc St</option>
                         <option value="Sampaguita St">Sampaguita St</option>
+                        <option value="Sampaguita Street Dolmar Subdivision">Sampaguita Street Dolmar Subdivision</option>
+                        <option value="Sampaguita Street Ismar">Sampaguita Street Ismar</option>
                         <option value="San Agustin Road">San Agustin Road</option>
                         <option value="San Flower St">San Flower St</option>
                         <option value="San Pedro St">San Pedro St</option>
@@ -311,6 +330,7 @@
                         <option value="Santol St">Santol St</option>
                         <option value="Sikap Compound St">Sikap Compound St</option>
                         <option value="Suha St">Suha St</option>
+                        <option value="Sunflower St">Sunflower St</option>
                         <option value="Talisay St">Talisay St</option>
                         <option value="Tanguile St">Tanguile St</option>
                         <option value="Ubas St">Ubas St</option>

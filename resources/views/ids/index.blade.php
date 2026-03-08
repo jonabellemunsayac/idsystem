@@ -30,19 +30,19 @@
                         <div class="position-absolute w-100 h-100" style="opacity: 0.6; background: repeating-radial-gradient(circle at 0 100%, transparent 0, transparent 10px, rgba(0,56,168,0.03) 11px, rgba(0,56,168,0.03) 12px), repeating-radial-gradient(circle at 100% 0, transparent 0, transparent 10px, rgba(206,17,38,0.03) 11px, rgba(206,17,38,0.03) 12px); pointer-events: none;"></div>
                         
                         <!-- Header -->
-                        <div class="position-relative d-flex align-items-center px-3 py-2" style="background: linear-gradient(90deg, rgba(38,143,255,0.85) 0%, rgba(255,255,255,0.85) 50%, rgba(0,48,103,0.85) 100%), url('/images/kalawaan_hall.jpg') center/cover; min-height: 60px; color: #003067;">
-                            <div class="d-flex align-items-center gap-2 w-100" style="position: relative; z-index: 1;">
-                                <div class="d-flex align-items-center justify-content-center" style="width: 55px; height: 55px; flex-shrink: 0;">
+                        <div class="position-relative d-flex align-items-center px-1 py-2" style="background: linear-gradient(90deg, rgba(38,143,255,0.85) 0%, rgba(255,255,255,0.85) 50%, rgba(0,48,103,0.85) 100%), url('/images/kalawaan_hall.jpg') center/cover; min-height: 60px; color: #003067;">
+                            <div class="d-flex align-items-center w-100" style="position: relative; z-index: 1; gap: 2px;">
+                                <div class="d-flex align-items-center justify-content-center" style="width: 65px; height: 65px; flex-shrink: 0;">
                                     <img src="/images/OIP.jpg" alt="Barangay Logo" style="width: 100%; height: 100%; object-fit: contain; border-radius: 50%;">
                                 </div>
                                 <div class="flex-grow-1 text-center" style="line-height: 1.1;">
-                                    <h2 style="font-size: 0.65rem; font-weight: normal; letter-spacing: 1px; margin: 0; text-transform: uppercase;">Republic of the Philippines</h2>
-                                    <h2 style="font-size: 0.65rem; font-weight: normal; letter-spacing: 1px; margin: 0; text-transform: uppercase;">National Capital Region</h2>
-                                    <h3 style="font-size: 1rem; font-weight: 800; margin: 0; text-transform: uppercase; letter-spacing: 0.5px;">City of Pasig</h3>
-                                    <h3 style="font-size: 1rem; font-weight: 800; margin: 0; text-transform: uppercase; letter-spacing: 0.5px;">Barangay Kalawaan</h3>
-                                    
+                                    <h2 style="font-size: 1rem; font-weight: 800; letter-spacing: 0.5px; margin: 0;">Republic of the Philippines</h2>
+                                    <h2 style="font-size: 1rem; font-weight: 800; letter-spacing: 0.5px; margin: 0;">National Capital Region</h2>
+                                    <h2 style="font-size: 1rem; font-weight: 800; margin: 0; letter-spacing: 0.5px;">City of Pasig</h2>
+                                    <h2 style="font-size: 1rem; font-weight: 800; margin: 0; letter-spacing: 0.5px;">Barangay Kalawaan</h2>
+                                    <h4 style="font-size: 0.75rem; font-weight: 700; margin: 1px 0 0 0; letter-spacing: 0.5px; text-transform: uppercase;">Barangay Residents Identification System</h4>
                                 </div>
-                                <div class="d-flex align-items-center justify-content-center" style="width: 55px; height: 55px; flex-shrink: 0;">
+                                <div class="d-flex align-items-center justify-content-center" style="width: 65px; height: 65px; flex-shrink: 0;">
                                     <img src="/images/Pasig_City_Seal_Logo.svg" alt="Pasig Logo" style="width: 90%; height: 90%; object-fit: contain;">
                                 </div>
                             </div>
@@ -98,8 +98,8 @@
                                             <div id="preview-nationality" class="fw-bold text-dark text-uppercase" style="font-size: 0.75rem; line-height: 1.2; white-space: nowrap; letter-spacing: 0; word-spacing: 0;">-</div>
                                         </div>
                                         <div>
-                                            <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1; letter-spacing: 0;">Valid Until</div>
-                                            <div id="preview-validity" class="fw-bold text-dark text-uppercase" style="font-size: 0.75rem; line-height: 1.2; white-space: nowrap; letter-spacing: 0; word-spacing: 0;">-</div>
+                                            <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1; letter-spacing: 0;">Sector</div>
+                                            <div id="preview-sector" class="fw-bold text-dark text-uppercase" style="font-size: 0.75rem; line-height: 1.2; white-space: nowrap; letter-spacing: 0; word-spacing: 0;">-</div>
                                         </div>
                                     </div>
 
@@ -115,8 +115,14 @@
                                 <!-- QR + Chairman Sig Column -->
                                 <div class="d-flex flex-column align-items-center flex-shrink-0" style="width: 72px; justify-content: space-between; padding-bottom: 4px;">
                                     <!-- QR Code at top -->
-                                    <div style="width: 60px; height: 60px; background: white; border: 2px solid #000; display: flex; align-items: center; justify-content: center;">
-                                        <img id="preview-qr" alt="QR Code" style="width: 100%; height: 100%; object-fit: contain;">
+                                    <div>
+                                        <div style="width: 60px; height: 60px; background: white; border: 2px solid #000; display: flex; align-items: center; justify-content: center;">
+                                            <img id="preview-qr" alt="QR Code" style="width: 100%; height: 100%; object-fit: contain;">
+                                        </div>
+                                        <div style="text-align: center; margin-top: 2px; line-height: 1.2;">
+                                            <div class="text-muted text-uppercase" style="font-size: 0.5rem; letter-spacing: 0;">Valid Until:</div>
+                                            <div id="preview-validity" class="fw-bold text-dark" style="font-size: 0.6rem; white-space: nowrap; letter-spacing: 0; word-spacing: 0;">-</div>
+                                        </div>
                                     </div>
                                     <!-- Chairman Signature at bottom -->
                                     <div class="text-center w-100" style="position: relative;">
@@ -296,6 +302,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const previewSex = document.getElementById('preview-sex');
     const previewNationality = document.getElementById('preview-nationality');
     const previewStatus = document.getElementById('preview-status');
+    const previewSector = document.getElementById('preview-sector');
     const previewAddress = document.getElementById('preview-address');
     const previewEcName = document.getElementById('preview-ec-name');
     const previewEcAddress = document.getElementById('preview-ec-address');
@@ -421,12 +428,19 @@ document.addEventListener('DOMContentLoaded', function() {
         return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     }
 
+    function formatMonthYear(dateStr) {
+        if (!dateStr) return '-';
+        const d = new Date(dateStr + 'T00:00:00');
+        return d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    }
+
     function updatePreview(resident, idData = null) {
         previewName.textContent = `${resident.last_name}, ${resident.first_name}${resident.middle_name ? ', ' + resident.middle_name : ''}${resident.suffix ? ' ' + resident.suffix : ''}`;
         previewDob.textContent = formatDate(resident.birth_date);
         previewSex.textContent = resident.gender || '-';
         previewNationality.textContent = resident.nationality || 'FILIPINO';
         previewStatus.textContent = resident.civil_status || '-';
+        if (previewSector) previewSector.textContent = resident.special_sector || '-';
         previewAddress.textContent = resident.address || '-';
         
         previewEcName.textContent = resident.emergency_contact_name || '_____________________';
@@ -693,18 +707,18 @@ document.addEventListener('DOMContentLoaded', function() {
                   position: relative; 
                   z-index: 1; 
                   background: linear-gradient(90deg, rgba(38,143,255,0.85) 0%, rgba(255,255,255,0.85) 50%, rgba(0,48,103,0.85) 100%), url('/images/kalawaan_hall.jpg') center/cover; 
-                  height: 45px; 
+                  height: 48px; 
                   display: flex; 
                   align-items: center; 
-                  padding: 0 8px; 
+                  padding: 0 3px; 
                   color: #003067;
                   flex-shrink: 0;
                   -webkit-print-color-adjust: exact;
                   print-color-adjust: exact;
                 }
                 .header-logo { 
-                  width: 35px; 
-                  height: 35px; 
+                  width: 44px; 
+                  height: 44px; 
                   border-radius: 50%; 
                   display: flex; 
                   align-items: center; 
@@ -714,9 +728,10 @@ document.addEventListener('DOMContentLoaded', function() {
                   print-color-adjust: exact;
                 }
                 .header-logo img { width: 90%; height: 90%; object-fit: contain; border-radius: 60%}
-                .header-text { flex: 1; text-align: center; line-height: 1.05; text-transform: uppercase; padding: 0 5px; }
+                .header-text { flex: 1; text-align: center; line-height: 1.05; padding: 0 2px; }
                 .header-text h3 { font-size: 5px; font-weight: normal; letter-spacing: 0.5px; margin: 0; }
                 .header-text h2 { font-size: 9px; font-weight: 800; margin: 0; letter-spacing: 0.5px; }
+                .header-text h4 { font-size: 7px; font-weight: 700; margin: 1px 0 0 0; letter-spacing: 0.5px; text-transform: uppercase; }
 
                 /* Body */
                 .card-body { 
@@ -776,7 +791,7 @@ document.addEventListener('DOMContentLoaded', function() {
               <div class="id-card">
                 <div class="bg-pattern"></div>
                 <div class="header">
-                  <div class="header-logo">
+                  <div class="header-logo" style="margin-left: 20px;">
                       <img src="${window.location.origin}/images/OIP.jpg" alt="Logo">
                   </div>
                   <div class="header-text">
@@ -784,8 +799,9 @@ document.addEventListener('DOMContentLoaded', function() {
                       <h2>National Capital Region</h2>
                       <h2>City of Pasig</h2>
                       <h2>Barangay Kalawaan</h2>
+                      <h4>Barangay Residents Identification System</h4>
                   </div>
-                  <div class="header-logo">
+                  <div class="header-logo" style="margin-right: 20px;">
                       <img src="${window.location.origin}/images/Pasig_City_Seal_Logo.svg" alt="Logo">
                   </div>
                 </div>
@@ -826,8 +842,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                   <div class="field-value" style="white-space: nowrap;">${currentResident.nationality || 'FILIPINO'}</div>
                               </div>
                               <div class="grid-item">
-                                  <div class="field-label">Valid Until</div>
-                                  <div class="field-value" style="white-space: nowrap;">${formatDate(currentID.expiration_date)}</div>
+                                  <div class="field-label">Sector</div>
+                                  <div class="field-value" style="white-space: nowrap;">${currentResident.special_sector || '-'}</div>
                               </div>
                           </div>
 
@@ -835,10 +851,16 @@ document.addEventListener('DOMContentLoaded', function() {
                           <div class="field-value" style="font-size: 8px; line-height: 1.25; text-transform: uppercase; overflow-wrap: break-word; max-width: 100%;">${currentResident.address || '-'}</div>
                       </div>
                       <div class="qr-col">
-                          <div style="width: 56px; height: 56px;display: flex; align-items: center; justify-content: center; margin-top: 27px;">
-                              <img src="${currentID.qr_code}" alt="QR" style="width: 90%; height: 90%; object-fit: contain;">
+                          <div style="display: flex; flex-direction: column; align-items: center; margin-top: 10px;">
+                              <div style="width: 56px; height: 56px; display: flex; align-items: center; justify-content: center; margin-top: 10px;">
+                                  <img src="${currentID.qr_code}" alt="QR" style="width: 90%; height: 90%; object-fit: contain;">
+                              </div>
+                              <div style="text-align: center; margin-top: 2px; line-height: 1.2;">
+                                  <div class="field-label">Valid Until:</div>
+                                  <div style="font-size: 6px; font-weight: bold; color: #212529; white-space: nowrap;">${formatMonthYear(currentID.expiration_date)}</div>
+                              </div>
                           </div>
-                          <div style="text-align: center; width: 65px; position: relative;">
+                          <div style="text-align: center; width: 65px; position: relative; margin-right: 20px;">
                               <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 75px; height: 24px; opacity: 1; z-index: 0;">
                                   <img src="${window.location.origin}/storage/signatures/chairman.png" alt="Signature" style="width: 100%; height: 100%; object-fit: contain;">
                               </div>
@@ -962,18 +984,18 @@ document.addEventListener('DOMContentLoaded', function() {
                   position: relative; 
                   z-index: 1; 
                   background: linear-gradient(90deg, rgba(38,143,255,0.85) 0%, rgba(255,255,255,0.85) 50%, rgba(0,48,103,0.85) 100%), url('/images/kalawaan_hall.jpg') center/cover; 
-                  height: 45px; 
+                  height: 48px; 
                   display: flex; 
                   align-items: center; 
-                  padding: 0 8px; 
+                  padding: 0 3px; 
                   color: #003067;
                   flex-shrink: 0;
                   -webkit-print-color-adjust: exact;
                   print-color-adjust: exact;
                 }
                 .header-logo { 
-                  width: 42px; 
-                  height: 42px; 
+                  width: 46px; 
+                  height: 46px; 
                   border-radius: 50%; 
                   display: flex; 
                   align-items: center; 
@@ -983,9 +1005,10 @@ document.addEventListener('DOMContentLoaded', function() {
                   print-color-adjust: exact;
                 }
                 .header-logo img { width: 90%; height: 90%; object-fit: contain; border-radius: 60%}
-                .header-text { flex: 1; text-align: center; line-height: 1.05; text-transform: uppercase; padding: 0 5px; }
+                .header-text { flex: 1; text-align: center; line-height: 1.05; padding: 0 2px; }
                 .header-text h3 { font-size: 5px; font-weight: normal; letter-spacing: 0.5px; margin: 0; }
-                .header-text h2 { font-size: 9px; font-weight: 800; margin: 0; letter-spacing: 0.5px; }
+                .header-text h2 { font-size: 9px; font-weight: 800; margin: 0; letter-spacing: 1px; }
+                .header-text h4 { font-size: 7px; font-weight: 700; margin: 1px 0 0 0; letter-spacing: 0.5px; text-transform: uppercase; }
 
                 /* Body */
                 .card-body { 

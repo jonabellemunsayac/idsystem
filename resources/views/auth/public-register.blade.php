@@ -252,7 +252,7 @@
                         <h6 class="fw-bold mb-2 mt-2" style="font-size: 0.8rem;">Address</h6>
                         <div class="row g-2 mb-2">
                             <div class="col-md-6">
-                                <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">House No</label>
+                                <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">House No./Unit/Bldg</label>
                                 <input type="text" class="form-control form-control-sm address-field" name="house_no" value="{{ old('house_no') }}" placeholder="Optional" style="font-size: 0.8rem;">
                                 <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Optional</small>
                             </div>
@@ -261,6 +261,7 @@
                                 <select class="form-select form-select-sm address-field" name="street_name" style="font-size: 0.8rem;">
                                     <option value="">Select Street...</option>
                                     <option value="A.V Jimenez St" {{ old('street_name') === 'A.V Jimenez St' ? 'selected' : '' }}>A.V Jimenez St</option>
+                                    <option value="AB. Kamagong" {{ old('street_name') === 'AB. Kamagong' ? 'selected' : '' }}>AB. Kamagong</option>
                                     <option value="Acacia St" {{ old('street_name') === 'Acacia St' ? 'selected' : '' }}>Acacia St</option>
                                     <option value="Alley 1 St" {{ old('street_name') === 'Alley 1 St' ? 'selected' : '' }}>Alley 1 St</option>
                                     <option value="Alley 2 St" {{ old('street_name') === 'Alley 2 St' ? 'selected' : '' }}>Alley 2 St</option>
@@ -279,6 +280,7 @@
                                     <option value="Casoy St" {{ old('street_name') === 'Casoy St' ? 'selected' : '' }}>Casoy St</option>
                                     <option value="Castillo St" {{ old('street_name') === 'Castillo St' ? 'selected' : '' }}>Castillo St</option>
                                     <option value="Chico St" {{ old('street_name') === 'Chico St' ? 'selected' : '' }}>Chico St</option>
+                                    <option value="Christian-Muslim Sarinas Comp." {{ old('street_name') === 'Christian-Muslim Sarinas Comp.' ? 'selected' : '' }}>Christian-Muslim Sarinas Comp.</option>
                                     <option value="D.M Tuazon St" {{ old('street_name') === 'D.M Tuazon St' ? 'selected' : '' }}>D.M Tuazon St</option>
                                     <option value="Dalandan St" {{ old('street_name') === 'Dalandan St' ? 'selected' : '' }}>Dalandan St</option>
                                     <option value="Dhalia St" {{ old('street_name') === 'Dhalia St' ? 'selected' : '' }}>Dhalia St</option>
@@ -297,6 +299,9 @@
                                     <option value="Kamias St" {{ old('street_name') === 'Kamias St' ? 'selected' : '' }}>Kamias St</option>
                                     <option value="Kamagong St" {{ old('street_name') === 'Kamagong St' ? 'selected' : '' }}>Kamagong St</option>
                                     <option value="Kayumito St" {{ old('street_name') === 'Kayumito St' ? 'selected' : '' }}>Kayumito St</option>
+                                    <option value="Krovha Phase 1" {{ old('street_name') === 'Krovha Phase 1' ? 'selected' : '' }}>Krovha Phase 1</option>
+                                    <option value="Krovha Phase 2" {{ old('street_name') === 'Krovha Phase 2' ? 'selected' : '' }}>Krovha Phase 2</option>
+                                    <option value="Krovha Phase 3" {{ old('street_name') === 'Krovha Phase 3' ? 'selected' : '' }}>Krovha Phase 3</option>
                                     <option value="Langka St" {{ old('street_name') === 'Langka St' ? 'selected' : '' }}>Langka St</option>
                                     <option value="Lansones St" {{ old('street_name') === 'Lansones St' ? 'selected' : '' }}>Lansones St</option>
                                     <option value="M. Castillo St" {{ old('street_name') === 'M. Castillo St' ? 'selected' : '' }}>M. Castillo St</option>
@@ -313,6 +318,7 @@
                                     <option value="Maunawain St" {{ old('street_name') === 'Maunawain St' ? 'selected' : '' }}>Maunawain St</option>
                                     <option value="Melon St" {{ old('street_name') === 'Melon St' ? 'selected' : '' }}>Melon St</option>
                                     <option value="N. Cuevas St" {{ old('street_name') === 'N. Cuevas St' ? 'selected' : '' }}>N. Cuevas St</option>
+                                    <option value="Nabsala St. Sarinas Comp." {{ old('street_name') === 'Nabsala St. Sarinas Comp.' ? 'selected' : '' }}>Nabsala St. Sarinas Comp.</option>
                                     <option value="Nara St" {{ old('street_name') === 'Nara St' ? 'selected' : '' }}>Nara St</option>
                                     <option value="Orchids St" {{ old('street_name') === 'Orchids St' ? 'selected' : '' }}>Orchids St</option>
                                     <option value="Pag Asa St" {{ old('street_name') === 'Pag Asa St' ? 'selected' : '' }}>Pag Asa St</option>
@@ -326,6 +332,8 @@
                                     <option value="S. Cuevas St" {{ old('street_name') === 'S. Cuevas St' ? 'selected' : '' }}>S. Cuevas St</option>
                                     <option value="Sampaloc St" {{ old('street_name') === 'Sampaloc St' ? 'selected' : '' }}>Sampaloc St</option>
                                     <option value="Sampaguita St" {{ old('street_name') === 'Sampaguita St' ? 'selected' : '' }}>Sampaguita St</option>
+                                    <option value="Sampaguita Street Dolmar Subdivision" {{ old('street_name') === 'Sampaguita Street Dolmar Subdivision' ? 'selected' : '' }}>Sampaguita Street Dolmar Subdivision</option>
+                                    <option value="Sampaguita Street Ismar" {{ old('street_name') === 'Sampaguita Street Ismar' ? 'selected' : '' }}>Sampaguita Street Ismar</option>
                                     <option value="San Agustin Road" {{ old('street_name') === 'San Agustin Road' ? 'selected' : '' }}>San Agustin Road</option>
                                     <option value="San Flower St" {{ old('street_name') === 'San Flower St' ? 'selected' : '' }}>San Flower St</option>
                                     <option value="San Pedro St" {{ old('street_name') === 'San Pedro St' ? 'selected' : '' }}>San Pedro St</option>
@@ -333,6 +341,7 @@
                                     <option value="Santol St" {{ old('street_name') === 'Santol St' ? 'selected' : '' }}>Santol St</option>
                                     <option value="Sikap Compound St" {{ old('street_name') === 'Sikap Compound St' ? 'selected' : '' }}>Sikap Compound St</option>
                                     <option value="Suha St" {{ old('street_name') === 'Suha St' ? 'selected' : '' }}>Suha St</option>
+                                    <option value="Sunflower St" {{ old('street_name') === 'Sunflower St' ? 'selected' : '' }}>Sunflower St</option>
                                     <option value="Talisay St" {{ old('street_name') === 'Talisay St' ? 'selected' : '' }}>Talisay St</option>
                                     <option value="Tanguile St" {{ old('street_name') === 'Tanguile St' ? 'selected' : '' }}>Tanguile St</option>
                                     <option value="Ubas St" {{ old('street_name') === 'Ubas St' ? 'selected' : '' }}>Ubas St</option>

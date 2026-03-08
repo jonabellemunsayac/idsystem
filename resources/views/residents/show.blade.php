@@ -121,6 +121,14 @@
                                 <p class="fw-medium mb-0" style="font-size: 0.9rem;">{{ $resident['nationality'] ?? 'Filipino' }}</p>
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            <div>
+                                <p class="text-muted d-flex align-items-center gap-2 mb-1" style="font-size: 0.75rem;">
+                                    <i class="bi bi-people"></i> Sector
+                                </p>
+                                <p class="fw-medium mb-0" style="font-size: 0.9rem;">{{ $resident['special_sector'] ?? '-' }}</p>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Divider -->

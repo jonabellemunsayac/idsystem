@@ -85,6 +85,18 @@
                     </div>
 
                     <div class="col-md-4">
+                        <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Sector <span class="text-muted">(Optional)</span></label>
+                        <select class="form-select form-select-sm" name="special_sector" style="font-size: 0.8rem;">
+                            <option value="">Select...</option>
+                            <option value="Senior Citizen" {{ old('special_sector', $resident['special_sector'] ?? '') === 'Senior Citizen' ? 'selected' : '' }}>Senior Citizen</option>
+                            <option value="PWD" {{ old('special_sector', $resident['special_sector'] ?? '') === 'PWD' ? 'selected' : '' }}>PWD</option>
+                            <option value="LGBTQ" {{ old('special_sector', $resident['special_sector'] ?? '') === 'LGBTQ' ? 'selected' : '' }}>LGBTQ</option>
+                            <option value="Solo Parent" {{ old('special_sector', $resident['special_sector'] ?? '') === 'Solo Parent' ? 'selected' : '' }}>Solo Parent</option>
+                            <option value="None" {{ old('special_sector', $resident['special_sector'] ?? '') === 'None' ? 'selected' : '' }}>None</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
                         <label for="blood_type" class="form-label" style="font-size: 0.65rem;">Blood Type</label>
                         <select class="form-select form-select-sm @error('blood_type') is-invalid @enderror" id="blood_type" name="blood_type" style="font-size: 0.8rem;">
                             <option value="">Select Blood Type</option>
@@ -278,12 +290,13 @@
                     </div>
                 </div>
 
-                <!-- Profile Image -->
-                <h6 class="fw-bold text-dark mt-2 mb-1" style="font-size: 0.8rem;">Profile Image</h6>
+                <!-- Profile Image & Signature -->
+                <h6 class="fw-bold text-dark mt-2 mb-1" style="font-size: 0.8rem;">Profile Image & Signature</h6>
                 <div class="row g-2 mb-2">
-                    <div class="col-md-12">
-                        <div class="card border-light bg-light">
+                    <div class="col-md-6">
+                        <div class="card border-light bg-light h-100">
                             <div class="card-body p-2">
+                                <h6 class="fw-bold mb-2" style="font-size: 0.75rem;">Profile Picture</h6>
                                 <div id="profile-image-section">
                                     <div class="d-flex gap-1 flex-wrap mb-2">
                                         <button type="button" class="btn btn-outline-primary btn-sm" id="upload-photo-btn" style="font-size: 0.75rem; padding: 0.3rem 0.6rem;">
@@ -333,6 +346,44 @@
                                     </div>
                                 </div>
                                 <div class="form-text" style="font-size: 0.6rem;">Supported formats: JPEG, PNG, JPG. Max size: 10MB.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="card border-light bg-light h-100">
+                            <div class="card-body p-2">
+                                <h6 class="fw-bold mb-2" style="font-size: 0.75rem;">Signature</h6>
+                                <div id="signature-section">
+                                    <div class="d-flex gap-1 flex-wrap mb-2">
+                                        <button type="button" class="btn btn-outline-info btn-sm" id="draw-signature-large-btn" style="font-size: 0.75rem; padding: 0.3rem 0.6rem;">
+                                            <i class="bi bi-pencil"></i> Draw
+                                        </button>
+                                    </div>
+                                    <input type="file" id="signature-file-input" name="signature" accept="image/*" style="display: none;">
+                                    <input type="hidden" id="signature-base64" name="signature_base64" value="">
+
+                                    @if($resident['signature'] ?? false)
+                                        <div id="signature-preview" class="mt-2">
+                                            <p class="mb-1" style="font-size: 0.65rem; color: #6c757d;">Current Signature:</p>
+                                            <img id="preview-signature" src="{{ asset('storage/' . $resident['signature']) }}?t={{ $resident['updated_at'] }}&v={{ time() }}" alt="Current Signature" style="max-width: 200px; max-height: 100px; border: 2px solid #dee2e6; border-radius: 4px; background: transparent; padding: 5px;">
+                                            <div class="mt-1">
+                                                <button type="button" class="btn btn-sm btn-danger" id="remove-signature-btn" style="font-size: 0.7rem; padding: 0.2rem 0.4rem;">
+                                                    <i class="bi bi-trash"></i> Remove
+                                                </button>
+                                            </div>
+                                        </div>
+                                    @else
+                                        <div id="signature-preview" style="display: none;" class="mt-2">
+                                            <img id="preview-signature" src="" alt="Signature Preview" style="max-width: 200px; max-height: 100px; border: 2px solid #dee2e6; border-radius: 4px; background: transparent; padding: 5px;">
+                                            <div class="mt-1">
+                                                <button type="button" class="btn btn-sm btn-danger" id="remove-signature-btn" style="font-size: 0.7rem; padding: 0.2rem 0.4rem;">
+                                                    <i class="bi bi-trash"></i> Remove
+                                                </button>
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -403,7 +454,7 @@
 <div class="card border-0 shadow-sm">
     <div class="card-body p-2">
 <div class="modal fade" id="signatureLargeModal" tabindex="-1" aria-labelledby="signatureLargeModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="signatureLargeModalLabel">Draw Signature</h5>
@@ -411,8 +462,8 @@
             </div>
             <div class="modal-body">
                 <div class="text-center">
-                    <div style="border: 2px solid #dee2e6; border-radius: 4px; background: transparent; overflow: hidden; display: inline-block;">
-                        <canvas id="signature-canvas-large" width="800" height="400" style="display: block; cursor: crosshair; background: transparent;"></canvas>
+                    <div style="border: 2px solid #dee2e6; border-radius: 4px; background: #fff; overflow: hidden; display: block; width: 100%; max-width: 500px; margin: 0 auto;">
+                        <canvas id="signature-canvas-large" style="display: block; cursor: crosshair; background: white; width: 100%; touch-action: none;"></canvas>
                     </div>
                     <p class="text-muted mt-2 mb-0" style="font-size: 0.85rem;">
                         <i class="bi bi-info-circle"></i> Draw your signature using your mouse or touch screen
@@ -804,6 +855,121 @@ document.addEventListener('DOMContentLoaded', function() {
     if (newPasswordField && confirmationField) {
         newPasswordField.addEventListener('input', function() {
             confirmationField.value = this.value;
+        });
+    }
+
+    // Signature - Large Canvas Modal
+    const drawSignatureLargeBtn = document.getElementById('draw-signature-large-btn');
+    const signatureLargeModal = new bootstrap.Modal(document.getElementById('signatureLargeModal'));
+    const signatureCanvasLarge = document.getElementById('signature-canvas-large');
+    const saveSignatureLargeBtn = document.getElementById('save-signature-large-btn');
+    const clearSignatureLargeBtn = document.getElementById('clear-signature-large-btn');
+    const signaturePreview = document.getElementById('signature-preview');
+    const previewSignature = document.getElementById('preview-signature');
+    const removeSignatureBtn = document.getElementById('remove-signature-btn');
+
+    let isDrawingLarge = false;
+    let ctxLarge = signatureCanvasLarge.getContext('2d');
+
+    function resizeSignatureCanvas() {
+        const container = signatureCanvasLarge.parentElement;
+        const width = Math.min(container.clientWidth, 500);
+        const height = Math.round(width * 0.45);
+        signatureCanvasLarge.width = width;
+        signatureCanvasLarge.height = height;
+        ctxLarge.clearRect(0, 0, width, height);
+    }
+
+    function getPos(e) {
+        const rect = signatureCanvasLarge.getBoundingClientRect();
+        const scaleX = signatureCanvasLarge.width / rect.width;
+        const scaleY = signatureCanvasLarge.height / rect.height;
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        return {
+            x: (clientX - rect.left) * scaleX,
+            y: (clientY - rect.top) * scaleY
+        };
+    }
+
+    resizeSignatureCanvas();
+    window.addEventListener('resize', resizeSignatureCanvas);
+
+    document.getElementById('signatureLargeModal').addEventListener('shown.bs.modal', function() {
+        resizeSignatureCanvas();
+        ctxLarge.clearRect(0, 0, signatureCanvasLarge.width, signatureCanvasLarge.height);
+    });
+
+    drawSignatureLargeBtn.addEventListener('click', function() {
+        signatureLargeModal.show();
+    });
+
+    signatureCanvasLarge.addEventListener('mousedown', function(e) {
+        isDrawingLarge = true;
+        const pos = getPos(e);
+        ctxLarge.beginPath();
+        ctxLarge.moveTo(pos.x, pos.y);
+    });
+    signatureCanvasLarge.addEventListener('mousemove', function(e) {
+        if (!isDrawingLarge) return;
+        const pos = getPos(e);
+        ctxLarge.lineTo(pos.x, pos.y);
+        ctxLarge.strokeStyle = '#000000';
+        ctxLarge.lineWidth = 2;
+        ctxLarge.lineCap = 'round';
+        ctxLarge.lineJoin = 'round';
+        ctxLarge.stroke();
+    });
+    signatureCanvasLarge.addEventListener('mouseup', function() { isDrawingLarge = false; });
+    signatureCanvasLarge.addEventListener('mouseleave', function() { isDrawingLarge = false; });
+
+    signatureCanvasLarge.addEventListener('touchstart', function(e) {
+        e.preventDefault();
+        isDrawingLarge = true;
+        const pos = getPos(e);
+        ctxLarge.beginPath();
+        ctxLarge.moveTo(pos.x, pos.y);
+    });
+    signatureCanvasLarge.addEventListener('touchmove', function(e) {
+        e.preventDefault();
+        if (!isDrawingLarge) return;
+        const pos = getPos(e);
+        ctxLarge.lineTo(pos.x, pos.y);
+        ctxLarge.strokeStyle = '#000000';
+        ctxLarge.lineWidth = 2;
+        ctxLarge.lineCap = 'round';
+        ctxLarge.lineJoin = 'round';
+        ctxLarge.stroke();
+    });
+    signatureCanvasLarge.addEventListener('touchend', function(e) { e.preventDefault(); isDrawingLarge = false; });
+
+    clearSignatureLargeBtn.addEventListener('click', function() {
+        ctxLarge.clearRect(0, 0, signatureCanvasLarge.width, signatureCanvasLarge.height);
+    });
+
+    saveSignatureLargeBtn.addEventListener('click', function() {
+        signatureCanvasLarge.toBlob(function(blob) {
+            if (blob) {
+                const file = new File([blob], 'signature.png', { type: 'image/png' });
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                document.getElementById('signature-file-input').files = dataTransfer.files;
+                const dataURL = signatureCanvasLarge.toDataURL('image/png');
+                previewSignature.src = dataURL;
+                previewSignature.style.background = 'transparent';
+                document.getElementById('signature-base64').value = dataURL;
+                signaturePreview.style.display = 'block';
+            }
+        }, 'image/png');
+        signatureLargeModal.hide();
+    });
+
+    if (removeSignatureBtn) {
+        removeSignatureBtn.addEventListener('click', function() {
+            previewSignature.src = '';
+            signaturePreview.style.display = 'none';
+            document.getElementById('signature-file-input').value = '';
+            document.getElementById('signature-base64').value = '';
         });
     }
 });

@@ -497,6 +497,7 @@
                     <i class="bi bi-grid-1x2-fill"></i> Dashboard
                 </a>
                 
+                @if(in_array(auth()->user()->role, ['encoder', 'admin', 'superadmin']))
                 <!-- Residents Group -->
                 <a href="#residentsSubmenu" class="list-group-item" data-bs-toggle="collapse" aria-expanded="{{ request()->routeIs('residents.*') || request()->routeIs('clans.*') ? 'true' : 'false' }}">
                     <i class="bi bi-people-fill"></i> Residents <i class="bi bi-chevron-down ms-auto" style="font-size: 0.8em;"></i>
@@ -513,7 +514,9 @@
                 <a href="{{ route('ids.index') }}" class="list-group-item {{ request()->routeIs('ids.*') ? 'active' : '' }}">
                     <i class="bi bi-credit-card-fill"></i> ID Management
                 </a>
-                
+                @endif
+
+                @if(in_array(auth()->user()->role, ['admin', 'superadmin']))
                 <a href="{{ route('appointments.index') }}" class="list-group-item {{ request()->routeIs('appointments.*') ? 'active' : '' }}">
                     <i class="bi bi-calendar-event-fill"></i> Appointments
                 </a>
@@ -526,17 +529,16 @@
                     <i class="bi bi-box-seam-fill"></i> Assets Management
                 </a>
                 
-                @if(auth()->user()->role === 'admin' || auth()->user()->role === 'superadmin')
                 <a href="{{ route('certificates.index') }}" class="list-group-item {{ request()->routeIs('certificates.*') ? 'active' : '' }}">
                     <i class="bi bi-award-fill"></i> Certificates
                 </a>
-                @endif
                 
                 <a href="{{ route('reports.index') }}" class="list-group-item {{ request()->routeIs('reports.*') ? 'active' : '' }}">
                     <i class="bi bi-bar-chart-fill"></i> Reports & Analytics
                 </a>
+                @endif
 
-                @if(auth()->user()->role === 'admin' || auth()->user()->role === 'superadmin')
+                @if(in_array(auth()->user()->role, ['site_editor', 'admin', 'superadmin']))
                 <a href="{{ route('site-editor.index') }}" class="list-group-item {{ request()->routeIs('site-editor.*') ? 'active' : '' }}">
                     <i class="bi bi-brush-fill"></i> Site Editor
                 </a>
@@ -546,14 +548,19 @@
                 <a href="{{ route('audit-logs.index') }}" class="list-group-item {{ request()->routeIs('audit-logs.*') ? 'active' : '' }}">
                     <i class="bi bi-clock-history"></i> Audit Logs
                 </a>
-                
+
+                <!-- User Management (superadmin only) -->
+                <a href="{{ route('users.index') }}" class="list-group-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
+                    <i class="bi bi-people-fill"></i> User Management
+                </a>
                 @endif
 
                 <!-- Settings Group -->
-                <a href="#settingsSubmenu" class="list-group-item" data-bs-toggle="collapse">
+                <a href="#settingsSubmenu" class="list-group-item" data-bs-toggle="collapse"
+                   aria-expanded="{{ request()->routeIs('settings.*') ? 'true' : 'false' }}">
                     <i class="bi bi-gear-fill"></i> Settings <i class="bi bi-chevron-down ms-auto" style="font-size: 0.8em;"></i>
                 </a>
-                <div class="collapse" id="settingsSubmenu">
+                <div class="collapse {{ request()->routeIs('settings.*') ? 'show' : '' }}" id="settingsSubmenu">
                     <a href="{{ route('settings.user-account.index') }}" class="list-group-item ps-5 {{ request()->routeIs('settings.user-account.*') ? 'active' : '' }}" style="font-size: 0.85rem;">
                         User Accounts
                     </a>
