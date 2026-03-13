@@ -85,26 +85,22 @@ class DashboardController extends Controller
     public function exportSummaryCSV()
     {
         $spreadsheet = new Spreadsheet();
-        
-        // Sheet 1: Dashboard Overview
         $sheet1 = $spreadsheet->getActiveSheet();
         $sheet1->setTitle('Dashboard Summary');
-        
+
+        $generatedAt = now()->format('F j, Y g:i A');
+
         $sheet1->setCellValue('A1', 'DASHBOARD SUMMARY REPORT');
-        $sheet1->getStyle('A1')->getFont()->setBold(true)->setSize(14);
-        $sheet1->setCellValue('A2', 'Generated: ' . now()->format('Y-m-d H:i:s'));
-        
+        $sheet1->setCellValue('A2', 'Generated On');
+        $sheet1->setCellValue('B2', $generatedAt);
+
         $row = 4;
         $sheet1->setCellValue('A' . $row, 'STATISTICS');
-        $sheet1->getStyle('A' . $row)->getFont()->setBold(true)->setSize(12);
-        
+
         $row++;
         $sheet1->setCellValue('A' . $row, 'Metric');
         $sheet1->setCellValue('B' . $row, 'Count');
-        $headerStyle = $sheet1->getStyle('A' . $row . ':B' . $row);
-        $headerStyle->getFont()->setBold(true)->setColor(new \PhpOffice\PhpSpreadsheet\Style\Color('FFFFFFFF'));
-        $headerStyle->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('FF0038A8');
-        
+
         $stats = [
             'residents_count' => Resident::count(),
             'appointments_count' => Appointment::where('status', 'pending')->count(),
@@ -125,75 +121,66 @@ class DashboardController extends Controller
             $sheet1->setCellValue('B' . $row, $count);
             $row++;
         }
-        
-        // Sheet 2: Residents
-        $sheet2 = $spreadsheet->createSheet();
-        $sheet2->setTitle('Residents');
-        
-        $residents = Resident::all(['id', 'first_name', 'last_name', 'email', 'contact_number', 'address']);
-        
-        $sheet2->setCellValue('A1', 'ID');
-        $sheet2->setCellValue('B1', 'First Name');
-        $sheet2->setCellValue('C1', 'Last Name');
-        $sheet2->setCellValue('D1', 'Email');
-        $sheet2->setCellValue('E1', 'Contact Number');
-        $sheet2->setCellValue('F1', 'Address');
-        
-        $headerStyle = $sheet2->getStyle('A1:F1');
-        $headerStyle->getFont()->setBold(true)->setColor(new \PhpOffice\PhpSpreadsheet\Style\Color('FFFFFFFF'));
-        $headerStyle->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('FF0038A8');
-        
-        $row = 2;
-        foreach ($residents as $resident) {
-            $sheet2->setCellValue('A' . $row, $resident->id);
-            $sheet2->setCellValue('B' . $row, $resident->first_name);
-            $sheet2->setCellValue('C' . $row, $resident->last_name);
-            $sheet2->setCellValue('D' . $row, $resident->email);
-            $sheet2->setCellValue('E' . $row, $resident->contact_number);
-            $sheet2->setCellValue('F' . $row, $resident->address);
+
+        $row += 2;
+        $sheet1->setCellValue('A' . $row, 'RECENT APPOINTMENTS');
+        $row++;
+        $sheet1->setCellValue('A' . $row, 'Resident');
+        $sheet1->setCellValue('B' . $row, 'Service');
+        $sheet1->setCellValue('C' . $row, 'Scheduled Time');
+        $sheet1->setCellValue('D' . $row, 'Status');
+
+        $recentAppointments = Appointment::with('resident')
+            ->latest('created_at')
+            ->limit(10)
+            ->get()
+            ->filter(fn($appointment) => $appointment->resident !== null);
+
+        $row++;
+        foreach ($recentAppointments as $appointment) {
+            $scheduledTime = $appointment->scheduled_time
+                ? \Carbon\Carbon::parse($appointment->scheduled_time)->format('F j, Y g:i A')
+                : 'N/A';
+
+            $sheet1->setCellValue('A' . $row, trim($appointment->resident->first_name . ' ' . $appointment->resident->last_name));
+            $sheet1->setCellValue('B' . $row, $appointment->service_type ?? 'N/A');
+            $sheet1->setCellValue('C' . $row, $scheduledTime);
+            $sheet1->setCellValue('D' . $row, ucfirst($appointment->status ?? 'pending'));
             $row++;
         }
-        
-        foreach (range('A', 'F') as $column) {
-            $sheet2->getColumnDimension($column)->setAutoSize(true);
-        }
-        
-        // Sheet 3: Assets
-        $sheet3 = $spreadsheet->createSheet();
-        $sheet3->setTitle('Assets');
-        
-        $assets = Asset::all(['id', 'asset_name', 'category', 'quantity', 'status', 'location']);
-        
-        $sheet3->setCellValue('A1', 'ID');
-        $sheet3->setCellValue('B1', 'Asset Name');
-        $sheet3->setCellValue('C1', 'Category');
-        $sheet3->setCellValue('D1', 'Quantity');
-        $sheet3->setCellValue('E1', 'Status');
-        $sheet3->setCellValue('F1', 'Location');
-        
-        $headerStyle = $sheet3->getStyle('A1:F1');
-        $headerStyle->getFont()->setBold(true)->setColor(new \PhpOffice\PhpSpreadsheet\Style\Color('FFFFFFFF'));
-        $headerStyle->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('FF0038A8');
-        
-        $row = 2;
-        foreach ($assets as $asset) {
-            $sheet3->setCellValue('A' . $row, $asset->id);
-            $sheet3->setCellValue('B' . $row, $asset->asset_name);
-            $sheet3->setCellValue('C' . $row, $asset->category);
-            $sheet3->setCellValue('D' . $row, $asset->quantity);
-            $sheet3->setCellValue('E' . $row, $asset->status);
-            $sheet3->setCellValue('F' . $row, $asset->location ?? '');
+
+        $row += 2;
+        $sheet1->setCellValue('A' . $row, 'RECENT BLOTTER CASES');
+        $row++;
+        $sheet1->setCellValue('A' . $row, 'Case Number');
+        $sheet1->setCellValue('B' . $row, 'Incident Type');
+        $sheet1->setCellValue('C' . $row, 'Incident Date');
+        $sheet1->setCellValue('D' . $row, 'Status');
+
+        $recentBlotterCases = BlotterRecord::orderBy('incident_date', 'desc')
+            ->limit(10)
+            ->get();
+
+        $row++;
+        foreach ($recentBlotterCases as $case) {
+            $incidentDate = $case->incident_date
+                ? \Carbon\Carbon::parse($case->incident_date)->format('F j, Y')
+                : 'N/A';
+
+            $sheet1->setCellValue('A' . $row, $case->case_number ?? 'N/A');
+            $sheet1->setCellValue('B' . $row, $case->incident_type ?? 'N/A');
+            $sheet1->setCellValue('C' . $row, $incidentDate);
+            $sheet1->setCellValue('D' . $row, ucfirst($case->status ?? 'pending'));
             $row++;
         }
-        
-        foreach (range('A', 'F') as $column) {
-            $sheet3->getColumnDimension($column)->setAutoSize(true);
-        }
-        
-        // Sheet 4: Weekly Statistics
-        $sheet4 = $spreadsheet->createSheet();
-        $sheet4->setTitle('Weekly Statistics');
-        
+
+        $row += 2;
+        $sheet1->setCellValue('A' . $row, 'WEEKLY STATISTICS');
+        $row++;
+        $sheet1->setCellValue('A' . $row, 'Day');
+        $sheet1->setCellValue('B' . $row, 'Appointments');
+        $sheet1->setCellValue('C' . $row, 'Blotter Cases');
+
         $weeklyAppointments = Appointment::selectRaw('DAYNAME(scheduled_time) as day, COUNT(*) as count')
             ->whereRaw('WEEK(scheduled_time) = WEEK(NOW())')
             ->groupByRaw('DAYNAME(scheduled_time), DAYOFWEEK(scheduled_time)')
@@ -205,47 +192,26 @@ class DashboardController extends Controller
             ->groupByRaw('DAYNAME(incident_date), DAYOFWEEK(incident_date)')
             ->orderByRaw('DAYOFWEEK(incident_date)')
             ->get();
-        
-        $sheet4->setCellValue('A1', 'Weekly Appointments');
-        $sheet4->getStyle('A1')->getFont()->setBold(true)->setSize(12);
-        
-        $sheet4->setCellValue('A2', 'Day');
-        $sheet4->setCellValue('B2', 'Count');
-        $headerStyle = $sheet4->getStyle('A2:B2');
-        $headerStyle->getFont()->setBold(true)->setColor(new \PhpOffice\PhpSpreadsheet\Style\Color('FFFFFFFF'));
-        $headerStyle->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('FF0038A8');
-        
-        $row = 3;
-        foreach ($weeklyAppointments as $data) {
-            $sheet4->setCellValue('A' . $row, $data->day);
-            $sheet4->setCellValue('B' . $row, $data->count);
+
+        $appointmentsByDay = $weeklyAppointments->pluck('count', 'day');
+        $blotterByDay = $weeklyBlotterCases->pluck('count', 'day');
+        $days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+        $row++;
+        foreach ($days as $day) {
+            $sheet1->setCellValue('A' . $row, $day);
+            $sheet1->setCellValue('B' . $row, $appointmentsByDay[$day] ?? 0);
+            $sheet1->setCellValue('C' . $row, $blotterByDay[$day] ?? 0);
             $row++;
         }
-        
-        $row += 2;
-        $sheet4->setCellValue('A' . $row, 'Weekly Blotter Cases');
-        $sheet4->getStyle('A' . $row)->getFont()->setBold(true)->setSize(12);
-        
-        $row++;
-        $sheet4->setCellValue('A' . $row, 'Day');
-        $sheet4->setCellValue('B' . $row, 'Count');
-        $headerStyle = $sheet4->getStyle('A' . $row . ':B' . $row);
-        $headerStyle->getFont()->setBold(true)->setColor(new \PhpOffice\PhpSpreadsheet\Style\Color('FFFFFFFF'));
-        $headerStyle->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('FFCE1126');
-        
-        $row++;
-        foreach ($weeklyBlotterCases as $data) {
-            $sheet4->setCellValue('A' . $row, $data->day);
-            $sheet4->setCellValue('B' . $row, $data->count);
-            $row++;
+
+        foreach (range('A', 'D') as $column) {
+            $sheet1->getColumnDimension($column)->setAutoSize(true);
         }
-        
-        $sheet4->getColumnDimension('A')->setAutoSize(true);
-        $sheet4->getColumnDimension('B')->setAutoSize(true);
-        
+
         $writer = new Csv($spreadsheet);
         $fileName = 'dashboard_summary_' . now()->format('Y-m-d_H-i-s') . '.csv';
-        
+
         return response()->streamDownload(function () use ($writer) {
             $writer->save('php://output');
         }, $fileName);
@@ -263,6 +229,16 @@ class DashboardController extends Controller
             'assets_count' => Asset::count(),
         ];
 
+        $recentAppointments = Appointment::with('resident')
+            ->latest('created_at')
+            ->limit(8)
+            ->get()
+            ->filter(fn($appointment) => $appointment->resident !== null);
+
+        $recentBlotterCases = BlotterRecord::orderBy('incident_date', 'desc')
+            ->limit(8)
+            ->get();
+
         $weeklyAppointments = Appointment::selectRaw('DAYNAME(scheduled_time) as day, COUNT(*) as count')
             ->whereRaw('WEEK(scheduled_time) = WEEK(NOW())')
             ->groupByRaw('DAYNAME(scheduled_time), DAYOFWEEK(scheduled_time)')
@@ -275,60 +251,199 @@ class DashboardController extends Controller
             ->orderByRaw('DAYOFWEEK(incident_date)')
             ->get();
 
-        // Format date in a user-friendly way
-        $generatedDate = now()->format('F d, Y');
-        $generatedTime = now()->format('g:i A');
+        $appointmentsByDay = $weeklyAppointments->pluck('count', 'day');
+        $blotterByDay = $weeklyBlotterCases->pluck('count', 'day');
+        $days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-        // Create PDF content
+        $generatedAt = now()->format('F j, Y g:i A');
+        $escape = static fn(string $value): string => str_replace(
+            ['\\', '(', ')'],
+            ['\\\\', '\(', '\)'],
+            $value
+        );
+        $truncate = static fn(string $value, int $limit): string => strlen($value) > $limit
+            ? substr($value, 0, $limit - 1) . '~'
+            : $value;
+
+        $appointmentRows = [];
+        foreach ($recentAppointments->take(6) as $appointment) {
+            $appointmentRows[] = [
+                $truncate(trim($appointment->resident->first_name . ' ' . $appointment->resident->last_name), 30),
+                $truncate((string) ($appointment->service_type ?? 'N/A'), 20),
+                $appointment->scheduled_time
+                    ? \Carbon\Carbon::parse($appointment->scheduled_time)->format('M j, Y g:i A')
+                    : 'N/A',
+                ucfirst((string) ($appointment->status ?? 'pending')),
+            ];
+        }
+
+        $blotterRows = [];
+        foreach ($recentBlotterCases->take(6) as $case) {
+            $blotterRows[] = [
+                $truncate((string) ($case->case_number ?? 'N/A'), 18),
+                $truncate((string) ($case->incident_type ?? 'N/A'), 32),
+                $case->incident_date
+                    ? \Carbon\Carbon::parse($case->incident_date)->format('M j, Y')
+                    : 'N/A',
+                ucfirst((string) ($case->status ?? 'pending')),
+            ];
+        }
+
+        $weeklyRows = [];
+        foreach ($days as $day) {
+            $weeklyRows[] = [
+                $day,
+                (string) ($appointmentsByDay[$day] ?? 0),
+                (string) ($blotterByDay[$day] ?? 0),
+            ];
+        }
+
+        $stream = '';
+        $drawText = function (string $text, float $x, float $y, int $size = 10) use (&$stream, $escape): void {
+            $safeText = $escape($text);
+            $stream .= "BT\n";
+            $stream .= "/F1 {$size} Tf\n";
+            $stream .= sprintf("1 0 0 1 %.2F %.2F Tm\n", $x, $y);
+            $stream .= "({$safeText}) Tj\n";
+            $stream .= "ET\n";
+        };
+        $drawLine = function (float $x1, float $y1, float $x2, float $y2) use (&$stream): void {
+            $stream .= sprintf("%.2F %.2F m %.2F %.2F l S\n", $x1, $y1, $x2, $y2);
+        };
+
+        $renderTable = function (
+            string $title,
+            array $headers,
+            array $rows,
+            float $x,
+            float $topY,
+            array $colWidths,
+            int $rowHeight = 16
+        ) use (&$stream, $drawText, $drawLine, $truncate): float {
+            $drawText($title, $x, $topY, 12);
+
+            $tableTop = $topY - 10;
+            $totalWidth = array_sum($colWidths);
+            $rowCount = count($rows) + 1;
+            $tableBottom = $tableTop - ($rowHeight * $rowCount);
+
+            // Header background
+            $stream .= sprintf("0.93 g %.2F %.2F %.2F %.2F re f\n", $x, $tableTop - $rowHeight, $totalWidth, $rowHeight);
+            $stream .= "0 g\n";
+
+            // Outer border + horizontal grid
+            for ($i = 0; $i <= $rowCount; $i++) {
+                $lineY = $tableTop - ($i * $rowHeight);
+                $drawLine($x, $lineY, $x + $totalWidth, $lineY);
+            }
+            $drawLine($x, $tableTop, $x, $tableBottom);
+            $drawLine($x + $totalWidth, $tableTop, $x + $totalWidth, $tableBottom);
+
+            // Vertical grid
+            $currentX = $x;
+            foreach ($colWidths as $width) {
+                $currentX += $width;
+                if ($currentX < $x + $totalWidth) {
+                    $drawLine($currentX, $tableTop, $currentX, $tableBottom);
+                }
+            }
+
+            // Header text
+            $currentX = $x;
+            foreach ($headers as $index => $header) {
+                $cellLimit = max(8, (int) floor(($colWidths[$index] - 8) / 5));
+                $drawText($truncate((string) $header, $cellLimit), $currentX + 3, $tableTop - 12, 9);
+                $currentX += $colWidths[$index];
+            }
+
+            // Body text
+            foreach ($rows as $rowIndex => $row) {
+                $currentX = $x;
+                foreach ($row as $cellIndex => $cell) {
+                    $cellLimit = max(8, (int) floor(($colWidths[$cellIndex] - 8) / 5));
+                    $textY = $tableTop - (($rowIndex + 2) * $rowHeight) + 4;
+                    $drawText($truncate((string) $cell, $cellLimit), $currentX + 3, $textY, 9);
+                    $currentX += $colWidths[$cellIndex];
+                }
+            }
+
+            return $tableBottom - 22;
+        };
+
+        $y = 770;
+        $drawText('DASHBOARD SUMMARY REPORT', 40, $y, 18);
+        $y -= 22;
+        $drawText("Generated on: {$generatedAt}", 40, $y, 11);
+        $y -= 24;
+        $drawText('Statistics', 40, $y, 12);
+        $y -= 16;
+        $drawText("Total Residents: {$stats['residents_count']}", 50, $y, 10);
+        $y -= 13;
+        $drawText("Pending Appointments: {$stats['appointments_count']}", 50, $y, 10);
+        $y -= 13;
+        $drawText("Pending Blotter Cases: {$stats['blotter_count']}", 50, $y, 10);
+        $y -= 13;
+        $drawText("Total Assets: {$stats['assets_count']}", 50, $y, 10);
+        $y -= 18;
+
+        $y = $renderTable(
+            'Recent Appointments',
+            ['Resident', 'Service', 'Scheduled Time', 'Status'],
+            $appointmentRows,
+            40,
+            $y,
+            [170, 100, 170, 90]
+        );
+
+        $y = $renderTable(
+            'Recent Blotter Cases',
+            ['Case Number', 'Incident Type', 'Incident Date', 'Status'],
+            $blotterRows,
+            40,
+            $y,
+            [130, 200, 120, 80]
+        );
+
+        if ($y > 80) {
+            $y = $renderTable(
+                'Weekly Statistics',
+                ['Day', 'Appointments', 'Blotter Cases'],
+                $weeklyRows,
+                40,
+                $y,
+                [220, 156, 154]
+            );
+        }
+
+        $objects = [
+            1 => '<</Type /Catalog /Pages 2 0 R>>',
+            2 => '<</Type /Pages /Kids [3 0 R] /Count 1>>',
+            3 => '<</Type /Page /Parent 2 0 R /Resources 4 0 R /MediaBox [0 0 612 792] /Contents 5 0 R>>',
+            4 => '<</Font <</F1 <</Type /Font /Subtype /Type1 /BaseFont /Helvetica>>>>>>',
+            5 => "<</Length " . strlen($stream) . ">>\nstream\n{$stream}endstream",
+        ];
+
         $pdfContent = "%PDF-1.4\n";
-        $pdfContent .= "1 0 obj\n<</Type /Catalog /Pages 2 0 R>>\nendobj\n";
-        $pdfContent .= "2 0 obj\n<</Type /Pages /Kids [3 0 R] /Count 1>>\nendobj\n";
-        $pdfContent .= "3 0 obj\n<</Type /Page /Parent 2 0 R /Resources 4 0 R /MediaBox [0 0 612 792] /Contents 5 0 R>>\nendobj\n";
-        $pdfContent .= "4 0 obj\n<</Font <</F1 <</Type /Font /Subtype /Type1 /BaseFont /Helvetica>>>>>>\nendobj\n";
-        
-        // PDF stream content
-        $stream = "BT\n";
-        $stream .= "/F1 24 Tf\n";
-        $stream .= "50 720 Td\n";
-        $stream .= "(WEEKLY STATISTICS REPORT) Tj\n";
-        $stream .= "0 -40 Td\n";
-        $stream .= "/F1 12 Tf\n";
-        $stream .= "(Generated: " . $generatedDate . " at " . $generatedTime . ") Tj\n";
-        $stream .= "0 -60 Td\n";
-        $stream .= "/F1 14 Tf\n";
-        $stream .= "(Total Residents: " . $stats['residents_count'] . ") Tj\n";
-        $stream .= "0 -30 Td\n";
-        $stream .= "(Barangay Assets: " . $stats['assets_count'] . ") Tj\n";
-        $stream .= "0 -60 Td\n";
-        $stream .= "/F1 12 Tf\n";
-        $stream .= "(Weekly Appointments) Tj\n";
-        $stream .= "0 -25 Td\n";
-        
-        foreach ($weeklyAppointments as $data) {
-            $stream .= "(" . $data->day . ": " . $data->count . ") Tj\n";
-            $stream .= "0 -20 Td\n";
+        $offsets = [0];
+
+        for ($i = 1; $i <= 5; $i++) {
+            $offsets[$i] = strlen($pdfContent);
+            $pdfContent .= "{$i} 0 obj\n{$objects[$i]}\nendobj\n";
         }
-        
-        $stream .= "0 -20 Td\n";
-        $stream .= "/F1 12 Tf\n";
-        $stream .= "(Weekly Blotter Cases) Tj\n";
-        $stream .= "0 -25 Td\n";
-        
-        foreach ($weeklyBlotterCases as $data) {
-            $stream .= "(" . $data->day . ": " . $data->count . ") Tj\n";
-            $stream .= "0 -20 Td\n";
+
+        $startXref = strlen($pdfContent);
+        $pdfContent .= "xref\n0 6\n";
+        $pdfContent .= "0000000000 65535 f \n";
+        for ($i = 1; $i <= 5; $i++) {
+            $pdfContent .= sprintf("%010d 00000 n \n", $offsets[$i]);
         }
-        
-        $stream .= "ET\n";
-        
-        $pdfContent .= "5 0 obj\n<</Length " . strlen($stream) . ">>\nstream\n" . $stream . "\nendstream\nendobj\n";
-        $pdfContent .= "xref\n0 6\n0000000000 65535 f\n0000000009 00000 n\n0000000058 00000 n\n0000000115 00000 n\n0000000206 00000 n\n0000000302 00000 n\n";
+
         $pdfContent .= "trailer\n<</Size 6 /Root 1 0 R>>\n";
-        $pdfContent .= "startxref\n" . (strlen($pdfContent) - 50) . "\n";
+        $pdfContent .= "startxref\n{$startXref}\n";
         $pdfContent .= "%%EOF\n";
-        
+
         $fileName = 'weekly_statistics_' . now()->format('Y-m-d_H-i-s') . '.pdf';
-        
+
         return response()->streamDownload(function () use ($pdfContent) {
             echo $pdfContent;
         }, $fileName, ['Content-Type' => 'application/pdf']);
