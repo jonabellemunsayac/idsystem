@@ -9,83 +9,116 @@
 </div>
 
 <!-- Metrics Grid -->
+@php
+    $role = auth()->user()->role ?? null;
+    $canAccessResidents = in_array($role, ['encoder', 'admin', 'superadmin'], true);
+    $canAccessOpsModules = in_array($role, ['admin', 'superadmin'], true);
+@endphp
 <div class="row g-4 mb-4">
     <!-- Total Residents -->
     <div class="col-12 col-md-6 col-lg-3">
-        <div class="card border-0 shadow-sm h-100 hover-shadow">
-            <div class="card-body p-4">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div class="flex-grow-1">
-                        <p class="text-muted mb-2 fw-medium" style="font-size: 0.875rem;">Total Residents</p>
-                        <h3 class="fs-2 fw-bold mb-2">{{ number_format($stats['residents_count'] ?? 0) }}</h3>
-                        <p class="text-success mb-0" style="font-size: 0.875rem;">
-                            <i class="bi bi-arrow-up"></i> +12% from last month
-                        </p>
-                    </div>
-                    <div class="rounded-3 bg-primary bg-opacity-10 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; flex-shrink: 0;">
-                        <i class="bi bi-people text-primary" style="font-size: 1.5rem;"></i>
+        @if($canAccessResidents)
+            <a href="{{ route('residents.index') }}" class="widget-link">
+        @endif
+            <div class="card border-0 shadow-sm h-100 hover-shadow {{ $canAccessResidents ? 'widget-card-clickable' : 'widget-card-static' }}">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="flex-grow-1">
+                            <p class="text-muted mb-2 fw-medium" style="font-size: 0.875rem;">Total Residents</p>
+                            <h3 class="fs-2 fw-bold mb-2">{{ number_format($stats['residents_count'] ?? 0) }}</h3>
+                            <p class="text-success mb-0" style="font-size: 0.875rem;">
+                                <i class="bi bi-arrow-up"></i> +12% from last month
+                            </p>
+                        </div>
+                        <div class="rounded-3 bg-primary bg-opacity-10 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; flex-shrink: 0;">
+                            <i class="bi bi-people text-primary" style="font-size: 1.5rem;"></i>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        @if($canAccessResidents)
+            </a>
+        @endif
     </div>
 
     <!-- Pending Requests -->
     <div class="col-12 col-md-6 col-lg-3">
-        <div class="card border-0 shadow-sm h-100 hover-shadow">
-            <div class="card-body p-4">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div class="flex-grow-1">
-                        <p class="text-muted mb-2 fw-medium" style="font-size: 0.875rem;">Pending Requests</p>
-                        <h3 class="fs-2 fw-bold mb-2">{{ number_format($stats['appointments_count'] ?? 0) }}</h3>
-                        <p class="text-success mb-0" style="font-size: 0.875rem;">
-                            <i class="bi bi-arrow-down"></i> -5% from last week
-                        </p>
-                    </div>
-                    <div class="rounded-3 bg-warning bg-opacity-10 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; flex-shrink: 0;">
-                        <i class="bi bi-person-check text-warning" style="font-size: 1.5rem;"></i>
+        @if($canAccessOpsModules)
+            <a href="{{ route('appointments.index') }}" class="widget-link">
+        @endif
+            <div class="card border-0 shadow-sm h-100 hover-shadow {{ $canAccessOpsModules ? 'widget-card-clickable' : 'widget-card-static' }}">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="flex-grow-1">
+                            <p class="text-muted mb-2 fw-medium" style="font-size: 0.875rem;">Pending Requests</p>
+                            <h3 class="fs-2 fw-bold mb-2">{{ number_format($stats['appointments_count'] ?? 0) }}</h3>
+                            <p class="text-success mb-0" style="font-size: 0.875rem;">
+                                <i class="bi bi-arrow-down"></i> -5% from last week
+                            </p>
+                        </div>
+                        <div class="rounded-3 bg-warning bg-opacity-10 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; flex-shrink: 0;">
+                            <i class="bi bi-person-check text-warning" style="font-size: 1.5rem;"></i>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        @if($canAccessOpsModules)
+            </a>
+        @endif
     </div>
 
     <!-- Blotter Cases -->
     <div class="col-12 col-md-6 col-lg-3">
-        <div class="card border-0 shadow-sm h-100 hover-shadow">
-            <div class="card-body p-4">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div class="flex-grow-1">
-                        <p class="text-muted mb-2 fw-medium" style="font-size: 0.875rem;">Blotter Cases</p>
-                        <h3 class="fs-2 fw-bold mb-2">{{ number_format($stats['blotter_count'] ?? 0) }}</h3>
-                        <p class="text-success mb-0" style="font-size: 0.875rem;">
-                            <i class="bi bi-arrow-up"></i> 3 resolved today
-                        </p>
-                    </div>
-                    <div class="rounded-3 bg-danger bg-opacity-10 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; flex-shrink: 0;">
-                        <i class="bi bi-file-earmark-text text-danger" style="font-size: 1.5rem;"></i>
+        @if($canAccessOpsModules)
+            <a href="{{ route('blotter.index') }}" class="widget-link">
+        @endif
+            <div class="card border-0 shadow-sm h-100 hover-shadow {{ $canAccessOpsModules ? 'widget-card-clickable' : 'widget-card-static' }}">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="flex-grow-1">
+                            <p class="text-muted mb-2 fw-medium" style="font-size: 0.875rem;">Blotter Cases</p>
+                            <h3 class="fs-2 fw-bold mb-2">{{ number_format($stats['blotter_count'] ?? 0) }}</h3>
+                            <p class="text-success mb-0" style="font-size: 0.875rem;">
+                                <i class="bi bi-arrow-up"></i> 3 resolved today
+                            </p>
+                        </div>
+                        <div class="rounded-3 bg-danger bg-opacity-10 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; flex-shrink: 0;">
+                            <i class="bi bi-file-earmark-text text-danger" style="font-size: 1.5rem;"></i>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        @if($canAccessOpsModules)
+            </a>
+        @endif
     </div>
 
     <!-- Barangay Assets -->
     <div class="col-12 col-md-6 col-lg-3">
-        <div class="card border-0 shadow-sm h-100 hover-shadow">
-            <div class="card-body p-4">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div class="flex-grow-1">
-                        <p class="text-muted mb-2 fw-medium" style="font-size: 0.875rem;">Barangay Assets</p>
-                        <h3 class="fs-2 fw-bold mb-2">{{ number_format($stats['assets_count'] ?? 0) }}</h3>
-                        <p class="text-muted mb-0" style="font-size: 0.875rem; visibility: hidden;">Placeholder</p>
-                    </div>
-                    <div class="rounded-3 bg-success bg-opacity-10 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; flex-shrink: 0;">
-                        <i class="bi bi-box-seam text-success" style="font-size: 1.5rem;"></i>
+        @if($canAccessOpsModules)
+            <a href="{{ route('assets.index') }}" class="widget-link">
+        @endif
+            <div class="card border-0 shadow-sm h-100 hover-shadow {{ $canAccessOpsModules ? 'widget-card-clickable' : 'widget-card-static' }}">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="flex-grow-1">
+                            <p class="text-muted mb-2 fw-medium" style="font-size: 0.875rem;">Barangay Assets</p>
+                            <h3 class="fs-2 fw-bold mb-2">{{ number_format($stats['assets_count'] ?? 0) }}</h3>
+                            @if($canAccessOpsModules)
+                                <p class="text-muted mb-0" style="font-size: 0.875rem;">Click to view inventory details</p>
+                            @else
+                                <p class="text-muted mb-0" style="font-size: 0.875rem;">Read-only overview for encoder role</p>
+                            @endif
+                        </div>
+                        <div class="rounded-3 bg-success bg-opacity-10 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; flex-shrink: 0;">
+                            <i class="bi bi-box-seam text-success" style="font-size: 1.5rem;"></i>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        @if($canAccessOpsModules)
+            </a>
+        @endif
     </div>
 </div>
 
@@ -317,6 +350,21 @@
 </script>
 
 <style>
+    .widget-link {
+        color: inherit;
+        text-decoration: none;
+        display: block;
+        height: 100%;
+    }
+
+    .widget-card-clickable {
+        cursor: pointer;
+    }
+
+    .widget-card-static {
+        cursor: default;
+    }
+
     .hover-shadow {
         transition: box-shadow 0.2s ease-in-out;
     }
