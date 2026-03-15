@@ -155,6 +155,12 @@ class ResidentController extends Controller
             'signature_base64' => ['nullable', 'string', 'max:1048576'],
         ]);
 
+        $validated['first_name'] = strtoupper(trim($validated['first_name']));
+        $validated['middle_name'] = isset($validated['middle_name']) && $validated['middle_name'] !== null && $validated['middle_name'] !== ''
+            ? strtoupper(trim($validated['middle_name']))
+            : null;
+        $validated['last_name'] = strtoupper(trim($validated['last_name']));
+
         $profileImagePath = null;
         if ($request->hasFile('profile_image')) {
             try {
@@ -632,6 +638,12 @@ class ResidentController extends Controller
             'new_password' => ['nullable', 'string', 'min:8', 'confirmed'],
         ]);
 
+        $validated['first_name'] = strtoupper(trim($validated['first_name']));
+        $validated['middle_name'] = isset($validated['middle_name']) && $validated['middle_name'] !== null && $validated['middle_name'] !== ''
+            ? strtoupper(trim($validated['middle_name']))
+            : null;
+        $validated['last_name'] = strtoupper(trim($validated['last_name']));
+
         if ($request->hasFile('profile_image')) {
             try {
                 $file = $request->file('profile_image');
@@ -905,6 +917,12 @@ class ResidentController extends Controller
             'signature' => 'nullable|image|max:1024',
             'is_head_of_family' => 'nullable|boolean',
         ]);
+
+        $validated['first_name'] = strtoupper(trim($validated['first_name']));
+        $validated['middle_name'] = isset($validated['middle_name']) && $validated['middle_name'] !== null && $validated['middle_name'] !== ''
+            ? strtoupper(trim($validated['middle_name']))
+            : null;
+        $validated['last_name'] = strtoupper(trim($validated['last_name']));
 
         // Handle profile image upload
         $profileImagePath = null;
@@ -1218,4 +1236,3 @@ class ResidentController extends Controller
         }
     }
 }
-
