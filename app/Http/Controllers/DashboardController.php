@@ -88,7 +88,7 @@ class DashboardController extends Controller
         $sheet1 = $spreadsheet->getActiveSheet();
         $sheet1->setTitle('Dashboard Summary');
 
-        $generatedAt = now()->format('F j, Y g:i A');
+        $generatedAt = now('Asia/Manila')->format('F j, Y g:i A');
 
         $sheet1->setCellValue('A1', 'DASHBOARD SUMMARY REPORT');
         $sheet1->setCellValue('A2', 'Generated On');
@@ -255,7 +255,7 @@ class DashboardController extends Controller
         $blotterByDay = $weeklyBlotterCases->pluck('count', 'day');
         $days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-        $generatedAt = now()->format('F j, Y g:i A');
+        $generatedAt = now('Asia/Manila')->format('F j, Y g:i A');
         $escape = static fn(string $value): string => str_replace(
             ['\\', '(', ')'],
             ['\\\\', '\(', '\)'],
