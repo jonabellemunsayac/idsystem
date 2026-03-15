@@ -13,7 +13,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Str;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
@@ -36,6 +35,21 @@ class ResidentController extends Controller
         
         $formatted = implode(', ', array_filter($addressParts));
         return $formatted ?: ($resident->address ?? '');
+    }
+
+    /**
+     * Generate default resident password format: LnameMMDDYY (DOB)
+     * Sample: Carpio053176
+     */
+    private function generateDefaultPassword(Resident $resident): string
+    {
+        $cleanLastName = preg_replace('/[^A-Za-z0-9]/', '', trim((string) $resident->last_name));
+        $lastNamePart = $cleanLastName !== '' ? ucfirst(strtolower($cleanLastName)) : 'Resident';
+        $birthDatePart = $resident->birth_date
+            ? Carbon::parse($resident->birth_date)->format('mdy')
+            : now()->format('mdy');
+
+        return $lastNamePart . $birthDatePart;
     }
 
     public function index(Request $request)
@@ -467,7 +481,7 @@ class ResidentController extends Controller
             $counter++;
         }
 
-        $password = Str::random(8);
+        $password = $this->generateDefaultPassword($resident);
         
         try {
             ResidentAccount::create([
@@ -1107,7 +1121,7 @@ class ResidentController extends Controller
             $counter++;
         }
 
-        $password = Str::random(8);
+        $password = $this->generateDefaultPassword($resident);
         
         // Create resident account
         ResidentAccount::create([
