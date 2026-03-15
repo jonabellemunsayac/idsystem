@@ -71,7 +71,7 @@
                                     <li><a class="dropdown-item" href="{{ route('residents.edit', $resident['id']) }}" style="font-size: 0.75rem;">Edit Record</a></li>
                                     <li><hr class="dropdown-divider m-1"></li>
                                     <li>
-                                        <form action="{{ route('residents.destroy', $resident['id']) }}" method="POST" onsubmit="return confirm('Are you sure?');">
+                                        <form action="{{ route('residents.destroy', $resident['id']) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete?');">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="dropdown-item text-danger" style="font-size: 0.75rem;">Delete</button>
@@ -161,7 +161,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             <li><hr class="dropdown-divider m-1"></li>
                             <li>
                                 <form action="/residents/${r.id}" method="POST"
-                                      onsubmit="return confirm('Are you sure?');">
+                                      onsubmit="return confirm('Are you sure you want to delete?');">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="dropdown-item text-danger"
