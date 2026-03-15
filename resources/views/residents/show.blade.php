@@ -22,7 +22,7 @@
             <form action="{{ route('residents.destroy', $resident['id']) }}" method="POST" style="display: inline;">
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="btn btn-danger btn-sm" style="font-size: 0.75rem; padding: 0.3rem 0.6rem;" onclick="return confirm('Are you sure?');">
+                <button type="submit" class="btn btn-danger btn-sm" style="font-size: 0.75rem; padding: 0.3rem 0.6rem;" onclick="return confirm('Are you sure you want to delete?');">
                     <i class="bi bi-trash me-1"></i> Delete
                 </button>
             </form>

@@ -249,7 +249,18 @@
 @endsection
 
 @section('content')
-<a href="#" class="back-link" id="backBtn"><i class="bi bi-arrow-left"></i> Back to Certificates</a>
+@php
+    $isEncoder = auth()->check() && auth()->user()->role === 'encoder';
+    $selectedResidentId = $residentPrefill['resident_id'] ?? request('resident_id');
+    $backUrl = $isEncoder
+        ? ($selectedResidentId ? route('residents.show', $selectedResidentId) : route('residents.index'))
+        : route('certificates.index');
+    $backLabel = $isEncoder
+        ? ($selectedResidentId ? 'Back to Resident' : 'Back to Residents')
+        : 'Back to Certificates';
+@endphp
+
+<a href="#" class="back-link" id="backBtn"><i class="bi bi-arrow-left"></i> {{ $backLabel }}</a>
 
 <div class="editor-wrapper">
 
@@ -273,7 +284,7 @@
                     <i class="bi bi-file-earmark-word-fill"></i> Download Word Template
                 </a>
                 <button class="btn-action btn-back-action" id="backBtnAction">
-                    <i class="bi bi-arrow-left"></i> Back to Certificates
+                    <i class="bi bi-arrow-left"></i> {{ $backLabel }}
                 </button>
             </div>
         </div>
@@ -453,7 +464,7 @@
     /* ---------- Back button ---------- */
     function goBack(e) {
         e.preventDefault();
-        window.location.href = '{{ route("certificates.index") }}';
+        window.location.href = @json($backUrl);
     }
 
     var residentPrefill = @json($residentPrefill ?? null);
