@@ -523,9 +523,8 @@ class ResidentController extends Controller
             ->orderBy('scheduled_time', 'desc')
             ->get();
         
-        // Fetch blotter records where resident is respondent/accused
-        $blotterRecords = BlotterRecord::where('respondent_name', 'LIKE', '%' . $resident->first_name . '%')
-            ->where('respondent_name', 'LIKE', '%' . $resident->last_name . '%')
+        // Fetch blotter records filed by this resident
+        $blotterRecords = BlotterRecord::where('resident_id', $resident->id)
             ->orderBy('created_at', 'desc')
             ->get();
 

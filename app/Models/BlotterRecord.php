@@ -9,6 +9,7 @@ class BlotterRecord extends Model
     protected $table = 'blotter_records';
 
     protected $fillable = [
+        'resident_id',
         'case_number',
         'complainant_name',
         'complainant_contact',
@@ -29,4 +30,9 @@ class BlotterRecord extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+
+    public function resident()
+    {
+        return $this->belongsTo(Resident::class);
+    }
 }
