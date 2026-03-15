@@ -104,6 +104,15 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::post('/api/ids/generate', [IDController::class, 'generateID'])->name('api.ids.generate');
         Route::post('/api/ids/log-print', [IDController::class, 'logPrint'])->name('api.ids.log-print');
         Route::resource('ids', IDController::class);
+
+        // Certificates Management (encoder, admin, superadmin)
+        Route::get('certificates/template/download/{type}', [CertificateController::class, 'downloadTemplate'])->name('certificates.template.download');
+        Route::get('certificates/template/file/{type}', [CertificateController::class, 'getTemplateFile'])->name('certificates.template.file');
+        Route::get('certificates/word-template/{type}/{resident?}', [CertificateController::class, 'wordTemplate'])->name('certificates.word.template');
+        Route::get('certificates/editor', [CertificateController::class, 'editor'])->name('certificates.editor');
+        Route::post('certificates/print-log', [CertificateController::class, 'logPrinted'])->name('certificates.print-log');
+        Route::resource('certificates', CertificateController::class);
+        Route::patch('certificates/{certificate}/approve', [CertificateController::class, 'approve'])->name('certificates.approve');
     });
 
     // Appointments, Blotter, Assets, Certificates, Reports (admin, superadmin)
@@ -113,15 +122,6 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::get('/appointments/booked-slots/{date}', [AppointmentController::class, 'getBookedSlots'])->name('appointments.getBookedSlots');
         Route::resource('appointments', AppointmentController::class);
         Route::patch('appointments/{appointment}/approve', [AppointmentController::class, 'approve'])->name('appointments.approve');
-
-        // Certificates Management
-        Route::get('certificates/template/download/{type}', [CertificateController::class, 'downloadTemplate'])->name('certificates.template.download');
-        Route::get('certificates/template/file/{type}', [CertificateController::class, 'getTemplateFile'])->name('certificates.template.file');
-        Route::get('certificates/word-template/{type}/{resident?}', [CertificateController::class, 'wordTemplate'])->name('certificates.word.template');
-        Route::get('certificates/editor', [CertificateController::class, 'editor'])->name('certificates.editor');
-        Route::post('certificates/print-log', [CertificateController::class, 'logPrinted'])->name('certificates.print-log');
-        Route::resource('certificates', CertificateController::class);
-        Route::patch('certificates/{certificate}/approve', [CertificateController::class, 'approve'])->name('certificates.approve');
 
         // Blotter Records
         Route::resource('blotter', BlotterController::class);

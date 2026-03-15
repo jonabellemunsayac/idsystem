@@ -528,11 +528,15 @@
                 <a href="{{ route('assets.index') }}" class="list-group-item {{ request()->routeIs('assets.*') ? 'active' : '' }}">
                     <i class="bi bi-box-seam-fill"></i> Assets Management
                 </a>
-                
+                @endif
+
+                @if(in_array(auth()->user()->role, ['encoder', 'admin', 'superadmin']))
                 <a href="{{ route('certificates.index') }}" class="list-group-item {{ request()->routeIs('certificates.*') ? 'active' : '' }}">
                     <i class="bi bi-award-fill"></i> Certificates
                 </a>
-                
+                @endif
+
+                @if(in_array(auth()->user()->role, ['admin', 'superadmin']))
                 <a href="{{ route('reports.index') }}" class="list-group-item {{ request()->routeIs('reports.*') ? 'active' : '' }}">
                     <i class="bi bi-bar-chart-fill"></i> Reports & Analytics
                 </a>
