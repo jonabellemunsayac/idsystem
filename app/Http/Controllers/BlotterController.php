@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BlotterRecord;
+use App\Models\Resident;
 use App\Services\ActivityLogger;
 use Illuminate\Http\Request;
 
@@ -25,7 +26,8 @@ class BlotterController extends Controller
         }
 
         // Prioritize pending status first, then by most recent (created_at)
-        $cases = $query->orderByRaw("FIELD(status, 'pending', 'investigating', 'resolved')")
+        $cases = $query->with('resident')
+            ->orderByRaw("FIELD(status, 'pending', 'investigating', 'resolved')")
             ->orderBy('created_at', 'desc')
             ->paginate(5);
         return view('blotter.index', compact('cases'));
@@ -53,7 +55,7 @@ class BlotterController extends Controller
             'case_id' => 'nullable|string',
             'date' => 'required|date',
             'type' => 'required|string',
-            'complainant_name' => 'required|string|max:255',
+            'resident_id' => 'required|exists:residents,id',
             'complainant_contact' => 'nullable|regex:/^09[0-9]{9}$/',
             'respondent_name' => 'nullable|string|max:255',
             'respondent_contact' => 'nullable|regex:/^09[0-9]{9}$/',
@@ -66,6 +68,8 @@ class BlotterController extends Controller
         ]);
 
         try {
+            $resident = Resident::findOrFail($validated['resident_id']);
+
             // Generate case number if not provided
             if (empty($validated['case_id'])) {
                 $caseNumber = 'BLT-' . str_pad(BlotterRecord::max('id') + 1, 6, '0', STR_PAD_LEFT);
@@ -75,9 +79,10 @@ class BlotterController extends Controller
 
             // Create the blotter record
             $blotterRecord = BlotterRecord::create([
+                'resident_id' => $resident->id,
                 'case_number' => $caseNumber,
-                'complainant_name' => $validated['complainant_name'],
-                'complainant_contact' => $validated['complainant_contact'] ?? null,
+                'complainant_name' => trim($resident->first_name . ' ' . $resident->last_name),
+                'complainant_contact' => $validated['complainant_contact'] ?? $resident->contact_number,
                 'respondent_name' => $validated['respondent_name'] ?? null,
                 'respondent_contact' => $validated['respondent_contact'] ?? null,
                 'incident_type' => $validated['type'],

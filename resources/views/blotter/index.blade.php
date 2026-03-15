@@ -3,6 +3,36 @@
 @section('title', 'Blotter Records')
 
 @section('content')
+<style>
+    #complainantResidentResults {
+        background: #ffffff;
+        border: 1px solid #dee2e6;
+        border-radius: 0.375rem;
+    }
+
+    #complainantResidentResults .resident-result-item {
+        background: #ffffff;
+        color: #212529;
+        border: 0;
+        border-bottom: 1px solid #f1f3f5;
+        text-align: left;
+    }
+
+    #complainantResidentResults .resident-result-item .fw-semibold {
+        color: #333333;
+    }
+
+    #complainantResidentResults .resident-result-item:last-child {
+        border-bottom: 0;
+    }
+
+    #complainantResidentResults .resident-result-item:hover,
+    #complainantResidentResults .resident-result-item:focus {
+        background: #f8f9fa;
+        color: #111827;
+    }
+</style>
+
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
         <h1 class="h4 fw-bold text-dark mb-1">Blotter Records</h1>
@@ -52,7 +82,15 @@
                             <div class="fw-medium text-dark" style="font-size: 0.75rem;">{{ $case->case_number }}</div>
                         </td>
                         <td style="font-size: 0.7rem;">{{ ucfirst(str_replace('-', ' ', $case->incident_type ?? '')) }}</td>
-                        <td style="font-size: 0.7rem;">{{ $case->complainant_name ?? '-' }}</td>
+                        <td style="font-size: 0.7rem;">
+                            @if($case->resident_id && $case->resident)
+                                <a href="{{ route('residents.show', $case->resident_id) }}" class="text-decoration-none fw-semibold">
+                                    {{ $case->resident->first_name }} {{ $case->resident->last_name }}
+                                </a>
+                            @else
+                                {{ $case->complainant_name ?? '-' }}
+                            @endif
+                        </td>
                         <td style="font-size: 0.7rem; max-width: 120px;">{{ $case->incident_location ?? '-' }}</td>
                         <td style="font-size: 0.7rem;">{{ $case->incident_date ? $case->incident_date->format('m/d/Y') : '-' }}</td>
                         <td style="font-size: 0.7rem;">
@@ -153,8 +191,13 @@
                     <!-- Complainant Information -->
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label for="complainantName" class="form-label fw-bold text-dark">Complainant Name <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="complainantName" placeholder="Full name" required>
+                            <label for="complainantResidentSearch" class="form-label fw-bold text-dark">Complainant Name <span class="text-danger">*</span></label>
+                            <div class="position-relative">
+                                <input type="text" class="form-control" id="complainantResidentSearch" placeholder="Type resident name..." autocomplete="off" required>
+                                <input type="hidden" id="complainantResidentId">
+                                <div id="complainantResidentResults" class="list-group position-absolute w-100 shadow-sm" style="z-index: 1055; display: none;"></div>
+                            </div>
+                            <small class="text-muted">Type at least 2 letters and select from results.</small>
                         </div>
                         <div class="col-md-6">
                             <label for="complainantContact" class="form-label fw-bold text-dark">Contact Number</label>
@@ -268,6 +311,82 @@
 </div>
 
 <script>
+    const residentSearchUrl = @json(route('residents.search'));
+    let residentSearchDebounce = null;
+
+    function escapeHtml(text) {
+        return String(text || '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
+    function hideResidentResults() {
+        const results = document.getElementById('complainantResidentResults');
+        if (!results) return;
+        results.style.display = 'none';
+        results.innerHTML = '';
+    }
+
+    function renderResidentResults(items) {
+        const results = document.getElementById('complainantResidentResults');
+        if (!results) return;
+
+        if (!items.length) {
+            results.innerHTML = '<div class="list-group-item text-muted small">No matching residents found.</div>';
+            results.style.display = 'block';
+            return;
+        }
+
+        results.innerHTML = items.map((resident) => {
+            const fullName = `${resident.first_name || ''} ${resident.last_name || ''}`.trim();
+            return `
+                <button type="button" class="list-group-item list-group-item-action resident-result-item"
+                    data-id="${resident.id}"
+                    data-name="${escapeHtml(fullName)}"
+                    data-contact="${escapeHtml(resident.contact_number || '')}">
+                    <div class="fw-semibold">${escapeHtml(fullName)}</div>
+                    <small class="text-muted">${escapeHtml(resident.address || '')}</small>
+                </button>
+            `;
+        }).join('');
+        results.style.display = 'block';
+
+        results.querySelectorAll('.resident-result-item').forEach((btn) => {
+            btn.addEventListener('click', function () {
+                const selectedId = this.getAttribute('data-id') || '';
+                const selectedName = this.getAttribute('data-name') || '';
+                const selectedContact = this.getAttribute('data-contact') || '';
+
+                document.getElementById('complainantResidentId').value = selectedId;
+                document.getElementById('complainantResidentSearch').value = selectedName;
+
+                const contactInput = document.getElementById('complainantContact');
+                if (contactInput && !contactInput.value && selectedContact) {
+                    contactInput.value = selectedContact;
+                }
+
+                hideResidentResults();
+            });
+        });
+    }
+
+    async function searchResidents(term) {
+        try {
+            const response = await fetch(`${residentSearchUrl}?q=${encodeURIComponent(term)}`, {
+                headers: { 'Accept': 'application/json' }
+            });
+            const data = await response.json();
+            const residents = Array.isArray(data.residents) ? data.residents.slice(0, 8) : [];
+            renderResidentResults(residents);
+        } catch (error) {
+            console.error('Resident search failed:', error);
+            hideResidentResults();
+        }
+    }
+
     async function viewCaseDetails(caseId) {
         currentCaseId = caseId;
         try {
@@ -561,6 +680,34 @@
         document.getElementById('respondentContact').addEventListener('input', function(e) {
             this.value = this.value.replace(/[^0-9]/g, '');
         });
+
+        const residentSearchInput = document.getElementById('complainantResidentSearch');
+        const residentIdInput = document.getElementById('complainantResidentId');
+        const residentResults = document.getElementById('complainantResidentResults');
+
+        if (residentSearchInput && residentIdInput) {
+            residentSearchInput.addEventListener('input', function () {
+                residentIdInput.value = '';
+                const term = this.value.trim();
+
+                if (residentSearchDebounce) {
+                    clearTimeout(residentSearchDebounce);
+                }
+
+                if (term.length < 2) {
+                    hideResidentResults();
+                    return;
+                }
+
+                residentSearchDebounce = setTimeout(() => searchResidents(term), 250);
+            });
+        }
+
+        document.addEventListener('click', function (event) {
+            if (!residentSearchInput || !residentResults) return;
+            if (residentSearchInput.contains(event.target) || residentResults.contains(event.target)) return;
+            hideResidentResults();
+        });
     });
 
     // Handle form submission
@@ -576,11 +723,17 @@
         }
 
         // Collect form data
+        const selectedResidentId = document.getElementById('complainantResidentId').value;
+        if (!selectedResidentId) {
+            alert('Please select a complainant from the resident search results.');
+            return;
+        }
+
         const caseData = {
             case_id: document.getElementById('caseId').value,
             date: document.getElementById('caseDate').value,
             type: document.getElementById('caseType').value,
-            complainant_name: document.getElementById('complainantName').value,
+            resident_id: selectedResidentId,
             complainant_contact: document.getElementById('complainantContact').value,
             respondent_name: document.getElementById('respondentName').value,
             respondent_contact: document.getElementById('respondentContact').value,
@@ -629,6 +782,8 @@
                 // Reset form
                 form.classList.remove('was-validated');
                 form.reset();
+                document.getElementById('complainantResidentId').value = '';
+                hideResidentResults();
 
                 // Reload page after 2 seconds to show new case
                 setTimeout(() => {
