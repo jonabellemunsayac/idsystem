@@ -18,6 +18,15 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class ResidentController extends Controller
 {
+    private function normalizeStreetName(?string $streetName): ?string
+    {
+        if (!$streetName) {
+            return $streetName;
+        }
+
+        return preg_replace('/\bSt\.?$/', 'St.', $streetName);
+    }
+
     /**
      * Format resident address from structured fields
      */
@@ -26,7 +35,7 @@ class ResidentController extends Controller
         $addressParts = [];
         
         if ($resident->house_no) $addressParts[] = '#' . $resident->house_no;
-        if ($resident->street_name) $addressParts[] = $resident->street_name;
+        if ($resident->street_name) $addressParts[] = $this->normalizeStreetName($resident->street_name);
         if ($resident->purok) $addressParts[] = 'Purok ' . $resident->purok;
         if ($resident->barangay) $addressParts[] = $resident->barangay;
         if ($resident->municipality) $addressParts[] = $resident->municipality;
@@ -150,7 +159,7 @@ class ResidentController extends Controller
             'civil_status' => ['required', 'string', 'max:255'],
             'nationality' => ['nullable', 'string', 'max:255'],
             'barangay' => ['nullable', 'string', 'max:255'],
-            'house_no' => ['nullable', 'string', 'max:255'],
+            'house_no' => ['required', 'string', 'max:255'],
             'street_name' => ['nullable', 'string', 'max:255'],
             'purok' => ['nullable', 'string', 'max:255'],
             'province' => ['nullable', 'string', 'max:255'],
@@ -411,7 +420,7 @@ class ResidentController extends Controller
 
         $addressParts = [];
         if (!empty($validated['house_no'])) $addressParts[] = '#' . $validated['house_no'];
-        if (!empty($validated['street_name'])) $addressParts[] = $validated['street_name'];
+        if (!empty($validated['street_name'])) $addressParts[] = $this->normalizeStreetName($validated['street_name']);
         if (!empty($validated['purok'])) $addressParts[] = 'Purok ' . $validated['purok'];
         if (!empty($validated['barangay'])) $addressParts[] = 'Barangay ' . $validated['barangay'];
         if (!empty($validated['municipality'])) $addressParts[] = $validated['municipality'];
@@ -642,7 +651,23 @@ class ResidentController extends Controller
                 'profile_image' => $resident->profile_image,
                 'signature' => $resident->signature,
                 'special_sector' => $resident->special_sector,
+                'household_composition' => $resident->household_composition,
                 'blood_type' => $resident->blood_type,
+                'height_cm' => $resident->height_cm,
+                'weight_kg' => $resident->weight_kg,
+                'religion' => $resident->religion,
+                'spouse_name' => $resident->spouse_name,
+                'children_names' => $resident->children_names,
+                'father_name' => $resident->father_name,
+                'mother_maiden_name' => $resident->mother_maiden_name,
+                'residency_type' => $resident->residency_type,
+                'tenure_status' => $resident->tenure_status,
+                'length_of_stay' => $resident->length_of_stay,
+                'registered_voter' => $resident->registered_voter,
+                'precinct_no' => $resident->precinct_no,
+                'occupation' => $resident->occupation,
+                'employment_type' => $resident->employment_type,
+                'economic_status' => $resident->economic_status,
                 'is_head_of_family' => $resident->clan && $resident->clan->resident_id === $resident->id,
                 'emergency_contact_name' => $resident->emergency_contact_name,
                 'emergency_contact_no' => $resident->emergency_contact_no,
@@ -669,7 +694,7 @@ class ResidentController extends Controller
             'civil_status' => ['required', 'string', 'max:255'],
             'nationality' => ['nullable', 'string', 'max:255'],
             'barangay' => ['nullable', 'string', 'max:255'],
-            'house_no' => ['nullable', 'string', 'max:255'],
+            'house_no' => ['required', 'string', 'max:255'],
             'street_name' => ['nullable', 'string', 'max:255'],
             'purok' => ['nullable', 'string', 'max:255'],
             'province' => ['nullable', 'string', 'max:255'],
@@ -694,6 +719,7 @@ class ResidentController extends Controller
             'occupation' => ['nullable', 'string', 'max:255'],
             'employment_type' => ['nullable', 'in:Government,Private'],
             'economic_status' => ['nullable', 'in:Low-income/Poor,Low-Income but Not Poor,Lower Middle Income,Middle Income/Independent,High Income/Rich'],
+            'household_composition' => ['nullable', 'in:Head of the Family,Spouse,Child'],
             'special_sector' => ['nullable', 'string', 'max:255'],
             'emergency_contact_name' => ['nullable', 'string', 'max:255'],
             'emergency_contact_no' => ['nullable', 'string', 'max:20'],
@@ -1085,7 +1111,7 @@ class ResidentController extends Controller
         // Build address from parts
         $addressParts = [];
         if (!empty($validated['house_no'])) $addressParts[] = '#' . $validated['house_no'];
-        if (!empty($validated['street_name'])) $addressParts[] = $validated['street_name'];
+        if (!empty($validated['street_name'])) $addressParts[] = $this->normalizeStreetName($validated['street_name']);
         if (!empty($validated['purok'])) $addressParts[] = 'Purok ' . $validated['purok'];
         $addressParts[] = 'Barangay Kalawaan';
         if (!empty($validated['municipality'])) $addressParts[] = $validated['municipality'];

@@ -113,11 +113,118 @@
                     </div>
 
                     <div class="col-md-4">
-                        <div class="form-check mt-4">
-                            <input class="form-check-input" type="checkbox" name="is_head_of_family" id="is_head_of_family" value="1" @checked(old('is_head_of_family', $resident['is_head_of_family'] ?? false)) style="font-size: 0.8rem;">
-                            <label class="form-check-label text-muted small fw-bold" for="is_head_of_family" style="font-size: 0.65rem;">Head of Family</label>
-                            <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Check if this person is the head of the family</small>
+                        @php($selectedHouseholdComposition = old('household_composition', $resident['household_composition'] ?? ($resident['is_head_of_family'] ? 'Head of the Family' : '')))
+                        <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Household Composition <span class="text-muted">(Optional)</span></label>
+                        <input type="hidden" name="is_head_of_family" id="is_head_of_family" value="{{ old('is_head_of_family', $resident['is_head_of_family'] ? 1 : 0) ? 1 : 0 }}">
+                        <select class="form-select form-select-sm" name="household_composition" id="household_composition" style="font-size: 0.8rem;">
+                            <option value="">Select...</option>
+                            <option value="Head of the Family" {{ $selectedHouseholdComposition === 'Head of the Family' ? 'selected' : '' }}>Head of the Family</option>
+                            <option value="Spouse" {{ $selectedHouseholdComposition === 'Spouse' ? 'selected' : '' }}>Spouse</option>
+                            <option value="Child" {{ $selectedHouseholdComposition === 'Child' ? 'selected' : '' }}>Child</option>
+                        </select>
+                        <!-- <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Selecting Head of the Family keeps the existing head-of-family logic.</small> -->
+                    </div>
+                </div>
+
+                <h6 class="fw-bold mb-2 mt-2" style="font-size: 0.8rem;">Additional Information</h6>
+                <div class="row g-2 mb-2">
+                    <div class="col-md-4">
+                        <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Height <span class="text-muted">(Optional)</span></label>
+                        <div class="input-group input-group-sm">
+                            <input type="number" step="0.01" min="0" class="form-control form-control-sm" name="height_cm" value="{{ old('height_cm', $resident['height_cm']) }}" style="font-size: 0.8rem;">
+                            <span class="input-group-text" style="font-size: 0.75rem;">cm</span>
                         </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Weight <span class="text-muted">(Optional)</span></label>
+                        <div class="input-group input-group-sm">
+                            <input type="number" step="0.01" min="0" class="form-control form-control-sm" name="weight_kg" value="{{ old('weight_kg', $resident['weight_kg']) }}" style="font-size: 0.8rem;">
+                            <span class="input-group-text" style="font-size: 0.75rem;">kgs</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Religion <span class="text-muted">(Optional)</span></label>
+                        <select class="form-select form-select-sm" name="religion" style="font-size: 0.8rem;">
+                            <option value="">Select...</option>
+                            <option value="Catholic" {{ old('religion', $resident['religion']) === 'Catholic' ? 'selected' : '' }}>Catholic</option>
+                            <option value="Muslim" {{ old('religion', $resident['religion']) === 'Muslim' ? 'selected' : '' }}>Muslim</option>
+                            <option value="Christian" {{ old('religion', $resident['religion']) === 'Christian' ? 'selected' : '' }}>Christian</option>
+                            <option value="Iglesia ni Cristo" {{ old('religion', $resident['religion']) === 'Iglesia ni Cristo' ? 'selected' : '' }}>Iglesia ni Cristo</option>
+                            <option value="Jesus is Lord" {{ old('religion', $resident['religion']) === 'Jesus is Lord' ? 'selected' : '' }}>Jesus is Lord</option>
+                            <option value="Other" {{ old('religion', $resident['religion']) === 'Other' ? 'selected' : '' }}>Other</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Father's Name <span class="text-muted">(Optional)</span></label>
+                        <input type="text" class="form-control form-control-sm" name="father_name" value="{{ old('father_name', $resident['father_name']) }}" style="font-size: 0.8rem;">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Mother's Maiden Name <span class="text-muted">(Optional)</span></label>
+                        <input type="text" class="form-control form-control-sm" name="mother_maiden_name" value="{{ old('mother_maiden_name', $resident['mother_maiden_name']) }}" style="font-size: 0.8rem;">
+                    </div>
+                    <div class="col-md-6 married-fields">
+                        <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Spouse <span class="text-muted">(If Married)</span></label>
+                        <input type="text" class="form-control form-control-sm" id="spouse_name" name="spouse_name" value="{{ old('spouse_name', $resident['spouse_name']) }}" style="font-size: 0.8rem;">
+                    </div>
+                    <div class="col-md-6 married-fields">
+                        <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Name/s of Children <span class="text-muted">(If Married)</span></label>
+                        <textarea class="form-control form-control-sm" id="children_names" name="children_names" rows="2" style="font-size: 0.8rem;">{{ old('children_names', $resident['children_names']) }}</textarea>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Residency Type <span class="text-muted">(Optional)</span></label>
+                        <select class="form-select form-select-sm" name="residency_type" style="font-size: 0.8rem;">
+                            <option value="">Select...</option>
+                            <option value="Owner" {{ old('residency_type', $resident['residency_type']) === 'Owner' ? 'selected' : '' }}>Owner</option>
+                            <option value="Rentee" {{ old('residency_type', $resident['residency_type']) === 'Rentee' ? 'selected' : '' }}>Rentee</option>
+                            <option value="Informal Settler" {{ old('residency_type', $resident['residency_type']) === 'Informal Settler' ? 'selected' : '' }}>Informal Settler</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Tenure Status <span class="text-muted">(Optional)</span></label>
+                        <select class="form-select form-select-sm" name="tenure_status" style="font-size: 0.8rem;">
+                            <option value="">Select...</option>
+                            <option value="Permanent" {{ old('tenure_status', $resident['tenure_status']) === 'Permanent' ? 'selected' : '' }}>Permanent</option>
+                            <option value="Temporary" {{ old('tenure_status', $resident['tenure_status']) === 'Temporary' ? 'selected' : '' }}>Temporary</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Length of Stay <span class="text-muted">(Optional)</span></label>
+                        <input type="text" class="form-control form-control-sm" name="length_of_stay" value="{{ old('length_of_stay', $resident['length_of_stay']) }}" placeholder="e.g., 10 years" style="font-size: 0.8rem;">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Registered Voter <span class="text-muted">(Optional)</span></label>
+                        <select class="form-select form-select-sm" id="registered_voter" name="registered_voter" style="font-size: 0.8rem;">
+                            <option value="">Select...</option>
+                            <option value="Yes" {{ old('registered_voter', $resident['registered_voter']) === 'Yes' ? 'selected' : '' }}>Yes</option>
+                            <option value="No" {{ old('registered_voter', $resident['registered_voter']) === 'No' ? 'selected' : '' }}>No</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 voter-fields">
+                        <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Precinct No. <span class="text-muted">(If Voter)</span></label>
+                        <input type="text" class="form-control form-control-sm" id="precinct_no" name="precinct_no" value="{{ old('precinct_no', $resident['precinct_no']) }}" style="font-size: 0.8rem;">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Occupation <span class="text-muted">(Optional)</span></label>
+                        <input type="text" class="form-control form-control-sm" name="occupation" value="{{ old('occupation', $resident['occupation']) }}" style="font-size: 0.8rem;">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Employment Type <span class="text-muted">(Optional)</span></label>
+                        <select class="form-select form-select-sm" name="employment_type" style="font-size: 0.8rem;">
+                            <option value="">Select...</option>
+                            <option value="Government" {{ old('employment_type', $resident['employment_type']) === 'Government' ? 'selected' : '' }}>Government</option>
+                            <option value="Private" {{ old('employment_type', $resident['employment_type']) === 'Private' ? 'selected' : '' }}>Private</option>
+                        </select>
+                    </div>
+                    <div class="col-md-8">
+                        <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Economic Status <span class="text-muted">(Optional)</span></label>
+                        <select class="form-select form-select-sm" name="economic_status" style="font-size: 0.8rem;">
+                            <option value="">Select...</option>
+                            <option value="Low-income/Poor" {{ old('economic_status', $resident['economic_status']) === 'Low-income/Poor' ? 'selected' : '' }}>Low-income/Poor</option>
+                            <option value="Low-Income but Not Poor" {{ old('economic_status', $resident['economic_status']) === 'Low-Income but Not Poor' ? 'selected' : '' }}>Low-Income but Not Poor</option>
+                            <option value="Lower Middle Income" {{ old('economic_status', $resident['economic_status']) === 'Lower Middle Income' ? 'selected' : '' }}>Lower Middle Income</option>
+                            <option value="Middle Income/Independent" {{ old('economic_status', $resident['economic_status']) === 'Middle Income/Independent' ? 'selected' : '' }}>Middle Income/Independent</option>
+                            <option value="High Income/Rich" {{ old('economic_status', $resident['economic_status']) === 'High Income/Rich' ? 'selected' : '' }}>High Income/Rich</option>
+                        </select>
                     </div>
                 </div>
 
@@ -125,8 +232,8 @@
                 <h6 class="fw-bold mb-2 mt-2" style="font-size: 0.8rem;">Contact Information</h6>
                 <div class="row g-2 mb-2">
                     <div class="col-md-6">
-                        <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Mobile Number</label>
-                        <input type="text" class="form-control form-control-sm mobile-number @error('contact_number') is-invalid @enderror" name="contact_number" value="{{ old('contact_number', $resident['contact_number']) }}" placeholder="e.g., 09123456789" inputmode="numeric" maxlength="11" pattern="[0-9]{11}" style="font-size: 0.8rem;">
+                        <label class="form-label text-muted small text-uppercase fw-bold required-field" style="font-size: 0.6rem;">Mobile Number</label>
+                        <input type="text" class="form-control form-control-sm mobile-number @error('contact_number') is-invalid @enderror" name="contact_number" value="{{ old('contact_number', $resident['contact_number']) }}" placeholder="e.g., 09123456789" inputmode="numeric" maxlength="11" pattern="[0-9]{11}" required style="font-size: 0.8rem;">
                         <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Must be exactly 11 digits</small>
                         @error('contact_number')<div class="text-danger small" style="font-size: 0.65rem;">{{ $message }}</div>@enderror
                     </div>
@@ -144,9 +251,8 @@
                 <h6 class="fw-bold mb-2 mt-2" style="font-size: 0.8rem;">Address</h6>
                 <div class="row g-2 mb-2">
                     <div class="col-md-6">
-                        <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">House No</label>
-                        <input type="text" class="form-control form-control-sm address-field" name="house_no" value="{{ old('house_no', $resident['house_no']) }}" placeholder="Optional" style="font-size: 0.8rem;">
-                        <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Optional</small>
+                        <label class="form-label text-muted small text-uppercase fw-bold required-field" style="font-size: 0.6rem;">House No./Unit/Bldg</label>
+                        <input type="text" class="form-control form-control-sm address-field" name="house_no" value="{{ old('house_no', $resident['house_no']) }}" required style="font-size: 0.8rem;">
                     </div>
                     <div class="col-md-6">
                         <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Street Name</label>
@@ -267,6 +373,8 @@
                             <option value="Partner" {{ old('emergency_contact_relationship', $resident['emergency_contact_relationship']) === 'Partner' ? 'selected' : '' }}>Partner</option>
                             <option value="Mother" {{ old('emergency_contact_relationship', $resident['emergency_contact_relationship']) === 'Mother' ? 'selected' : '' }}>Mother</option>
                             <option value="Father" {{ old('emergency_contact_relationship', $resident['emergency_contact_relationship']) === 'Father' ? 'selected' : '' }}>Father</option>
+                            <option value="Son" {{ old('emergency_contact_relationship', $resident['emergency_contact_relationship']) === 'Son' ? 'selected' : '' }}>Son</option>
+                            <option value="Daughter" {{ old('emergency_contact_relationship', $resident['emergency_contact_relationship']) === 'Daughter' ? 'selected' : '' }}>Daughter</option>
                             <option value="Sibling" {{ old('emergency_contact_relationship', $resident['emergency_contact_relationship']) === 'Sibling' ? 'selected' : '' }}>Sibling</option>
                             <option value="Grandparent" {{ old('emergency_contact_relationship', $resident['emergency_contact_relationship']) === 'Grandparent' ? 'selected' : '' }}>Grandparent</option>
                             <option value="Cousin" {{ old('emergency_contact_relationship', $resident['emergency_contact_relationship']) === 'Cousin' ? 'selected' : '' }}>Cousin</option>
@@ -518,14 +626,82 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     birthDateInput.addEventListener('change', checkAndSetSeniorCitizen);
+
+    const civilStatusSelect = document.querySelector('select[name="civil_status"]');
+    const marriedFieldGroups = document.querySelectorAll('.married-fields');
+    const spouseNameInput = document.getElementById('spouse_name');
+    const childrenNamesInput = document.getElementById('children_names');
+    const registeredVoterSelect = document.getElementById('registered_voter');
+    const voterFieldGroups = document.querySelectorAll('.voter-fields');
+    const precinctNoInput = document.getElementById('precinct_no');
+    const householdCompositionSelect = document.getElementById('household_composition');
+    const isHeadOfFamilyInput = document.getElementById('is_head_of_family');
+
+    function toggleConditionalFields(groups, shouldShow) {
+        groups.forEach(group => {
+            group.style.display = shouldShow ? '' : 'none';
+        });
+    }
+
+    function updateMarriedFields() {
+        const isMarried = civilStatusSelect && civilStatusSelect.value === 'Married';
+        toggleConditionalFields(marriedFieldGroups, isMarried);
+
+        if (spouseNameInput) spouseNameInput.required = isMarried;
+        if (childrenNamesInput) childrenNamesInput.required = isMarried;
+
+        if (!isMarried) {
+            if (spouseNameInput) spouseNameInput.value = '';
+            if (childrenNamesInput) childrenNamesInput.value = '';
+        }
+    }
+
+    function updateVoterFields() {
+        const isRegisteredVoter = registeredVoterSelect && registeredVoterSelect.value === 'Yes';
+        toggleConditionalFields(voterFieldGroups, isRegisteredVoter);
+
+        if (precinctNoInput) precinctNoInput.required = isRegisteredVoter;
+
+        if (!isRegisteredVoter && precinctNoInput) {
+            precinctNoInput.value = '';
+        }
+    }
+
+    function syncHeadOfFamilySelection() {
+        if (!householdCompositionSelect || !isHeadOfFamilyInput) {
+            return;
+        }
+
+        isHeadOfFamilyInput.value = householdCompositionSelect.value === 'Head of the Family' ? '1' : '0';
+    }
+
+    if (civilStatusSelect) {
+        civilStatusSelect.addEventListener('change', updateMarriedFields);
+    }
+
+    if (registeredVoterSelect) {
+        registeredVoterSelect.addEventListener('change', updateVoterFields);
+    }
+
+    if (householdCompositionSelect) {
+        householdCompositionSelect.addEventListener('change', syncHeadOfFamilySelection);
+    }
+
+    updateMarriedFields();
+    updateVoterFields();
+    syncHeadOfFamilySelection();
     
     // Auto-fill full address from address components
     const addressFields = document.querySelectorAll('.address-field');
     const fullAddressDisplay = document.getElementById('full_address_display');
+
+    function formatStreetName(streetName) {
+        return streetName ? streetName.replace(/\bSt\.?$/u, 'St.') : '';
+    }
     
     function updateFullAddress() {
         const houseNo = document.querySelector('input[name="house_no"]').value;
-        const streetName = document.querySelector('select[name="street_name"]').value;
+        const streetName = formatStreetName(document.querySelector('select[name="street_name"]').value);
         const province = document.querySelector('select[name="province"]').value;
         
         const addressParts = [];

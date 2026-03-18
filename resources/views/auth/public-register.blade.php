@@ -402,6 +402,8 @@
                                     <option value="Partner" {{ old('emergency_contact_relationship') === 'Partner' ? 'selected' : '' }}>Partner</option>
                                     <option value="Mother" {{ old('emergency_contact_relationship') === 'Mother' ? 'selected' : '' }}>Mother</option>
                                     <option value="Father" {{ old('emergency_contact_relationship') === 'Father' ? 'selected' : '' }}>Father</option>
+                                    <option value="Son" {{ old('emergency_contact_relationship') === 'Son' ? 'selected' : '' }}>Son</option>
+                                    <option value="Daughter" {{ old('emergency_contact_relationship') === 'Daughter' ? 'selected' : '' }}>Daughter</option>
                                     <option value="Sibling" {{ old('emergency_contact_relationship') === 'Sibling' ? 'selected' : '' }}>Sibling</option>
                                     <option value="Grandparent" {{ old('emergency_contact_relationship') === 'Grandparent' ? 'selected' : '' }}>Grandparent</option>
                                     <option value="Cousin" {{ old('emergency_contact_relationship') === 'Cousin' ? 'selected' : '' }}>Cousin</option>
@@ -637,10 +639,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // Auto-fill full address from address components
     const addressFields = document.querySelectorAll('.address-field');
     const fullAddressDisplay = document.getElementById('full_address_display');
+
+    function formatStreetName(streetName) {
+        return streetName ? streetName.replace(/\bSt\.?$/u, 'St.') : '';
+    }
     
     function updateFullAddress() {
         const houseNo = document.querySelector('input[name="house_no"]').value;
-        const streetName = document.querySelector('select[name="street_name"]').value;
+        const streetName = formatStreetName(document.querySelector('select[name="street_name"]').value);
         const province = document.querySelector('select[name="province"]').value;
         
         const addressParts = [];
