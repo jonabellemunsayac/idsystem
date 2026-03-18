@@ -27,6 +27,7 @@ class Resident extends Model
         'telephone_no',
         'email',
         'blood_type',
+        'household_composition',
         'height_cm',
         'weight_kg',
         'religion',

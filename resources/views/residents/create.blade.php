@@ -148,7 +148,7 @@
 
             <div class="row g-2 mb-2">
                 <div class="col-md-4">
-                    <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">First Name</label>
+                    <label class="form-label text-muted small text-uppercase fw-bold required-field" style="font-size: 0.6rem;">First Name</label>
                     <input type="text" class="form-control form-control-sm" name="first_name" required style="font-size: 0.8rem;">
                 </div>
                 <div class="col-md-4">
@@ -156,7 +156,7 @@
                     <input type="text" class="form-control form-control-sm" name="middle_name" style="font-size: 0.8rem;">
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Last Name</label>
+                    <label class="form-label text-muted small text-uppercase fw-bold required-field" style="font-size: 0.6rem;">Last Name</label>
                     <input type="text" class="form-control form-control-sm" name="last_name" required style="font-size: 0.8rem;">
                 </div>
                 <div class="col-md-4">
@@ -179,7 +179,7 @@
                         $selectedBirthDay = $selectedBirthDate ? date('j', strtotime($selectedBirthDate)) : '';
                         $currentYear = (int) date('Y');
                     @endphp
-                    <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Birth Date</label>
+                    <label class="form-label text-muted small text-uppercase fw-bold required-field" style="font-size: 0.6rem;">Birth Date</label>
                     <input type="hidden" name="birth_date" id="birth_date" value="{{ old('birth_date') }}">
                     <div class="row g-1">
                         <div class="col-4">
@@ -210,7 +210,7 @@
                     <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Select year, month, and day.</small>
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Gender</label>
+                    <label class="form-label text-muted small text-uppercase fw-bold required-field" style="font-size: 0.6rem;">Gender</label>
                     <select class="form-select form-select-sm" name="gender" required style="font-size: 0.8rem;">
                         <option value="">Select...</option>
                         <option value="Male">Male</option>
@@ -218,7 +218,7 @@
                     </select>
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Civil Status</label>
+                    <label class="form-label text-muted small text-uppercase fw-bold required-field" style="font-size: 0.6rem;">Civil Status</label>
                     <select class="form-select form-select-sm" name="civil_status" required style="font-size: 0.8rem;">
                         <option value="">Select...</option>
                         <option value="Single">Single</option>
@@ -265,11 +265,16 @@
                     </select>
                 </div>
                 <div class="col-md-4">
-                    <div class="form-check mt-4">
-                        <input class="form-check-input" type="checkbox" name="is_head_of_family" id="is_head_of_family" value="1" style="font-size: 0.8rem;">
-                        <label class="form-check-label text-muted small fw-bold" for="is_head_of_family" style="font-size: 0.65rem;">Head of Family</label>
-                        <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Check if this person is the head of the family</small>
-                    </div>
+                    @php($selectedHouseholdComposition = old('household_composition', old('is_head_of_family') ? 'Head of the Family' : ''))
+                    <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Household Composition <span class="text-muted">(Optional)</span></label>
+                    <input type="hidden" name="is_head_of_family" id="is_head_of_family" value="{{ old('is_head_of_family') ? 1 : 0 }}">
+                    <select class="form-select form-select-sm" name="household_composition" id="household_composition" style="font-size: 0.8rem;">
+                        <option value="">Select...</option>
+                        <option value="Head of the Family" {{ $selectedHouseholdComposition === 'Head of the Family' ? 'selected' : '' }}>Head of the Family</option>
+                        <option value="Spouse" {{ $selectedHouseholdComposition === 'Spouse' ? 'selected' : '' }}>Spouse</option>
+                        <option value="Child" {{ $selectedHouseholdComposition === 'Child' ? 'selected' : '' }}>Child</option>
+                    </select>
+                    <!-- <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Selecting Head of the Family keeps the existing head-of-family logic.</small> -->
                 </div>
             </div>
 
@@ -496,8 +501,8 @@
             <h6 class="fw-bold mb-2 mt-2" style="font-size: 0.8rem;">Contact Information</h6>
             <div class="row g-2 mb-2">
                 <div class="col-md-6">
-                    <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Mobile Number</label>
-                    <input type="text" class="form-control form-control-sm mobile-number" name="contact_number" placeholder="e.g., 09123456789" inputmode="numeric" maxlength="11" pattern="[0-9]{11}" style="font-size: 0.8rem;">
+                    <label class="form-label text-muted small text-uppercase fw-bold required-field" style="font-size: 0.6rem;">Mobile Number</label>
+                    <input type="text" class="form-control form-control-sm mobile-number" name="contact_number" placeholder="e.g., 09123456789" inputmode="numeric" maxlength="11" pattern="[0-9]{11}" required style="font-size: 0.8rem;">
                     <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Must be exactly 11 digits</small>
                     @if ($errors->has('contact_number'))
                         <div class="text-danger small mt-1" style="font-size: 0.65rem;">{{ $errors->first('contact_number') }}</div>
@@ -691,7 +696,7 @@
 
             <div class="d-flex justify-content-end gap-2">
                 <a href="{{ route('residents.index') }}" class="btn btn-secondary btn-sm px-3" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="return confirm('Are you sure you want to cancel? Unsaved changes will be lost.');">Cancel</a>
-                <button type="submit" class="btn btn-primary btn-sm px-3" style="background-color: #0038A8; border-color: #0038A8; padding: 0.4rem 0.8rem; font-size: 0.8rem;">Save</button>
+                <button type="submit" id="save-resident-btn" class="btn btn-primary btn-sm px-3" style="background-color: #0038A8; border-color: #0038A8; padding: 0.4rem 0.8rem; font-size: 0.8rem;">Save</button>
             </div>
         </form>
         @endif
@@ -853,6 +858,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const registeredVoterSelect = document.getElementById('registered_voter');
     const voterFieldGroups = document.querySelectorAll('.voter-fields');
     const precinctNoInput = document.getElementById('precinct_no');
+    const householdCompositionSelect = document.getElementById('household_composition');
+    const isHeadOfFamilyInput = document.getElementById('is_head_of_family');
 
     function toggleConditionalFields(groups, shouldShow) {
         groups.forEach(group => {
@@ -884,6 +891,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    function syncHeadOfFamilySelection() {
+        if (!householdCompositionSelect || !isHeadOfFamilyInput) {
+            return;
+        }
+
+        isHeadOfFamilyInput.value = householdCompositionSelect.value === 'Head of the Family' ? '1' : '0';
+    }
+
     if (civilStatusSelect) {
         civilStatusSelect.addEventListener('change', updateMarriedFields);
     }
@@ -892,8 +907,36 @@ document.addEventListener('DOMContentLoaded', function() {
         registeredVoterSelect.addEventListener('change', updateVoterFields);
     }
 
+    if (householdCompositionSelect) {
+        householdCompositionSelect.addEventListener('change', syncHeadOfFamilySelection);
+    }
+
     updateMarriedFields();
     updateVoterFields();
+    syncHeadOfFamilySelection();
+
+    const residentForm = document.querySelector('form[action="{{ route('residents.store') }}"]');
+    const saveResidentBtn = document.getElementById('save-resident-btn');
+
+    if (residentForm && saveResidentBtn) {
+        saveResidentBtn.addEventListener('click', function() {
+            residentForm.classList.add('was-validated');
+        });
+
+        residentForm.querySelectorAll('input, select, textarea').forEach(field => {
+            field.addEventListener('input', function() {
+                if (this.checkValidity()) {
+                    this.classList.remove('is-invalid');
+                }
+            });
+
+            field.addEventListener('change', function() {
+                if (this.checkValidity()) {
+                    this.classList.remove('is-invalid');
+                }
+            });
+        });
+    }
     
     // Auto-fill full address from address components
     const addressFields = document.querySelectorAll('.address-field');
@@ -1384,6 +1427,12 @@ setInterval(function () {
 }, 30 * 60 * 1000);
 
 function confirmResidentSave(form) {
+    form.classList.add('was-validated');
+
+    if (!form.checkValidity()) {
+        return false;
+    }
+
     try {
         const sameAsAboveCheckbox = document.getElementById('same_as_above_address');
         const emergencyAddressDisplay = document.getElementById('emergency_address_display');

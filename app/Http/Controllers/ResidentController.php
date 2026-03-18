@@ -175,6 +175,7 @@ class ResidentController extends Controller
             'occupation' => ['nullable', 'string', 'max:255'],
             'employment_type' => ['nullable', 'in:Government,Private'],
             'economic_status' => ['nullable', 'in:Low-income/Poor,Low-Income but Not Poor,Lower Middle Income,Middle Income/Independent,High Income/Rich'],
+            'household_composition' => ['nullable', 'in:Head of the Family,Spouse,Child'],
             'special_sector' => ['nullable', 'string', 'max:255'],
             'emergency_contact_name' => ['nullable', 'string', 'max:255'],
             'emergency_contact_no' => ['nullable', 'string', 'max:20'],
@@ -468,6 +469,7 @@ class ResidentController extends Controller
             'occupation' => $validated['occupation'] ?? null,
             'employment_type' => $validated['employment_type'] ?? null,
             'economic_status' => $validated['economic_status'] ?? null,
+            'household_composition' => $validated['household_composition'] ?? null,
             'special_sector' => $validated['special_sector'] ?? null,
             'emergency_contact_name' => $validated['emergency_contact_name'] ?? null,
             'emergency_contact_no' => $validated['emergency_contact_no'] ?? null,
@@ -557,8 +559,12 @@ class ResidentController extends Controller
             ->orderBy('scheduled_time', 'desc')
             ->get();
         
-        // Fetch blotter records filed by this resident
-        $blotterRecords = BlotterRecord::where('resident_id', $resident->id)
+        // Fetch blotter records where this resident is either the complainant or respondent
+        $blotterRecords = BlotterRecord::with(['complainantResident', 'respondentResident'])
+            ->where(function ($query) use ($resident) {
+                $query->where('complainant_resident_id', $resident->id)
+                    ->orWhere('respondent_resident_id', $resident->id);
+            })
             ->orderBy('created_at', 'desc')
             ->get();
 
