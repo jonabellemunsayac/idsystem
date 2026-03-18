@@ -133,7 +133,7 @@
                 @endif
                 
                 <div class="d-flex gap-2 justify-content-center mt-4">
-                    <a href="{{ route('residents.index') }}" class="btn btn-secondary btn-sm" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="return confirm('Are you sure you want to go back? Unsaved changes will be lost.');">
+                    <a href="{{ route('residents.index') }}" class="btn btn-secondary btn-sm" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">
                         <i class="bi bi-arrow-left"></i> Back to Residents
                     </a>
                     <a href="{{ route('residents.create') }}" class="btn btn-primary btn-sm" style="background-color: #0038A8; border-color: #0038A8; padding: 0.4rem 0.8rem; font-size: 0.8rem;">
@@ -143,12 +143,12 @@
             </div>
         @else
             <!-- Resident Creation Form -->
-        <form action="{{ route('residents.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('residents.store') }}" method="POST" enctype="multipart/form-data" onsubmit="return confirmResidentSave(this)">
             @csrf
 
             <div class="row g-2 mb-2">
                 <div class="col-md-4">
-                    <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">First Name</label>
+                    <label class="form-label text-muted small text-uppercase fw-bold required-field" style="font-size: 0.6rem;">First Name</label>
                     <input type="text" class="form-control form-control-sm" name="first_name" required style="font-size: 0.8rem;">
                 </div>
                 <div class="col-md-4">
@@ -156,7 +156,7 @@
                     <input type="text" class="form-control form-control-sm" name="middle_name" style="font-size: 0.8rem;">
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Last Name</label>
+                    <label class="form-label text-muted small text-uppercase fw-bold required-field" style="font-size: 0.6rem;">Last Name</label>
                     <input type="text" class="form-control form-control-sm" name="last_name" required style="font-size: 0.8rem;">
                 </div>
                 <div class="col-md-4">
@@ -172,11 +172,45 @@
                     </select>
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Birth Date</label>
-                    <input type="date" class="form-control form-control-sm" name="birth_date" required max="{{ date('Y-m-d') }}" style="font-size: 0.8rem;">
+                    @php
+                        $selectedBirthDate = old('birth_date');
+                        $selectedBirthYear = $selectedBirthDate ? date('Y', strtotime($selectedBirthDate)) : '';
+                        $selectedBirthMonth = $selectedBirthDate ? date('n', strtotime($selectedBirthDate)) : '';
+                        $selectedBirthDay = $selectedBirthDate ? date('j', strtotime($selectedBirthDate)) : '';
+                        $currentYear = (int) date('Y');
+                    @endphp
+                    <label class="form-label text-muted small text-uppercase fw-bold required-field" style="font-size: 0.6rem;">Birth Date</label>
+                    <input type="hidden" name="birth_date" id="birth_date" value="{{ old('birth_date') }}">
+                    <div class="row g-1">
+                        <div class="col-4">
+                            <select class="form-select form-select-sm" id="birth_year" required style="font-size: 0.8rem;">
+                                <option value="">Year</option>
+                                @for ($year = $currentYear; $year >= 1900; $year--)
+                                    <option value="{{ $year }}" {{ (string) $selectedBirthYear === (string) $year ? 'selected' : '' }}>{{ $year }}</option>
+                                @endfor
+                            </select>
+                        </div>
+                        <div class="col-4">
+                            <select class="form-select form-select-sm" id="birth_month" required style="font-size: 0.8rem;">
+                                <option value="">Month</option>
+                                @foreach ([1 => 'January', 2 => 'February', 3 => 'March', 4 => 'April', 5 => 'May', 6 => 'June', 7 => 'July', 8 => 'August', 9 => 'September', 10 => 'October', 11 => 'November', 12 => 'December'] as $monthNumber => $monthName)
+                                    <option value="{{ $monthNumber }}" {{ (string) $selectedBirthMonth === (string) $monthNumber ? 'selected' : '' }}>{{ $monthName }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-4">
+                            <select class="form-select form-select-sm" id="birth_day" required style="font-size: 0.8rem;">
+                                <option value="">Day</option>
+                                @for ($day = 1; $day <= 31; $day++)
+                                    <option value="{{ $day }}" {{ (string) $selectedBirthDay === (string) $day ? 'selected' : '' }}>{{ $day }}</option>
+                                @endfor
+                            </select>
+                        </div>
+                    </div>
+                    <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Select year, month, and day.</small>
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Gender</label>
+                    <label class="form-label text-muted small text-uppercase fw-bold required-field" style="font-size: 0.6rem;">Gender</label>
                     <select class="form-select form-select-sm" name="gender" required style="font-size: 0.8rem;">
                         <option value="">Select...</option>
                         <option value="Male">Male</option>
@@ -184,7 +218,7 @@
                     </select>
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Civil Status</label>
+                    <label class="form-label text-muted small text-uppercase fw-bold required-field" style="font-size: 0.6rem;">Civil Status</label>
                     <select class="form-select form-select-sm" name="civil_status" required style="font-size: 0.8rem;">
                         <option value="">Select...</option>
                         <option value="Single">Single</option>
@@ -201,14 +235,15 @@
                     </select>
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Sector <span class="text-muted">(Optional)</span></label>
+                    <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Sector</label>
                     <select class="form-select form-select-sm" name="special_sector" style="font-size: 0.8rem;">
-                        <option value="">Select...</option>
-                        <option value="Senior Citizen">Senior Citizen</option>
-                        <option value="PWD">PWD</option>
-                        <option value="LGBTQ">LGBTQ</option>
-                        <option value="Solo Parent">Solo Parent</option>
-                        <option value="None">None</option>
+                        @php($selectedSector = old('special_sector', 'None'))
+                        <option value="" {{ $selectedSector === '' ? 'selected' : '' }}>Select...</option>
+                        <option value="Senior Citizen" {{ $selectedSector === 'Senior Citizen' ? 'selected' : '' }}>Senior Citizen</option>
+                        <option value="PWD" {{ $selectedSector === 'PWD' ? 'selected' : '' }}>PWD</option>
+                        <option value="LGBTQ" {{ $selectedSector === 'LGBTQ' ? 'selected' : '' }}>LGBTQ</option>
+                        <option value="Solo Parent" {{ $selectedSector === 'Solo Parent' ? 'selected' : '' }}>Solo Parent</option>
+                        <option value="None" {{ $selectedSector === 'None' ? 'selected' : '' }}>None</option>
                     </select>
                 </div>
                 <div class="col-md-4">
@@ -230,11 +265,118 @@
                     </select>
                 </div>
                 <div class="col-md-4">
-                    <div class="form-check mt-4">
-                        <input class="form-check-input" type="checkbox" name="is_head_of_family" id="is_head_of_family" value="1" style="font-size: 0.8rem;">
-                        <label class="form-check-label text-muted small fw-bold" for="is_head_of_family" style="font-size: 0.65rem;">Head of Family</label>
-                        <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Check if this person is the head of the family</small>
+                    @php($selectedHouseholdComposition = old('household_composition', old('is_head_of_family') ? 'Head of the Family' : ''))
+                    <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Household Composition <span class="text-muted">(Optional)</span></label>
+                    <input type="hidden" name="is_head_of_family" id="is_head_of_family" value="{{ old('is_head_of_family') ? 1 : 0 }}">
+                    <select class="form-select form-select-sm" name="household_composition" id="household_composition" style="font-size: 0.8rem;">
+                        <option value="">Select...</option>
+                        <option value="Head of the Family" {{ $selectedHouseholdComposition === 'Head of the Family' ? 'selected' : '' }}>Head of the Family</option>
+                        <option value="Spouse" {{ $selectedHouseholdComposition === 'Spouse' ? 'selected' : '' }}>Spouse</option>
+                        <option value="Child" {{ $selectedHouseholdComposition === 'Child' ? 'selected' : '' }}>Child</option>
+                    </select>
+                    <!-- <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Selecting Head of the Family keeps the existing head-of-family logic.</small> -->
+                </div>
+            </div>
+
+            <h6 class="fw-bold mb-2 mt-2" style="font-size: 0.8rem;">Additional Information</h6>
+            <div class="row g-2 mb-2">
+                <div class="col-md-4">
+                    <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Height <span class="text-muted">(Optional)</span></label>
+                    <div class="input-group input-group-sm">
+                        <input type="number" step="0.01" min="0" class="form-control form-control-sm" name="height_cm" value="{{ old('height_cm') }}" style="font-size: 0.8rem;">
+                        <span class="input-group-text" style="font-size: 0.75rem;">cm</span>
                     </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Weight <span class="text-muted">(Optional)</span></label>
+                    <div class="input-group input-group-sm">
+                        <input type="number" step="0.01" min="0" class="form-control form-control-sm" name="weight_kg" value="{{ old('weight_kg') }}" style="font-size: 0.8rem;">
+                        <span class="input-group-text" style="font-size: 0.75rem;">kgs</span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Religion <span class="text-muted">(Optional)</span></label>
+                    <select class="form-select form-select-sm" name="religion" style="font-size: 0.8rem;">
+                        <option value="">Select...</option>
+                        <option value="Catholic" {{ old('religion') === 'Catholic' ? 'selected' : '' }}>Catholic</option>
+                        <option value="Muslim" {{ old('religion') === 'Muslim' ? 'selected' : '' }}>Muslim</option>
+                        <option value="Christian" {{ old('religion') === 'Christian' ? 'selected' : '' }}>Christian</option>
+                        <option value="Iglesia ni Cristo" {{ old('religion') === 'Iglesia ni Cristo' ? 'selected' : '' }}>Iglesia ni Cristo</option>
+                        <option value="Jesus is Lord" {{ old('religion') === 'Jesus is Lord' ? 'selected' : '' }}>Jesus is Lord</option>
+                        <option value="Other" {{ old('religion') === 'Other' ? 'selected' : '' }}>Other</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Father's Name <span class="text-muted">(Optional)</span></label>
+                    <input type="text" class="form-control form-control-sm" name="father_name" value="{{ old('father_name') }}" style="font-size: 0.8rem;">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Mother's Maiden Name <span class="text-muted">(Optional)</span></label>
+                    <input type="text" class="form-control form-control-sm" name="mother_maiden_name" value="{{ old('mother_maiden_name') }}" style="font-size: 0.8rem;">
+                </div>
+                <div class="col-md-6 married-fields">
+                    <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Spouse <span class="text-muted">(If Married)</span></label>
+                    <input type="text" class="form-control form-control-sm" id="spouse_name" name="spouse_name" value="{{ old('spouse_name') }}" style="font-size: 0.8rem;">
+                </div>
+                <div class="col-md-6 married-fields">
+                    <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Name/s of Children <span class="text-muted">(If Married)</span></label>
+                    <textarea class="form-control form-control-sm" id="children_names" name="children_names" rows="2" style="font-size: 0.8rem;">{{ old('children_names') }}</textarea>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Residency Type <span class="text-muted">(Optional)</span></label>
+                    <select class="form-select form-select-sm" name="residency_type" style="font-size: 0.8rem;">
+                        <option value="">Select...</option>
+                        <option value="Owner" {{ old('residency_type') === 'Owner' ? 'selected' : '' }}>Owner</option>
+                        <option value="Rentee" {{ old('residency_type') === 'Rentee' ? 'selected' : '' }}>Rentee</option>
+                        <option value="Informal Settler" {{ old('residency_type') === 'Informal Settler' ? 'selected' : '' }}>Informal Settler</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Tenure Status <span class="text-muted">(Optional)</span></label>
+                    <select class="form-select form-select-sm" name="tenure_status" style="font-size: 0.8rem;">
+                        <option value="">Select...</option>
+                        <option value="Permanent" {{ old('tenure_status') === 'Permanent' ? 'selected' : '' }}>Permanent</option>
+                        <option value="Temporary" {{ old('tenure_status') === 'Temporary' ? 'selected' : '' }}>Temporary</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Length of Stay <span class="text-muted">(Optional)</span></label>
+                    <input type="text" class="form-control form-control-sm" name="length_of_stay" value="{{ old('length_of_stay') }}" placeholder="e.g., 10 years" style="font-size: 0.8rem;">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Registered Voter <span class="text-muted">(Optional)</span></label>
+                    <select class="form-select form-select-sm" id="registered_voter" name="registered_voter" style="font-size: 0.8rem;">
+                        <option value="">Select...</option>
+                        <option value="Yes" {{ old('registered_voter') === 'Yes' ? 'selected' : '' }}>Yes</option>
+                        <option value="No" {{ old('registered_voter') === 'No' ? 'selected' : '' }}>No</option>
+                    </select>
+                </div>
+                <div class="col-md-4 voter-fields">
+                    <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Precinct No. <span class="text-muted">(If Voter)</span></label>
+                    <input type="text" class="form-control form-control-sm" id="precinct_no" name="precinct_no" value="{{ old('precinct_no') }}" style="font-size: 0.8rem;">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Occupation <span class="text-muted">(Optional)</span></label>
+                    <input type="text" class="form-control form-control-sm" name="occupation" value="{{ old('occupation') }}" style="font-size: 0.8rem;">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Employment Type <span class="text-muted">(Optional)</span></label>
+                    <select class="form-select form-select-sm" name="employment_type" style="font-size: 0.8rem;">
+                        <option value="">Select...</option>
+                        <option value="Government" {{ old('employment_type') === 'Government' ? 'selected' : '' }}>Government</option>
+                        <option value="Private" {{ old('employment_type') === 'Private' ? 'selected' : '' }}>Private</option>
+                    </select>
+                </div>
+                <div class="col-md-8">
+                    <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Economic Status <span class="text-muted">(Optional)</span></label>
+                    <select class="form-select form-select-sm" name="economic_status" style="font-size: 0.8rem;">
+                        <option value="">Select...</option>
+                        <option value="Low-income/Poor" {{ old('economic_status') === 'Low-income/Poor' ? 'selected' : '' }}>Low-income/Poor</option>
+                        <option value="Low-Income but Not Poor" {{ old('economic_status') === 'Low-Income but Not Poor' ? 'selected' : '' }}>Low-Income but Not Poor</option>
+                        <option value="Lower Middle Income" {{ old('economic_status') === 'Lower Middle Income' ? 'selected' : '' }}>Lower Middle Income</option>
+                        <option value="Middle Income/Independent" {{ old('economic_status') === 'Middle Income/Independent' ? 'selected' : '' }}>Middle Income/Independent</option>
+                        <option value="High Income/Rich" {{ old('economic_status') === 'High Income/Rich' ? 'selected' : '' }}>High Income/Rich</option>
+                    </select>
                 </div>
             </div>
 
@@ -242,8 +384,7 @@
             <div class="row g-2 mb-2">
                 <div class="col-md-6">
                     <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">House No./Unit/Bldg</label>
-                    <input type="text" class="form-control form-control-sm address-field" name="house_no" placeholder="Optional" style="font-size: 0.8rem;">
-                    <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Optional</small>
+                    <input type="text" class="form-control form-control-sm address-field" name="house_no"  style="font-size: 0.8rem;">
                 </div>
                 <div class="col-md-6">
                     <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Street Name</label>
@@ -360,8 +501,8 @@
             <h6 class="fw-bold mb-2 mt-2" style="font-size: 0.8rem;">Contact Information</h6>
             <div class="row g-2 mb-2">
                 <div class="col-md-6">
-                    <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Mobile Number</label>
-                    <input type="text" class="form-control form-control-sm mobile-number" name="contact_number" placeholder="e.g., 09123456789" inputmode="numeric" maxlength="11" pattern="[0-9]{11}" style="font-size: 0.8rem;">
+                    <label class="form-label text-muted small text-uppercase fw-bold required-field" style="font-size: 0.6rem;">Mobile Number</label>
+                    <input type="text" class="form-control form-control-sm mobile-number" name="contact_number" placeholder="e.g., 09123456789" inputmode="numeric" maxlength="11" pattern="[0-9]{11}" required style="font-size: 0.8rem;">
                     <small class="text-muted d-block mt-1" style="font-size: 0.65rem;">Must be exactly 11 digits</small>
                     @if ($errors->has('contact_number'))
                         <div class="text-danger small mt-1" style="font-size: 0.65rem;">{{ $errors->first('contact_number') }}</div>
@@ -553,8 +694,9 @@
                 </div>
             @endif
 
-            <div class="text-end">
-                <button type="submit" class="btn btn-primary btn-sm px-3" style="background-color: #0038A8; border-color: #0038A8; padding: 0.4rem 0.8rem; font-size: 0.8rem;">Save</button>
+            <div class="d-flex justify-content-end gap-2">
+                <a href="{{ route('residents.index') }}" class="btn btn-secondary btn-sm px-3" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="return confirm('Are you sure you want to cancel? Unsaved changes will be lost.');">Cancel</a>
+                <button type="submit" id="save-resident-btn" class="btn btn-primary btn-sm px-3" style="background-color: #0038A8; border-color: #0038A8; padding: 0.4rem 0.8rem; font-size: 0.8rem;">Save</button>
             </div>
         </form>
         @endif
@@ -619,16 +761,46 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Auto-select Senior Citizen for birthdate >= 60 years old
-    const birthDateInput = document.querySelector('input[name="birth_date"]');
+    const birthDateInput = document.getElementById('birth_date');
+    const birthYearSelect = document.getElementById('birth_year');
+    const birthMonthSelect = document.getElementById('birth_month');
+    const birthDaySelect = document.getElementById('birth_day');
     const specialSectorSelect = document.querySelector('select[name="special_sector"]');
-    
-    // Add input validation to restrict birth date input length
-    birthDateInput.addEventListener('input', function(e) {
-        // Ensure the input doesn't exceed 10 characters (YYYY-MM-DD format)
-        if (this.value.length > 10) {
-            this.value = this.value.slice(0, 10);
+
+    function syncBirthDate() {
+        if (!birthDateInput || !birthYearSelect || !birthMonthSelect || !birthDaySelect) {
+            return;
         }
-    });
+
+        const year = birthYearSelect.value;
+        const month = birthMonthSelect.value;
+        const day = birthDaySelect.value;
+
+        birthDaySelect.setCustomValidity('');
+
+        if (!year || !month || !day) {
+            birthDateInput.value = '';
+            return;
+        }
+
+        const formattedMonth = month.padStart(2, '0');
+        const formattedDay = day.padStart(2, '0');
+        const formattedDate = `${year}-${formattedMonth}-${formattedDay}`;
+        const birthDate = new Date(`${formattedDate}T00:00:00`);
+        const isValidDate =
+            !isNaN(birthDate.getTime()) &&
+            birthDate.getFullYear() === Number(year) &&
+            birthDate.getMonth() + 1 === Number(month) &&
+            birthDate.getDate() === Number(day);
+
+        if (!isValidDate || birthDate > new Date()) {
+            birthDateInput.value = '';
+            birthDaySelect.setCustomValidity('Select a valid birth date.');
+            return;
+        }
+
+        birthDateInput.value = formattedDate;
+    }
     
     function calculateAge(birthDate) {
         const today = new Date();
@@ -644,7 +816,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function checkAndSetSeniorCitizen() {
         // Only proceed if we have a complete date (10 characters in YYYY-MM-DD format)
         if (birthDateInput.value && birthDateInput.value.length === 10) {
-            const birthDate = new Date(birthDateInput.value);
+            const birthDate = new Date(`${birthDateInput.value}T00:00:00`);
             
             // Validate that the date is valid and not in the future
             if (isNaN(birthDate.getTime()) || birthDate > new Date()) {
@@ -664,10 +836,107 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     }
-    
-    // Trigger validation on both change and blur events for better responsiveness
-    birthDateInput.addEventListener('change', checkAndSetSeniorCitizen);
-    birthDateInput.addEventListener('blur', checkAndSetSeniorCitizen);
+
+    [birthYearSelect, birthMonthSelect, birthDaySelect].forEach(field => {
+        if (!field) {
+            return;
+        }
+
+        field.addEventListener('change', function() {
+            syncBirthDate();
+            checkAndSetSeniorCitizen();
+        });
+    });
+
+    syncBirthDate();
+    checkAndSetSeniorCitizen();
+
+    const civilStatusSelect = document.querySelector('select[name="civil_status"]');
+    const marriedFieldGroups = document.querySelectorAll('.married-fields');
+    const spouseNameInput = document.getElementById('spouse_name');
+    const childrenNamesInput = document.getElementById('children_names');
+    const registeredVoterSelect = document.getElementById('registered_voter');
+    const voterFieldGroups = document.querySelectorAll('.voter-fields');
+    const precinctNoInput = document.getElementById('precinct_no');
+    const householdCompositionSelect = document.getElementById('household_composition');
+    const isHeadOfFamilyInput = document.getElementById('is_head_of_family');
+
+    function toggleConditionalFields(groups, shouldShow) {
+        groups.forEach(group => {
+            group.style.display = shouldShow ? '' : 'none';
+        });
+    }
+
+    function updateMarriedFields() {
+        const isMarried = civilStatusSelect && civilStatusSelect.value === 'Married';
+        toggleConditionalFields(marriedFieldGroups, isMarried);
+
+        if (spouseNameInput) spouseNameInput.required = isMarried;
+        if (childrenNamesInput) childrenNamesInput.required = isMarried;
+
+        if (!isMarried) {
+            if (spouseNameInput) spouseNameInput.value = '';
+            if (childrenNamesInput) childrenNamesInput.value = '';
+        }
+    }
+
+    function updateVoterFields() {
+        const isRegisteredVoter = registeredVoterSelect && registeredVoterSelect.value === 'Yes';
+        toggleConditionalFields(voterFieldGroups, isRegisteredVoter);
+
+        if (precinctNoInput) precinctNoInput.required = isRegisteredVoter;
+
+        if (!isRegisteredVoter && precinctNoInput) {
+            precinctNoInput.value = '';
+        }
+    }
+
+    function syncHeadOfFamilySelection() {
+        if (!householdCompositionSelect || !isHeadOfFamilyInput) {
+            return;
+        }
+
+        isHeadOfFamilyInput.value = householdCompositionSelect.value === 'Head of the Family' ? '1' : '0';
+    }
+
+    if (civilStatusSelect) {
+        civilStatusSelect.addEventListener('change', updateMarriedFields);
+    }
+
+    if (registeredVoterSelect) {
+        registeredVoterSelect.addEventListener('change', updateVoterFields);
+    }
+
+    if (householdCompositionSelect) {
+        householdCompositionSelect.addEventListener('change', syncHeadOfFamilySelection);
+    }
+
+    updateMarriedFields();
+    updateVoterFields();
+    syncHeadOfFamilySelection();
+
+    const residentForm = document.querySelector('form[action="{{ route('residents.store') }}"]');
+    const saveResidentBtn = document.getElementById('save-resident-btn');
+
+    if (residentForm && saveResidentBtn) {
+        saveResidentBtn.addEventListener('click', function() {
+            residentForm.classList.add('was-validated');
+        });
+
+        residentForm.querySelectorAll('input, select, textarea').forEach(field => {
+            field.addEventListener('input', function() {
+                if (this.checkValidity()) {
+                    this.classList.remove('is-invalid');
+                }
+            });
+
+            field.addEventListener('change', function() {
+                if (this.checkValidity()) {
+                    this.classList.remove('is-invalid');
+                }
+            });
+        });
+    }
     
     // Auto-fill full address from address components
     const addressFields = document.querySelectorAll('.address-field');
@@ -679,8 +948,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const province = document.querySelector('select[name="province"]').value;
         
         const addressParts = [];
-        if (houseNo) addressParts.push(houseNo);
-        if (streetName) addressParts.push(streetName);
+        const streetAddress = [houseNo, streetName].filter(Boolean).join(' ');
+        if (streetAddress) addressParts.push(streetAddress);
         if (province) addressParts.push(province);
         
         fullAddressDisplay.value = addressParts.join(', ') || '';
@@ -711,20 +980,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Ensure emergency_contact_address is populated on form submit if checkbox is checked
-    const form = document.querySelector('form');
-    if (form) {
-        form.addEventListener('submit', function(e) {
-            try {
-                if (sameAsAboveCheckbox && sameAsAboveCheckbox.checked) {
-                    emergencyAddressDisplay.value = fullAddressDisplay.value;
-                }
-            } catch (err) {
-                console.warn('Form submit handler error:', err);
-            }
-        }, { passive: true });
-    }
-
     // Mobile number validation - only numbers and 11 digits
     document.querySelectorAll('.mobile-number').forEach(field => {
         field.addEventListener('input', function(e) {
@@ -1170,6 +1425,28 @@ setInterval(function () {
         })
         .catch(() => {});
 }, 30 * 60 * 1000);
+
+function confirmResidentSave(form) {
+    form.classList.add('was-validated');
+
+    if (!form.checkValidity()) {
+        return false;
+    }
+
+    try {
+        const sameAsAboveCheckbox = document.getElementById('same_as_above_address');
+        const emergencyAddressDisplay = document.getElementById('emergency_address_display');
+        const fullAddressDisplay = document.getElementById('full_address_display');
+
+        if (sameAsAboveCheckbox && sameAsAboveCheckbox.checked && emergencyAddressDisplay && fullAddressDisplay) {
+            emergencyAddressDisplay.value = fullAddressDisplay.value;
+        }
+    } catch (err) {
+        console.warn('Save confirmation pre-submit error:', err);
+    }
+
+    return window.confirm('Are you sure you want to save this resident record?');
+}
 </script>
 
 @endsection

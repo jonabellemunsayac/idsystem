@@ -47,7 +47,7 @@
                     </div>
 
                     <!-- Name -->
-                    <h2 class="fw-bold mb-1" style="font-size: 1.1rem;">{{ $resident['first_name'] }} {{ $resident['middle_name'] ?? '' }} {{ $resident['last_name'] }}{{ $resident['suffix'] ? ' ' . $resident['suffix'] : '' }}</h2>
+                    <h2 class="fw-bold mb-1" style="font-size: 1.1rem;">{{ $resident['display_name'] }}</h2>
                     <p class="text-muted mb-3" style="font-size: 0.85rem;">{{ $resident['barangay'] ?? 'Barangay' }}</p>
 
                     <!-- Status Badge -->
@@ -260,6 +260,14 @@
                             @if($blotterRecords->count() > 0)
                                 <div class="d-flex flex-column gap-3">
                                     @foreach($blotterRecords as $blotter)
+                                        @php
+                                            $isComplainant = (int) $blotter->complainant_resident_id === (int) $resident['id'];
+                                            $isRespondent = (int) $blotter->respondent_resident_id === (int) $resident['id'];
+                                            $otherPartyLabel = $isComplainant ? 'Respondent' : 'Complainant';
+                                            $otherPartyName = $isComplainant
+                                                ? ($blotter->respondentResident->display_name ?? $blotter->respondent_name ?? 'N/A')
+                                                : ($blotter->complainantResident->display_name ?? $blotter->complainant_name ?? 'N/A');
+                                        @endphp
                                         <div class="card border rounded-3 p-3">
                                             <div class="d-flex justify-content-between align-items-start gap-3">
                                                 <div style="flex: 1;">
@@ -268,10 +276,13 @@
                                                         <span class="badge rounded-pill px-3 bg-secondary">
                                                             {{ ucfirst($blotter->status ?? 'ongoing') }}
                                                         </span>
+                                                        <span class="badge rounded-pill px-3 {{ $isComplainant ? 'bg-primary' : ($isRespondent ? 'bg-danger' : 'bg-dark') }}">
+                                                            {{ $isComplainant ? 'Complainant' : ($isRespondent ? 'Respondent' : 'Related Party') }}
+                                                        </span>
                                                     </div>
                                                     <div class="d-flex align-items-center gap-2 text-muted mb-1">
                                                         <i class="bi bi-person"></i>
-                                                        <span>Respondent: {{ $blotter->respondent_name ?? 'N/A' }}</span>
+                                                        <span>{{ $otherPartyLabel }}: {{ $otherPartyName }}</span>
                                                     </div>
                                                     <div class="d-flex align-items-center gap-2 text-muted mb-1">
                                                         <i class="bi bi-exclamation-circle"></i>

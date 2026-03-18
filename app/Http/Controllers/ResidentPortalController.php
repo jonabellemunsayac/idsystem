@@ -21,6 +21,8 @@ class ResidentPortalController extends Controller
                 'first_name' => $resident->first_name,
                 'middle_name' => $resident->middle_name,
                 'last_name' => $resident->last_name,
+                'suffix' => $resident->suffix,
+                'display_name' => $resident->display_name,
                 'gender' => $resident->gender,
                 'birth_date' => $resident->birth_date,
                 'age' => $resident->birth_date ? Carbon::parse($resident->birth_date)->age : null,
@@ -104,6 +106,8 @@ class ResidentPortalController extends Controller
                         'first_name' => $member->first_name,
                         'middle_name' => $member->middle_name,
                         'last_name' => $member->last_name,
+                        'suffix' => $member->suffix,
+                        'display_name' => $member->display_name,
                         'gender' => $member->gender,
                         'birth_date' => $member->birth_date,
                         'age' => $member->birth_date ? Carbon::parse($member->birth_date)->age : null,
@@ -147,4 +151,3 @@ class ResidentPortalController extends Controller
         return view('residents-portal.book-appointment', $data);
     }
 }
-

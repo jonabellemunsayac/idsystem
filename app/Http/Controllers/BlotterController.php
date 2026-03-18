@@ -26,7 +26,7 @@ class BlotterController extends Controller
         }
 
         // Prioritize pending status first, then by most recent (created_at)
-        $cases = $query->with('resident')
+        $cases = $query->with(['complainantResident', 'respondentResident'])
             ->orderByRaw("FIELD(status, 'pending', 'investigating', 'resolved')")
             ->orderBy('created_at', 'desc')
             ->paginate(5);
@@ -55,8 +55,9 @@ class BlotterController extends Controller
             'case_id' => 'nullable|string',
             'date' => 'required|date',
             'type' => 'required|string',
-            'resident_id' => 'required|exists:residents,id',
+            'complainant_resident_id' => 'required|exists:residents,id',
             'complainant_contact' => 'nullable|regex:/^09[0-9]{9}$/',
+            'respondent_resident_id' => 'nullable|exists:residents,id',
             'respondent_name' => 'nullable|string|max:255',
             'respondent_contact' => 'nullable|regex:/^09[0-9]{9}$/',
             'location' => 'required|string|max:255',
@@ -68,7 +69,10 @@ class BlotterController extends Controller
         ]);
 
         try {
-            $resident = Resident::findOrFail($validated['resident_id']);
+            $complainantResident = Resident::findOrFail($validated['complainant_resident_id']);
+            $respondentResident = !empty($validated['respondent_resident_id'])
+                ? Resident::findOrFail($validated['respondent_resident_id'])
+                : null;
 
             // Generate case number if not provided
             if (empty($validated['case_id'])) {
@@ -79,12 +83,15 @@ class BlotterController extends Controller
 
             // Create the blotter record
             $blotterRecord = BlotterRecord::create([
-                'resident_id' => $resident->id,
+                'complainant_resident_id' => $complainantResident->id,
+                'respondent_resident_id' => $respondentResident?->id,
                 'case_number' => $caseNumber,
-                'complainant_name' => trim($resident->first_name . ' ' . $resident->last_name),
-                'complainant_contact' => $validated['complainant_contact'] ?? $resident->contact_number,
-                'respondent_name' => $validated['respondent_name'] ?? null,
-                'respondent_contact' => $validated['respondent_contact'] ?? null,
+                'complainant_name' => trim($complainantResident->display_name),
+                'complainant_contact' => $validated['complainant_contact'] ?? $complainantResident->contact_number,
+                'respondent_name' => $respondentResident
+                    ? trim($respondentResident->display_name)
+                    : ($validated['respondent_name'] ?? null),
+                'respondent_contact' => $validated['respondent_contact'] ?? $respondentResident?->contact_number,
                 'incident_type' => $validated['type'],
                 'incident_location' => $validated['location'],
                 'details' => $validated['description'],
