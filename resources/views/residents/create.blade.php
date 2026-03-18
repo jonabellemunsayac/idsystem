@@ -383,8 +383,8 @@
             <h6 class="fw-bold mb-2 mt-2" style="font-size: 0.8rem;">Address</h6>
             <div class="row g-2 mb-2">
                 <div class="col-md-6">
-                    <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">House No./Unit/Bldg</label>
-                    <input type="text" class="form-control form-control-sm address-field" name="house_no"  style="font-size: 0.8rem;">
+                    <label class="form-label text-muted small text-uppercase fw-bold required-field" style="font-size: 0.6rem;">House No./Unit/Bldg</label>
+                    <input type="text" class="form-control form-control-sm address-field" name="house_no" required style="font-size: 0.8rem;">
                 </div>
                 <div class="col-md-6">
                     <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Street Name</label>
@@ -536,6 +536,8 @@
                         <option value="Partner">Partner</option>
                         <option value="Mother">Mother</option>
                         <option value="Father">Father</option>
+                        <option value="Son">Son</option>
+                        <option value="Daughter">Daughter</option>
                         <option value="Sibling">Sibling</option>
                         <option value="Grandparent">Grandparent</option>
                         <option value="Cousin">Cousin</option>
@@ -941,10 +943,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // Auto-fill full address from address components
     const addressFields = document.querySelectorAll('.address-field');
     const fullAddressDisplay = document.getElementById('full_address_display');
+
+    function formatStreetName(streetName) {
+        return streetName ? streetName.replace(/\bSt\.?$/u, 'St.') : '';
+    }
     
     function updateFullAddress() {
         const houseNo = document.querySelector('input[name="house_no"]').value;
-        const streetName = document.querySelector('select[name="street_name"]').value;
+        const streetName = formatStreetName(document.querySelector('select[name="street_name"]').value);
         const province = document.querySelector('select[name="province"]').value;
         
         const addressParts = [];
