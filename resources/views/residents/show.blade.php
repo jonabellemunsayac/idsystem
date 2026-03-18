@@ -47,7 +47,7 @@
                     </div>
 
                     <!-- Name -->
-                    <h2 class="fw-bold mb-1" style="font-size: 1.1rem;">{{ $resident['first_name'] }} {{ $resident['middle_name'] ?? '' }} {{ $resident['last_name'] }}{{ $resident['suffix'] ? ' ' . $resident['suffix'] : '' }}</h2>
+                    <h2 class="fw-bold mb-1" style="font-size: 1.1rem;">{{ $resident['display_name'] }}</h2>
                     <p class="text-muted mb-3" style="font-size: 0.85rem;">{{ $resident['barangay'] ?? 'Barangay' }}</p>
 
                     <!-- Status Badge -->

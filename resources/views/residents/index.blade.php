@@ -50,7 +50,7 @@
                     @forelse($residents as $resident)
                     <tr style="font-size: 0.75rem;">
                         <td class="ps-2">
-                            <div class="fw-medium text-dark" style="font-size: 0.75rem;">{{ $resident['first_name'] }} {{ $resident['last_name'] }}</div>
+                            <div class="fw-medium text-dark" style="font-size: 0.75rem;">{{ $resident['display_name'] }}</div>
                         </td>
                         <td class="text-muted" style="max-width: 150px; font-size: 0.7rem;">
                             {{ isset($resident['address']) && !empty($resident['address']) ? $resident['address'] : '-' }}
@@ -140,7 +140,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             return `<tr style="font-size:0.75rem;">
                 <td class="ps-2">
-                    <div class="fw-medium text-dark" style="font-size:0.75rem;">${r.first_name} ${r.last_name}</div>
+                    <div class="fw-medium text-dark" style="font-size:0.75rem;">${r.display_name || `${r.first_name} ${r.last_name}`}</div>
                 </td>
                 <td class="text-muted" style="max-width:150px;font-size:0.7rem;">${address}</td>
                 <td style="font-size:0.7rem;">${contact}</td>
