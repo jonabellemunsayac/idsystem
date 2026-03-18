@@ -4,13 +4,13 @@
 
 @section('content')
 <style>
-    #complainantResidentResults {
+    .resident-results-dropdown {
         background: #ffffff;
         border: 1px solid #dee2e6;
         border-radius: 0.375rem;
     }
 
-    #complainantResidentResults .resident-result-item {
+    .resident-results-dropdown .resident-result-item {
         background: #ffffff;
         color: #212529;
         border: 0;
@@ -18,16 +18,16 @@
         text-align: left;
     }
 
-    #complainantResidentResults .resident-result-item .fw-semibold {
+    .resident-results-dropdown .resident-result-item .fw-semibold {
         color: #333333;
     }
 
-    #complainantResidentResults .resident-result-item:last-child {
+    .resident-results-dropdown .resident-result-item:last-child {
         border-bottom: 0;
     }
 
-    #complainantResidentResults .resident-result-item:hover,
-    #complainantResidentResults .resident-result-item:focus {
+    .resident-results-dropdown .resident-result-item:hover,
+    .resident-results-dropdown .resident-result-item:focus {
         background: #f8f9fa;
         color: #111827;
     }
@@ -83,9 +83,9 @@
                         </td>
                         <td style="font-size: 0.7rem;">{{ ucfirst(str_replace('-', ' ', $case->incident_type ?? '')) }}</td>
                         <td style="font-size: 0.7rem;">
-                            @if($case->resident_id && $case->resident)
-                                <a href="{{ route('residents.show', $case->resident_id) }}" class="text-decoration-none fw-semibold">
-                                    {{ $case->resident->first_name }} {{ $case->resident->last_name }}
+                            @if($case->complainant_resident_id && $case->complainantResident)
+                                <a href="{{ route('residents.show', $case->complainant_resident_id) }}" class="text-decoration-none fw-semibold">
+                                    {{ $case->complainantResident->display_name }}
                                 </a>
                             @else
                                 {{ $case->complainant_name ?? '-' }}
@@ -195,7 +195,7 @@
                             <div class="position-relative">
                                 <input type="text" class="form-control" id="complainantResidentSearch" placeholder="Type resident name..." autocomplete="off" required>
                                 <input type="hidden" id="complainantResidentId">
-                                <div id="complainantResidentResults" class="list-group position-absolute w-100 shadow-sm" style="z-index: 1055; display: none;"></div>
+                                <div id="complainantResidentResults" class="list-group position-absolute w-100 shadow-sm resident-results-dropdown" style="z-index: 1055; display: none;"></div>
                             </div>
                             <small class="text-muted">Type at least 2 letters and select from results.</small>
                         </div>
@@ -208,8 +208,13 @@
                     <!-- Respondent/Accused Information -->
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label for="respondentName" class="form-label fw-bold text-dark">Respondent/Accused</label>
-                            <input type="text" class="form-control" id="respondentName" placeholder="Full name or description">
+                            <label for="respondentResidentSearch" class="form-label fw-bold text-dark">Respondent/Accused</label>
+                            <div class="position-relative">
+                                <input type="text" class="form-control" id="respondentResidentSearch" placeholder="Type resident name or enter description..." autocomplete="off">
+                                <input type="hidden" id="respondentResidentId">
+                                <div id="respondentResidentResults" class="list-group position-absolute w-100 shadow-sm resident-results-dropdown" style="z-index: 1055; display: none;"></div>
+                            </div>
+                            <small class="text-muted">Select from residents if applicable, or leave typed text as-is.</small>
                         </div>
                         <div class="col-md-6">
                             <label for="respondentContact" class="form-label fw-bold text-dark">Respondent Contact</label>
@@ -312,7 +317,8 @@
 
 <script>
     const residentSearchUrl = @json(route('residents.search'));
-    let residentSearchDebounce = null;
+    const residentSearchDebounces = {};
+    const residentLookupConfigs = [];
 
     function escapeHtml(text) {
         return String(text || '')
@@ -323,15 +329,15 @@
             .replace(/'/g, '&#039;');
     }
 
-    function hideResidentResults() {
-        const results = document.getElementById('complainantResidentResults');
+    function hideResidentResults(resultsId) {
+        const results = document.getElementById(resultsId);
         if (!results) return;
         results.style.display = 'none';
         results.innerHTML = '';
     }
 
-    function renderResidentResults(items) {
-        const results = document.getElementById('complainantResidentResults');
+    function renderResidentResults(items, config) {
+        const results = document.getElementById(config.resultsId);
         if (!results) return;
 
         if (!items.length) {
@@ -360,30 +366,38 @@
                 const selectedName = this.getAttribute('data-name') || '';
                 const selectedContact = this.getAttribute('data-contact') || '';
 
-                document.getElementById('complainantResidentId').value = selectedId;
-                document.getElementById('complainantResidentSearch').value = selectedName;
+                const residentIdInput = document.getElementById(config.hiddenId);
+                const residentSearchInput = document.getElementById(config.inputId);
+                const contactInput = document.getElementById(config.contactId);
 
-                const contactInput = document.getElementById('complainantContact');
+                if (residentIdInput) {
+                    residentIdInput.value = selectedId;
+                }
+
+                if (residentSearchInput) {
+                    residentSearchInput.value = selectedName;
+                }
+
                 if (contactInput && !contactInput.value && selectedContact) {
                     contactInput.value = selectedContact;
                 }
 
-                hideResidentResults();
+                hideResidentResults(config.resultsId);
             });
         });
     }
 
-    async function searchResidents(term) {
+    async function searchResidents(term, config) {
         try {
             const response = await fetch(`${residentSearchUrl}?q=${encodeURIComponent(term)}`, {
                 headers: { 'Accept': 'application/json' }
             });
             const data = await response.json();
             const residents = Array.isArray(data.residents) ? data.residents.slice(0, 8) : [];
-            renderResidentResults(residents);
+            renderResidentResults(residents, config);
         } catch (error) {
             console.error('Resident search failed:', error);
-            hideResidentResults();
+            hideResidentResults(config.resultsId);
         }
     }
 
@@ -681,32 +695,64 @@
             this.value = this.value.replace(/[^0-9]/g, '');
         });
 
-        const residentSearchInput = document.getElementById('complainantResidentSearch');
-        const residentIdInput = document.getElementById('complainantResidentId');
-        const residentResults = document.getElementById('complainantResidentResults');
+        residentLookupConfigs.push(
+            {
+                inputId: 'complainantResidentSearch',
+                hiddenId: 'complainantResidentId',
+                resultsId: 'complainantResidentResults',
+                contactId: 'complainantContact',
+            },
+            {
+                inputId: 'respondentResidentSearch',
+                hiddenId: 'respondentResidentId',
+                resultsId: 'respondentResidentResults',
+                contactId: 'respondentContact',
+            }
+        );
 
-        if (residentSearchInput && residentIdInput) {
+        residentLookupConfigs.forEach((config) => {
+            const residentSearchInput = document.getElementById(config.inputId);
+            const residentIdInput = document.getElementById(config.hiddenId);
+
+            if (!residentSearchInput) {
+                return;
+            }
+
             residentSearchInput.addEventListener('input', function () {
-                residentIdInput.value = '';
+                if (residentIdInput) {
+                    residentIdInput.value = '';
+                }
+
                 const term = this.value.trim();
 
-                if (residentSearchDebounce) {
-                    clearTimeout(residentSearchDebounce);
+                if (residentSearchDebounces[config.inputId]) {
+                    clearTimeout(residentSearchDebounces[config.inputId]);
                 }
 
                 if (term.length < 2) {
-                    hideResidentResults();
+                    hideResidentResults(config.resultsId);
                     return;
                 }
 
-                residentSearchDebounce = setTimeout(() => searchResidents(term), 250);
+                residentSearchDebounces[config.inputId] = setTimeout(() => searchResidents(term, config), 250);
             });
-        }
+        });
 
         document.addEventListener('click', function (event) {
-            if (!residentSearchInput || !residentResults) return;
-            if (residentSearchInput.contains(event.target) || residentResults.contains(event.target)) return;
-            hideResidentResults();
+            residentLookupConfigs.forEach((config) => {
+                const residentSearchInput = document.getElementById(config.inputId);
+                const residentResults = document.getElementById(config.resultsId);
+
+                if (!residentSearchInput || !residentResults) {
+                    return;
+                }
+
+                if (residentSearchInput.contains(event.target) || residentResults.contains(event.target)) {
+                    return;
+                }
+
+                hideResidentResults(config.resultsId);
+            });
         });
     });
 
@@ -733,9 +779,10 @@
             case_id: document.getElementById('caseId').value,
             date: document.getElementById('caseDate').value,
             type: document.getElementById('caseType').value,
-            resident_id: selectedResidentId,
+            complainant_resident_id: selectedResidentId,
             complainant_contact: document.getElementById('complainantContact').value,
-            respondent_name: document.getElementById('respondentName').value,
+            respondent_resident_id: document.getElementById('respondentResidentId').value || null,
+            respondent_name: document.getElementById('respondentResidentSearch').value,
             respondent_contact: document.getElementById('respondentContact').value,
             location: document.getElementById('incidentLocation').value,
             description: document.getElementById('incidentDescription').value,
@@ -783,7 +830,9 @@
                 form.classList.remove('was-validated');
                 form.reset();
                 document.getElementById('complainantResidentId').value = '';
-                hideResidentResults();
+                document.getElementById('respondentResidentId').value = '';
+                hideResidentResults('complainantResidentResults');
+                hideResidentResults('respondentResidentResults');
 
                 // Reload page after 2 seconds to show new case
                 setTimeout(() => {

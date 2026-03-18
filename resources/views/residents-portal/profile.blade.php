@@ -131,7 +131,7 @@
                         </div>
                     @endif
                 </div>
-                <h1 class="profile-name">{{ $resident['first_name'] }} {{ $resident['middle_name'] }} {{ $resident['last_name'] }}</h1>
+                <h1 class="profile-name">{{ $resident['display_name'] }}</h1>
                 <p class="profile-username">{{ $account['username'] }}</p>
             </div>
 

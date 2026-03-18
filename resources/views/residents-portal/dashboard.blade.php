@@ -126,7 +126,7 @@
 <!-- Welcome Section -->
 <div class="welcome-card">
     <h2>Welcome back!</h2>
-    <p>{{ $resident['first_name'] }} {{ $resident['last_name'] }}</p>
+    <p>{{ $resident['display_name'] }}</p>
     <p class="small">ID: BRG-2024-001</p>
 </div>
 

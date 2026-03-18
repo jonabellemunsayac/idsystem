@@ -85,11 +85,7 @@
                                                         </div>
                                                     @endif
                                                     <div>
-                                                        <strong>{{ $member['first_name'] }} 
-                                                            @if($member['middle_name'])
-                                                                {{ $member['middle_name'][0] }}.
-                                                            @endif
-                                                            {{ $member['last_name'] }}</strong>
+                                                        <strong>{{ $member['display_name'] }}</strong>
                                                         @if($member['id'] === $resident['id'])
                                                             <br><small class="badge bg-info">You</small>
                                                         @endif
