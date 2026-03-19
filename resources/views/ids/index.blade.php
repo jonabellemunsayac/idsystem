@@ -608,7 +608,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return Number(size.toFixed(2));
             };
 
-            const nameFont = fitFont(fullNamePrint, 8, 6.1, 40);
+            const nameFont = fitFont(fullNamePrint, 7, 6.1, 40);
             const addressFont = fitFont(addressPrint, 6.8, 5.1, 44);
             const sectorFont = fitFont(sectorPrint, 6.6, 5.4, 18);
             const idFont = fitFont(idNumberPrint, 6.3, 5.0, 16);
@@ -621,22 +621,22 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <img src="${templateSrc}" alt="Template" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
 
                                 <div style="position: absolute; left: 6.2%; top: 29.5%; width: 19.5%; height: 40%; overflow: hidden; border-radius: 8px; background: #d8d8d8; display: flex; align-items: center; justify-content: center;">
-                                    ${photoSrc ? `<img src="${photoSrc}" alt="Photo" style="width: 100%; height: 80%; object-fit: cover;">` : '<span style="font-size: 8px; color: #666; font-weight: bold;">NO PHOTO</span>'}
+                                    ${photoSrc ? `<img src="${photoSrc}" alt="Photo" style="width: 100%; height: 100%; object-fit: cover;">` : '<span style="font-size: 8px; color: #666; font-weight: bold;">NO PHOTO</span>'}
                                 </div>
 
                                 <div style="position: absolute; left: 29%; top: 37%; width: 65%; font-size: ${nameFont}px; font-weight: 900; line-height: 1.05; text-transform: uppercase; white-space: nowrap; overflow: hidden; letter-spacing: 0.15px; ${printNameStyle}">${fullNamePrint || '-'}</div>
                                 <div style="position: absolute; left: 29.4%; top: 49%; width: 64.5%; font-size: ${addressFont}px; font-weight: 800; line-height: 1.05; text-transform: uppercase; white-space: nowrap; overflow: hidden; letter-spacing: 0.1px; ${printValueStyle}">${addressPrint}</div>
 
-                                <div style="position: absolute; left: 29.5%; top: 60.1%; width: 17%; font-size: 6.4px; font-weight: 800; white-space: normal; overflow-wrap: anywhere; word-break: break-word; line-height: 1.05; letter-spacing: 0.1px; ${printValueStyle}">${formatDate(currentResident.birth_date)}</div>
-                                <div style="position: absolute; left: 43.5%; top: 60.1%; width: 20%; font-size: 6.4px; font-weight: 800; white-space: normal; overflow-wrap: anywhere; word-break: break-word; line-height: 1.05; letter-spacing: 0.1px; ${printValueStyle}">${currentResident.birth_place || currentResident.place_of_birth || '-'}</div>
-                                <div style="position: absolute; left: 59.6%; top: 60.1%; width: 13.5%; font-size: 6.4px; font-weight: 800; white-space: normal; overflow-wrap: anywhere; word-break: break-word; line-height: 1.05; letter-spacing: 0.1px; ${printValueStyle}">${currentResident.nationality || 'FILIPINO'}</div>
-                                <div style="position: absolute; left: 72%; top: 60.1%; width: 7%; font-size: 6.4px; font-weight: 800; white-space: normal; overflow-wrap: anywhere; word-break: break-word; line-height: 1.05; letter-spacing: 0.1px; ${printValueStyle}">${currentResident.gender || '-'}</div>
-                                <div style="position: absolute; left: 79%; top: 60.1%; width: 14%; font-size: 6.4px; font-weight: 800; white-space: normal; overflow-wrap: anywhere; word-break: break-word; line-height: 1.05; letter-spacing: 0.1px; ${printValueStyle}">${currentResident.civil_status || '-'}</div>
+                                <div style="position: absolute; left: 29.5%; top: 60.1%; width: 17%; font-size: 5px; font-weight: 800; white-space: normal; overflow-wrap: anywhere; word-break: break-word; line-height: 1.05; letter-spacing: 0.1px; ${printValueStyle}">${formatDate(currentResident.birth_date)}</div>
+                                <div style="position: absolute; left: 43.5%; top: 60.1%; width: 20%; font-size: 5px; font-weight: 800; white-space: normal; overflow-wrap: anywhere; word-break: break-word; line-height: 1.05; letter-spacing: 0.1px; ${printValueStyle}">${currentResident.birth_place || currentResident.place_of_birth || '-'}</div>
+                                <div style="position: absolute; left: 59.6%; top: 60.1%; width: 13.5%; font-size: 5px; font-weight: 800; white-space: normal; overflow-wrap: anywhere; word-break: break-word; line-height: 1.05; letter-spacing: 0.1px; ${printValueStyle}">${currentResident.nationality || 'FILIPINO'}</div>
+                                <div style="position: absolute; left: 72%; top: 60.1%; width: 7%; font-size: 5px; font-weight: 800; white-space: normal; overflow-wrap: anywhere; word-break: break-word; line-height: 1.05; letter-spacing: 0.1px; ${printValueStyle}">${currentResident.gender || '-'}</div>
+                                <div style="position: absolute; left: 79%; top: 60.1%; width: 14%; font-size: 5px; font-weight: 800; white-space: normal; overflow-wrap: anywhere; word-break: break-word; line-height: 1.05; letter-spacing: 0.1px; ${printValueStyle}">${currentResident.civil_status || '-'}</div>
 
-                                <div style="position: absolute; left: 29.5%; top: 68.5%; width: 18%; font-size: 6.5px; font-weight: 800; white-space: nowrap; overflow: hidden; letter-spacing: 0.1px; ${printValueStyle}">${sectorPrint}</div>
+                                <div style="position: absolute; left: 29.7%; top: 68.5%; width: 18%; font-size: 6.5px; font-weight: 800; white-space: nowrap; overflow: hidden; letter-spacing: 0.1px; ${printValueStyle}">${sectorPrint}</div>
                                 <div style="position: absolute; left: 7%; top: 73.4%; width: 18.2%; text-align: center; font-size: 4px; font-weight: 900; white-space: nowrap; overflow: hidden; letter-spacing: 0.2px; ${printStrongStyle}">${idNumberPrint}</div>
 
-                                <div style="position: absolute; left: 7%; top: 84.1%; width: 18.5%; height: 7.3%; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                                <div style="position: absolute; left: 7%; top: 80%; width: 23%; height: 15%; display: flex; align-items: center; justify-content: center; overflow: hidden;">
                                     ${signatureSrc ? `<img src="${signatureSrc}" alt="Signature" style="max-width: 100%; max-height: 100%; object-fit: contain;">` : ''}
                                 </div>
 
