@@ -96,6 +96,8 @@ class IDController extends Controller
                 'signature' => $r->signature,
                 'gender' => $r->gender,
                 'birth_date' => $r->birth_date,
+                'birth_place' => $r->birth_place,
+                'place_of_birth' => $r->place_of_birth,
                 'civil_status' => $r->civil_status,
                 'nationality' => $r->nationality,
                 'contact_number' => $r->contact_number,

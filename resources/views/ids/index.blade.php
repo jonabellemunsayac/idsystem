@@ -25,119 +25,34 @@
 
                 <div id="id-preview-content" style="display: none;">
                     <!-- FRONT PREVIEW -->
-                    <div class="id-card-preview mb-4 position-relative overflow-hidden shadow-sm" style="width: 100%; max-width: 600px; margin: 0 auto; background-color: #f8f9fa; border-radius: 12px; font-family: sans-serif;">
-                        <!-- Background Pattern (Fingerprint style simulation) -->
-                        <div class="position-absolute w-100 h-100" style="opacity: 0.6; background: repeating-radial-gradient(circle at 0 100%, transparent 0, transparent 10px, rgba(0,56,168,0.03) 11px, rgba(0,56,168,0.03) 12px), repeating-radial-gradient(circle at 100% 0, transparent 0, transparent 10px, rgba(206,17,38,0.03) 11px, rgba(206,17,38,0.03) 12px); pointer-events: none;"></div>
-                        
-                        <!-- Header -->
-                        <div class="position-relative d-flex align-items-center px-1 py-2" style="background: linear-gradient(90deg, rgba(38,143,255,0.85) 0%, rgba(255,255,255,0.85) 50%, rgba(0,48,103,0.85) 100%), url('/images/kalawaan_hall.jpg') center/cover; min-height: 60px; color: #003067;">
-                            <div class="d-flex align-items-center w-100" style="position: relative; z-index: 1; gap: 2px;">
-                                <div class="d-flex align-items-center justify-content-center" style="width: 65px; height: 65px; flex-shrink: 0;">
-                                    <img src="/images/OIP.jpg" alt="Barangay Logo" style="width: 100%; height: 100%; object-fit: contain; border-radius: 50%;">
-                                </div>
-                                <div class="flex-grow-1 text-center" style="line-height: 1.1;">
-                                    <h2 style="font-size: 1rem; font-weight: 800; letter-spacing: 0.5px; margin: 0;">Republic of the Philippines</h2>
-                                    <h2 style="font-size: 1rem; font-weight: 800; letter-spacing: 0.5px; margin: 0;">National Capital Region</h2>
-                                    <h2 style="font-size: 1rem; font-weight: 800; margin: 0; letter-spacing: 0.5px;">City of Pasig</h2>
-                                    <h2 style="font-size: 1rem; font-weight: 800; margin: 0; letter-spacing: 0.5px;">Barangay Kalawaan</h2>
-                                    <h4 style="font-size: 0.75rem; font-weight: 700; margin: 1px 0 0 0; letter-spacing: 0.5px; text-transform: uppercase;">Barangay Residents Identification System</h4>
-                                </div>
-                                <div class="d-flex align-items-center justify-content-center" style="width: 65px; height: 65px; flex-shrink: 0;">
-                                    <img src="/images/Pasig_City_Seal_Logo.svg" alt="Pasig Logo" style="width: 90%; height: 90%; object-fit: contain;">
-                                </div>
-                            </div>
+                    <div class="id-card-preview mb-4 position-relative overflow-hidden shadow-sm" style="aspect-ratio: 1.586/1; border-radius: 8px; background-color: #f4f4f4; max-width: 600px; margin: 0 auto;">
+                        <img src="{{ asset('images/id-template-blank.png') }}" alt="ID Template" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+
+                        <div style="position: absolute; left: 6.2%; top: 29.5%; width: 19.5%; height: 40%; overflow: hidden; border-radius: 14px;">
+                            <img id="preview-photo" src="" alt="Photo" style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                            <div id="preview-no-photo" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #6c757d; font-size: 12px; font-weight: 600; background: rgba(220,220,220,0.55);">NO PHOTO</div>
                         </div>
 
-                        <!-- Body -->
-                        <div class="d-flex p-3 position-relative" style="gap: 12px;">
-                            <!-- Left Column: Photo, ID No & Signature -->
-                            <div class="d-flex flex-column align-items-center" style="width: auto; flex-shrink: 0; gap: 4px;">
-                                <div class="bg-white d-flex align-items-center justify-content-center overflow-hidden rounded" style="width: 90px; height: 110px; background-color: #e9ecef;">
-                                    <img id="preview-photo" src="" alt="Photo" style="width: 100%; height: 100%; object-fit: cover; display: none;">
-                                    <span id="preview-no-photo" style="font-size: 0.9rem; color: #adb5bd;">PHOTO</span>
-                                </div>
-                                <div class="text-center" style="font-size: 0.55rem; color: #333; margin-top: 2px;">
-                                    <span id="preview-id-no-front" class="fw-bold">-</span>
-                                </div>
-                                <div class="d-flex align-items-center justify-content-center position-relative" style="width: 100px; height: 40px; overflow: hidden; background: transparent;">
-                                    <img id="preview-signature" src="" alt="Signature" style="max-width: 95px; max-height: 38px; object-fit: contain; display: none; background: transparent;">
-                                    <span id="preview-no-signature" style="font-family: cursive; font-size: 0.8rem; display: block; color: #999;">Signature</span>
-                                </div>
-                                <div style="border-top: 1px solid #000; width: 80px; margin-top: -2px;"></div>
-                                <div class="text-center fw-bold" style="font-size: 0.75rem; letter-spacing: 0.5px; color: #0038A8;">RESIDENT</div>
-                            </div>
-
-                            <!-- Right Column: Details + QR/Sig -->
-                            <div class="flex-grow-1 d-flex" style="min-width: 0; gap: 8px;">
-                                <!-- Details -->
-                                <div class="d-flex flex-column flex-grow-1" style="min-width: 0;">
-                                    <!-- Name -->
-                                    <div class="mb-1">
-                                        <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1;">Last Name, First Name, Middle Name</div>
-                                        <div id="preview-name" class="fw-bold text-uppercase text-dark" style="font-size: 0.82rem; line-height: 1.15; color: #0038A8 !important; overflow-wrap: break-word; letter-spacing: 0; word-spacing: 0;">
-                                            RESIDENT NAME
-                                        </div>
-                                    </div>
-
-                                    <!-- Grid Details -->
-                                    <div style="display: grid; grid-template-columns: auto auto auto; justify-content: start; gap: 5px 12px; margin-bottom: 6px;">
-                                        <div>
-                                            <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1;">Sex</div>
-                                            <div id="preview-sex" class="fw-bold text-dark text-uppercase" style="font-size: 0.75rem; line-height: 1.2; white-space: nowrap; letter-spacing: 0; word-spacing: 0;">-</div>
-                                        </div>
-                                        <div>
-                                            <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1; letter-spacing: 0;">Date of Birth</div>
-                                            <div id="preview-dob" class="fw-bold text-dark text-uppercase" style="font-size: 0.75rem; line-height: 1.2; white-space: nowrap; letter-spacing: 0; word-spacing: 0;">-</div>
-                                        </div>
-                                        <div>
-                                            <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1; letter-spacing: 0;">Civil Status</div>
-                                            <div id="preview-status" class="fw-bold text-dark text-uppercase" style="font-size: 0.75rem; line-height: 1.2; white-space: nowrap; letter-spacing: 0; word-spacing: 0;">-</div>
-                                        </div>
-                                        <div>
-                                            <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1; letter-spacing: 0;">Nationality</div>
-                                            <div id="preview-nationality" class="fw-bold text-dark text-uppercase" style="font-size: 0.75rem; line-height: 1.2; white-space: nowrap; letter-spacing: 0; word-spacing: 0;">-</div>
-                                        </div>
-                                        <div>
-                                            <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1; letter-spacing: 0;">Sector</div>
-                                            <div id="preview-sector" class="fw-bold text-dark text-uppercase" style="font-size: 0.75rem; line-height: 1.2; white-space: nowrap; letter-spacing: 0; word-spacing: 0;">-</div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Address -->
-                                    <div>
-                                        <div class="text-muted text-uppercase" style="font-size: 0.6rem; line-height: 1;">Address</div>
-                                        <div id="preview-address" class="fw-bold text-dark text-uppercase" style="font-size: 0.74rem; line-height: 1.25; overflow-wrap: break-word; letter-spacing: 0; word-spacing: 0;">
-                                            -
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- QR + Chairman Sig Column -->
-                                <div class="d-flex flex-column align-items-center flex-shrink-0" style="width: 72px; justify-content: space-between; padding-bottom: 4px;">
-                                    <!-- QR Code at top -->
-                                    <div>
-                                        <div style="width: 60px; height: 60px; background: white; border: 2px solid #000; display: flex; align-items: center; justify-content: center;">
-                                            <img id="preview-qr" alt="QR Code" style="width: 100%; height: 100%; object-fit: contain;">
-                                        </div>
-                                        <div style="text-align: center; margin-top: 2px; line-height: 1.2;">
-                                            <div class="text-muted text-uppercase" style="font-size: 0.5rem; letter-spacing: 0;">Valid Until:</div>
-                                            <div id="preview-validity" class="fw-bold text-dark" style="font-size: 0.6rem; white-space: nowrap; letter-spacing: 0; word-spacing: 0;">-</div>
-                                        </div>
-                                    </div>
-                                    <!-- Chairman Signature at bottom -->
-                                    <div class="text-center w-100" style="position: relative;">
-                                        <div style="position: absolute; top: -6px; left: 50%; transform: translateX(-50%); width: 75px; height: 16px; opacity: 1; z-index: 0;">
-                                            <img src="{{ asset('storage/signatures/chairman.png') }}" alt="Signature" style="width: 100%; height: 100%; object-fit: contain;">
-                                        </div>
-                                        <div style="position: relative; z-index: 1;">
-                                            <div style="font-size: 0.55rem; font-weight: bold; color: #0038A8; line-height: 1.2; white-space: nowrap;">JESSIE B. GAVIOLA</div>
-                                            <div style="border-top: 2px solid #000; margin: 2px auto 4px auto; width: 100%;"></div>
-                                            <div style="font-size: 0.5rem; font-weight: bold; color: #0038A8; line-height: 1.2;">PUNONG BARANGAY</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                        <div style="position: absolute; left: 7%; top: 84.1%; width: 18.5%; height: 7.3%; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                            <img id="preview-signature" src="" alt="Signature" style="max-width: 100%; max-height: 100%; object-fit: contain; display: none;">
                         </div>
+
+                        <div id="preview-name" style="position: absolute; left: 29%; top: 31.8%; width: 65%; font-size: 15px; font-weight: 800; line-height: 1.1; text-transform: uppercase; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-</div>
+                        <div id="preview-address" style="position: absolute; left: 29.4%; top: 48.6%; width: 64.5%; font-size: 9px; font-weight: 700; line-height: 1.2; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-</div>
+
+                        <div id="preview-dob" style="position: absolute; left: 30%; top: 60.1%; width: 17%; font-size: 8px; font-weight: 700; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-</div>
+                        <div id="preview-pob" style="position: absolute; left: 43.5%; top: 60.1%; width: 20%; font-size: 8px; font-weight: 700; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-</div>
+                        <div id="preview-nationality" style="position: absolute; left: 59.6%; top: 60.1%; width: 13.5%; font-size: 8px; font-weight: 700; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-</div>
+                        <div id="preview-sex" style="position: absolute; left: 72%; top: 60.1%; width: 7%; font-size: 8px; font-weight: 700; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-</div>
+                        <div id="preview-status" style="position: absolute; left: 79%; top: 60.1%; width: 14%; font-size: 8px; font-weight: 700; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-</div>
+
+                        <div id="preview-sector" style="position: absolute; left: 30%; top: 68%; width: 18%; font-size: 8px; font-weight: 700; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-</div>
+                        <div id="preview-id-no" style="position: absolute; left: 8%; top: 70%; width: 16.4%; font-size: 9px; font-weight: 800; text-align: center; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">PENDING</div>
+
+                        <div style="position: absolute; left: 79.6%; top: 68.5%; width: 14%; height: 20.8%; border: 1px solid #000; background: #fff; display: flex; align-items: center; justify-content: center; padding: 2px;">
+                            <img id="preview-qr-front" alt="QR Code" style="width: 100%; height: 100%; object-fit: contain; display: none;">
+                        </div>
+                        <div id="preview-validity" style="position: absolute; left: 79.6%; top: 100%; width: 14%; font-size: 7px; font-weight: 800; text-align: center; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-</div>
                     </div>
 
                     <!-- BACK PREVIEW -->
@@ -296,18 +211,19 @@ document.addEventListener('DOMContentLoaded', function() {
     const previewPhoto = document.getElementById('preview-photo');
     const previewNoPhoto = document.getElementById('preview-no-photo');
     const previewSignature = document.getElementById('preview-signature');
-    const previewNoSignature = document.getElementById('preview-no-signature');
     const previewName = document.getElementById('preview-name');
     const previewDob = document.getElementById('preview-dob');
+    const previewPob = document.getElementById('preview-pob');
     const previewSex = document.getElementById('preview-sex');
     const previewNationality = document.getElementById('preview-nationality');
     const previewStatus = document.getElementById('preview-status');
     const previewSector = document.getElementById('preview-sector');
     const previewAddress = document.getElementById('preview-address');
+    const previewIdNo = document.getElementById('preview-id-no');
     const previewEcName = document.getElementById('preview-ec-name');
     const previewEcAddress = document.getElementById('preview-ec-address');
     const previewEcNo = document.getElementById('preview-ec-no');
-    const previewQr = document.getElementById('preview-qr');
+    const previewQrFront = document.getElementById('preview-qr-front');
     const previewValidity = document.getElementById('preview-validity');
 
     let currentResident = null;
@@ -410,7 +326,9 @@ document.addEventListener('DOMContentLoaded', function() {
         // Update UI
         selectedResidentInfo.style.display = 'block';
         selectedNameDisplay.textContent = `${resident.first_name} ${resident.last_name}`;
-        generatedInfo.style.display = 'none';
+        generatedInfo.style.display = 'block';
+        printFrontBtn.disabled = true;
+        printBackBtn.disabled = true;
         
         // Update Preview
         updatePreview(resident);
@@ -434,14 +352,28 @@ document.addEventListener('DOMContentLoaded', function() {
         return d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
     }
 
+    function resolveMediaUrl(path) {
+        if (!path || !String(path).trim()) return '';
+        const cleanPath = String(path).trim();
+        if (/^https?:\/\//i.test(cleanPath) || cleanPath.startsWith('data:')) {
+            return cleanPath;
+        }
+        if (cleanPath.startsWith('/storage/') || cleanPath.startsWith('storage/')) {
+            return cleanPath.startsWith('/') ? cleanPath : `/${cleanPath}`;
+        }
+        return `/storage/${cleanPath.replace(/^\/+/, '')}`;
+    }
+
     function updatePreview(resident, idData = null) {
-        previewName.textContent = `${resident.last_name}, ${resident.first_name}${resident.middle_name ? ', ' + resident.middle_name : ''}${resident.suffix ? ' ' + resident.suffix : ''}`;
+        const fullName = `${resident.last_name || ''}, ${resident.first_name || ''} ${resident.middle_name || ''}${resident.suffix ? ' ' + resident.suffix : ''}`.trim();
+        previewName.textContent = fullName || '-';
         previewDob.textContent = formatDate(resident.birth_date);
+        previewPob.textContent = resident.birth_place || resident.place_of_birth || '-';
         previewSex.textContent = resident.gender || '-';
         previewNationality.textContent = resident.nationality || 'FILIPINO';
         previewStatus.textContent = resident.civil_status || '-';
         if (previewSector) previewSector.textContent = resident.special_sector || '-';
-        previewAddress.textContent = resident.address || '-';
+        previewAddress.textContent = (resident.address || '-').toUpperCase();
         
         previewEcName.textContent = resident.emergency_contact_name || '_____________________';
         previewEcAddress.textContent = resident.emergency_contact_address || '_____________________';
@@ -456,46 +388,45 @@ document.addEventListener('DOMContentLoaded', function() {
         // Handle photo display
         if (resident.profile_image && resident.profile_image.trim()) {
             try {
-                previewPhoto.src = `/storage/${resident.profile_image}`;
+                previewPhoto.src = resolveMediaUrl(resident.profile_image);
                 previewPhoto.style.display = 'block';
                 previewNoPhoto.style.display = 'none';
             } catch (e) {
                 console.error('Error loading photo:', e);
                 previewPhoto.style.display = 'none';
-                previewNoPhoto.style.display = 'block';
+                previewNoPhoto.style.display = 'flex';
             }
         } else {
             previewPhoto.style.display = 'none';
-            previewNoPhoto.style.display = 'block';
+            previewNoPhoto.style.display = 'flex';
         }
 
-        // Handle signature display
-        if (resident.signature && resident.signature.trim()) {
-            try {
-                previewSignature.src = `/storage/${resident.signature}`;
+        if (previewSignature) {
+            if (resident.signature && resident.signature.trim()) {
+                previewSignature.src = resolveMediaUrl(resident.signature);
                 previewSignature.style.display = 'block';
-                previewNoSignature.style.display = 'none';
-            } catch (e) {
-                console.error('Error loading signature:', e);
+            } else {
+                previewSignature.src = '';
                 previewSignature.style.display = 'none';
-                previewNoSignature.style.display = 'block';
             }
-        } else {
-            previewSignature.style.display = 'none';
-            previewNoSignature.style.display = 'block';
         }
 
         // Handle ID data
-        const previewIdNoFront = document.getElementById('preview-id-no-front');
         if (idData) {
-            if (previewIdNoFront) previewIdNoFront.textContent = idData.id_number || 'PENDING';
+            if (previewIdNo) previewIdNo.textContent = idData.id_number || 'PENDING';
             if (idData.qr_code) {
-                previewQr.src = idData.qr_code;
+                if (previewQrFront) {
+                    previewQrFront.src = idData.qr_code;
+                    previewQrFront.style.display = 'block';
+                }
             }
-            previewValidity.textContent = formatDate(idData.expiration_date) || 'N/A';
+            previewValidity.textContent = formatDate(idData.expiration_date) || '-';
         } else {
-            if (previewIdNoFront) previewIdNoFront.textContent = 'PENDING';
-            previewQr.src = '';
+            if (previewIdNo) previewIdNo.textContent = 'PENDING';
+            if (previewQrFront) {
+                previewQrFront.src = '';
+                previewQrFront.style.display = 'none';
+            }
             // Calculate validity: resident created_at + 3 years
             if (resident.created_at) {
                 const createdDate = new Date(resident.created_at);
@@ -505,7 +436,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const validityDate = new Date(year, month, date).toISOString().split('T')[0];
                 previewValidity.textContent = formatDate(validityDate);
             } else {
-                previewValidity.textContent = 'N/A';
+                previewValidity.textContent = '-';
             }
         }
     }
@@ -517,7 +448,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Current Date:', new Date());
         
         generatingLoader.style.display = 'block';
-        generatedInfo.style.display = 'none';
+        generatedInfo.style.display = 'block';
         
         const issuedDate = new Date().toISOString().split('T')[0];
         const expirationDate = new Date(new Date().setFullYear(new Date().getFullYear() + 3)).toISOString().split('T')[0];
@@ -589,6 +520,8 @@ document.addEventListener('DOMContentLoaded', function() {
             updatePreview(resident, idData);
             generatedInfo.style.display = 'block';
             generatedIdNo.textContent = idData.id_number || 'PENDING';
+            printFrontBtn.disabled = false;
+            printBackBtn.disabled = false;
             
             console.log('==== generateID SUCCESS ====');
         })
@@ -599,6 +532,8 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Error stack:', err.stack);
             console.error('====================');
             generatingLoader.style.display = 'none';
+            printFrontBtn.disabled = true;
+            printBackBtn.disabled = true;
             alert('Error generating ID:\n' + err.message + '\n\nCheck console for details.');
         });
     }
@@ -628,14 +563,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const printWindow = window.open('', '_blank');
         if (!printWindow) return;
 
-        // Get absolute image URLs for print preview
-        const photoUrl = currentResident.profile_image 
-            ? `${window.location.protocol}//${window.location.host}/storage/${currentResident.profile_image}`
-            : '';
+        // Resolve media URLs for print preview
+        const photoUrl = resolveMediaUrl(currentResident.profile_image);
+        const signatureUrl = resolveMediaUrl(currentResident.signature);
 
-        const signatureUrl = currentResident.signature
-            ? `${window.location.protocol}//${window.location.host}/storage/${currentResident.signature}`
-            : '';
+        const templateUrl = `${window.location.protocol}//${window.location.host}/images/id-template-blank.png`;
 
         // Function to fetch and convert image to base64
         async function getImageBase64(url) {
@@ -657,224 +589,63 @@ document.addEventListener('DOMContentLoaded', function() {
         // Generate print HTML after images are ready
         Promise.all([
             getImageBase64(photoUrl),
-            getImageBase64(signatureUrl)
-        ]).then(([photoBase64, signatureBase64]) => {
+            getImageBase64(signatureUrl),
+            getImageBase64(templateUrl)
+        ]).then(([photoBase64, signatureBase64, templateBase64]) => {
             const photoSrc = photoBase64;
             const signatureSrc = signatureBase64;
+            const templateSrc = templateBase64 || templateUrl;
+            const fullNamePrint = `${currentResident.last_name || ''}, ${currentResident.first_name || ''} ${currentResident.middle_name || ''}${currentResident.suffix ? ' ' + currentResident.suffix : ''}`.replace(/\s+/g, ' ').trim();
+            const addressPrint = (currentResident.address || '-').replace(/\s+/g, ' ').trim();
+            const sectorPrint = (currentResident.special_sector || '-').replace(/\s+/g, ' ').trim();
+            const idNumberPrint = (currentID.id_number || '-').replace(/\s+/g, ' ').trim();
+            const validityPrint = formatDate(currentID.expiration_date);
 
-        const frontCardHTML = `
-          <!DOCTYPE html>
-          <html>
-            <head>
-              <meta charset="UTF-8">
-              <title>Barangay ID Card - ${currentResident.first_name} ${currentResident.last_name}</title>
-              <style>
-                * { margin: 0; padding: 0; box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-                html, body { margin: 0; padding: 0; height: 100%; }
-                body { font-family: sans-serif; background: white; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-                
-                .id-card { 
-                  position: relative; 
-                  width: 3.375in; 
-                  height: 2.125in; 
-                  background-color: #f8f9fa; 
-                  overflow: hidden; 
-                  display: flex; 
-                  flex-direction: column;
-                  margin-bottom: 20px;
-                  break-after: always;
-                  -webkit-print-color-adjust: exact;
-                  print-color-adjust: exact;
-                }
-                
-                /* Background Pattern */
-                .bg-pattern { 
-                  position: absolute; 
-                  top: 0; 
-                  left: 0; 
-                  width: 100%; 
-                  height: 100%; 
-                  opacity: 0.6; 
-                  background: repeating-radial-gradient(circle at 0 100%, transparent 0, transparent 10px, rgba(0,56,168,0.03) 11px, rgba(0,56,168,0.03) 12px), repeating-radial-gradient(circle at 100% 0, transparent 0, transparent 10px, rgba(206,17,38,0.03) 11px, rgba(206,17,38,0.03) 12px); 
-                  pointer-events: none; 
-                  z-index: 0;
-                  -webkit-print-color-adjust: exact;
-                  print-color-adjust: exact;
-                }
+            const fitFont = (text, base, min, maxChars) => {
+                if (!text) return base;
+                const ratio = Math.max(0, (text.length - maxChars) / maxChars);
+                const size = base - (base - min) * Math.min(1, ratio);
+                return Number(size.toFixed(2));
+            };
 
-                /* Header */
-                .header { 
-                  position: relative; 
-                  z-index: 1; 
-                  background: linear-gradient(90deg, rgba(38,143,255,0.85) 0%, rgba(255,255,255,0.85) 50%, rgba(0,48,103,0.85) 100%), url('/images/kalawaan_hall.jpg') center/cover; 
-                  height: 48px; 
-                  display: flex; 
-                  align-items: center; 
-                  padding: 0 3px; 
-                  color: #003067;
-                  flex-shrink: 0;
-                  -webkit-print-color-adjust: exact;
-                  print-color-adjust: exact;
-                }
-                .header-logo { 
-                  width: 44px; 
-                  height: 44px; 
-                  border-radius: 50%; 
-                  display: flex; 
-                  align-items: center; 
-                  justify-content: center;
-                  flex-shrink: 0;
-                  -webkit-print-color-adjust: exact;
-                  print-color-adjust: exact;
-                }
-                .header-logo img { width: 90%; height: 90%; object-fit: contain; border-radius: 60%}
-                .header-text { flex: 1; text-align: center; line-height: 1.05; padding: 0 2px; }
-                .header-text h3 { font-size: 5px; font-weight: normal; letter-spacing: 0.5px; margin: 0; }
-                .header-text h2 { font-size: 9px; font-weight: 800; margin: 0; letter-spacing: 0.5px; }
-                .header-text h4 { font-size: 7px; font-weight: 700; margin: 1px 0 0 0; letter-spacing: 0.5px; text-transform: uppercase; }
+            const nameFont = fitFont(fullNamePrint, 8, 6.1, 40);
+            const addressFont = fitFont(addressPrint, 6.8, 5.1, 44);
+            const sectorFont = fitFont(sectorPrint, 6.6, 5.4, 18);
+            const idFont = fitFont(idNumberPrint, 6.3, 5.0, 16);
+            const printNameStyle = 'font-family: "Arial Black", "Segoe UI", Arial, sans-serif; color: #0a1f4d; text-shadow: 0 0 1.2px rgba(255,255,255,0.95), 0 0 0.6px rgba(255,255,255,0.9);';
+            const printValueStyle = 'font-family: "Segoe UI", Arial, sans-serif; color: #101828; text-shadow: 0 0 1px rgba(255,255,255,0.95), 0 0 0.4px rgba(255,255,255,0.9);';
+            const printStrongStyle = 'font-family: "Arial Black", "Segoe UI", Arial, sans-serif; color: #07193d; text-shadow: 0 0 1.2px rgba(255,255,255,0.95), 0 0 0.6px rgba(255,255,255,0.9);';
 
-                /* Body */
-                .card-body { 
-                  position: relative; 
-                  z-index: 1; 
-                  display: flex; 
-                  padding: 8px; 
-                  gap: 8px; 
-                  flex: 1;
-                  overflow: hidden;
-                }
+                const frontCardHTML = `
+                            <div class="id-card" style="position: relative; width: 3.375in; height: 2.125in; overflow: hidden;">
+                                <img src="${templateSrc}" alt="Template" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
 
-                /* Left Col */
-                .left-col { width: 80px; display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
-                .photo-box { width: 80px; height: 95px; background-color: #e9ecef; border: 1px solid #adb5bd; border-radius: 3px; overflow: hidden; display: flex; align-items: center; justify-content: center; margin-bottom: 4px; flex-shrink: 0; }
-                .photo-box img { width: 100%; height: 100%; object-fit: cover; }
-                .signature-area { width: 100%; height: 25px; margin-bottom: 2px; display: flex; align-items: flex-end; justify-content: center; flex-shrink: 0; }
-                .signature-text { font-family: cursive; font-size: 7px; }
-                .resident-label { font-size: 5.5px; font-weight: bold; color: #0038A8; letter-spacing: 0.5px; line-height: 1.1; }
+                                <div style="position: absolute; left: 6.2%; top: 29.5%; width: 19.5%; height: 40%; overflow: hidden; border-radius: 8px; background: #d8d8d8; display: flex; align-items: center; justify-content: center;">
+                                    ${photoSrc ? `<img src="${photoSrc}" alt="Photo" style="width: 100%; height: 80%; object-fit: cover;">` : '<span style="font-size: 8px; color: #666; font-weight: bold;">NO PHOTO</span>'}
+                                </div>
 
-                /* Right Col */
-                .right-col { flex: 1; display: flex; flex-direction: row; min-width: 0; gap: 8px; }
-                .details-col { flex: 1; min-width: 0; display: flex; flex-direction: column; }
-                .qr-col { width: 65px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding-bottom: 4px; }
-                .field-label { font-size: 6px; color: #6c757d; text-transform: uppercase; margin-bottom: 0.5px; letter-spacing: 0; word-spacing: 0; }
-                .field-value { font-size: 8px; font-weight: bold; color: #212529; line-height: 1.2; overflow-wrap: break-word; text-transform: uppercase; letter-spacing: 0; word-spacing: 0; }
-                .name-value { font-size: 9px; color: #0038A8; text-transform: uppercase; margin-bottom: 5px; line-height: 1.1; letter-spacing: 0; word-spacing: 0; }
+                                <div style="position: absolute; left: 29%; top: 37%; width: 65%; font-size: ${nameFont}px; font-weight: 900; line-height: 1.05; text-transform: uppercase; white-space: nowrap; overflow: hidden; letter-spacing: 0.15px; ${printNameStyle}">${fullNamePrint || '-'}</div>
+                                <div style="position: absolute; left: 29.4%; top: 49%; width: 64.5%; font-size: ${addressFont}px; font-weight: 800; line-height: 1.05; text-transform: uppercase; white-space: nowrap; overflow: hidden; letter-spacing: 0.1px; ${printValueStyle}">${addressPrint}</div>
 
-                .grid-container { display: grid; grid-template-columns: auto auto auto; justify-content: start; gap: 3px 12px; margin-bottom: 5px; }
-                .grid-item { }
-                
-                .qr-section { position: absolute; bottom: 0; right: 0; text-align: center; padding: 4px; }
-                .qr-box { width: 60px; height: 60px; background: white; border: 1px solid #999; padding: 1px; margin-bottom: 1px; display: flex; align-items: center; justify-content: center; }
-                .qr-box img { width: 100%; height: 100%; object-fit: contain; }
-                .id-no { font-family: monospace; font-weight: bold; font-size: 7px; letter-spacing: 0.3px; }
+                                <div style="position: absolute; left: 29.5%; top: 60.1%; width: 17%; font-size: 6.4px; font-weight: 800; white-space: normal; overflow-wrap: anywhere; word-break: break-word; line-height: 1.05; letter-spacing: 0.1px; ${printValueStyle}">${formatDate(currentResident.birth_date)}</div>
+                                <div style="position: absolute; left: 43.5%; top: 60.1%; width: 20%; font-size: 6.4px; font-weight: 800; white-space: normal; overflow-wrap: anywhere; word-break: break-word; line-height: 1.05; letter-spacing: 0.1px; ${printValueStyle}">${currentResident.birth_place || currentResident.place_of_birth || '-'}</div>
+                                <div style="position: absolute; left: 59.6%; top: 60.1%; width: 13.5%; font-size: 6.4px; font-weight: 800; white-space: normal; overflow-wrap: anywhere; word-break: break-word; line-height: 1.05; letter-spacing: 0.1px; ${printValueStyle}">${currentResident.nationality || 'FILIPINO'}</div>
+                                <div style="position: absolute; left: 72%; top: 60.1%; width: 7%; font-size: 6.4px; font-weight: 800; white-space: normal; overflow-wrap: anywhere; word-break: break-word; line-height: 1.05; letter-spacing: 0.1px; ${printValueStyle}">${currentResident.gender || '-'}</div>
+                                <div style="position: absolute; left: 79%; top: 60.1%; width: 14%; font-size: 6.4px; font-weight: 800; white-space: normal; overflow-wrap: anywhere; word-break: break-word; line-height: 1.05; letter-spacing: 0.1px; ${printValueStyle}">${currentResident.civil_status || '-'}</div>
 
-                /* Back Side */
-                .back-header { background: linear-gradient(90deg, rgba(38,143,255,0.85) 0%, rgba(255,255,255,0.85) 50%, rgba(0,48,103,0.85) 100%), url('/images/kalawaan_hall.jpg') center/cover; color: #003067; text-align: center; font-weight: bold; font-size: 9px; padding: 4px; letter-spacing: 0.5px; flex-shrink: 0; }
-                .back-body { padding: 10px; display: flex; gap: 10px; flex: 1; overflow: hidden; }
-                .back-left { flex: 1; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
-                .ec-label { font-size: 6px; font-weight: bold; color: #0038A8; margin-bottom: 0.5px; }
-                .ec-value { font-size: 8px; font-weight: bold; color: #333; border-bottom: 1px solid #999; padding-bottom: 0.5px; min-height: 10px; }
-                .disclaimer { margin-top: auto; font-size: 5px; color: #6c757d; text-align: center; line-height: 1.1; }
-                .back-right { width: 70px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; flex-shrink: 0; }
-                .chairman-line { border-top: 1px solid #000; width: 100%; margin-bottom: 1px; }
-                .chairman-label { font-size: 6px; font-weight: bold; color: #0038A8; text-align: center; line-height: 1.1; }
+                                <div style="position: absolute; left: 29.5%; top: 68.5%; width: 18%; font-size: 6.5px; font-weight: 800; white-space: nowrap; overflow: hidden; letter-spacing: 0.1px; ${printValueStyle}">${sectorPrint}</div>
+                                <div style="position: absolute; left: 7%; top: 73.4%; width: 18.2%; text-align: center; font-size: 4px; font-weight: 900; white-space: nowrap; overflow: hidden; letter-spacing: 0.2px; ${printStrongStyle}">${idNumberPrint}</div>
 
-                @media print {
-                  @page { size: 3.375in 2.125in; margin: 0; }
-                  html, body { margin: 0; padding: 0; }
-                  body { display: block; background: white; }
-                }
-              </style>
-            </head>
-            <body>
-              <!-- FRONT CARD -->
-              <div class="id-card">
-                <div class="bg-pattern"></div>
-                <div class="header">
-                  <div class="header-logo" style="margin-left: 20px;">
-                      <img src="${window.location.origin}/images/OIP.jpg" alt="Logo">
-                  </div>
-                  <div class="header-text">
-                      <h2>Republic of the Philippines</h2>
-                      <h2>National Capital Region</h2>
-                      <h2>City of Pasig</h2>
-                      <h2>Barangay Kalawaan</h2>
-                      <h4>Barangay Residents Identification System</h4>
-                  </div>
-                  <div class="header-logo" style="margin-right: 20px;">
-                      <img src="${window.location.origin}/images/Pasig_City_Seal_Logo.svg" alt="Logo">
-                  </div>
-                </div>
-                
-                <div class="card-body">
-                  <div class="left-col">
-                      <div class="photo-box">
-                          ${photoSrc ? `<img src="${photoSrc}" alt="Photo">` : '<span style="font-size: 7px; color: #adb5bd;">PHOTO</span>'}
-                      </div>
-                      <div style="font-size: 5.5px; font-weight: bold; color: #333; text-align: center; margin-bottom: 2px;">${currentID.id_number || '-'}</div>
-                      <div class="signature-area">
-                          ${signatureSrc ? `<img src="${signatureSrc}" alt="Signature" style="max-width: 75px; max-height: 22px; object-fit: contain; background: transparent;">` : '<span style="font-family: cursive; font-size: 7px; color: #999;">Signature</span>'}
-                      </div>
-                      <div style="border-top: 1.5px solid #000; width: 65px; margin: 1px auto 2px auto;"></div>
-                      <div class="resident-label" style="margin-bottom: 3px;">RESIDENT</div>
-                  </div>
-                  
-                  <div class="right-col">
-                      <div class="details-col">
-                          <div class="field-label">Last Name, First Name, Middle Name</div>
-                          <div class="field-value name-value">${currentResident.last_name}, ${currentResident.first_name}${currentResident.middle_name ? ', ' + currentResident.middle_name : ''}${currentResident.suffix ? ' ' + currentResident.suffix : ''}</div>
-                          
-                          <div class="grid-container">
-                              <div class="grid-item">
-                                  <div class="field-label">Sex</div>
-                                  <div class="field-value" style="white-space: nowrap;">${currentResident.gender || '-'}</div>
-                              </div>
-                              <div class="grid-item">
-                                  <div class="field-label">Date of Birth</div>
-                                  <div class="field-value" style="white-space: nowrap;">${formatDate(currentResident.birth_date)}</div>
-                              </div>
-                              <div class="grid-item">
-                                  <div class="field-label">Status</div>
-                                  <div class="field-value" style="white-space: nowrap;">${currentResident.civil_status || '-'}</div>
-                              </div>
-                              <div class="grid-item">
-                                  <div class="field-label">Nationality</div>
-                                  <div class="field-value" style="white-space: nowrap;">${currentResident.nationality || 'FILIPINO'}</div>
-                              </div>
-                              <div class="grid-item">
-                                  <div class="field-label">Sector</div>
-                                  <div class="field-value" style="white-space: nowrap;">${currentResident.special_sector || '-'}</div>
-                              </div>
-                          </div>
+                                <div style="position: absolute; left: 7%; top: 84.1%; width: 18.5%; height: 7.3%; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                                    ${signatureSrc ? `<img src="${signatureSrc}" alt="Signature" style="max-width: 100%; max-height: 100%; object-fit: contain;">` : ''}
+                                </div>
 
-                          <div class="field-label">Address</div>
-                          <div class="field-value" style="font-size: 8px; line-height: 1.25; text-transform: uppercase; overflow-wrap: break-word; max-width: 100%;">${currentResident.address || '-'}</div>
-                      </div>
-                      <div class="qr-col">
-                          <div style="display: flex; flex-direction: column; align-items: center; margin-top: 10px;">
-                              <div style="width: 56px; height: 56px; display: flex; align-items: center; justify-content: center; margin-top: 10px;">
-                                  <img src="${currentID.qr_code}" alt="QR" style="width: 90%; height: 90%; object-fit: contain;">
-                              </div>
-                              <div style="text-align: center; margin-top: 2px; line-height: 1.2;">
-                                  <div class="field-label">Valid Until:</div>
-                                  <div style="font-size: 6px; font-weight: bold; color: #212529; white-space: nowrap;">${formatMonthYear(currentID.expiration_date)}</div>
-                              </div>
-                          </div>
-                          <div style="text-align: center; width: 65px; position: relative; margin-right: 20px;">
-                              <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 75px; height: 24px; opacity: 1; z-index: 0;">
-                                  <img src="${window.location.origin}/storage/signatures/chairman.png" alt="Signature" style="width: 100%; height: 100%; object-fit: contain;">
-                              </div>
-                              <div style="position: relative; z-index: 1;">
-                                  <div style="font-size: 7px; font-weight: bold; color: #0038A8; line-height: 1.1; white-space: nowrap;">JESSIE B. GAVIOLA</div>
-                                  <div style="border-top: 1.5px solid #000; margin: 1px auto 2px auto; width: 100%;"></div>
-                                  <div style="font-size: 5.5px; font-weight: bold; color: #0038A8; line-height: 1.1;">PUNONG BARANGAY</div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-                </div>
-              </div>
-        `;
+                                <div style="position: absolute; left: 79.6%; top: 68.5%; width: 14%; height: 20.8%; background: #fff; display: flex; align-items: center; justify-content: center; padding: 2px;">
+                                    ${currentID.qr_code ? `<img src="${currentID.qr_code}" alt="QR" style="width: 100%; height: 100%; object-fit: contain;">` : ''}
+                                </div>
+                                <div style="position: absolute; left: 78.8%; top: 93%; width: 15.6%; text-align: center; font-size: 5px; font-weight: 900; white-space: nowrap; overflow: hidden; letter-spacing: 0.1px; ${printStrongStyle}">${validityPrint}</div>
+                            </div>
+                `;
 
         const backCardHTML = `
               <div class="id-card">
@@ -946,124 +717,49 @@ document.addEventListener('DOMContentLoaded', function() {
               <meta charset="UTF-8">
               <title>Barangay ID Card - ${currentResident.first_name} ${currentResident.last_name}</title>
               <style>
-                * { margin: 0; padding: 0; box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-                html, body { margin: 0; padding: 0; height: 100%; }
-                body { font-family: Arial, Helvetica, sans-serif; background: white; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-                
-                .id-card { 
-                  position: relative; 
-                  width: 3.375in; 
-                  height: 2.125in; 
-                  background-color: #f8f9fa; 
-                  overflow: hidden; 
-                  display: flex; 
-                  flex-direction: column;
-                  margin-bottom: 20px;
-                  break-after: always;
-                  -webkit-print-color-adjust: exact;
-                  print-color-adjust: exact;
-                }
-                
-                /* Background Pattern */
-                .bg-pattern { 
-                  position: absolute; 
-                  top: 0; 
-                  left: 0; 
-                  width: 100%; 
-                  height: 100%; 
-                  opacity: 0.6; 
-                  background: repeating-radial-gradient(circle at 0 100%, transparent 0, transparent 10px, rgba(0,56,168,0.03) 11px, rgba(0,56,168,0.03) 12px), repeating-radial-gradient(circle at 100% 0, transparent 0, transparent 10px, rgba(206,17,38,0.03) 11px, rgba(206,17,38,0.03) 12px); 
-                  pointer-events: none; 
-                  z-index: 0;
-                  -webkit-print-color-adjust: exact;
-                  print-color-adjust: exact;
-                }
-
-                /* Header */
-                .header { 
-                  position: relative; 
-                  z-index: 1; 
-                  background: linear-gradient(90deg, rgba(38,143,255,0.85) 0%, rgba(255,255,255,0.85) 50%, rgba(0,48,103,0.85) 100%), url('/images/kalawaan_hall.jpg') center/cover; 
-                  height: 48px; 
-                  display: flex; 
-                  align-items: center; 
-                  padding: 0 3px; 
-                  color: #003067;
-                  flex-shrink: 0;
-                  -webkit-print-color-adjust: exact;
-                  print-color-adjust: exact;
-                }
-                .header-logo { 
-                  width: 46px; 
-                  height: 46px; 
-                  border-radius: 50%; 
-                  display: flex; 
-                  align-items: center; 
-                  justify-content: center;
-                  flex-shrink: 0;
-                  -webkit-print-color-adjust: exact;
-                  print-color-adjust: exact;
-                }
-                .header-logo img { width: 90%; height: 90%; object-fit: contain; border-radius: 60%}
-                .header-text { flex: 1; text-align: center; line-height: 1.05; padding: 0 2px; }
-                .header-text h3 { font-size: 5px; font-weight: normal; letter-spacing: 0.5px; margin: 0; }
-                .header-text h2 { font-size: 9px; font-weight: 800; margin: 0; letter-spacing: 1px; }
-                .header-text h4 { font-size: 7px; font-weight: 700; margin: 1px 0 0 0; letter-spacing: 0.5px; text-transform: uppercase; }
-
-                /* Body */
-                .card-body { 
-                  position: relative; 
-                  z-index: 1; 
-                  display: flex; 
-                  padding: 8px; 
-                  gap: 8px; 
-                  flex: 1;
-                  overflow: hidden;
-                }
-
-                /* Left Col */
-                .left-col { width: 80px; display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
-                .photo-box { width: 80px; height: 95px; background-color: #e9ecef; border: 1px solid #adb5bd; border-radius: 3px; overflow: hidden; display: flex; align-items: center; justify-content: center; margin-bottom: 4px; flex-shrink: 0; }
-                .photo-box img { width: 100%; height: 100%; object-fit: cover; }
-                .signature-area { width: 100%; height: 25px; margin-bottom: 2px; display: flex; align-items: flex-end; justify-content: center; flex-shrink: 0; }
-                .signature-text { font-family: cursive; font-size: 7px; }
-                .resident-label { font-size: 5.5px; font-weight: bold; color: #0038A8; letter-spacing: 0.5px; line-height: 1.1; }
-
-                /* Right Col */
-                .right-col { flex: 1; display: flex; flex-direction: row; min-width: 0; gap: 8px; }
-                .details-col { flex: 1; min-width: 0; display: flex; flex-direction: column; }
-                .qr-col { width: 65px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding-bottom: 4px; }
-                .field-label { font-size: 5.5px; color: #6c757d; text-transform: uppercase; margin-bottom: 0.5px; letter-spacing: 0; word-spacing: 0; }
-                .field-value { font-size: 8px; font-weight: bold; color: #212529; line-height: 1.2; overflow-wrap: break-word; text-transform: uppercase; letter-spacing: 0; word-spacing: 0; }
-                .name-value { font-size: 8px; color: #0038A8; text-transform: uppercase; margin-bottom: 6px; line-height: 1.1; letter-spacing: 0; word-spacing: 0; }
-
-                .grid-container { display: grid; grid-template-columns: auto auto auto; justify-content: start; gap: 3px 12px; margin-bottom: 4px; }
-                .grid-item { }
-                
-                .qr-section { position: absolute; bottom: 0; right: 0; text-align: center; padding: 4px; }
-                .qr-box { width: 60px; height: 60px; background: white; border: 1px solid #999; padding: 1px; margin-bottom: 1px; display: flex; align-items: center; justify-content: center; }
-                .qr-box img { width: 100%; height: 100%; object-fit: contain; }
-                .id-no { font-family: monospace; font-weight: bold; font-size: 7px; letter-spacing: 0.3px; }
-
-                /* Back Side */
-                .back-header { background: linear-gradient(90deg, rgba(38,143,255,0.85) 0%, rgba(255,255,255,0.85) 50%, rgba(0,48,103,0.85) 100%), url('/images/kalawaan_hall.jpg') center/cover; color: #003067; text-align: center; font-weight: bold; font-size: 9px; padding: 4px; letter-spacing: 0.5px; flex-shrink: 0; }
-                .back-body { padding: 10px; display: flex; gap: 10px; flex: 1; overflow: hidden; }
-                .back-left { flex: 1; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
-                .ec-label { font-size: 6px; font-weight: bold; color: #0038A8; margin-bottom: 0.5px; }
-                .ec-value { font-size: 8px; font-weight: bold; color: #333; border-bottom: 1px solid #999; padding-bottom: 0.5px; min-height: 10px; }
-                .disclaimer { margin-top: auto; font-size: 5px; color: #6c757d; text-align: center; line-height: 1.1; }
-                .back-right { width: 70px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; flex-shrink: 0; }
-                .chairman-line { border-top: 1px solid #000; width: 100%; margin-bottom: 1px; }
-                .chairman-label { font-size: 6px; font-weight: bold; color: #0038A8; text-align: center; line-height: 1.1; }
+                                * { margin: 0; padding: 0; box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                                html, body { margin: 0; padding: 0; }
+                                body { font-family: Arial, Helvetica, sans-serif; background: #f3f4f6; padding: 14px; }
+                                .print-wrap { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+                                .id-card {
+                                    position: relative;
+                                    width: 3.375in;
+                                    height: 2.125in;
+                                    overflow: hidden;
+                                    background: #fff;
+                                    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+                                    border-radius: 4px;
+                                }
+                                @media screen and (max-width: 900px) {
+                                    .id-card {
+                                        width: min(95vw, 3.375in);
+                                        height: auto;
+                                        aspect-ratio: 1.588;
+                                    }
+                                }
+                                .bg-pattern {
+                                    position: absolute;
+                                    top: 0;
+                                    left: 0;
+                                    width: 100%;
+                                    height: 100%;
+                                    opacity: 0.6;
+                                    background: repeating-radial-gradient(circle at 0 100%, transparent 0, transparent 10px, rgba(0,56,168,0.03) 11px, rgba(0,56,168,0.03) 12px), repeating-radial-gradient(circle at 100% 0, transparent 0, transparent 10px, rgba(206,17,38,0.03) 11px, rgba(206,17,38,0.03) 12px);
+                                    pointer-events: none;
+                                }
 
                 @media print {
                   @page { size: 3.375in 2.125in; margin: 0; }
-                  html, body { margin: 0; padding: 0; }
-                  body { display: block; background: white; }
+                                    html, body { margin: 0; padding: 0; background: #fff; }
+                                    body { padding: 0; }
+                                    .print-wrap { gap: 0; }
+                                    .id-card { margin: 0; border-radius: 0; box-shadow: none; page-break-after: always; }
+                                    .id-card:last-child { page-break-after: auto; }
                 }
               </style>
             </head>
-            <body>
+                        <body>
+                        <div class="print-wrap">
             `;
 
             if (side === 'front' || side === 'both') {
@@ -1074,6 +770,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             finalHTML += `
+                        </div>
             </body>
           </html>
         `;
