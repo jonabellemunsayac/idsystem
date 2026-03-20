@@ -364,7 +364,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function getSectorLeftPosition(sector) {
         const normalized = String(sector || '').trim().toLowerCase();
-        if (normalized.includes('pwd')) return '48%';
+        if (normalized.includes('pwd') || normalized === 'none') return '47%';
         if (normalized.includes('senior citizen') || normalized.includes('single mom')) return '44%';
         return '44%';
     }
@@ -383,10 +383,22 @@ document.addEventListener('DOMContentLoaded', function() {
         return Number(size.toFixed(2));
     }
 
+    function applyFittedNameFont(element, text, base, min, maxChars) {
+        if (!element) return;
+        let size = fitFontSize(text, base, min, maxChars);
+        element.style.fontSize = `${size}px`;
+
+        // Fine-tune using real rendered width so very long names keep shrinking.
+        while (element.scrollWidth > element.clientWidth && size > min) {
+            size = Number((size - 0.3).toFixed(2));
+            element.style.fontSize = `${size}px`;
+        }
+    }
+
     function updatePreview(resident, idData = null) {
         const fullName = `${resident.last_name || ''}, ${resident.first_name || ''} ${resident.middle_name || ''}${resident.suffix ? ' ' + resident.suffix : ''}`.trim();
         previewName.textContent = fullName || '-';
-        previewName.style.fontSize = `${fitFontSize(fullName, 16, 11, 32)}px`;
+        applyFittedNameFont(previewName, fullName, 16, 8, 32);
         previewDob.textContent = formatDate(resident.birth_date);
         previewSex.textContent = formatSexShort(resident.gender);
         previewNationality.textContent = resident.nationality || 'FILIPINO';
@@ -624,7 +636,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const idNumberPrint = (currentID.id_number || '-').replace(/\s+/g, ' ').trim();
             const validityPrint = formatDate(currentID.expiration_date);
 
-            const nameFont = fitFontSize(fullNamePrint, 8.2, 6.8, 40);
+            const nameFont = fitFontSize(fullNamePrint, 8.2, 5.4, 34);
             const addressFont = fitFontSize(addressPrint, 6.8, 5.1, 44);
             const printNameStyle = 'font-family: "Arial Black", "Segoe UI", Arial, sans-serif; color: #0a1f4d; text-shadow: 0 0 1.2px rgba(255,255,255,0.95), 0 0 0.6px rgba(255,255,255,0.9);';
             const printValueStyle = 'font-family: "Segoe UI", Arial, sans-serif; color: #101828; text-shadow: 0 0 1px rgba(255,255,255,0.95), 0 0 0.4px rgba(255,255,255,0.9);';
