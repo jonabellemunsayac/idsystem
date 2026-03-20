@@ -37,16 +37,15 @@
                             <img id="preview-signature" src="" alt="Signature" style="max-width: 100%; max-height: 100%; object-fit: contain; display: none;">
                         </div>
 
-                        <div id="preview-name" style="position: absolute; left: 29%; top: 31.8%; width: 65%; font-size: 15px; font-weight: 800; line-height: 1.1; text-transform: uppercase; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-</div>
-                        <div id="preview-address" style="position: absolute; left: 29.4%; top: 48.6%; width: 64.5%; font-size: 9px; font-weight: 700; line-height: 1.2; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-</div>
+                        <div id="preview-name" style="position: absolute; left: 29%; top: 33%; width: 65%; font-size: 16px; font-weight: 800; line-height: 1.1; text-transform: uppercase; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-</div>
+                        <div id="preview-address" style="position: absolute; left: 29.4%; top: 48.6%; width: 64.5%; font-size: 12px; font-weight: 800; line-height: 1.2; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-</div>
 
-                        <div id="preview-dob" style="position: absolute; left: 30%; top: 60.1%; width: 17%; font-size: 8px; font-weight: 700; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-</div>
-                        <div id="preview-pob" style="position: absolute; left: 43.5%; top: 60.1%; width: 20%; font-size: 8px; font-weight: 700; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-</div>
-                        <div id="preview-nationality" style="position: absolute; left: 59.6%; top: 60.1%; width: 13.5%; font-size: 8px; font-weight: 700; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-</div>
-                        <div id="preview-sex" style="position: absolute; left: 72%; top: 60.1%; width: 7%; font-size: 8px; font-weight: 700; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-</div>
-                        <div id="preview-status" style="position: absolute; left: 79%; top: 60.1%; width: 14%; font-size: 8px; font-weight: 700; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-</div>
+                        <div id="preview-dob" style="position: absolute; left: 30%; top: 60.1%; width: 17%; font-size: 10px; font-weight: 800; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-</div>
+                        <div id="preview-sector" style="position: absolute; left: 44%; top: 60.1%; width: 20%; font-size: 10px; font-weight: 800; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-</div>
+                        <div id="preview-nationality" style="position: absolute; left: 59.6%; top: 60.1%; width: 13.5%; font-size: 10px; font-weight: 800; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-</div>
+                        <div id="preview-sex" style="position: absolute; left: 74%; top: 60.1%; width: 7%; font-size: 10px; font-weight: 800; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-</div>
+                        <div id="preview-status" style="position: absolute; left: 79%; top: 60.1%; width: 14%; font-size: 10px; font-weight: 800; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-</div>
 
-                        <div id="preview-sector" style="position: absolute; left: 30%; top: 68%; width: 18%; font-size: 8px; font-weight: 700; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-</div>
                         <div id="preview-id-no" style="position: absolute; left: 8%; top: 70%; width: 16.4%; font-size: 9px; font-weight: 800; text-align: center; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">PENDING</div>
 
                         <div style="position: absolute; left: 79.6%; top: 68.5%; width: 14%; height: 20.8%; border: 1px solid #000; background: #fff; display: flex; align-items: center; justify-content: center; padding: 2px;">
@@ -213,7 +212,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const previewSignature = document.getElementById('preview-signature');
     const previewName = document.getElementById('preview-name');
     const previewDob = document.getElementById('preview-dob');
-    const previewPob = document.getElementById('preview-pob');
     const previewSex = document.getElementById('preview-sex');
     const previewNationality = document.getElementById('preview-nationality');
     const previewStatus = document.getElementById('preview-status');
@@ -364,15 +362,39 @@ document.addEventListener('DOMContentLoaded', function() {
         return `/storage/${cleanPath.replace(/^\/+/, '')}`;
     }
 
+    function getSectorLeftPosition(sector) {
+        const normalized = String(sector || '').trim().toLowerCase();
+        if (normalized.includes('pwd')) return '48%';
+        if (normalized.includes('senior citizen') || normalized.includes('single mom')) return '44%';
+        return '44%';
+    }
+
+    function formatSexShort(sex) {
+        const normalized = String(sex || '').trim().toLowerCase();
+        if (normalized === 'male') return 'M';
+        if (normalized === 'female') return 'F';
+        return sex || '-';
+    }
+
+    function fitFontSize(text, base, min, maxChars) {
+        if (!text) return base;
+        const ratio = Math.max(0, (text.length - maxChars) / maxChars);
+        const size = base - (base - min) * Math.min(1, ratio);
+        return Number(size.toFixed(2));
+    }
+
     function updatePreview(resident, idData = null) {
         const fullName = `${resident.last_name || ''}, ${resident.first_name || ''} ${resident.middle_name || ''}${resident.suffix ? ' ' + resident.suffix : ''}`.trim();
         previewName.textContent = fullName || '-';
+        previewName.style.fontSize = `${fitFontSize(fullName, 16, 11, 32)}px`;
         previewDob.textContent = formatDate(resident.birth_date);
-        previewPob.textContent = resident.birth_place || resident.place_of_birth || '-';
-        previewSex.textContent = resident.gender || '-';
+        previewSex.textContent = formatSexShort(resident.gender);
         previewNationality.textContent = resident.nationality || 'FILIPINO';
         previewStatus.textContent = resident.civil_status || '-';
-        if (previewSector) previewSector.textContent = resident.special_sector || '-';
+        if (previewSector) {
+            previewSector.textContent = resident.special_sector || '-';
+            previewSector.style.left = getSectorLeftPosition(resident.special_sector);
+        }
         previewAddress.textContent = (resident.address || '-').toUpperCase();
         
         previewEcName.textContent = resident.emergency_contact_name || '_____________________';
@@ -598,20 +620,12 @@ document.addEventListener('DOMContentLoaded', function() {
             const fullNamePrint = `${currentResident.last_name || ''}, ${currentResident.first_name || ''} ${currentResident.middle_name || ''}${currentResident.suffix ? ' ' + currentResident.suffix : ''}`.replace(/\s+/g, ' ').trim();
             const addressPrint = (currentResident.address || '-').replace(/\s+/g, ' ').trim();
             const sectorPrint = (currentResident.special_sector || '-').replace(/\s+/g, ' ').trim();
+            const sectorLeftPrint = getSectorLeftPosition(currentResident.special_sector);
             const idNumberPrint = (currentID.id_number || '-').replace(/\s+/g, ' ').trim();
             const validityPrint = formatDate(currentID.expiration_date);
 
-            const fitFont = (text, base, min, maxChars) => {
-                if (!text) return base;
-                const ratio = Math.max(0, (text.length - maxChars) / maxChars);
-                const size = base - (base - min) * Math.min(1, ratio);
-                return Number(size.toFixed(2));
-            };
-
-            const nameFont = fitFont(fullNamePrint, 7, 6.1, 40);
-            const addressFont = fitFont(addressPrint, 6.8, 5.1, 44);
-            const sectorFont = fitFont(sectorPrint, 6.6, 5.4, 18);
-            const idFont = fitFont(idNumberPrint, 6.3, 5.0, 16);
+            const nameFont = fitFontSize(fullNamePrint, 8.2, 6.8, 40);
+            const addressFont = fitFontSize(addressPrint, 6.8, 5.1, 44);
             const printNameStyle = 'font-family: "Arial Black", "Segoe UI", Arial, sans-serif; color: #0a1f4d; text-shadow: 0 0 1.2px rgba(255,255,255,0.95), 0 0 0.6px rgba(255,255,255,0.9);';
             const printValueStyle = 'font-family: "Segoe UI", Arial, sans-serif; color: #101828; text-shadow: 0 0 1px rgba(255,255,255,0.95), 0 0 0.4px rgba(255,255,255,0.9);';
             const printStrongStyle = 'font-family: "Arial Black", "Segoe UI", Arial, sans-serif; color: #07193d; text-shadow: 0 0 1.2px rgba(255,255,255,0.95), 0 0 0.6px rgba(255,255,255,0.9);';
@@ -624,16 +638,15 @@ document.addEventListener('DOMContentLoaded', function() {
                                     ${photoSrc ? `<img src="${photoSrc}" alt="Photo" style="width: 100%; height: 100%; object-fit: cover;">` : '<span style="font-size: 8px; color: #666; font-weight: bold;">NO PHOTO</span>'}
                                 </div>
 
-                                <div style="position: absolute; left: 29%; top: 37%; width: 65%; font-size: ${nameFont}px; font-weight: 900; line-height: 1.05; text-transform: uppercase; white-space: nowrap; overflow: hidden; letter-spacing: 0.15px; ${printNameStyle}">${fullNamePrint || '-'}</div>
-                                <div style="position: absolute; left: 29.4%; top: 49%; width: 64.5%; font-size: ${addressFont}px; font-weight: 800; line-height: 1.05; text-transform: uppercase; white-space: nowrap; overflow: hidden; letter-spacing: 0.1px; ${printValueStyle}">${addressPrint}</div>
+                                <div style="position: absolute; left: 29.7%; top: 36%; width: 65%; font-size: ${nameFont}px; font-weight: 900; line-height: 1.05; text-transform: uppercase; white-space: nowrap; overflow: hidden; letter-spacing: 0.15px; ${printNameStyle}">${fullNamePrint || '-'}</div>
+                                <div style="position: absolute; left: 29.7%; top: 49%; width: 64.5%; font-size: ${addressFont}px; font-weight: 800; line-height: 1.05; text-transform: uppercase; white-space: nowrap; overflow: hidden; letter-spacing: 0.1px; ${printValueStyle}">${addressPrint}</div>
 
-                                <div style="position: absolute; left: 29.5%; top: 60.1%; width: 17%; font-size: 5px; font-weight: 800; white-space: normal; overflow-wrap: anywhere; word-break: break-word; line-height: 1.05; letter-spacing: 0.1px; ${printValueStyle}">${formatDate(currentResident.birth_date)}</div>
-                                <div style="position: absolute; left: 43.5%; top: 60.1%; width: 20%; font-size: 5px; font-weight: 800; white-space: normal; overflow-wrap: anywhere; word-break: break-word; line-height: 1.05; letter-spacing: 0.1px; ${printValueStyle}">${currentResident.birth_place || currentResident.place_of_birth || '-'}</div>
-                                <div style="position: absolute; left: 59.6%; top: 60.1%; width: 13.5%; font-size: 5px; font-weight: 800; white-space: normal; overflow-wrap: anywhere; word-break: break-word; line-height: 1.05; letter-spacing: 0.1px; ${printValueStyle}">${currentResident.nationality || 'FILIPINO'}</div>
-                                <div style="position: absolute; left: 72%; top: 60.1%; width: 7%; font-size: 5px; font-weight: 800; white-space: normal; overflow-wrap: anywhere; word-break: break-word; line-height: 1.05; letter-spacing: 0.1px; ${printValueStyle}">${currentResident.gender || '-'}</div>
-                                <div style="position: absolute; left: 79%; top: 60.1%; width: 14%; font-size: 5px; font-weight: 800; white-space: normal; overflow-wrap: anywhere; word-break: break-word; line-height: 1.05; letter-spacing: 0.1px; ${printValueStyle}">${currentResident.civil_status || '-'}</div>
+                                <div style="position: absolute; left: 29.5%; top: 60.1%; width: 17%; font-size: 6px; font-weight: 800; white-space: normal; overflow-wrap: anywhere; word-break: break-word; line-height: 1.05; letter-spacing: 0.1px; ${printValueStyle}">${formatDate(currentResident.birth_date)}</div>
+                                <div style="position: absolute; left: ${sectorLeftPrint}; top: 60.1%; width: 20%; font-size: 6px; font-weight: 800; white-space: normal; overflow-wrap: anywhere; word-break: break-word; line-height: 1.05; letter-spacing: 0.1px; ${printValueStyle}">${sectorPrint}</div>
+                                <div style="position: absolute; left: 59.6%; top: 60.1%; width: 13.5%; font-size: 6px; font-weight: 800; white-space: normal; overflow-wrap: anywhere; word-break: break-word; line-height: 1.05; letter-spacing: 0.1px; ${printValueStyle}">${currentResident.nationality || 'FILIPINO'}</div>
+                                <div style="position: absolute; left: 73%; top: 60.1%; width: 7%; font-size: 6px; font-weight: 800; white-space: normal; overflow-wrap: anywhere; word-break: break-word; line-height: 1.05; letter-spacing: 0.1px; ${printValueStyle}">${formatSexShort(currentResident.gender)}</div>
+                                <div style="position: absolute; left: 79%; top: 60.1%; width: 14%; font-size: 6px; font-weight: 800; white-space: normal; overflow-wrap: anywhere; word-break: break-word; line-height: 1.05; letter-spacing: 0.1px; ${printValueStyle}">${currentResident.civil_status || '-'}</div>
 
-                                <div style="position: absolute; left: 29.7%; top: 68.5%; width: 18%; font-size: 6.5px; font-weight: 800; white-space: nowrap; overflow: hidden; letter-spacing: 0.1px; ${printValueStyle}">${sectorPrint}</div>
                                 <div style="position: absolute; left: 7%; top: 73.4%; width: 18.2%; text-align: center; font-size: 4px; font-weight: 900; white-space: nowrap; overflow: hidden; letter-spacing: 0.2px; ${printStrongStyle}">${idNumberPrint}</div>
 
                                 <div style="position: absolute; left: 7%; top: 80%; width: 23%; height: 15%; display: flex; align-items: center; justify-content: center; overflow: hidden;">
