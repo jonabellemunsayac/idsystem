@@ -51,7 +51,7 @@
                         <div style="position: absolute; left: 79.6%; top: 68.5%; width: 14%; height: 20.8%; border: 1px solid #000; background: #fff; display: flex; align-items: center; justify-content: center; padding: 2px;">
                             <img id="preview-qr-front" alt="QR Code" style="width: 100%; height: 100%; object-fit: contain; display: none;">
                         </div>
-                        <div id="preview-validity" style="position: absolute; left: 74.6%; top: 91.4%; width: 24%; font-size: 7px; font-weight: 800; text-align: center; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Valid Until: -</div>
+                        <div id="preview-validity" style="position: absolute; left: 74.6%; top: 91.4%; width: 24%; font-size: 7px; font-weight: 800; text-align: center; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">VALID UNTIL: -</div>
                     </div>
 
                     <!-- BACK PREVIEW -->
@@ -453,7 +453,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     previewQrFront.style.display = 'block';
                 }
             }
-            previewValidity.textContent = `Valid Until: ${formatMonthYear(idData.expiration_date) || '-'}`;
+            previewValidity.textContent = `VALID UNTIL: ${(formatMonthYear(idData.expiration_date) || '-').toUpperCase()}`;
         } else {
             if (previewIdNo) previewIdNo.textContent = 'PENDING';
             if (previewQrFront) {
@@ -467,9 +467,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 const month = createdDate.getMonth();
                 const date = createdDate.getDate();
                 const validityDate = new Date(year, month, date).toISOString().split('T')[0];
-                previewValidity.textContent = `Valid Until: ${formatMonthYear(validityDate)}`;
+                previewValidity.textContent = `VALID UNTIL: ${(formatMonthYear(validityDate) || '-').toUpperCase()}`;
             } else {
-                previewValidity.textContent = 'Valid Until: -';
+                previewValidity.textContent = 'VALID UNTIL: -';
             }
         }
     }
@@ -636,7 +636,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const sectorPrint = (currentResident.special_sector || '-').replace(/\s+/g, ' ').trim();
             const sectorLeftPrint = getSectorLeftPosition(currentResident.special_sector);
             const idNumberPrint = (currentID.id_number || '-').replace(/\s+/g, ' ').trim();
-            const validityPrint = `Valid Until: ${formatMonthYear(currentID.expiration_date)}`;
+            const validityPrint = `VALID UNTIL: ${(formatMonthYear(currentID.expiration_date) || '-').toUpperCase()}`;
 
             const nameFont = fitFontSize(fullNamePrint, 8.2, 5.4, 34);
             const addressFont = fitFontSize(addressPrint, 6.8, 5.1, 44);
