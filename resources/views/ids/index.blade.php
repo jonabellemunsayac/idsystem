@@ -51,17 +51,16 @@
                         <div style="position: absolute; left: 79.6%; top: 68.5%; width: 14%; height: 20.8%; border: 1px solid #000; background: #fff; display: flex; align-items: center; justify-content: center; padding: 2px;">
                             <img id="preview-qr-front" alt="QR Code" style="width: 100%; height: 100%; object-fit: contain; display: none;">
                         </div>
-                        <div id="preview-validity" style="position: absolute; left: 79.6%; top: 100%; width: 14%; font-size: 7px; font-weight: 800; text-align: center; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-</div>
+                        <div id="preview-validity" style="position: absolute; left: 74.6%; top: 91.4%; width: 24%; font-size: 7px; font-weight: 800; text-align: center; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Valid Until: -</div>
                     </div>
 
                     <!-- BACK PREVIEW -->
-                    <div class="id-card-preview position-relative overflow-hidden shadow-sm" style="width: 100%; max-width: 600px; margin: 0 auto; background-color: #f8f9fa; border-radius: 12px; font-family: sans-serif;">
-                        <!-- Background Pattern -->
-                        <div class="position-absolute w-100 h-100" style="opacity: 0.6; background: repeating-radial-gradient(circle at 0 100%, transparent 0, transparent 10px, rgba(0,56,168,0.03) 11px, rgba(0,56,168,0.03) 12px), repeating-radial-gradient(circle at 100% 0, transparent 0, transparent 10px, rgba(206,17,38,0.03) 11px, rgba(206,17,38,0.03) 12px); pointer-events: none;"></div>
+                    <div class="id-card-preview position-relative overflow-hidden shadow-sm" style="aspect-ratio: 1.586/1; width: 100%; max-width: 600px; margin: 0 auto; background-color: #f8f9fa; border-radius: 12px; font-family: sans-serif;">
+                        <img src="{{ asset('images/back-id.png') }}" alt="ID Back Template" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;">
 
                         <!-- Top Section: Emergency Contact Info -->
                         <div style="padding: 12px 14px; position: relative; z-index: 1;">
-                            <div style="text-align: center; font-weight: bold; color: #0038A8; font-size: 1.05rem; letter-spacing: 0.5px; margin-bottom: 8px; line-height: 1.2;">IN CASE OF EMERGENCY, KINDLY NOTIFY:</div>
+                            <div style="text-align: center; font-weight: bold; color: #fff; font-size: 1.05rem; letter-spacing: 0.5px; margin-bottom: 8px; line-height: 1.2;">IN CASE OF EMERGENCY, KINDLY NOTIFY:</div>
                             
                             <table style="width: 100%; font-size: 0.95rem; border-collapse: collapse; margin-bottom: 6px;">
                                 <tr style="line-height: 1.6;">
@@ -454,7 +453,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     previewQrFront.style.display = 'block';
                 }
             }
-            previewValidity.textContent = formatDate(idData.expiration_date) || '-';
+            previewValidity.textContent = `Valid Until: ${formatMonthYear(idData.expiration_date) || '-'}`;
         } else {
             if (previewIdNo) previewIdNo.textContent = 'PENDING';
             if (previewQrFront) {
@@ -468,9 +467,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 const month = createdDate.getMonth();
                 const date = createdDate.getDate();
                 const validityDate = new Date(year, month, date).toISOString().split('T')[0];
-                previewValidity.textContent = formatDate(validityDate);
+                previewValidity.textContent = `Valid Until: ${formatMonthYear(validityDate)}`;
             } else {
-                previewValidity.textContent = '-';
+                previewValidity.textContent = 'Valid Until: -';
             }
         }
     }
@@ -602,6 +601,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const signatureUrl = resolveMediaUrl(currentResident.signature);
 
         const templateUrl = `${window.location.protocol}//${window.location.host}/images/id-template-blank.png`;
+        const backTemplateUrl = `${window.location.protocol}//${window.location.host}/images/back-id.png`;
 
         // Function to fetch and convert image to base64
         async function getImageBase64(url) {
@@ -624,17 +624,19 @@ document.addEventListener('DOMContentLoaded', function() {
         Promise.all([
             getImageBase64(photoUrl),
             getImageBase64(signatureUrl),
-            getImageBase64(templateUrl)
-        ]).then(([photoBase64, signatureBase64, templateBase64]) => {
+            getImageBase64(templateUrl),
+            getImageBase64(backTemplateUrl)
+        ]).then(([photoBase64, signatureBase64, templateBase64, backTemplateBase64]) => {
             const photoSrc = photoBase64;
             const signatureSrc = signatureBase64;
             const templateSrc = templateBase64 || templateUrl;
+            const backTemplateSrc = backTemplateBase64 || backTemplateUrl;
             const fullNamePrint = `${currentResident.last_name || ''}, ${currentResident.first_name || ''} ${currentResident.middle_name || ''}${currentResident.suffix ? ' ' + currentResident.suffix : ''}`.replace(/\s+/g, ' ').trim();
             const addressPrint = (currentResident.address || '-').replace(/\s+/g, ' ').trim();
             const sectorPrint = (currentResident.special_sector || '-').replace(/\s+/g, ' ').trim();
             const sectorLeftPrint = getSectorLeftPosition(currentResident.special_sector);
             const idNumberPrint = (currentID.id_number || '-').replace(/\s+/g, ' ').trim();
-            const validityPrint = formatDate(currentID.expiration_date);
+            const validityPrint = `Valid Until: ${formatMonthYear(currentID.expiration_date)}`;
 
             const nameFont = fitFontSize(fullNamePrint, 8.2, 5.4, 34);
             const addressFont = fitFontSize(addressPrint, 6.8, 5.1, 44);
@@ -668,15 +670,15 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <div style="position: absolute; left: 79.6%; top: 68.5%; width: 14%; height: 20.8%; background: #fff; display: flex; align-items: center; justify-content: center; padding: 2px;">
                                     ${currentID.qr_code ? `<img src="${currentID.qr_code}" alt="QR" style="width: 100%; height: 100%; object-fit: contain;">` : ''}
                                 </div>
-                                <div style="position: absolute; left: 78.8%; top: 93%; width: 15.6%; text-align: center; font-size: 5px; font-weight: 900; white-space: nowrap; overflow: hidden; letter-spacing: 0.1px; ${printStrongStyle}">${validityPrint}</div>
+                                <div style="position: absolute; left: 74.6%; top: 92.3%; width: 24%; text-align: center; font-size: 5px; font-weight: 900; white-space: nowrap; overflow: hidden; letter-spacing: 0.1px; ${printStrongStyle}">${validityPrint}</div>
                             </div>
                 `;
 
         const backCardHTML = `
-              <div class="id-card">
-                <div class="bg-pattern"></div>
+                            <div class="id-card">
+                                <img src="${backTemplateSrc}" alt="Back Template" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
                 <div style="padding: 12px 14px; position: relative; z-index: 1;">
-                  <div style="text-align: center; font-weight: bold; color: #0038A8; font-size: 11px; letter-spacing: 0.5px; margin-bottom: 8px; line-height: 1.2;">IN CASE OF EMERGENCY, KINDLY NOTIFY:</div>
+                  <div style="text-align: center; font-weight: bold; color: #fff; font-size: 11px; letter-spacing: 0.5px; margin-bottom: 8px; line-height: 1.2;">IN CASE OF EMERGENCY, KINDLY NOTIFY:</div>
                   
                   <table style="width: 100%; font-size: 10px; border-collapse: collapse; margin-bottom: 6px;">
                     <tr style="line-height: 1.6;">
@@ -762,17 +764,6 @@ document.addEventListener('DOMContentLoaded', function() {
                                         aspect-ratio: 1.588;
                                     }
                                 }
-                                .bg-pattern {
-                                    position: absolute;
-                                    top: 0;
-                                    left: 0;
-                                    width: 100%;
-                                    height: 100%;
-                                    opacity: 0.6;
-                                    background: repeating-radial-gradient(circle at 0 100%, transparent 0, transparent 10px, rgba(0,56,168,0.03) 11px, rgba(0,56,168,0.03) 12px), repeating-radial-gradient(circle at 100% 0, transparent 0, transparent 10px, rgba(206,17,38,0.03) 11px, rgba(206,17,38,0.03) 12px);
-                                    pointer-events: none;
-                                }
-
                 @media print {
                   @page { size: 3.375in 2.125in; margin: 0; }
                                     html, body { margin: 0; padding: 0; background: #fff; }
