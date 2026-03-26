@@ -25,92 +25,28 @@
 
                 <div id="id-preview-content" style="display: none;">
                     <!-- FRONT PREVIEW -->
-                    <div class="id-card-preview mb-4 position-relative overflow-hidden shadow-sm" style="aspect-ratio: 1.586/1; background-color: #1a3a5c; border-radius: 8px; container-type: inline-size;">
-                        <!-- Header -->
-                        <div class="position-relative d-flex align-items-center justify-content-center text-white" style="background-color: #0f2741; height: 15cqw;">
-                            <div class="position-absolute bg-white rounded-circle d-flex align-items-center justify-content-center overflow-hidden border border-2 border-white" style="left: 3cqw; width: 11cqw; height: 11cqw; padding: 0.5cqw;">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="#0038A8" stroke-width="2" style="width: 100%; height: 100%;">
-                                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                                    <polyline points="9 22 9 12 15 12 15 22" />
-                                    <line x1="9" y1="5" x2="9" y2="9" />
-                                    <line x1="15" y1="5" x2="15" y2="9" />
-                                </svg>
-                            </div>
-                            <div class="text-center w-100" style="line-height: 1;">
-                                <h1 style="font-size: 2.5cqw; font-weight: normal; letter-spacing: 0.1em; margin: 0;">Republic of the Philippines</h1>
-                                <h1 style="font-size: 2.5cqw; font-weight: normal; letter-spacing: 0.1em; margin: 0;">National Capital Region</h1>
-                                <h2 style="font-size: 3.5cqw; font-weight: bold; margin: 0.5cqw 0;">CITY OF PASIG</h2>
-                                <h3 style="font-size: 2.5cqw; font-weight: normal; margin: 0;">BARANGAY KALAWAAN</h3>
-                            </div>
-                        </div>
+                    <div class="id-card-preview mb-4 position-relative overflow-hidden shadow-sm" style="aspect-ratio: 1.586/1; border-radius: 8px; background-color: #f4f4f4;">
+                      <img src="{{ asset('images/id-template-blank.png') }}" alt="ID Template" style="width: 100%; height: 100%; object-fit: cover; display: block;">
 
-                        <!-- Body -->
-                        <div class="d-flex gap-3 p-3" style="padding: 3cqw !important; gap: 3cqw !important;">
-                            <!-- Photo + ID No -->
-                            <div class="d-flex flex-column align-items-center flex-shrink-0" style="width: 25cqw;">
-                                <div class="bg-secondary border border-2 border-white d-flex align-items-center justify-content-center overflow-hidden rounded" style="width: 25cqw; height: 28cqw; background-color: #ddd;">
-                                    <img id="preview-photo" src="" alt="Photo" style="width: 100%; height: 100%; object-fit: cover; display: none;">
-                                    <span id="preview-no-photo" style="font-size: 2.5cqw; color: #666;">NO PHOTO</span>
-                                </div>
-                                <div class="text-center text-white" style="font-size: 1.6cqw; margin-top: 1cqw;">
-                                    <span style="color: #fcd34d; font-weight: bold;">I.D. No.:</span>
-                                    <span id="preview-id-no" style="font-weight: bold;">PENDING</span>
-                                </div>
-                            </div>
+                      <!-- Photo -->
+                      <div style="position: absolute; left: 6.2%; top: 29.5%; width: 19.5%; height: 40%; overflow: hidden; border-radius: 14px;">
+                        <img id="preview-photo" src="" alt="Photo" style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                        <div id="preview-no-photo" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #6c757d; font-size: 1.2cqw; font-weight: 600; background: rgba(220,220,220,0.55);">NO PHOTO</div>
+                      </div>
 
-                            <!-- Details -->
-                            <div class="flex-grow-1 d-flex flex-column justify-content-center text-white">
-                                <div id="preview-name" style="font-size: 3.8cqw; font-weight: bold; text-transform: uppercase; border-bottom: 0.5cqw solid #fbbf24; padding-bottom: 0.5cqw; margin-bottom: 1cqw;">
-                                    RESIDENT NAME
-                                </div>
-                                
-                                <div class="d-flex align-items-baseline mb-1" style="font-size: 2.2cqw; margin-bottom: 0.5cqw !important;">
-                                    <span style="color: #fcd34d; font-weight: bold; width: 16cqw;">Date of Birth</span>
-                                    <span id="preview-dob" style="font-weight: 600;">-</span>
-                                </div>
-                                <div class="d-flex align-items-baseline mb-1" style="font-size: 2.2cqw; margin-bottom: 0.5cqw !important;">
-                                    <span style="color: #fcd34d; font-weight: bold; width: 16cqw;">Sex</span>
-                                    <span id="preview-sex" style="font-weight: 600;">-</span>
-                                </div>
-                                <div class="d-flex align-items-baseline mb-1" style="font-size: 2.2cqw; margin-bottom: 0.5cqw !important;">
-                                    <span style="color: #fcd34d; font-weight: bold; width: 16cqw;">Nationality</span>
-                                    <span id="preview-nationality" style="font-weight: 600;">FILIPINO</span>
-                                </div>
-                                <div class="d-flex align-items-baseline mb-1" style="font-size: 2.2cqw; margin-bottom: 0.5cqw !important;">
-                                    <span style="color: #fcd34d; font-weight: bold; width: 16cqw;">Status</span>
-                                    <span id="preview-status" style="font-weight: 600;">-</span>
-                                </div>
-                                <div class="d-flex align-items-baseline mb-1" style="font-size: 2.2cqw; margin-bottom: 0.5cqw !important;">
-                                    <span style="color: #fcd34d; font-weight: bold; width: 16cqw;">Blood Type</span>
-                                    <span id="preview-blood" style="font-weight: 600;">-</span>
-                                </div>
-                                <div class="d-flex align-items-baseline mb-1" style="font-size: 2.2cqw; margin-bottom: 0.5cqw !important;">
-                                    <span style="color: #fcd34d; font-weight: bold; width: 16cqw;">Address</span>
-                                    <span id="preview-address" style="font-weight: 600; font-size: 1.8cqw; line-height: 1.2;">-</span>
-                                </div>
-                                <!-- Resident Signature -->
-                                <div class="mt-auto" style="margin-top: 1cqw;">
-                                    <div style="border-top: 1px solid white; width: 70%; margin: 1cqw 0 0.3cqw 0;"></div>
-                                    <div style="font-size: 1.5cqw; color: white;">Signature of Resident</div>
-                                </div>
-                            </div>
+                      <!-- Dynamic text overlays -->
+                      <div id="preview-name" style="position: absolute; left: 29%; top: 31.6%; width: 65%; font-size: 2.7cqw; font-weight: 800; line-height: 1.1; text-transform: uppercase; color: #111;">-</div>
+                      <div id="preview-address" style="position: absolute; left: 29.4%; top: 43.8%; width: 64.5%; font-size: 1.5cqw; font-weight: 700; line-height: 1.2; color: #111;">-</div>
 
-                            <!-- Punong Barangay Signature -->
-                            <div class="d-flex flex-column align-items-center justify-content-end" style="width: 25cqw;">
-                                <div class="text-center w-100 mt-auto" style="position: relative;">
-                                    <!-- Signature as background -->
-                                    <div style="position: absolute; top: -1.5cqw; left: 50%; transform: translateX(-50%); width: 22cqw; height: 3.5cqw; opacity: 1; z-index: 0;">
-                                        <img src="{{ asset('storage/signatures/chairman.png') }}" alt="Signature" style="width: 100%; height: 100%; object-fit: contain;">
-                                    </div>
-                                    <!-- Text overlay -->
-                                    <div style="position: relative; z-index: 1;">
-                                        <div style="font-size: 1.8cqw; font-weight: bold; color: white; padding-top: 0cqw;">HON. JESSIE B. GAVIOLA</div>
-                                        <div style="border-top: 2px solid white; margin: 0.5cqw auto; width: 100%;"></div>
-                                        <div style="font-size: 1.5cqw; color: white;">PUNONG BARANGAY</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                      <div id="preview-dob" style="position: absolute; left: 29%; top: 56.8%; width: 17%; font-size: 1.42cqw; font-weight: 700; color: #111;">-</div>
+                      <div id="preview-pob" style="position: absolute; left: 43.5%; top: 56.8%; width: 20%; font-size: 1.42cqw; font-weight: 700; color: #111;">-</div>
+                      <div id="preview-nationality" style="position: absolute; left: 59.6%; top: 56.8%; width: 13.5%; font-size: 1.42cqw; font-weight: 700; color: #111;">-</div>
+                      <div id="preview-sex" style="position: absolute; left: 74%; top: 56.8%; width: 7%; font-size: 1.42cqw; font-weight: 700; color: #111;">-</div>
+                      <div id="preview-status" style="position: absolute; left: 80.4%; top: 56.8%; width: 14%; font-size: 1.42cqw; font-weight: 700; color: #111;">-</div>
+
+                      <div id="preview-sector" style="position: absolute; left: 29%; top: 67.4%; width: 18%; font-size: 1.42cqw; font-weight: 700; color: #111;">-</div>
+                      <div id="preview-id-no" style="position: absolute; left: 9.9%; top: 72.3%; width: 16.4%; font-size: 2.1cqw; font-weight: 800; text-align: center; color: #111;">-</div>
+                      <div id="preview-validity" style="position: absolute; left: 79.6%; top: 93%; width: 14%; font-size: 1.42cqw; font-weight: 800; text-align: center; color: #111;">-</div>
                     </div>
 
                     <!-- BACK PREVIEW -->
@@ -241,10 +177,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const previewNoPhoto = document.getElementById('preview-no-photo');
     const previewName = document.getElementById('preview-name');
     const previewDob = document.getElementById('preview-dob');
+    const previewPob = document.getElementById('preview-pob');
     const previewSex = document.getElementById('preview-sex');
     const previewNationality = document.getElementById('preview-nationality');
     const previewStatus = document.getElementById('preview-status');
-    const previewBlood = document.getElementById('preview-blood');
+    const previewSector = document.getElementById('preview-sector');
     const previewAddress = document.getElementById('preview-address');
     const previewIdNo = document.getElementById('preview-id-no');
     const previewEcName = document.getElementById('preview-ec-name');
@@ -324,12 +261,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function updatePreview(resident, idData = null) {
-        previewName.textContent = `${resident.first_name} ${resident.middle_name ? resident.middle_name[0] + '.' : ''} ${resident.last_name}`;
-        previewDob.textContent = resident.birth_date || '-';
+      const suffix = resident.suffix ? ` ${resident.suffix}` : '';
+      previewName.textContent = `${resident.last_name || ''}, ${resident.first_name || ''} ${resident.middle_name || ''}${suffix}`.trim();
+      previewDob.textContent = resident.birth_date || '-';
+      previewPob.textContent = resident.birth_place || resident.place_of_birth || '-';
         previewSex.textContent = resident.gender || '-';
         previewNationality.textContent = resident.nationality || 'FILIPINO';
         previewStatus.textContent = resident.civil_status || '-';
-        previewBlood.textContent = resident.blood_type || '-';
+      previewSector.textContent = resident.special_sector || '-';
         previewAddress.textContent = resident.address || '-';
         
         previewEcName.textContent = resident.emergency_contact_name || '_____________________';
@@ -345,10 +284,10 @@ document.addEventListener('DOMContentLoaded', function() {
         if (resident.profile_image) {
             previewPhoto.src = `/storage/${resident.profile_image}`;
             previewPhoto.style.display = 'block';
-            previewNoPhoto.style.display = 'none';
+          previewNoPhoto.style.display = 'none';
         } else {
             previewPhoto.style.display = 'none';
-            previewNoPhoto.style.display = 'block';
+          previewNoPhoto.style.display = 'flex';
         }
 
         if (idData) {
@@ -360,7 +299,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             previewIdNo.textContent = 'PENDING';
             previewQr.src = '';
-            previewValidity.textContent = 'N/A';
+            previewValidity.textContent = '-';
         }
     }
 
@@ -414,6 +353,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const printWindow = window.open('', '_blank');
         if (!printWindow) return;
 
+        const fullName = `${currentResident.last_name || ''}, ${currentResident.first_name || ''} ${currentResident.middle_name || ''} ${currentResident.suffix || ''}`.trim();
+        const placeOfBirth = currentResident.birth_place || currentResident.place_of_birth || '-';
+        const sector = currentResident.special_sector || '-';
+        const templateImage = @json(asset('images/id-template-blank.png'));
+
         const idCardHTML = `
           <!DOCTYPE html>
           <html>
@@ -424,40 +368,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 * { margin: 0; padding: 0; box-sizing: border-box; }
                 body { font-family: Arial, sans-serif; background: #f0f0f0; display: flex; flex-direction: column; align-items: center; padding: 20px; }
                 .page-container { display: flex; flex-direction: column; gap: 30px; margin-bottom: 20px; }
-                .id-card { position: relative; width: 3.375in; height: 2.125in; background-color: #1a3a5c; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.2); display: flex; flex-direction: column; }
-                
-                /* FRONT SIDE STYLES */
-                .front-header { background-color: #0f2741; color: white; padding: 8px 10px; position: relative; display: flex; align-items: center; justify-content: center; height: 50px; }
-                .logo-placeholder { position: absolute; left: 10px; width: 35px; height: 35px; background-color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px solid white; }
-                .logo-placeholder img { width: 100%; height: 100%; object-fit: cover; }
-                .header-text { text-align: center; line-height: 1.1; }
-                .header-text h1 { font-size: 9px; font-weight: normal; letter-spacing: 1px; color: white; }
-                .header-text h2 { font-size: 12px; font-weight: bold; margin: 2px 0; color: white; }
-                .header-text h3 { font-size: 9px; font-weight: normal; color: white; }
+                .id-card { position: relative; width: 3.375in; height: 2.125in; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.2); display: flex; flex-direction: column; }
 
-                .front-body { flex: 1; padding: 10px 12px; display: flex; gap: 10px; background-color: #1a3a5c; }
-                .photo-col { display: flex; flex-direction: column; align-items: center; width: 85px; flex-shrink: 0; }
-                .photo-box { width: 85px; height: 100px; background-color: #ddd; border: 2px solid white; overflow: hidden; display: flex; align-items: center; justify-content: center; border-radius: 4px; }
-                .photo-box img { width: 100%; height: 100%; object-fit: cover; }
-                .id-number-below { font-size: 7px; color: white; text-align: center; margin-top: 4px; }
-                .id-number-below .id-label { color: #fcd34d; font-weight: bold; }
-                .id-number-below .id-value { font-weight: bold; }
-                .details-col { flex: 1; display: flex; flex-direction: column; justify-content: center; }
-                .resident-name { font-size: 13px; font-weight: bold; color: white; text-transform: uppercase; margin-bottom: 4px; border-bottom: 2px solid #fbbf24; padding-bottom: 3px; }
-                .detail-row { display: flex; margin-bottom: 2px; font-size: 8px; align-items: baseline; }
-                .detail-label { color: #fcd34d; font-weight: bold; margin-right: 6px; min-width: 55px; white-space: nowrap; }
-                .detail-value { flex: 1; font-weight: 600; color: white; }
-                .front-bottom { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 4px; }
-                .signature-area { text-align: left; }
-                .signature-line { border-top: 1px solid white; width: 100px; margin: 6px 0 2px 0; }
-                .signature-label { font-size: 7px; color: white; }
-                .punong-area { text-align: center; position: relative; }
-                .punong-sig-img { max-width: 75px; max-height: 25px; object-fit: contain; display: block; margin: 0 auto 2px; }
-                .punong-line { border-top: 1.5px solid white; margin: 1px auto 2px; width: 100%; }
-                .punong-name { font-size: 7px; font-weight: bold; color: white; }
-                .punong-title { font-size: 6px; color: white; }
+                .front-card { background: #f4f4f4; }
+                .front-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+                .front-photo { position: absolute; left: 6.2%; top: 29.5%; width: 19.5%; height: 40%; object-fit: cover; border-radius: 8px; background: #d8d8d8; }
+                .front-text { position: absolute; color: #111; font-weight: 700; line-height: 1.15; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+                .f-name { left: 29%; top: 31.6%; width: 65%; font-size: 12px; font-weight: 800; text-transform: uppercase; }
+                .f-address { left: 29.4%; top: 43.8%; width: 64.5%; font-size: 8px; }
+                .f-dob { left: 29%; top: 56.8%; width: 17%; font-size: 8px; }
+                .f-pob { left: 43.5%; top: 56.8%; width: 20%; font-size: 8px; }
+                .f-nationality { left: 59.6%; top: 56.8%; width: 13.5%; font-size: 8px; }
+                .f-sex { left: 74%; top: 56.8%; width: 7%; font-size: 8px; }
+                .f-status { left: 80.4%; top: 56.8%; width: 14%; font-size: 8px; }
+                .f-sector { left: 29%; top: 67.4%; width: 18%; font-size: 8px; }
+                .f-id { left: 9.9%; top: 72.3%; width: 16.4%; text-align: center; font-size: 11px; font-weight: 800; }
+                .f-validity { left: 79.6%; top: 93%; width: 14%; text-align: center; font-size: 8px; font-weight: 800; }
 
-                /* BACK SIDE STYLES */
                 .back-header { background-color: #0f2741; color: white; padding: 8px; text-align: center; font-size: 11px; font-weight: bold; letter-spacing: 1px; }
                 .back-body { flex: 1; padding: 12px 14px; display: flex; gap: 14px; background-color: #1a3a5c; }
                 .emergency-col { flex: 1; display: flex; flex-direction: column; gap: 6px; }
@@ -468,7 +395,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 .qr-box img { width: 100%; height: 100%; }
                 .validity-text { font-size: 7px; text-align: center; color: #fcd34d; font-weight: bold; line-height: 1.2; }
                 .chairman-sig { text-align: center; width: 100%; margin-top: auto; }
-                .chairman-line { border-top: 1px solid white; margin: 4px auto; width: 75%; }
                 .chairman-label { font-size: 7px; font-weight: bold; color: white; margin-top: 1px; }
                 .disclaimer { font-size: 6px; color: white; text-align: center; line-height: 1.1; margin-top: auto; }
 
@@ -477,91 +403,29 @@ document.addEventListener('DOMContentLoaded', function() {
                   html, body { margin: 0; padding: 0; width: 100%; height: 100%; }
                   body { display: block; background: white; }
                   .page-container { margin: 0; gap: 0; display: block; width: 100%; height: 100%; }
-                  .id-card { margin: 0; border-radius: 0; box-shadow: none; page-break-after: always; width: 100%; height: 100%; max-width: none; max-height: none; overflow: hidden; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                  .id-card { margin: 0; border-radius: 0; box-shadow: none; page-break-after: always; width: 100%; height: 100%; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
                   .id-card:last-child { page-break-after: auto; }
                 }
               </style>
             </head>
             <body>
               <div class="page-container">
-                <!-- FRONT CARD -->
-                <div class="id-card">
-                  <div class="front-header">
-                    <div class="logo-placeholder" style="padding: 4px; display: flex; align-items: center; justify-content: center; background: white;">
-                      <img src="data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMzhBOCIgc3Ryb2tlLXdpZHRoPSIyIj48cGF0aCBkPSJNMyA5bDktNyA5IDd2MTFhMiAyIDAgMDEtMiAySDVhMiAyIDAgMDEtMiAySDVhMiAyIDAgMDEtMi0yeiIgLz48cG9seWxpbmUgcG9pbnRzPSI5IDIyIDkgMTIgMTUgMTIgMTUgMjIiIC8+PGxpbmUgeDE9IjkiIHkxPSI1IiB4Mj0iOSIgeTI9IjkiIC8+PGxpbmUgeDE9IjE1IiB5MT0iNSIgeDI9IjE1IiB5Mj0iOSIgLz48L3N2Zz4=" alt="Logo" style="width: 100%; height: 100%;" />
-                    </div>
-                    <div class="header-text">
-                      <h1>Republic of the Philippines</h1>
-                      <h1>National Capital Region</h1>
-                      <h2>CITY OF PASIG</h2>
-                      <h3>BARANGAY KALAWAAN</h3>
-                    </div>
-                  </div>
-                  <div class="front-body">
-                    <div class="photo-col">
-                      <div class="photo-box">
-                        ${currentResident.profile_image ? `<img src="/storage/${currentResident.profile_image}" alt="Photo" />` : '<span style="font-size: 9px; color: #999;">NO PHOTO</span>'}
-                      </div>
-                      <div class="id-number-below">
-                        <span class="id-label">I.D. No.: </span>
-                        <span class="id-value">${currentID.id_number}</span>
-                      </div>
-                    </div>
-                    <div class="details-col">
-                      <div class="resident-name">
-                        ${currentResident.first_name} ${currentResident.middle_name ? currentResident.middle_name[0] + '.' : ''} ${currentResident.last_name}
-                      </div>
-                      
-                      <div class="detail-row">
-                        <span class="detail-label">Date of Birth</span>
-                        <span class="detail-value">${currentResident.birth_date || '-'}</span>
-                      </div>
-                      <div class="detail-row">
-                        <span class="detail-label">Sex</span>
-                        <span class="detail-value">${currentResident.gender || '-'}</span>
-                      </div>
-                      <div class="detail-row">
-                        <span class="detail-label">Nationality</span>
-                        <span class="detail-value">${currentResident.nationality || 'FILIPINO'}</span>
-                      </div>
-                      <div class="detail-row">
-                        <span class="detail-label">Status</span>
-                        <span class="detail-value">${currentResident.civil_status || '-'}</span>
-                      </div>
-                      <div class="detail-row">
-                        <span class="detail-label">Blood Type</span>
-                        <span class="detail-value">${currentResident.blood_type || '-'}</span>
-                      </div>
-                      <div class="detail-row">
-                        <span class="detail-label">Address</span>
-                        <span class="detail-value" style="font-size: 7px; line-height: 1.2;">
-                          ${currentResident.address || '-'}
-                        </span>
-                      </div>
+                <div class="id-card front-card">
+                  <img class="front-bg" src="${templateImage}" alt="ID Template" />
+                  ${currentResident.profile_image ? `<img class="front-photo" src="/storage/${currentResident.profile_image}" alt="Photo" />` : ''}
 
-                      <div class="front-bottom">
-                        <div class="signature-area">
-                          <div class="signature-line"></div>
-                          <div class="signature-label">Signature of Resident</div>
-                        </div>
-                        <div class="punong-area" style="position: relative;">
-                          <!-- Signature as background -->
-                          <div style="position: absolute; top: -5px; left: 50%; transform: translateX(-50%); width: 65px; height: 14px; opacity: 1; z-index: 0;">
-                            <img src="{{ asset('storage/signatures/chairman.png') }}" alt="Signature" style="width: 100%; height: 100%; object-fit: contain;">
-                          </div>
-                          <!-- Text overlay -->
-                          <div style="position: relative; z-index: 1;">
-                            <div class="punong-name" style="padding-top: 0px;">HON. JESSIE B. GAVIOLA</div>
-                            <div class="punong-line" style="width: 100%; border-top-width: 1.5px;"></div>
-                            <div class="punong-title">PUNONG BARANGAY</div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <div class="front-text f-name">${fullName || '-'}</div>
+                  <div class="front-text f-address">${currentResident.address || '-'}</div>
+                  <div class="front-text f-dob">${currentResident.birth_date || '-'}</div>
+                  <div class="front-text f-pob">${placeOfBirth}</div>
+                  <div class="front-text f-nationality">${currentResident.nationality || 'FILIPINO'}</div>
+                  <div class="front-text f-sex">${currentResident.gender || '-'}</div>
+                  <div class="front-text f-status">${currentResident.civil_status || '-'}</div>
+                  <div class="front-text f-sector">${sector}</div>
+                  <div class="front-text f-id">${currentID.id_number || '-'}</div>
+                  <div class="front-text f-validity">${currentID.expiration_date || '-'}</div>
                 </div>
 
-                <!-- BACK CARD -->
                 <div class="id-card">
                   <div class="back-header">EMERGENCY CONTACT</div>
                   <div class="back-body">
@@ -584,17 +448,17 @@ document.addEventListener('DOMContentLoaded', function() {
                           <td class="emergency-value">${currentResident.emergency_contact_no || '_____________________'}</td>
                         </tr>
                       </table>
-                      
+
                       <div class="disclaimer">
                         This card is non-transferable.<br>Please report lost or found cards<br>to the Barangay Hall immediately.
                       </div>
                     </div>
-                    
+
                     <div class="qr-col">
                       <div class="qr-box">
                         <img src="${currentID.qr_code}" alt="QR Code" />
                       </div>
-                      
+
                       <div class="validity-text">
                         Valid Until<br>
                         <span style="color: white">${currentID.expiration_date || 'N/A'}</span>
@@ -606,10 +470,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                   </div>
                 </div>
-              </div>
-
-              <div style="text-align: center; color: white; margin-top: 20px; font-size: 10px;">
-                QR Code Generated and Stored Permanently
               </div>
             </body>
           </html>

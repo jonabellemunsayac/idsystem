@@ -163,6 +163,134 @@
                         </div>
                     </div>
 
+                    <!-- Divider -->
+                    <hr class="my-3">
+
+                    <!-- Additional Information Section -->
+                    <h6 class="fw-bold mb-3" style="font-size: 0.9rem;">Additional Information</h6>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <div>
+                                <p class="text-muted mb-1" style="font-size: 0.75rem;">Blood Type</p>
+                                <p class="fw-medium mb-0" style="font-size: 0.9rem;">{{ $resident['blood_type'] ?? '-' }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div>
+                                <p class="text-muted mb-1" style="font-size: 0.75rem;">Household Composition</p>
+                                <p class="fw-medium mb-0" style="font-size: 0.9rem;">{{ $resident['household_composition'] ?? '-' }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div>
+                                <p class="text-muted mb-1" style="font-size: 0.75rem;">Religion</p>
+                                <p class="fw-medium mb-0" style="font-size: 0.9rem;">{{ $resident['religion'] ?? '-' }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div>
+                                <p class="text-muted mb-1" style="font-size: 0.75rem;">Height</p>
+                                <p class="fw-medium mb-0" style="font-size: 0.9rem;">
+                                    @if(!empty($resident['height_cm']))
+                                        {{ $resident['height_cm'] }} cm
+                                    @else
+                                        -
+                                    @endif
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div>
+                                <p class="text-muted mb-1" style="font-size: 0.75rem;">Weight</p>
+                                <p class="fw-medium mb-0" style="font-size: 0.9rem;">
+                                    @if(!empty($resident['weight_kg']))
+                                        {{ $resident['weight_kg'] }} kgs
+                                    @else
+                                        -
+                                    @endif
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div>
+                                <p class="text-muted mb-1" style="font-size: 0.75rem;">Telephone Number</p>
+                                <p class="fw-medium mb-0" style="font-size: 0.9rem;">{{ $resident['telephone_no'] ?? '-' }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div>
+                                <p class="text-muted mb-1" style="font-size: 0.75rem;">Father's Name</p>
+                                <p class="fw-medium mb-0" style="font-size: 0.9rem;">{{ $resident['father_name'] ?? '-' }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div>
+                                <p class="text-muted mb-1" style="font-size: 0.75rem;">Mother's Maiden Name</p>
+                                <p class="fw-medium mb-0" style="font-size: 0.9rem;">{{ $resident['mother_maiden_name'] ?? '-' }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div>
+                                <p class="text-muted mb-1" style="font-size: 0.75rem;">Spouse</p>
+                                <p class="fw-medium mb-0" style="font-size: 0.9rem;">{{ $resident['spouse_name'] ?? '-' }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div>
+                                <p class="text-muted mb-1" style="font-size: 0.75rem;">Name/s of Children</p>
+                                <p class="fw-medium mb-0" style="font-size: 0.9rem;">{{ $resident['children_names'] ?? '-' }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div>
+                                <p class="text-muted mb-1" style="font-size: 0.75rem;">Occupation</p>
+                                <p class="fw-medium mb-0" style="font-size: 0.9rem;">{{ $resident['occupation'] ?? '-' }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div>
+                                <p class="text-muted mb-1" style="font-size: 0.75rem;">Employment Type</p>
+                                <p class="fw-medium mb-0" style="font-size: 0.9rem;">{{ $resident['employment_type'] ?? '-' }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div>
+                                <p class="text-muted mb-1" style="font-size: 0.75rem;">Economic Status</p>
+                                <p class="fw-medium mb-0" style="font-size: 0.9rem;">{{ $resident['economic_status'] ?? '-' }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div>
+                                <p class="text-muted mb-1" style="font-size: 0.75rem;">Residency Type</p>
+                                <p class="fw-medium mb-0" style="font-size: 0.9rem;">{{ $resident['residency_type'] ?? '-' }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div>
+                                <p class="text-muted mb-1" style="font-size: 0.75rem;">Tenure Status</p>
+                                <p class="fw-medium mb-0" style="font-size: 0.9rem;">{{ $resident['tenure_status'] ?? '-' }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div>
+                                <p class="text-muted mb-1" style="font-size: 0.75rem;">Length of Stay</p>
+                                <p class="fw-medium mb-0" style="font-size: 0.9rem;">{{ $resident['length_of_stay'] ?? '-' }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div>
+                                <p class="text-muted mb-1" style="font-size: 0.75rem;">Registered Voter</p>
+                                <p class="fw-medium mb-0" style="font-size: 0.9rem;">{{ $resident['registered_voter'] ?? '-' }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div>
+                                <p class="text-muted mb-1" style="font-size: 0.75rem;">Precinct No.</p>
+                                <p class="fw-medium mb-0" style="font-size: 0.9rem;">{{ $resident['precinct_no'] ?? '-' }}</p>
+                            </div>
+                        </div>
+                    </div>
+
                     @if($resident['emergency_contact_name'])
                     <!-- Divider -->
                     <hr class="my-3">
