@@ -37,16 +37,16 @@
                             <img id="preview-signature" src="" alt="Signature" style="max-width: 100%; max-height: 100%; object-fit: contain; display: none;">
                         </div>
 
-                        <div id="preview-name" style="position: absolute; left: 29%; top: 33%; width: 65%; font-size: 16px; font-weight: 800; line-height: 1.1; text-transform: uppercase; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-</div>
-                        <div id="preview-address" style="position: absolute; left: 29.4%; top: 48.6%; width: 64.5%; font-size: 12px; font-weight: 800; line-height: 1.2; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-</div>
+                        <div id="preview-name" style="position: absolute; left: 29%; top: 33%; width: 65%; font-size: 16px; font-weight: 800; line-height: 1.1; text-transform: uppercase; color: #111; white-space: nowrap; overflow: hidden; text-overflow: clip;">-</div>
+                        <div id="preview-address" style="position: absolute; left: 29.4%; top: 48.6%; width: 64.5%; height: 10.8%; font-size: 10px; font-weight: 900; line-height: 1.02; color: #111; text-transform: uppercase; white-space: normal; overflow: hidden; text-overflow: clip; overflow-wrap: anywhere; word-break: break-word;">-</div>
 
-                        <div id="preview-dob" style="position: absolute; left: 30%; top: 60.1%; width: 17%; font-size: 10px; font-weight: 800; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-</div>
-                        <div id="preview-sector" style="position: absolute; left: 44%; top: 60.1%; width: 20%; font-size: 10px; font-weight: 800; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-</div>
-                        <div id="preview-nationality" style="position: absolute; left: 59.6%; top: 60.1%; width: 13.5%; font-size: 10px; font-weight: 800; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-</div>
-                        <div id="preview-sex" style="position: absolute; left: 74%; top: 60.1%; width: 7%; font-size: 10px; font-weight: 800; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-</div>
-                        <div id="preview-status" style="position: absolute; left: 79%; top: 60.1%; width: 14%; font-size: 10px; font-weight: 800; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-</div>
+                        <div id="preview-dob" style="position: absolute; left: 30%; top: 60.1%; width: 17%; height: 4.2%; display: flex; align-items: flex-end; justify-content: flex-start; font-size: 10px; font-weight: 800; line-height: 1; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-</div>
+                        <div id="preview-sector" style="position: absolute; left: 78.5%; top: 60.1%; width: 13.8%; height: 4.2%; display: flex; align-items: flex-end; justify-content: flex-start; font-size: 10px; font-weight: 800; line-height: 1; color: #111; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: clip;">-</div>
+                        <div id="preview-nationality" style="position: absolute; left: 59.6%; top: 60.1%; width: 13.5%; height: 4.2%; display: flex; align-items: flex-end; justify-content: flex-start; font-size: 10px; font-weight: 800; line-height: 1; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-</div>
+                        <div id="preview-sex" style="position: absolute; left: 72.5%; top: 60.1%; width: 7%; height: 4.2%; display: flex; align-items: flex-end; justify-content: flex-start; font-size: 10px; font-weight: 800; line-height: 1; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-</div>
+                        <div id="preview-status" style="position: absolute; left: 42.9%; top: 60.1%; width: 14%; height: 4.2%; display: flex; align-items: flex-end; justify-content: center; font-size: 10px; font-weight: 800; line-height: 1; color: #111; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: clip;">-</div>
 
-                        <div id="preview-id-no" style="position: absolute; left: 8%; top: 70%; width: 16.4%; font-size: 9px; font-weight: 800; text-align: center; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">PENDING</div>
+                        <div id="preview-id-no" style="position: absolute; left: 7%; top: 70%; width: 18.2%; font-size: 8.8px; font-weight: 800; text-align: center; color: #111; white-space: nowrap; overflow: hidden; text-overflow: clip; letter-spacing: 0.05px;">PENDING</div>
 
                         <div style="position: absolute; left: 79.6%; top: 68.5%; width: 14%; height: 20.8%; border: 1px solid #000; background: #fff; display: flex; align-items: center; justify-content: center; padding: 2px;">
                             <img id="preview-qr-front" alt="QR Code" style="width: 100%; height: 100%; object-fit: contain; display: none;">
@@ -73,7 +73,7 @@
                                 </tr>
                                 <tr style="line-height: 1.6;">
                                     <td style="font-weight: bold; color: #000; width: 120px; padding: 0 4px 3px 0; text-align: right; white-space: nowrap;">ADDRESS :</td>
-                                    <td style="color: #000; font-weight: bold; padding: 0 0 3px 4px; text-transform: uppercase;" id="preview-ec-address">_________________</td>
+                                    <td style="color: #000; font-weight: bold; padding: 0 0 3px 4px; text-transform: uppercase; white-space: normal; overflow-wrap: anywhere; line-height: 1.2; letter-spacing: 0.35px; word-spacing: 0.4px;" id="preview-ec-address">_________________</td>
                                 </tr>
                                 <tr style="line-height: 1.6;">
                                     <td style="font-weight: bold; color: #000; width: 120px; padding: 0 4px 0 0; text-align: right; white-space: nowrap;">CONTACT NO. :</td>
@@ -222,6 +222,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const previewEcNo = document.getElementById('preview-ec-no');
     const previewQrFront = document.getElementById('preview-qr-front');
     const previewValidity = document.getElementById('preview-validity');
+    const FIXED_VALIDITY_DATE = '2029-12-31';
 
     let currentResident = null;
     let currentID = null;
@@ -346,7 +347,39 @@ document.addEventListener('DOMContentLoaded', function() {
     function formatMonthYear(dateStr) {
         if (!dateStr) return '-';
         const d = new Date(dateStr + 'T00:00:00');
-        return d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+        return d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+    }
+
+    function formatDisplayName(resident) {
+        const last = (resident.last_name || '').trim();
+        const first = (resident.first_name || '').trim();
+        const suffix = (resident.suffix || '').trim();
+        const middle = (resident.middle_name || '').trim();
+
+        let trailing = first;
+        const afterFirst = [suffix, middle].filter(Boolean).join(' ');
+        if (afterFirst) {
+            trailing = trailing ? `${trailing}, ${afterFirst}` : afterFirst;
+        }
+
+        if (last && trailing) return `${last}, ${trailing}`;
+        return last || trailing || '-';
+    }
+
+    function formatAddressForCard(address) {
+        if (!address) return '-';
+
+        let clean = String(address).trim();
+        clean = clean.replace(/\bBRGY\.?\s*/gi, '');
+        clean = clean.replace(/\bBARANGAY\s*/gi, '');
+        clean = clean.replace(/\bST\b\.?/gi, 'ST.');
+        clean = clean.replace(/^(\s*#?\s*\d+[A-Z0-9\-\/]*)\s*,\s*/i, '$1 ');
+        clean = clean.replace(/\s*,\s*/g, ', ');
+        clean = clean.replace(/\s+/g, ' ');
+        clean = clean.replace(/,\s*,+/g, ', ');
+        clean = clean.trim().replace(/^,|,$/g, '').trim();
+
+        return clean || '-';
     }
 
     function resolveMediaUrl(path) {
@@ -362,10 +395,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function getSectorLeftPosition(sector) {
-        const normalized = String(sector || '').trim().toLowerCase();
-        if (normalized.includes('pwd') || normalized === 'none') return '47%';
-        if (normalized.includes('senior citizen') || normalized.includes('single mom')) return '44%';
-        return '44%';
+        return '78.5%';
     }
 
     function formatSexShort(sex) {
@@ -384,20 +414,73 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function applyFittedNameFont(element, text, base, min, maxChars) {
         if (!element) return;
-        let size = fitFontSize(text, base, min, maxChars);
-        element.style.fontSize = `${size}px`;
 
-        // Fine-tune using real rendered width so very long names keep shrinking.
+        const size = fitFontSize(text, base, min, maxChars);
+        element.style.fontSize = `${size}px`;
+        fitElementToWidth(element, min, 0.25);
+
+        // Run a second pass once layout settles to avoid occasional clipping.
+        requestAnimationFrame(() => fitElementToWidth(element, min, 0.25));
+    }
+
+    function fitElementToWidth(element, min, step = 0.2) {
+        if (!element) return;
+
+        let size = Number(parseFloat(element.style.fontSize || '0').toFixed(2));
+        if (!size) return;
+
         while (element.scrollWidth > element.clientWidth && size > min) {
-            size = Number((size - 0.3).toFixed(2));
+            size = Number((size - step).toFixed(2));
             element.style.fontSize = `${size}px`;
         }
     }
 
+    function applyFittedFieldFont(element, text, base, min, maxChars) {
+        if (!element) return;
+
+        const size = fitFontSize(text, base, min, maxChars);
+        element.style.fontSize = `${size}px`;
+        fitElementToWidth(element, min);
+
+        // Run a second pass once layout settles to avoid occasional clipping.
+        requestAnimationFrame(() => fitElementToWidth(element, min));
+    }
+
+    function getSectorFontSettings(forPrint = false) {
+        if (forPrint) {
+            return { base: 5.6, min: 3.8, maxChars: 10 };
+        }
+
+        return { base: 9.4, min: 5.2, maxChars: 10 };
+    }
+
+    function getNameFontSettings(forPrint = false) {
+        if (forPrint) {
+            return { base: 8.2, min: 4.4, maxChars: 24 };
+        }
+
+        return { base: 16, min: 6, maxChars: 24 };
+    }
+
+    function getAddressFontSettings(forPrint = false) {
+        if (forPrint) {
+            return { base: 6.2, min: 5.6, maxChars: 60 };
+        }
+
+        return { base: 10, min: 9.2, maxChars: 60 };
+    }
+
     function updatePreview(resident, idData = null) {
-        const fullName = `${resident.last_name || ''}, ${resident.first_name || ''} ${resident.middle_name || ''}${resident.suffix ? ' ' + resident.suffix : ''}`.trim();
+        const fullName = formatDisplayName(resident);
         previewName.textContent = fullName || '-';
-        applyFittedNameFont(previewName, fullName, 16, 8, 32);
+        const nameFontSettings = getNameFontSettings(false);
+        applyFittedNameFont(
+            previewName,
+            fullName,
+            nameFontSettings.base,
+            nameFontSettings.min,
+            nameFontSettings.maxChars
+        );
         previewDob.textContent = formatDate(resident.birth_date);
         previewSex.textContent = formatSexShort(resident.gender);
         previewNationality.textContent = resident.nationality || 'FILIPINO';
@@ -405,11 +488,42 @@ document.addEventListener('DOMContentLoaded', function() {
         if (previewSector) {
             previewSector.textContent = resident.special_sector || '-';
             previewSector.style.left = getSectorLeftPosition(resident.special_sector);
+            const sectorFontSettings = getSectorFontSettings(false);
+            applyFittedFieldFont(
+                previewSector,
+                previewSector.textContent,
+                sectorFontSettings.base,
+                sectorFontSettings.min,
+                sectorFontSettings.maxChars
+            );
         }
-        previewAddress.textContent = (resident.address || '-').toUpperCase();
+        applyFittedFieldFont(previewStatus, previewStatus.textContent, 10, 6, 14);
+
+        const formattedAddress = formatAddressForCard(resident.address).toUpperCase();
+        previewAddress.textContent = formattedAddress;
+        previewAddress.style.whiteSpace = 'normal';
+        previewAddress.style.overflowWrap = 'anywhere';
+        previewAddress.style.wordBreak = 'break-word';
+        previewAddress.style.lineHeight = '1.02';
+        previewAddress.style.fontWeight = '900';
+        const addressFontSettings = getAddressFontSettings(false);
+        applyFittedFieldFont(
+            previewAddress,
+            formattedAddress,
+            addressFontSettings.base,
+            addressFontSettings.min,
+            addressFontSettings.maxChars
+        );
         
         previewEcName.textContent = resident.emergency_contact_name || '_____________________';
-        previewEcAddress.textContent = resident.emergency_contact_address || '_____________________';
+        const emergencyAddress = resident.emergency_contact_address || '_____________________';
+        previewEcAddress.textContent = emergencyAddress;
+        previewEcAddress.style.fontSize = `${fitFontSize(emergencyAddress, 15.2, 9.2, 34)}px`;
+        previewEcAddress.style.whiteSpace = 'normal';
+        previewEcAddress.style.overflowWrap = 'anywhere';
+        previewEcAddress.style.lineHeight = '1.2';
+        previewEcAddress.style.letterSpacing = '0.35px';
+        previewEcAddress.style.wordSpacing = '0.4px';
         previewEcNo.textContent = resident.emergency_contact_no || '_____________________';
         
         // Handle emergency contact relation
@@ -446,7 +560,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Handle ID data
         if (idData) {
-            if (previewIdNo) previewIdNo.textContent = idData.id_number || 'PENDING';
+            if (previewIdNo) {
+                const idText = (idData.id_number || 'PENDING').replace(/\s+/g, ' ').trim();
+                previewIdNo.textContent = idText;
+                applyFittedFieldFont(previewIdNo, idText, 8.8, 5.8, 14);
+            }
             if (idData.qr_code) {
                 if (previewQrFront) {
                     previewQrFront.src = idData.qr_code;
@@ -455,22 +573,16 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             previewValidity.textContent = `VALID UNTIL: ${(formatMonthYear(idData.expiration_date) || '-').toUpperCase()}`;
         } else {
-            if (previewIdNo) previewIdNo.textContent = 'PENDING';
+            if (previewIdNo) {
+                const pendingText = 'PENDING';
+                previewIdNo.textContent = pendingText;
+                applyFittedFieldFont(previewIdNo, pendingText, 8.8, 5.8, 14);
+            }
             if (previewQrFront) {
                 previewQrFront.src = '';
                 previewQrFront.style.display = 'none';
             }
-            // Calculate validity: resident created_at + 3 years
-            if (resident.created_at) {
-                const createdDate = new Date(resident.created_at);
-                const year = createdDate.getFullYear() + 3;
-                const month = createdDate.getMonth();
-                const date = createdDate.getDate();
-                const validityDate = new Date(year, month, date).toISOString().split('T')[0];
-                previewValidity.textContent = `VALID UNTIL: ${(formatMonthYear(validityDate) || '-').toUpperCase()}`;
-            } else {
-                previewValidity.textContent = 'VALID UNTIL: -';
-            }
+            previewValidity.textContent = `VALID UNTIL: ${formatMonthYear(FIXED_VALIDITY_DATE).toUpperCase()}`;
         }
     }
 
@@ -484,7 +596,7 @@ document.addEventListener('DOMContentLoaded', function() {
         generatedInfo.style.display = 'block';
         
         const issuedDate = new Date().toISOString().split('T')[0];
-        const expirationDate = new Date(new Date().setFullYear(new Date().getFullYear() + 3)).toISOString().split('T')[0];
+        const expirationDate = FIXED_VALIDITY_DATE;
 
         const requestBody = {
             resident_id: resident.id,
@@ -631,15 +743,28 @@ document.addEventListener('DOMContentLoaded', function() {
             const signatureSrc = signatureBase64;
             const templateSrc = templateBase64 || templateUrl;
             const backTemplateSrc = backTemplateBase64 || backTemplateUrl;
-            const fullNamePrint = `${currentResident.last_name || ''}, ${currentResident.first_name || ''} ${currentResident.middle_name || ''}${currentResident.suffix ? ' ' + currentResident.suffix : ''}`.replace(/\s+/g, ' ').trim();
-            const addressPrint = (currentResident.address || '-').replace(/\s+/g, ' ').trim();
+            const fullNamePrint = formatDisplayName(currentResident).replace(/\s+/g, ' ').trim();
+            const addressPrint = formatAddressForCard(currentResident.address).replace(/\s+/g, ' ').trim();
             const sectorPrint = (currentResident.special_sector || '-').replace(/\s+/g, ' ').trim();
             const sectorLeftPrint = getSectorLeftPosition(currentResident.special_sector);
+            const statusPrint = (currentResident.civil_status || '-').replace(/\s+/g, ' ').trim();
+            const ecAddressPrint = (currentResident.emergency_contact_address || '_________________').replace(/\s+/g, ' ').trim();
             const idNumberPrint = (currentID.id_number || '-').replace(/\s+/g, ' ').trim();
             const validityPrint = `VALID UNTIL: ${(formatMonthYear(currentID.expiration_date) || '-').toUpperCase()}`;
 
-            const nameFont = fitFontSize(fullNamePrint, 8.2, 5.4, 34);
-            const addressFont = fitFontSize(addressPrint, 6.8, 5.1, 44);
+            const nameFontSettings = getNameFontSettings(true);
+            const addressFontSettings = getAddressFontSettings(true);
+            const nameFont = fitFontSize(fullNamePrint, nameFontSettings.base, nameFontSettings.min, nameFontSettings.maxChars);
+            const addressFont = fitFontSize(addressPrint, addressFontSettings.base, addressFontSettings.min, addressFontSettings.maxChars);
+            const sectorFontSettings = getSectorFontSettings(true);
+            const sectorFont = fitFontSize(
+                sectorPrint,
+                sectorFontSettings.base,
+                sectorFontSettings.min,
+                sectorFontSettings.maxChars
+            );
+            const statusFont = fitFontSize(statusPrint, 6, 4.4, 12);
+            const ecAddressFont = fitFontSize(ecAddressPrint, 10, 7.2, 32);
             const printNameStyle = 'font-family: "Arial Black", "Segoe UI", Arial, sans-serif; color: #0a1f4d; text-shadow: 0 0 1.2px rgba(255,255,255,0.95), 0 0 0.6px rgba(255,255,255,0.9);';
             const printValueStyle = 'font-family: "Segoe UI", Arial, sans-serif; color: #101828; text-shadow: 0 0 1px rgba(255,255,255,0.95), 0 0 0.4px rgba(255,255,255,0.9);';
             const printStrongStyle = 'font-family: "Arial Black", "Segoe UI", Arial, sans-serif; color: #07193d; text-shadow: 0 0 1.2px rgba(255,255,255,0.95), 0 0 0.6px rgba(255,255,255,0.9);';
@@ -652,14 +777,14 @@ document.addEventListener('DOMContentLoaded', function() {
                                     ${photoSrc ? `<img src="${photoSrc}" alt="Photo" style="width: 100%; height: 100%; object-fit: cover;">` : '<span style="font-size: 8px; color: #666; font-weight: bold;">NO PHOTO</span>'}
                                 </div>
 
-                                <div style="position: absolute; left: 29.7%; top: 36%; width: 65%; font-size: ${nameFont}px; font-weight: 900; line-height: 1.05; text-transform: uppercase; white-space: nowrap; overflow: hidden; letter-spacing: 0.15px; ${printNameStyle}">${fullNamePrint || '-'}</div>
-                                <div style="position: absolute; left: 29.7%; top: 49%; width: 64.5%; font-size: ${addressFont}px; font-weight: 800; line-height: 1.05; text-transform: uppercase; white-space: nowrap; overflow: hidden; letter-spacing: 0.1px; ${printValueStyle}">${addressPrint}</div>
+                                <div style="position: absolute; left: 29.7%; top: 36%; width: 65%; font-size: ${nameFont}px; font-weight: 900; line-height: 1.05; text-transform: uppercase; white-space: nowrap; overflow: hidden; letter-spacing: 0.08px; ${printNameStyle}">${fullNamePrint || '-'}</div>
+                                <div style="position: absolute; left: 29.7%; top: 49%; width: 64.5%; height: 10.8%; font-size: ${addressFont}px; font-weight: 900; line-height: 1.02; text-transform: uppercase; white-space: normal; overflow: hidden; overflow-wrap: anywhere; word-break: break-word; letter-spacing: 0.02px; ${printValueStyle}">${addressPrint}</div>
 
-                                <div style="position: absolute; left: 29.5%; top: 60.1%; width: 17%; font-size: 6px; font-weight: 800; white-space: normal; overflow-wrap: anywhere; word-break: break-word; line-height: 1.05; letter-spacing: 0.1px; ${printValueStyle}">${formatDate(currentResident.birth_date)}</div>
-                                <div style="position: absolute; left: ${sectorLeftPrint}; top: 60.1%; width: 20%; font-size: 6px; font-weight: 800; white-space: normal; overflow-wrap: anywhere; word-break: break-word; line-height: 1.05; letter-spacing: 0.1px; ${printValueStyle}">${sectorPrint}</div>
-                                <div style="position: absolute; left: 59.6%; top: 60.1%; width: 13.5%; font-size: 6px; font-weight: 800; white-space: normal; overflow-wrap: anywhere; word-break: break-word; line-height: 1.05; letter-spacing: 0.1px; ${printValueStyle}">${currentResident.nationality || 'FILIPINO'}</div>
-                                <div style="position: absolute; left: 73%; top: 60.1%; width: 7%; font-size: 6px; font-weight: 800; white-space: normal; overflow-wrap: anywhere; word-break: break-word; line-height: 1.05; letter-spacing: 0.1px; ${printValueStyle}">${formatSexShort(currentResident.gender)}</div>
-                                <div style="position: absolute; left: 79%; top: 60.1%; width: 14%; font-size: 6px; font-weight: 800; white-space: normal; overflow-wrap: anywhere; word-break: break-word; line-height: 1.05; letter-spacing: 0.1px; ${printValueStyle}">${currentResident.civil_status || '-'}</div>
+                                <div style="position: absolute; left: 29.5%; top: 60.1%; width: 17%; height: 4.2%; display: flex; align-items: flex-end; justify-content: flex-start; font-size: 6px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: clip; line-height: 1; letter-spacing: 0.1px; ${printValueStyle}">${formatDate(currentResident.birth_date)}</div>
+                                <div style="position: absolute; left: ${sectorLeftPrint}; top: 60.1%; width: 13.8%; height: 4.2%; display: flex; align-items: flex-end; justify-content: flex-start; font-size: ${sectorFont}px; font-weight: 800; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: clip; line-height: 1; letter-spacing: 0.05px; ${printValueStyle}">${sectorPrint}</div>
+                                <div style="position: absolute; left: 59.6%; top: 60.1%; width: 13.5%; height: 4.2%; display: flex; align-items: flex-end; justify-content: flex-start; font-size: 6px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: clip; line-height: 1; letter-spacing: 0.1px; ${printValueStyle}">${currentResident.nationality || 'FILIPINO'}</div>
+                                <div style="position: absolute; left: 73%; top: 60.1%; width: 7%; height: 4.2%; display: flex; align-items: flex-end; justify-content: flex-start; font-size: 6px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: clip; line-height: 1; letter-spacing: 0.1px; ${printValueStyle}">${formatSexShort(currentResident.gender)}</div>
+                                <div style="position: absolute; left: 42.9%; top: 60.1%; width: 14%; height: 4.2%; display: flex; align-items: flex-end; justify-content: center; font-size: ${statusFont}px; font-weight: 800; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: clip; line-height: 1; letter-spacing: 0.1px; ${printValueStyle}">${statusPrint}</div>
 
                                 <div style="position: absolute; left: 7%; top: 73.4%; width: 18.2%; text-align: center; font-size: 4px; font-weight: 900; white-space: nowrap; overflow: hidden; letter-spacing: 0.2px; ${printStrongStyle}">${idNumberPrint}</div>
 
@@ -691,7 +816,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     </tr>
                     <tr style="line-height: 1.6;">
                       <td style="font-weight: bold; color: #000; width: 85px; padding: 0 4px 3px 0; text-align: right; white-space: nowrap;">ADDRESS :</td>
-                      <td style="color: #000; font-weight: bold; padding: 0 0 3px 4px; text-transform: uppercase;">${currentResident.emergency_contact_address || '_________________'}</td>
+                                            <td style="color: #000; font-weight: bold; padding: 0 0 3px 4px; text-transform: uppercase; font-size: ${ecAddressFont}px; white-space: normal; overflow-wrap: anywhere; line-height: 1.2; letter-spacing: 0.35px; word-spacing: 0.4px;">${ecAddressPrint || '_________________'}</td>
                     </tr>
                     <tr style="line-height: 1.6;">
                       <td style="font-weight: bold; color: #000; width: 85px; padding: 0 4px 0 0; text-align: right; white-space: nowrap;">CONTACT NO. :</td>

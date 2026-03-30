@@ -696,17 +696,19 @@ document.addEventListener('DOMContentLoaded', function() {
     const fullAddressDisplay = document.getElementById('full_address_display');
 
     function formatStreetName(streetName) {
-        return streetName ? streetName.replace(/\bSt\.?$/u, 'St.') : '';
+        return streetName ? streetName.replace(/\bSt\.?$/iu, 'St') : '';
     }
     
     function updateFullAddress() {
         const houseNo = document.querySelector('input[name="house_no"]').value;
         const streetName = formatStreetName(document.querySelector('select[name="street_name"]').value);
+        const barangay = 'Kalawaan';
         const province = document.querySelector('select[name="province"]').value;
         
         const addressParts = [];
         if (houseNo) addressParts.push(houseNo);
         if (streetName) addressParts.push(streetName);
+        if (barangay) addressParts.push(barangay);
         if (province) addressParts.push(province);
         
         fullAddressDisplay.value = addressParts.join(', ') || '';

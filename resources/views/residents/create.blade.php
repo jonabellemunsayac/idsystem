@@ -945,7 +945,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const fullAddressDisplay = document.getElementById('full_address_display');
 
     function formatStreetName(streetName) {
-        return streetName ? streetName.replace(/\bSt\.?$/u, 'St.') : '';
+        return streetName ? streetName.replace(/\bSt\.?$/iu, 'St') : '';
     }
     
     function updateFullAddress() {

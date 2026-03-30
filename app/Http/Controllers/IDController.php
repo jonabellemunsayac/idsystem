@@ -118,7 +118,7 @@ class IDController extends Controller
         $request->validate([
             'resident_id' => 'required|exists:residents,id',
             'issued_date' => 'required|date',
-            'expiration_date' => 'required|date',
+            'expiration_date' => 'nullable|date',
         ]);
 
         $resident = Resident::find($request->resident_id);
@@ -167,8 +167,11 @@ class IDController extends Controller
         // Generate or get QR token
         $qrToken = $residentAccount->generateQRToken();
         
-        // Generate ID Number: BRGY-YEAR-RANDOM
-        $idNumber = 'BRGY-' . date('Y') . '-' . strtoupper(Str::random(6));
+        $issuedDate = Carbon::parse($request->issued_date);
+        $fixedExpirationDate = Carbon::create(2029, 12, 31)->toDateString();
+
+        // Generate sequential ID Number: BKPC-YYYY-00001
+        $idNumber = $this->generateBarangayIdNumber((int) $issuedDate->format('Y'));
         
         // Create QR code URL using the qr.authenticate route with QRCodeGenerator service
         $qrUrl = route('qr.authenticate', ['token' => $qrToken]);
@@ -179,7 +182,7 @@ class IDController extends Controller
             'id_type' => 'barangay',
             'id_number' => $idNumber,
             'issued_date' => $request->issued_date,
-            'expiration_date' => $request->expiration_date ?? null,
+            'expiration_date' => $fixedExpirationDate,
             'qr_code' => $qrCodeImage
         ]);
 
@@ -190,22 +193,79 @@ class IDController extends Controller
                 'id_number' => $id->id_number,
                 'qr_code' => $qrCodeImage,
                 'issued_date' => $id->issued_date,
-                'expiration_date' => $request->expiration_date,
+                'expiration_date' => $fixedExpirationDate,
             ]
         ]);
+    }
+
+    private function generateBarangayIdNumber(int $year): string
+    {
+        $prefix = "BKPC-{$year}-";
+
+        $maxSequence = ID::query()
+            ->where('id_number', 'like', $prefix . '%')
+            ->pluck('id_number')
+            ->map(function ($idNumber) {
+                if (preg_match('/^BKPC-\d{4}-(\d{5})$/', (string) $idNumber, $matches)) {
+                    return (int) $matches[1];
+                }
+
+                return 0;
+            })
+            ->max() ?? 0;
+
+        return $prefix . str_pad((string) ($maxSequence + 1), 5, '0', STR_PAD_LEFT);
     }
 
     private function formatAddress($resident)
     {
         $parts = [];
-        if ($resident->house_no) $parts[] = '#' . $resident->house_no;
-        if ($resident->street_name) $parts[] = $resident->street_name;
-        if ($resident->purok) $parts[] = 'Purok ' . $resident->purok;
-        if ($resident->barangay) $parts[] = 'Brgy. ' . $resident->barangay;
-        if ($resident->municipality) $parts[] = $resident->municipality;
-        if ($resident->province) $parts[] = $resident->province;
-        
-        return implode(', ', $parts) ?: $resident->address;
+
+        $streetSegment = trim(implode(' ', array_filter([
+            $resident->house_no ? trim((string) $resident->house_no) : null,
+            $this->normalizeStreetName($resident->street_name),
+        ])));
+
+        if ($streetSegment !== '') $parts[] = $streetSegment;
+        if ($resident->purok) $parts[] = 'Purok ' . trim((string) $resident->purok);
+        if ($resident->barangay) $parts[] = trim((string) $resident->barangay);
+        if ($resident->municipality) $parts[] = trim((string) $resident->municipality);
+        if ($resident->province) $parts[] = trim((string) $resident->province);
+
+        if (!empty($parts)) {
+            return implode(', ', $parts);
+        }
+
+        return $this->sanitizeAddressString($resident->address);
+    }
+
+    private function normalizeStreetName(?string $streetName): string
+    {
+        if (!$streetName) {
+            return '';
+        }
+
+        $normalized = preg_replace('/\bST\b\.?/i', 'ST.', trim($streetName));
+        $normalized = preg_replace('/\s+/', ' ', $normalized ?? '');
+
+        return trim($normalized ?? '');
+    }
+
+    private function sanitizeAddressString(?string $address): string
+    {
+        if (!$address) {
+            return '';
+        }
+
+        $clean = trim($address);
+        $clean = preg_replace('/\bBRGY\.?\s*/i', '', $clean);
+        $clean = preg_replace('/\bBARANGAY\s*/i', '', $clean ?? '');
+        $clean = preg_replace('/\bST\b\.?/i', 'ST.', $clean ?? '');
+        $clean = preg_replace('/^(\s*#?\s*\d+[A-Z0-9\-\/]*)\s*,\s*/i', '$1 ', $clean ?? '');
+        $clean = preg_replace('/\s*,\s*/', ', ', $clean ?? '');
+        $clean = preg_replace('/\s+/', ' ', $clean ?? '');
+
+        return trim((string) ($clean ?? ''), " ,");
     }
 
     /**
