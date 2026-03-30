@@ -24,7 +24,7 @@ class ResidentController extends Controller
             return $streetName;
         }
 
-        return preg_replace('/\bSt\.?$/', 'St.', $streetName);
+        return preg_replace('/\bSt\.?$/iu', 'St', $streetName);
     }
 
     /**
