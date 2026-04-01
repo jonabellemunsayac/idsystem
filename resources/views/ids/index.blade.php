@@ -38,7 +38,7 @@
                         </div>
 
                         <div id="preview-name" style="position: absolute; left: 29%; top: 33%; width: 65%; font-size: 16px; font-weight: 800; line-height: 1.1; text-transform: uppercase; color: #111; white-space: nowrap; overflow: hidden; text-overflow: clip;">-</div>
-                        <div id="preview-address" style="position: absolute; left: 29.4%; top: 48.6%; width: 64.5%; height: 10.8%; font-size: 10px; font-weight: 900; line-height: 1.02; color: #111; text-transform: uppercase; white-space: normal; overflow: hidden; text-overflow: clip; overflow-wrap: anywhere; word-break: break-word;">-</div>
+                        <div id="preview-address" style="position: absolute; left: 29.4%; top: 48.6%; width: 64.5%; height: 10.8%; font-size: 10px; font-weight: 900; line-height: 1.05; color: #111; text-transform: uppercase; white-space: normal; overflow: hidden; text-overflow: clip; overflow-wrap: anywhere; word-break: break-word; letter-spacing: 0.08px; word-spacing: 0.35px;">-</div>
 
                         <div id="preview-dob" style="position: absolute; left: 30%; top: 60.1%; width: 17%; height: 4.2%; display: flex; align-items: flex-end; justify-content: flex-start; font-size: 10px; font-weight: 800; line-height: 1; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-</div>
                         <div id="preview-sector" style="position: absolute; left: 78.5%; top: 60.1%; width: 13.8%; height: 4.2%; display: flex; align-items: flex-end; justify-content: flex-start; font-size: 10px; font-weight: 800; line-height: 1; color: #111; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: clip;">-</div>
@@ -51,7 +51,7 @@
                         <div style="position: absolute; left: 79.6%; top: 68.5%; width: 14%; height: 20.8%; border: 1px solid #000; background: #fff; display: flex; align-items: center; justify-content: center; padding: 2px;">
                             <img id="preview-qr-front" alt="QR Code" style="width: 100%; height: 100%; object-fit: contain; display: none;">
                         </div>
-                        <div id="preview-validity" style="position: absolute; left: 74.6%; top: 91.4%; width: 24%; font-size: 7px; font-weight: 800; text-align: center; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">VALID UNTIL: -</div>
+                        <div id="preview-validity" style="position: absolute; left: 79.6%; top: 91.4%; width: 14%; font-size: 5.8px; font-weight: 800; text-align: center; color: #111; white-space: nowrap; overflow: hidden; text-overflow: clip; letter-spacing: 0;">VALID: -</div>
                     </div>
 
                     <!-- BACK PREVIEW -->
@@ -73,7 +73,7 @@
                                 </tr>
                                 <tr style="line-height: 1.6;">
                                     <td style="font-weight: bold; color: #000; width: 120px; padding: 0 4px 3px 0; text-align: right; white-space: nowrap;">ADDRESS :</td>
-                                    <td style="color: #000; font-weight: bold; padding: 0 0 3px 4px; text-transform: uppercase; white-space: normal; overflow-wrap: anywhere; line-height: 1.2; letter-spacing: 0.35px; word-spacing: 0.4px;" id="preview-ec-address">_________________</td>
+                                    <td style="color: #000; font-weight: bold; padding: 0 0 3px 4px; text-transform: uppercase; white-space: normal; overflow-wrap: anywhere; line-height: 1.24; letter-spacing: 0.45px; word-spacing: 0.75px;" id="preview-ec-address">_________________</td>
                                 </tr>
                                 <tr style="line-height: 1.6;">
                                     <td style="font-weight: bold; color: #000; width: 120px; padding: 0 4px 0 0; text-align: right; white-space: nowrap;">CONTACT NO. :</td>
@@ -350,20 +350,28 @@ document.addEventListener('DOMContentLoaded', function() {
         return d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
     }
 
+    function formatValidityLabel(dateStr) {
+        return `VALID: ${(formatMonthYear(dateStr) || '-').toUpperCase()}`;
+    }
+
     function formatDisplayName(resident) {
         const last = (resident.last_name || '').trim();
         const first = (resident.first_name || '').trim();
-        const suffix = (resident.suffix || '').trim();
+        const suffix = String(resident.suffix || '').replace(/\./g, '').trim();
         const middle = (resident.middle_name || '').trim();
 
-        let trailing = first;
-        const afterFirst = [suffix, middle].filter(Boolean).join(' ');
-        if (afterFirst) {
-            trailing = trailing ? `${trailing}, ${afterFirst}` : afterFirst;
-        }
+        const firstWithSuffix = [first, suffix].filter(Boolean).join(' ');
+        const trailing = [firstWithSuffix, middle].filter(Boolean).join(', ');
 
         if (last && trailing) return `${last}, ${trailing}`;
         return last || trailing || '-';
+    }
+
+    function normalizeStreetAbbreviation(value) {
+        if (!value) return '';
+        return String(value)
+            .replace(/\bST\b\.?/gi, 'ST.')
+            .replace(/\bST\.\s*,\s*/gi, 'ST. ');
     }
 
     function formatAddressForCard(address) {
@@ -372,7 +380,7 @@ document.addEventListener('DOMContentLoaded', function() {
         let clean = String(address).trim();
         clean = clean.replace(/\bBRGY\.?\s*/gi, '');
         clean = clean.replace(/\bBARANGAY\s*/gi, '');
-        clean = clean.replace(/\bST\b\.?/gi, 'ST.');
+        clean = normalizeStreetAbbreviation(clean);
         clean = clean.replace(/^(\s*#?\s*\d+[A-Z0-9\-\/]*)\s*,\s*/i, '$1 ');
         clean = clean.replace(/\s*,\s*/g, ', ');
         clean = clean.replace(/\s+/g, ' ');
@@ -504,8 +512,10 @@ document.addEventListener('DOMContentLoaded', function() {
         previewAddress.style.whiteSpace = 'normal';
         previewAddress.style.overflowWrap = 'anywhere';
         previewAddress.style.wordBreak = 'break-word';
-        previewAddress.style.lineHeight = '1.02';
+        previewAddress.style.lineHeight = '1.05';
         previewAddress.style.fontWeight = '900';
+        previewAddress.style.letterSpacing = '0.08px';
+        previewAddress.style.wordSpacing = '0.35px';
         const addressFontSettings = getAddressFontSettings(false);
         applyFittedFieldFont(
             previewAddress,
@@ -516,14 +526,14 @@ document.addEventListener('DOMContentLoaded', function() {
         );
         
         previewEcName.textContent = resident.emergency_contact_name || '_____________________';
-        const emergencyAddress = resident.emergency_contact_address || '_____________________';
+        const emergencyAddress = normalizeStreetAbbreviation(resident.emergency_contact_address) || '_____________________';
         previewEcAddress.textContent = emergencyAddress;
         previewEcAddress.style.fontSize = `${fitFontSize(emergencyAddress, 15.2, 9.2, 34)}px`;
         previewEcAddress.style.whiteSpace = 'normal';
         previewEcAddress.style.overflowWrap = 'anywhere';
-        previewEcAddress.style.lineHeight = '1.2';
-        previewEcAddress.style.letterSpacing = '0.35px';
-        previewEcAddress.style.wordSpacing = '0.4px';
+        previewEcAddress.style.lineHeight = '1.24';
+        previewEcAddress.style.letterSpacing = '0.45px';
+        previewEcAddress.style.wordSpacing = '0.75px';
         previewEcNo.textContent = resident.emergency_contact_no || '_____________________';
         
         // Handle emergency contact relation
@@ -571,7 +581,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     previewQrFront.style.display = 'block';
                 }
             }
-            previewValidity.textContent = `VALID UNTIL: ${(formatMonthYear(idData.expiration_date) || '-').toUpperCase()}`;
+            previewValidity.textContent = formatValidityLabel(idData.expiration_date);
+            applyFittedFieldFont(previewValidity, previewValidity.textContent, 5.8, 4.2, 13);
         } else {
             if (previewIdNo) {
                 const pendingText = 'PENDING';
@@ -582,7 +593,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 previewQrFront.src = '';
                 previewQrFront.style.display = 'none';
             }
-            previewValidity.textContent = `VALID UNTIL: ${formatMonthYear(FIXED_VALIDITY_DATE).toUpperCase()}`;
+            previewValidity.textContent = formatValidityLabel(FIXED_VALIDITY_DATE);
+            applyFittedFieldFont(previewValidity, previewValidity.textContent, 5.8, 4.2, 13);
         }
     }
 
@@ -748,9 +760,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const sectorPrint = (currentResident.special_sector || '-').replace(/\s+/g, ' ').trim();
             const sectorLeftPrint = getSectorLeftPosition(currentResident.special_sector);
             const statusPrint = (currentResident.civil_status || '-').replace(/\s+/g, ' ').trim();
-            const ecAddressPrint = (currentResident.emergency_contact_address || '_________________').replace(/\s+/g, ' ').trim();
+            const ecAddressPrint = (normalizeStreetAbbreviation(currentResident.emergency_contact_address) || '_________________').replace(/\s+/g, ' ').trim();
             const idNumberPrint = (currentID.id_number || '-').replace(/\s+/g, ' ').trim();
-            const validityPrint = `VALID UNTIL: ${(formatMonthYear(currentID.expiration_date) || '-').toUpperCase()}`;
+            const validityPrint = formatValidityLabel(currentID.expiration_date);
 
             const nameFontSettings = getNameFontSettings(true);
             const addressFontSettings = getAddressFontSettings(true);
@@ -765,6 +777,7 @@ document.addEventListener('DOMContentLoaded', function() {
             );
             const statusFont = fitFontSize(statusPrint, 6, 4.4, 12);
             const ecAddressFont = fitFontSize(ecAddressPrint, 10, 7.2, 32);
+            const validityFont = fitFontSize(validityPrint, 4.4, 3.4, 13);
             const printNameStyle = 'font-family: "Arial Black", "Segoe UI", Arial, sans-serif; color: #0a1f4d; text-shadow: 0 0 1.2px rgba(255,255,255,0.95), 0 0 0.6px rgba(255,255,255,0.9);';
             const printValueStyle = 'font-family: "Segoe UI", Arial, sans-serif; color: #101828; text-shadow: 0 0 1px rgba(255,255,255,0.95), 0 0 0.4px rgba(255,255,255,0.9);';
             const printStrongStyle = 'font-family: "Arial Black", "Segoe UI", Arial, sans-serif; color: #07193d; text-shadow: 0 0 1.2px rgba(255,255,255,0.95), 0 0 0.6px rgba(255,255,255,0.9);';
@@ -778,7 +791,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 </div>
 
                                 <div style="position: absolute; left: 29.7%; top: 36%; width: 65%; font-size: ${nameFont}px; font-weight: 900; line-height: 1.05; text-transform: uppercase; white-space: nowrap; overflow: hidden; letter-spacing: 0.08px; ${printNameStyle}">${fullNamePrint || '-'}</div>
-                                <div style="position: absolute; left: 29.7%; top: 49%; width: 64.5%; height: 10.8%; font-size: ${addressFont}px; font-weight: 900; line-height: 1.02; text-transform: uppercase; white-space: normal; overflow: hidden; overflow-wrap: anywhere; word-break: break-word; letter-spacing: 0.02px; ${printValueStyle}">${addressPrint}</div>
+                                <div style="position: absolute; left: 29.7%; top: 49%; width: 64.5%; height: 10.8%; font-size: ${addressFont}px; font-weight: 900; line-height: 1.05; text-transform: uppercase; white-space: normal; overflow: hidden; overflow-wrap: anywhere; word-break: break-word; letter-spacing: 0.08px; word-spacing: 0.35px; ${printValueStyle}">${addressPrint}</div>
 
                                 <div style="position: absolute; left: 29.5%; top: 60.1%; width: 17%; height: 4.2%; display: flex; align-items: flex-end; justify-content: flex-start; font-size: 6px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: clip; line-height: 1; letter-spacing: 0.1px; ${printValueStyle}">${formatDate(currentResident.birth_date)}</div>
                                 <div style="position: absolute; left: ${sectorLeftPrint}; top: 60.1%; width: 13.8%; height: 4.2%; display: flex; align-items: flex-end; justify-content: flex-start; font-size: ${sectorFont}px; font-weight: 800; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: clip; line-height: 1; letter-spacing: 0.05px; ${printValueStyle}">${sectorPrint}</div>
@@ -795,7 +808,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <div style="position: absolute; left: 79.6%; top: 68.5%; width: 14%; height: 20.8%; background: #fff; display: flex; align-items: center; justify-content: center; padding: 2px;">
                                     ${currentID.qr_code ? `<img src="${currentID.qr_code}" alt="QR" style="width: 100%; height: 100%; object-fit: contain;">` : ''}
                                 </div>
-                                <div style="position: absolute; left: 74.6%; top: 92.3%; width: 24%; text-align: center; font-size: 5px; font-weight: 900; white-space: nowrap; overflow: hidden; letter-spacing: 0.1px; ${printStrongStyle}">${validityPrint}</div>
+                                <div style="position: absolute; left: 79.6%; top: 92.3%; width: 14%; text-align: center; font-size: ${validityFont}px; font-weight: 800; white-space: nowrap; overflow: hidden; letter-spacing: 0; font-family: \"Segoe UI\", Arial, sans-serif; color: #111;">${validityPrint}</div>
                             </div>
                 `;
 
@@ -816,7 +829,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     </tr>
                     <tr style="line-height: 1.6;">
                       <td style="font-weight: bold; color: #000; width: 85px; padding: 0 4px 3px 0; text-align: right; white-space: nowrap;">ADDRESS :</td>
-                                            <td style="color: #000; font-weight: bold; padding: 0 0 3px 4px; text-transform: uppercase; font-size: ${ecAddressFont}px; white-space: normal; overflow-wrap: anywhere; line-height: 1.2; letter-spacing: 0.35px; word-spacing: 0.4px;">${ecAddressPrint || '_________________'}</td>
+                                            <td style="color: #000; font-weight: bold; padding: 0 0 3px 4px; text-transform: uppercase; font-size: ${ecAddressFont}px; white-space: normal; overflow-wrap: anywhere; line-height: 1.24; letter-spacing: 0.45px; word-spacing: 0.75px;">${ecAddressPrint || '_________________'}</td>
                     </tr>
                     <tr style="line-height: 1.6;">
                       <td style="font-weight: bold; color: #000; width: 85px; padding: 0 4px 0 0; text-align: right; white-space: nowrap;">CONTACT NO. :</td>
