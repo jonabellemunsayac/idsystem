@@ -95,7 +95,7 @@
                             <div class="bg-white p-1 rounded" style="width: 20cqw; height: 20cqw; display: flex; align-items: center; justify-content: center; border: 0.3cqw solid #000;">
                                 <img id="preview-qr" alt="QR Code" style="width: 100%; height: 100%; object-fit: contain;">
                             </div>
-                            <div id="preview-id-no-back" class="font-monospace fw-bold text-center" style="font-size: 1.2cqw; letter-spacing: 0.1em; color: #212529; width: 20cqw; margin-top: 0.5cqw;">QR CODE</div>
+                            <div id="preview-id-no-back" class="font-monospace fw-bold text-center" style="font-size: 1.2cqw; letter-spacing: 0.1em; color: #212529; width: 20cqw; margin-top: 0.5cqw;">VALID UNTIL</div>
                         </div>
                     </div>
                 </div>
@@ -189,6 +189,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const previewEcNo = document.getElementById('preview-ec-no');
     const previewQr = document.getElementById('preview-qr');
     const previewValidity = document.getElementById('preview-validity');
+    const previewIdNoBack = document.getElementById('preview-id-no-back');
 
     let currentResident = null;
     let currentID = null;
@@ -272,7 +273,7 @@ document.addEventListener('DOMContentLoaded', function() {
         previewAddress.textContent = resident.address || '-';
         
         previewEcName.textContent = resident.emergency_contact_name || '_____________________';
-        previewEcAddress.textContent = resident.emergency_contact_address || '_____________________';
+        previewEcAddress.textContent = resident.address || resident.emergency_contact_address || '_____________________';
         previewEcNo.textContent = resident.emergency_contact_no || '_____________________';
         
         // Handle emergency contact relation
@@ -295,11 +296,13 @@ document.addEventListener('DOMContentLoaded', function() {
             if (idData.qr_code) {
                 previewQr.src = idData.qr_code;
             }
-            previewValidity.textContent = idData.expiration_date;
+            previewValidity.textContent = `VALID UNTIL ${idData.expiration_date}`;
+            previewIdNoBack.textContent = `VALID UNTIL ${idData.expiration_date}`;
         } else {
             previewIdNo.textContent = 'PENDING';
             previewQr.src = '';
-            previewValidity.textContent = '-';
+            previewValidity.textContent = 'VALID UNTIL -';
+            previewIdNoBack.textContent = 'VALID UNTIL';
         }
     }
 
@@ -423,7 +426,7 @@ document.addEventListener('DOMContentLoaded', function() {
                   <div class="front-text f-status">${currentResident.civil_status || '-'}</div>
                   <div class="front-text f-sector">${sector}</div>
                   <div class="front-text f-id">${currentID.id_number || '-'}</div>
-                  <div class="front-text f-validity">${currentID.expiration_date || '-'}</div>
+                  <div class="front-text f-validity">VALID UNTIL ${currentID.expiration_date || '-'}</div>
                 </div>
 
                 <div class="id-card">
@@ -441,7 +444,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         </tr>
                         <tr>
                           <td class="emergency-title" style="text-align: right; padding-right: 6px; white-space: nowrap; vertical-align: top;">ADDRESS:</td>
-                          <td class="emergency-value" style="min-height: 24px; line-height: 1.2;">${currentResident.emergency_contact_address || '_____________________'}</td>
+                          <td class="emergency-value" style="min-height: 24px; line-height: 1.2;">${currentResident.address || currentResident.emergency_contact_address || '_____________________'}</td>
                         </tr>
                         <tr>
                           <td class="emergency-title" style="text-align: right; padding-right: 6px; white-space: nowrap; vertical-align: top;">CONTACT NO.:</td>
@@ -460,7 +463,7 @@ document.addEventListener('DOMContentLoaded', function() {
                       </div>
 
                       <div class="validity-text">
-                        Valid Until<br>
+                        VALID UNTIL<br>
                         <span style="color: white">${currentID.expiration_date || 'N/A'}</span>
                       </div>
 

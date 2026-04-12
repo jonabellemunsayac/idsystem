@@ -51,7 +51,7 @@
                         <div style="position: absolute; left: 79.6%; top: 68.5%; width: 14%; height: 20.8%; border: 1px solid #000; background: #fff; display: flex; align-items: center; justify-content: center; padding: 2px;">
                             <img id="preview-qr-front" alt="QR Code" style="width: 100%; height: 100%; object-fit: contain; display: none;">
                         </div>
-                        <div id="preview-validity" style="position: absolute; left: 79.6%; top: 91.4%; width: 14%; font-size: 5.8px; font-weight: 800; text-align: center; color: #111; white-space: nowrap; overflow: hidden; text-overflow: clip; letter-spacing: 0;">VALID: -</div>
+                        <div id="preview-validity" style="position: absolute; left: 79.6%; top: 91.4%; width: 14%; font-size: 4.7px; font-weight: 800; text-align: center; color: #111; white-space: nowrap; overflow: hidden; text-overflow: clip; letter-spacing: -0.1px;">VALID UNTIL: -</div>
                     </div>
 
                     <!-- BACK PREVIEW -->
@@ -351,7 +351,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function formatValidityLabel(dateStr) {
-        return `VALID: ${(formatMonthYear(dateStr) || '-').toUpperCase()}`;
+        return `VALID UNTIL: ${(formatMonthYear(dateStr) || '-').toUpperCase()}`;
     }
 
     function formatDisplayName(resident) {
@@ -582,7 +582,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
             previewValidity.textContent = formatValidityLabel(idData.expiration_date);
-            applyFittedFieldFont(previewValidity, previewValidity.textContent, 5.8, 4.2, 13);
+            applyFittedFieldFont(previewValidity, previewValidity.textContent, 4.7, 3.2, 24);
         } else {
             if (previewIdNo) {
                 const pendingText = 'PENDING';
@@ -594,7 +594,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 previewQrFront.style.display = 'none';
             }
             previewValidity.textContent = formatValidityLabel(FIXED_VALIDITY_DATE);
-            applyFittedFieldFont(previewValidity, previewValidity.textContent, 5.8, 4.2, 13);
+            applyFittedFieldFont(previewValidity, previewValidity.textContent, 4.7, 3.2, 24);
         }
     }
 
@@ -777,7 +777,7 @@ document.addEventListener('DOMContentLoaded', function() {
             );
             const statusFont = fitFontSize(statusPrint, 6, 4.4, 12);
             const ecAddressFont = fitFontSize(ecAddressPrint, 10, 7.2, 32);
-            const validityFont = fitFontSize(validityPrint, 4.4, 3.4, 13);
+            const validityFont = fitFontSize(validityPrint, 3.3, 2.1, 27);
             const printNameStyle = 'font-family: "Arial Black", "Segoe UI", Arial, sans-serif; color: #0a1f4d; text-shadow: 0 0 1.2px rgba(255,255,255,0.95), 0 0 0.6px rgba(255,255,255,0.9);';
             const printValueStyle = 'font-family: "Segoe UI", Arial, sans-serif; color: #101828; text-shadow: 0 0 1px rgba(255,255,255,0.95), 0 0 0.4px rgba(255,255,255,0.9);';
             const printStrongStyle = 'font-family: "Arial Black", "Segoe UI", Arial, sans-serif; color: #07193d; text-shadow: 0 0 1.2px rgba(255,255,255,0.95), 0 0 0.6px rgba(255,255,255,0.9);';
@@ -808,7 +808,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <div style="position: absolute; left: 79.6%; top: 68.5%; width: 14%; height: 20.8%; background: #fff; display: flex; align-items: center; justify-content: center; padding: 2px;">
                                     ${currentID.qr_code ? `<img src="${currentID.qr_code}" alt="QR" style="width: 100%; height: 100%; object-fit: contain;">` : ''}
                                 </div>
-                                <div style="position: absolute; left: 79.6%; top: 92.3%; width: 14%; text-align: center; font-size: ${validityFont}px; font-weight: 800; white-space: nowrap; overflow: hidden; letter-spacing: 0; font-family: \"Segoe UI\", Arial, sans-serif; color: #111;">${validityPrint}</div>
+                                <div style="position: absolute; left: 79.6%; top: 92.3%; width: 14%; text-align: center; font-size: ${validityFont}px; font-weight: 800; white-space: nowrap; overflow: hidden; letter-spacing: -0.1px; font-family: \"Segoe UI\", Arial, sans-serif; color: #111;">${validityPrint}</div>
                             </div>
                 `;
 
