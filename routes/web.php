@@ -92,6 +92,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     // Residents Management (encoder, admin, superadmin)
     Route::middleware('role:encoder,admin,superadmin')->group(function () {
         Route::get('residents/search', [ResidentController::class, 'searchJson'])->name('residents.search');
+        Route::get('residents/check-duplicate', [ResidentController::class, 'checkDuplicate'])->name('residents.check-duplicate');
         Route::resource('residents', ResidentController::class);
         Route::get('residents/export/excel', [ResidentController::class, 'export'])->name('residents.export');
 

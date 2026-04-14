@@ -904,6 +904,8 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Initialize Cropper
             const image = modal.querySelector('#crop-image');
+            const brightnessSlider = modal.querySelector('#crop-brightness');
+            const brightnessValue = modal.querySelector('#crop-brightness-value');
             const cropper = new Cropper(image, {
                 aspectRatio: 5 / 6,
                 viewMode: 1,
@@ -912,14 +914,64 @@ document.addEventListener('DOMContentLoaded', function() {
                 background: false,
             });
 
+            function applyBrightnessToCropperPreview(brightness) {
+                modal.querySelectorAll('.cropper-container img').forEach((cropperImage) => {
+                    cropperImage.style.filter = `brightness(${brightness}%)`;
+                });
+            }
+
+            function updateBrightnessPreview() {
+                const brightness = Number(brightnessSlider.value || 100);
+                image.style.filter = `brightness(${brightness}%)`;
+                applyBrightnessToCropperPreview(brightness);
+                brightnessValue.textContent = `${brightness}%`;
+            }
+
+            brightnessSlider.addEventListener('input', updateBrightnessPreview);
+
+            image.addEventListener('ready', updateBrightnessPreview, { once: true });
+
+            function applyBrightnessToCanvas(sourceCanvas, brightness) {
+                if (brightness === 100) {
+                    return sourceCanvas;
+                }
+
+                const adjustedCanvas = document.createElement('canvas');
+                adjustedCanvas.width = sourceCanvas.width;
+                adjustedCanvas.height = sourceCanvas.height;
+
+                const adjustedContext = adjustedCanvas.getContext('2d');
+                adjustedContext.drawImage(sourceCanvas, 0, 0);
+
+                const imageData = adjustedContext.getImageData(0, 0, adjustedCanvas.width, adjustedCanvas.height);
+                const factor = brightness / 100;
+                const data = imageData.data;
+
+                for (let index = 0; index < data.length; index += 4) {
+                    data[index] = Math.min(255, Math.round(data[index] * factor));
+                    data[index + 1] = Math.min(255, Math.round(data[index + 1] * factor));
+                    data[index + 2] = Math.min(255, Math.round(data[index + 2] * factor));
+                }
+
+                adjustedContext.putImageData(imageData, 0, 0);
+
+                return adjustedCanvas;
+            }
+
+            setTimeout(updateBrightnessPreview, 50);
+
             // Handle Apply
             const cropApply = modal.querySelector('#crop-apply');
             cropApply.addEventListener('click', function() {
-                cropper.getCroppedCanvas({
+                const brightness = Number(brightnessSlider.value || 100);
+                const croppedCanvas = cropper.getCroppedCanvas({
                     width: 300,
                     height: 360,
                     imageSmoothingQuality: 'high',
-                }).toBlob((blob) => {
+                });
+                const outputCanvas = applyBrightnessToCanvas(croppedCanvas, brightness);
+
+                outputCanvas.toBlob((blob) => {
                     // Create a new file from the blob
                     const croppedFile = new File([blob], "profile_photo.jpg", { type: "image/jpeg" });
                     
@@ -969,6 +1021,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="modal-body">
                         <div class="img-container" style="max-height: 60vh; overflow: hidden;">
                             <img id="crop-image" src="${imageSrc}" style="max-width: 100%; display: block;">
+                        </div>
+                        <div class="mt-3">
+                            <label for="crop-brightness" class="form-label fw-semibold mb-1">Brightness</label>
+                            <div class="d-flex align-items-center gap-2">
+                                <input type="range" class="form-range m-0" id="crop-brightness" min="50" max="150" value="100" step="1">
+                                <span id="crop-brightness-value" class="text-muted small" style="min-width: 48px;">100%</span>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">

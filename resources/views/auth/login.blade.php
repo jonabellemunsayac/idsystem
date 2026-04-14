@@ -239,6 +239,13 @@
                     </div>
                 @endif
 
+                @if(session('resident_qr_auth'))
+                    <div class="success-message" style="background-color: #e7f1ff; border-color: #b6d4fe; color: #084298;">
+                        QR recognized for {{ session('resident_qr_auth.resident_name') ?? 'resident account' }}.
+                        Enter the account password to finish authentication.
+                    </div>
+                @endif
+
                 <form action="{{ route('login.store') }}" method="POST">
                     @csrf
 
@@ -249,7 +256,7 @@
                             id="username" 
                             name="username" 
                             class="form-control @error('username') is-invalid @enderror" 
-                            value="{{ old('username') }}"
+                            value="{{ old('username', session('resident_qr_auth.username')) }}"
                             autocomplete="username"
                             autofocus
                             required
