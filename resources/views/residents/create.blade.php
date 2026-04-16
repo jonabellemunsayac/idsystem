@@ -266,12 +266,16 @@
                     <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Blood Type <span class="text-muted">(Optional)</span></label>
                     <select class="form-select form-select-sm" name="blood_type" style="font-size: 0.8rem;">
                         <option value="">Select...</option>
+                        <option value="A">A</option>
                         <option value="A+">A+</option>
                         <option value="A-">A-</option>
+                        <option value="B">B</option>
                         <option value="B+">B+</option>
                         <option value="B-">B-</option>
+                        <option value="AB">AB</option>
                         <option value="AB+">AB+</option>
                         <option value="AB-">AB-</option>
+                        <option value="O">O</option>
                         <option value="O+">O+</option>
                         <option value="O-">O-</option>
                     </select>
@@ -402,6 +406,7 @@
                     <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Street Name</label>
                     <select class="form-select form-select-sm address-field" name="street_name" style="font-size: 0.8rem;">
                         <option value="">Select Street...</option>
+                        <option value="AV. Cruz St">AV. Cruz St</option>
                         <option value="A.V Jimenez St">A.V Jimenez St</option>
                         <option value="AB. Kamagong">AB. Kamagong</option>
                         <option value="Acacia St">Acacia St</option>
@@ -421,6 +426,7 @@
                         <option value="Carnation St">Carnation St</option>
                         <option value="Casoy St">Casoy St</option>
                         <option value="Castillo St">Castillo St</option>
+                        <option value="Champaca St">Champaca St</option>
                         <option value="Chico St">Chico St</option>
                         <option value="Christian-Muslim Sarinas Comp.">Christian-Muslim Sarinas Comp.</option>
                         <option value="D.M Tuazon St">D.M Tuazon St</option>
@@ -466,10 +472,12 @@
                         <option value="Pag Asa St">Pag Asa St</option>
                         <option value="Papaya St">Papaya St</option>
                         <option value="Paulino St">Paulino St</option>
+                        <option value="Paulino-Bornay St">Paulino-Bornay St</option>
                         <option value="Pinya St">Pinya St</option>
                         <option value="R. Castillo St">R. Castillo St</option>
                         <option value="R.Tatco St">R.Tatco St</option>
                         <option value="Rambutan St">Rambutan St</option>
+                        <option value="Red Palm St">Red Palm St</option>
                         <option value="Rose St">Rose St</option>
                         <option value="S. Cuevas St">S. Cuevas St</option>
                         <option value="Sampaloc St">Sampaloc St</option>

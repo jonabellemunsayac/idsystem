@@ -1086,22 +1086,41 @@ class ResidentController extends Controller
             'gender' => 'required|in:Male,Female',
             'civil_status' => 'required|in:Single,Married,Widowed,Separated',
             'nationality' => 'nullable|string|max:50',
+            'special_sector' => 'nullable|string|max:255',
             'blood_type' => 'nullable|string|max:10',
-            'house_no' => 'nullable|string|max:50',
+            'household_composition' => 'nullable|in:Head of the Family,Spouse,Child',
+            'height_cm' => 'nullable|numeric|min:0|max:999.99',
+            'weight_kg' => 'nullable|numeric|min:0|max:999.99',
+            'religion' => 'nullable|string|max:100',
+            'spouse_name' => 'nullable|string|max:255|required_if:civil_status,Married',
+            'children_names' => 'nullable|string|required_if:civil_status,Married',
+            'father_name' => 'nullable|string|max:255',
+            'mother_maiden_name' => 'nullable|string|max:255',
+            'residency_type' => 'nullable|in:Owner,Rentee,Informal Settler',
+            'tenure_status' => 'nullable|in:Permanent,Temporary',
+            'length_of_stay' => 'nullable|string|max:100',
+            'registered_voter' => 'nullable|in:Yes,No',
+            'precinct_no' => 'nullable|string|max:50|required_if:registered_voter,Yes',
+            'occupation' => 'nullable|string|max:255',
+            'employment_type' => 'nullable|in:Government,Private',
+            'economic_status' => 'nullable|in:Low-income/Poor,Low-Income but Not Poor,Lower Middle Income,Middle Income/Independent,High Income/Rich',
+            'house_no' => 'required|string|max:50',
             'street_name' => 'nullable|string|max:100',
             'purok' => 'nullable|string|max:50',
             'municipality' => 'nullable|string|max:100',
             'province' => 'nullable|string|max:100',
             'zip_code' => 'nullable|string|max:10',
-            'contact_number' => 'nullable|string|max:20',
+            'contact_number' => 'required|string|max:20',
             'telephone_no' => 'nullable|string|max:20',
             'email' => 'nullable|email',
             'emergency_contact_name' => 'nullable|string|max:100',
             'emergency_contact_relationship' => 'nullable|string|max:50',
             'emergency_contact_no' => 'nullable|string|max:20',
             'emergency_contact_address' => 'nullable|string|max:255',
-            'profile_image' => 'nullable|image|max:2048',
+            'profile_image' => 'nullable|image|max:10240',
+            'profile_image_base64' => 'nullable|string|max:10485760',
             'signature' => 'nullable|image|max:1024',
+            'signature_base64' => 'nullable|string|max:1048576',
             'is_head_of_family' => 'nullable|boolean',
         ]);
 
@@ -1110,6 +1129,15 @@ class ResidentController extends Controller
             ? strtoupper(trim($validated['middle_name']))
             : null;
         $validated['last_name'] = strtoupper(trim($validated['last_name']));
+
+        if ($this->findDuplicateResident($validated)) {
+            return redirect()->back()
+                ->withErrors([
+                    'first_name' => 'A resident with the same name and birth date already exists.',
+                ])
+                ->with('error', 'Duplicate resident detected. Please review the existing record before creating a new one.')
+                ->withInput();
+        }
 
         // Handle profile image upload
         $profileImagePath = null;
@@ -1131,9 +1159,9 @@ class ResidentController extends Controller
                         ->withInput();
                 }
                 
-                if ($file->getSize() > 2097152) {
+                if ($file->getSize() > 10485760) {
                     return redirect()->back()
-                        ->withErrors(['profile_image' => 'Profile image must be less than 2MB.'])
+                        ->withErrors(['profile_image' => 'Profile image must be less than 10MB.'])
                         ->withInput();
                 }
                 
@@ -1235,7 +1263,24 @@ class ResidentController extends Controller
             'gender' => $validated['gender'],
             'civil_status' => $validated['civil_status'],
             'nationality' => $validated['nationality'] ?? 'Filipino',
+            'special_sector' => $validated['special_sector'] ?? null,
             'blood_type' => $validated['blood_type'] ?? null,
+            'household_composition' => $validated['household_composition'] ?? null,
+            'height_cm' => $validated['height_cm'] ?? null,
+            'weight_kg' => $validated['weight_kg'] ?? null,
+            'religion' => $validated['religion'] ?? null,
+            'spouse_name' => $validated['spouse_name'] ?? null,
+            'children_names' => $validated['children_names'] ?? null,
+            'father_name' => $validated['father_name'] ?? null,
+            'mother_maiden_name' => $validated['mother_maiden_name'] ?? null,
+            'residency_type' => $validated['residency_type'] ?? null,
+            'tenure_status' => $validated['tenure_status'] ?? null,
+            'length_of_stay' => $validated['length_of_stay'] ?? null,
+            'registered_voter' => $validated['registered_voter'] ?? null,
+            'precinct_no' => $validated['precinct_no'] ?? null,
+            'occupation' => $validated['occupation'] ?? null,
+            'employment_type' => $validated['employment_type'] ?? null,
+            'economic_status' => $validated['economic_status'] ?? null,
             'house_no' => $validated['house_no'] ?? null,
             'street_name' => $validated['street_name'] ?? null,
             'purok' => $validated['purok'] ?? null,

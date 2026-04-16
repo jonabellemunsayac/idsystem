@@ -100,14 +100,18 @@
                         <label for="blood_type" class="form-label" style="font-size: 0.65rem;">Blood Type</label>
                         <select class="form-select form-select-sm @error('blood_type') is-invalid @enderror" id="blood_type" name="blood_type" style="font-size: 0.8rem;">
                             <option value="">Select Blood Type</option>
-                            <option value="O+" @selected(old('blood_type', $resident['blood_type']) == 'O+')>O+</option>
-                            <option value="O-" @selected(old('blood_type', $resident['blood_type']) == 'O-')>O-</option>
+                            <option value="A" @selected(old('blood_type', $resident['blood_type']) == 'A')>A</option>
                             <option value="A+" @selected(old('blood_type', $resident['blood_type']) == 'A+')>A+</option>
                             <option value="A-" @selected(old('blood_type', $resident['blood_type']) == 'A-')>A-</option>
+                            <option value="B" @selected(old('blood_type', $resident['blood_type']) == 'B')>B</option>
                             <option value="B+" @selected(old('blood_type', $resident['blood_type']) == 'B+')>B+</option>
                             <option value="B-" @selected(old('blood_type', $resident['blood_type']) == 'B-')>B-</option>
+                            <option value="AB" @selected(old('blood_type', $resident['blood_type']) == 'AB')>AB</option>
                             <option value="AB+" @selected(old('blood_type', $resident['blood_type']) == 'AB+')>AB+</option>
                             <option value="AB-" @selected(old('blood_type', $resident['blood_type']) == 'AB-')>AB-</option>
+                            <option value="O" @selected(old('blood_type', $resident['blood_type']) == 'O')>O</option>
+                            <option value="O+" @selected(old('blood_type', $resident['blood_type']) == 'O+')>O+</option>
+                            <option value="O-" @selected(old('blood_type', $resident['blood_type']) == 'O-')>O-</option>
                         </select>
                         @error('blood_type') <div class="invalid-feedback" style="font-size: 0.65rem;">{{ $message }}</div> @enderror
                     </div>
@@ -258,6 +262,7 @@
                         <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Street Name</label>
                         <select class="form-select form-select-sm address-field" name="street_name" style="font-size: 0.8rem;">
                             <option value="" {{ old('street_name', $resident['street_name']) === '' ? 'selected' : '' }}>Select Street...</option>
+                            <option value="AV. Cruz St" {{ old('street_name', $resident['street_name']) === 'AV. Cruz St' ? 'selected' : '' }}>AV. Cruz St</option>
                             <option value="A.V Jimenez St" {{ old('street_name', $resident['street_name']) === 'A.V Jimenez St' ? 'selected' : '' }}>A.V Jimenez St</option>
                             <option value="Acacia St" {{ old('street_name', $resident['street_name']) === 'Acacia St' ? 'selected' : '' }}>Acacia St</option>
                             <option value="Alley 1 St" {{ old('street_name', $resident['street_name']) === 'Alley 1 St' ? 'selected' : '' }}>Alley 1 St</option>
@@ -276,6 +281,7 @@
                             <option value="Carnation St" {{ old('street_name', $resident['street_name']) === 'Carnation St' ? 'selected' : '' }}>Carnation St</option>
                             <option value="Casoy St" {{ old('street_name', $resident['street_name']) === 'Casoy St' ? 'selected' : '' }}>Casoy St</option>
                             <option value="Castillo St" {{ old('street_name', $resident['street_name']) === 'Castillo St' ? 'selected' : '' }}>Castillo St</option>
+                            <option value="Champaca St" {{ old('street_name', $resident['street_name']) === 'Champaca St' ? 'selected' : '' }}>Champaca St</option>
                             <option value="Chico St" {{ old('street_name', $resident['street_name']) === 'Chico St' ? 'selected' : '' }}>Chico St</option>
                             <option value="D.M Tuazon St" {{ old('street_name', $resident['street_name']) === 'D.M Tuazon St' ? 'selected' : '' }}>D.M Tuazon St</option>
                             <option value="Dalandan St" {{ old('street_name', $resident['street_name']) === 'Dalandan St' ? 'selected' : '' }}>Dalandan St</option>
@@ -316,7 +322,9 @@
                             <option value="Pag Asa St" {{ old('street_name', $resident['street_name']) === 'Pag Asa St' ? 'selected' : '' }}>Pag Asa St</option>
                             <option value="Papaya St" {{ old('street_name', $resident['street_name']) === 'Papaya St' ? 'selected' : '' }}>Papaya St</option>
                             <option value="Paulino St" {{ old('street_name', $resident['street_name']) === 'Paulino St' ? 'selected' : '' }}>Paulino St</option>
+                            <option value="Paulino-Bornay St" {{ old('street_name', $resident['street_name']) === 'Paulino-Bornay St' ? 'selected' : '' }}>Paulino-Bornay St</option>
                             <option value="Pinya St" {{ old('street_name', $resident['street_name']) === 'Pinya St' ? 'selected' : '' }}>Pinya St</option>
+                            <option value="Red Palm St" {{ old('street_name', $resident['street_name']) === 'Red Palm St' ? 'selected' : '' }}>Red Palm St</option>
                             <option value="R. Castillo St" {{ old('street_name', $resident['street_name']) === 'R. Castillo St' ? 'selected' : '' }}>R. Castillo St</option>
                             <option value="R.Tatco St" {{ old('street_name', $resident['street_name']) === 'R.Tatco St' ? 'selected' : '' }}>R.Tatco St</option>
                             <option value="Rambutan St" {{ old('street_name', $resident['street_name']) === 'Rambutan St' ? 'selected' : '' }}>Rambutan St</option>
