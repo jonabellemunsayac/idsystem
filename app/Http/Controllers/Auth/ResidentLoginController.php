@@ -26,8 +26,18 @@ class ResidentLoginController extends Controller
             ]);
         }
 
+        $qrAuth = $request->session()->get('resident_qr_auth');
+
+        if ($qrAuth && (int) ($qrAuth['resident_account_id'] ?? 0) !== (int) $residentAccount->id) {
+            throw ValidationException::withMessages([
+                'username' => 'This account does not match the scanned QR code. Please use the account linked to that ID.',
+            ]);
+        }
+
         Auth::guard('resident')->login($residentAccount, $request->boolean('remember'));
         $request->session()->regenerate();
+        $request->session()->forget('resident_qr_auth');
+        $residentAccount->update(['last_login' => now()]);
 
         return redirect()->route('resident.dashboard');
     }

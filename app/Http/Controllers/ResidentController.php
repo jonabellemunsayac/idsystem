@@ -9,7 +9,9 @@ use App\Models\Resident;
 use App\Models\ResidentAccount;
 use App\Services\ActivityLogger;
 use Carbon\Carbon;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -59,6 +61,53 @@ class ResidentController extends Controller
             : now()->format('mdy');
 
         return $lastNamePart . $birthDatePart;
+    }
+
+    private function findDuplicateResident(array $validated): ?Resident
+    {
+        $query = Resident::query()
+            ->where('first_name', $validated['first_name'])
+            ->where('last_name', $validated['last_name'])
+            ->whereDate('birth_date', $validated['birth_date']);
+
+        if (!empty($validated['middle_name'])) {
+            $query->where('middle_name', $validated['middle_name']);
+        } else {
+            $query->whereNull('middle_name');
+        }
+
+        if (!empty($validated['suffix'])) {
+            $query->where('suffix', $validated['suffix']);
+        } else {
+            $query->whereNull('suffix');
+        }
+
+        return $query->first();
+    }
+
+    private function generateResidentUsername(Resident $resident): string
+    {
+        $firstName = strtolower(trim(str_replace(' ', '', $resident->first_name)));
+        $lastName = strtolower(trim(str_replace(' ', '', $resident->last_name)));
+        $baseUsername = $firstName . '.' . $lastName;
+        $username = $baseUsername;
+        $counter = 1;
+
+        while (ResidentAccount::where('username', $username)->exists()) {
+            $username = $baseUsername . $counter;
+            $counter++;
+        }
+
+        return $username;
+    }
+
+    private function cleanupResidentAssets(?string $profileImagePath, ?string $signaturePath): void
+    {
+        foreach ([$profileImagePath, $signaturePath] as $path) {
+            if ($path && Storage::disk('public')->exists($path)) {
+                Storage::disk('public')->delete($path);
+            }
+        }
     }
 
     public function index(Request $request)
@@ -147,6 +196,52 @@ class ResidentController extends Controller
         return view('residents.create');
     }
 
+    public function checkDuplicate(Request $request)
+    {
+        $validated = $request->validate([
+            'first_name' => ['nullable', 'string', 'max:255'],
+            'middle_name' => ['nullable', 'string', 'max:255'],
+            'last_name' => ['nullable', 'string', 'max:255'],
+            'suffix' => ['nullable', 'string', 'max:20'],
+            'birth_date' => ['nullable', 'date'],
+        ]);
+
+        $firstName = strtoupper(trim((string) ($validated['first_name'] ?? '')));
+        $lastName = strtoupper(trim((string) ($validated['last_name'] ?? '')));
+        $birthDate = $validated['birth_date'] ?? null;
+
+        if ($firstName === '' || $lastName === '' || !$birthDate) {
+            return response()->json([
+                'exists' => false,
+                'ready' => false,
+            ]);
+        }
+
+        $normalized = [
+            'first_name' => $firstName,
+            'middle_name' => isset($validated['middle_name']) && trim((string) $validated['middle_name']) !== ''
+                ? strtoupper(trim((string) $validated['middle_name']))
+                : null,
+            'last_name' => $lastName,
+            'suffix' => isset($validated['suffix']) && trim((string) $validated['suffix']) !== ''
+                ? trim((string) $validated['suffix'])
+                : null,
+            'birth_date' => $birthDate,
+        ];
+
+        $resident = $this->findDuplicateResident($normalized);
+
+        return response()->json([
+            'exists' => (bool) $resident,
+            'ready' => true,
+            'resident' => $resident ? [
+                'id' => $resident->id,
+                'display_name' => $resident->display_name,
+                'birth_date' => $resident->birth_date,
+            ] : null,
+        ]);
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -203,6 +298,15 @@ class ResidentController extends Controller
             ? strtoupper(trim($validated['middle_name']))
             : null;
         $validated['last_name'] = strtoupper(trim($validated['last_name']));
+
+        if ($this->findDuplicateResident($validated)) {
+            return redirect()->back()
+                ->withErrors([
+                    'first_name' => 'A resident with the same name and birth date already exists.',
+                ])
+                ->with('error', 'Duplicate resident detected. Please review the existing record before creating a new one.')
+                ->withInput();
+        }
 
         $profileImagePath = null;
         if ($request->hasFile('profile_image')) {
@@ -428,125 +532,112 @@ class ResidentController extends Controller
         if (!empty($validated['zip_code'])) $addressParts[] = $validated['zip_code'];
         $formattedAddress = implode(', ', array_filter($addressParts));
 
-        // Auto-create or reuse clan (lastname only - same last name = same clan)
-        // Normalize clan_name: trim whitespace for consistency
-        $clanName = trim($validated['last_name']);
-        $clan = Clan::where('clan_name', $clanName)->first();
-        
-        if (!$clan) {
-            $clan = Clan::create(['clan_name' => $clanName]);
-        }
-        
-        // Update clan address if this is the first resident or address was empty
-        if (empty($clan->address)) {
-            $clan->update(['address' => $formattedAddress]);
-        }
-
-        $resident = Resident::create([
-            'first_name' => $validated['first_name'],
-            'middle_name' => $validated['middle_name'] ?? null,
-            'last_name' => $validated['last_name'],
-            'suffix' => $validated['suffix'] ?? null,
-            'gender' => $validated['gender'] ?? null,
-            'birth_date' => $validated['birth_date'] ?? null,
-            'civil_status' => $validated['civil_status'] ?? null,
-            'nationality' => $validated['nationality'] ?? null,
-            'barangay' => $validated['barangay'] ?? null,
-            'house_no' => $validated['house_no'] ?? null,
-            'street_name' => $validated['street_name'] ?? null,
-            'purok' => $validated['purok'] ?? null,
-            'province' => $validated['province'] ?? null,
-            'municipality' => $validated['municipality'] ?? null,
-            'zip_code' => $validated['zip_code'] ?? null,
-            'address' => $formattedAddress ?: null,
-            'clan_id' => $clan->id,
-            'contact_number' => $validated['contact_number'] ?? null,
-            'telephone_no' => $validated['telephone_no'] ?? null,
-            'blood_type' => $validated['blood_type'] ?? null,
-            'height_cm' => $validated['height_cm'] ?? null,
-            'weight_kg' => $validated['weight_kg'] ?? null,
-            'religion' => $validated['religion'] ?? null,
-            'spouse_name' => $validated['spouse_name'] ?? null,
-            'children_names' => $validated['children_names'] ?? null,
-            'father_name' => $validated['father_name'] ?? null,
-            'mother_maiden_name' => $validated['mother_maiden_name'] ?? null,
-            'residency_type' => $validated['residency_type'] ?? null,
-            'tenure_status' => $validated['tenure_status'] ?? null,
-            'length_of_stay' => $validated['length_of_stay'] ?? null,
-            'registered_voter' => $validated['registered_voter'] ?? null,
-            'precinct_no' => $validated['precinct_no'] ?? null,
-            'occupation' => $validated['occupation'] ?? null,
-            'employment_type' => $validated['employment_type'] ?? null,
-            'economic_status' => $validated['economic_status'] ?? null,
-            'household_composition' => $validated['household_composition'] ?? null,
-            'special_sector' => $validated['special_sector'] ?? null,
-            'emergency_contact_name' => $validated['emergency_contact_name'] ?? null,
-            'emergency_contact_no' => $validated['emergency_contact_no'] ?? null,
-            'emergency_contact_relationship' => $validated['emergency_contact_relationship'] ?? null,
-            'emergency_contact_address' => $validated['emergency_contact_address'] ?? null,
-            'email' => $validated['email'] ?? null,
-            'profile_image' => $profileImagePath,
-            'signature' => $signaturePath,
-        ]);
-
-        // If marked as head of family, update the clan with resident_id and head_of_family name
-        if ($validated['is_head_of_family'] ?? false) {
-            $clan->update([
-                'resident_id' => $resident->id,
-                'head_of_family' => $resident->first_name . ' ' . $resident->last_name,
-            ]);
-        }
-
-        // Generate username with counter for duplicate first names
-        $firstName = strtolower(trim(str_replace(' ', '', $resident->first_name)));
-        $lastName = strtolower(trim($resident->last_name));
-        
-        // Check if this first name already exists (with or without counter)
-        $firstNamePattern = $firstName . '\\d*\\.';
-        $existingCount = ResidentAccount::where('username', 'regexp', $firstNamePattern)->count();
-        
-        if ($existingCount > 0) {
-            // Find the highest counter for this first name
-            $maxCounter = 0;
-            $accounts = ResidentAccount::whereRaw("username REGEXP ?", [$firstNamePattern])->get();
-            foreach ($accounts as $account) {
-                if (preg_match("/^{$firstName}(\d+)\./", $account->username, $matches)) {
-                    $maxCounter = max($maxCounter, (int)$matches[1]);
-                }
-            }
-            $baseUsername = $firstName . ($maxCounter + 1) . '.' . $lastName;
-        } else {
-            $baseUsername = $firstName . '.' . $lastName;
-        }
-
-        $username = $baseUsername;
-        $counter = 1;
-        while (ResidentAccount::where('username', $username)->exists()) {
-            $username = $baseUsername . $counter;
-            $counter++;
-        }
-
-        $password = $this->generateDefaultPassword($resident);
-        
         try {
-            ResidentAccount::create([
-                'resident_id' => $resident->id,
-                'username' => $username,
-                'password_hash' => Hash::make($password),
-                'email' => $validated['email'] ?? null,
-            ]);
+            [$resident, $username, $password] = DB::transaction(function () use ($validated, $formattedAddress, $profileImagePath, $signaturePath) {
+                $clan = Clan::firstOrCreate([
+                    'clan_name' => trim($validated['last_name']),
+                ]);
 
-            // Log the resident creation
+                if (empty($clan->address)) {
+                    $clan->update(['address' => $formattedAddress]);
+                }
+
+                $resident = Resident::create([
+                    'first_name' => $validated['first_name'],
+                    'middle_name' => $validated['middle_name'] ?? null,
+                    'last_name' => $validated['last_name'],
+                    'suffix' => $validated['suffix'] ?? null,
+                    'gender' => $validated['gender'] ?? null,
+                    'birth_date' => $validated['birth_date'] ?? null,
+                    'civil_status' => $validated['civil_status'] ?? null,
+                    'nationality' => $validated['nationality'] ?? null,
+                    'barangay' => $validated['barangay'] ?? null,
+                    'house_no' => $validated['house_no'] ?? null,
+                    'street_name' => $validated['street_name'] ?? null,
+                    'purok' => $validated['purok'] ?? null,
+                    'province' => $validated['province'] ?? null,
+                    'municipality' => $validated['municipality'] ?? null,
+                    'zip_code' => $validated['zip_code'] ?? null,
+                    'address' => $formattedAddress ?: null,
+                    'clan_id' => $clan->id,
+                    'contact_number' => $validated['contact_number'] ?? null,
+                    'telephone_no' => $validated['telephone_no'] ?? null,
+                    'blood_type' => $validated['blood_type'] ?? null,
+                    'height_cm' => $validated['height_cm'] ?? null,
+                    'weight_kg' => $validated['weight_kg'] ?? null,
+                    'religion' => $validated['religion'] ?? null,
+                    'spouse_name' => $validated['spouse_name'] ?? null,
+                    'children_names' => $validated['children_names'] ?? null,
+                    'father_name' => $validated['father_name'] ?? null,
+                    'mother_maiden_name' => $validated['mother_maiden_name'] ?? null,
+                    'residency_type' => $validated['residency_type'] ?? null,
+                    'tenure_status' => $validated['tenure_status'] ?? null,
+                    'length_of_stay' => $validated['length_of_stay'] ?? null,
+                    'registered_voter' => $validated['registered_voter'] ?? null,
+                    'precinct_no' => $validated['precinct_no'] ?? null,
+                    'occupation' => $validated['occupation'] ?? null,
+                    'employment_type' => $validated['employment_type'] ?? null,
+                    'economic_status' => $validated['economic_status'] ?? null,
+                    'household_composition' => $validated['household_composition'] ?? null,
+                    'special_sector' => $validated['special_sector'] ?? null,
+                    'emergency_contact_name' => $validated['emergency_contact_name'] ?? null,
+                    'emergency_contact_no' => $validated['emergency_contact_no'] ?? null,
+                    'emergency_contact_relationship' => $validated['emergency_contact_relationship'] ?? null,
+                    'emergency_contact_address' => $validated['emergency_contact_address'] ?? null,
+                    'email' => $validated['email'] ?? null,
+                    'profile_image' => $profileImagePath,
+                    'signature' => $signaturePath,
+                ]);
+
+                if ($validated['is_head_of_family'] ?? false) {
+                    $clan->update([
+                        'resident_id' => $resident->id,
+                        'head_of_family' => $resident->first_name . ' ' . $resident->last_name,
+                    ]);
+                }
+
+                $password = $this->generateDefaultPassword($resident);
+                $attempts = 0;
+                $baseUsername = $this->generateResidentUsername($resident);
+
+                do {
+                    $username = $attempts === 0 ? $baseUsername : $baseUsername . $attempts;
+
+                    try {
+                        ResidentAccount::create([
+                            'resident_id' => $resident->id,
+                            'username' => $username,
+                            'password_hash' => Hash::make($password),
+                            'email' => $validated['email'] ?? null,
+                        ]);
+
+                        return [$resident, $username, $password];
+                    } catch (QueryException $exception) {
+                        $attempts++;
+
+                        if ($attempts >= 5 || !str_contains(strtolower($exception->getMessage()), 'duplicate')) {
+                            throw $exception;
+                        }
+                    }
+                } while ($attempts < 5);
+            });
+
             $residentName = "{$resident->first_name} {$resident->last_name}";
             ActivityLogger::logResidentAccount('created', $residentName, $resident->id);
-            
-        } catch (\Exception $e) {
-            Log::error('Failed to create resident account: ' . $e->getMessage(), [
-                'resident_id' => $resident->id,
-                'username' => $username,
+        } catch (\Throwable $e) {
+            $this->cleanupResidentAssets($profileImagePath, $signaturePath);
+
+            Log::error('Failed to create resident: ' . $e->getMessage(), [
+                'first_name' => $validated['first_name'],
+                'last_name' => $validated['last_name'],
+                'birth_date' => $validated['birth_date'],
+                'exception' => get_class($e),
             ]);
-            return redirect()->route('residents.create')->with([
-                'error' => 'Resident added but failed to create account: ' . $e->getMessage()
+
+            return redirect()->route('residents.create')->withInput()->with([
+                'error' => 'Failed to create resident. ' . (str_contains(strtolower($e->getMessage()), 'duplicate')
+                    ? 'A duplicate entry was detected. Please review the resident and account details.'
+                    : 'Please try again.')
             ]);
         }
 
@@ -952,24 +1043,48 @@ class ResidentController extends Controller
 
     public function destroy(Resident $resident)
     {
-        // Delete profile image if exists
-        if ($resident->profile_image) {
-            $imagePath = storage_path('app/public/' . $resident->profile_image);
-            if (file_exists($imagePath)) {
-                unlink($imagePath);
+        DB::transaction(function () use ($resident) {
+
+            $residentName = "{$resident->first_name} {$resident->last_name}";
+            $residentId   = $resident->id;
+
+            // Get clan before deleting resident
+            $clan = $resident->clan;
+
+            // Delete profile image
+            if ($resident->profile_image) {
+                $imagePath = storage_path('app/public/' . $resident->profile_image);
+                if (file_exists($imagePath)) {
+                    unlink($imagePath);
+                }
             }
-        }
 
-        $residentName = "{$resident->first_name} {$resident->last_name}";
-        $residentId = $resident->id;
+            // Delete signature
+            if ($resident->signature) {
+                $signaturePath = storage_path('app/public/' . $resident->signature);
+                if (file_exists($signaturePath)) {
+                    unlink($signaturePath);
+                }
+            }
 
-        ResidentAccount::where('resident_id', $resident->id)->delete();
-        $resident->delete();
+            // Delete resident account
+            ResidentAccount::where('resident_id', $resident->id)->delete();
 
-        // Log the deletion
-        ActivityLogger::logResidentAccount('deleted', $residentName, $residentId);
+            // Delete resident
+            $resident->delete();
 
-        return redirect()->route('residents.index')->with('success', 'Resident deleted successfully!');
+            // Delete clan also
+            if ($clan && $clan->residents()->count() == 0) {
+                $clan->delete();
+            }
+
+            // Log deletion
+            ActivityLogger::logResidentAccount('deleted', $residentName, $residentId);
+        });
+
+        return redirect()
+            ->route('residents.index')
+            ->with('success', 'Resident and clan deleted successfully!');
     }
 
     /**
@@ -995,22 +1110,41 @@ class ResidentController extends Controller
             'gender' => 'required|in:Male,Female',
             'civil_status' => 'required|in:Single,Married,Widowed,Separated',
             'nationality' => 'nullable|string|max:50',
+            'special_sector' => 'nullable|string|max:255',
             'blood_type' => 'nullable|string|max:10',
-            'house_no' => 'nullable|string|max:50',
+            'household_composition' => 'nullable|in:Head of the Family,Spouse,Child',
+            'height_cm' => 'nullable|numeric|min:0|max:999.99',
+            'weight_kg' => 'nullable|numeric|min:0|max:999.99',
+            'religion' => 'nullable|string|max:100',
+            'spouse_name' => 'nullable|string|max:255|required_if:civil_status,Married',
+            'children_names' => 'nullable|string|required_if:civil_status,Married',
+            'father_name' => 'nullable|string|max:255',
+            'mother_maiden_name' => 'nullable|string|max:255',
+            'residency_type' => 'nullable|in:Owner,Rentee,Informal Settler',
+            'tenure_status' => 'nullable|in:Permanent,Temporary',
+            'length_of_stay' => 'nullable|string|max:100',
+            'registered_voter' => 'nullable|in:Yes,No',
+            'precinct_no' => 'nullable|string|max:50|required_if:registered_voter,Yes',
+            'occupation' => 'nullable|string|max:255',
+            'employment_type' => 'nullable|in:Government,Private',
+            'economic_status' => 'nullable|in:Low-income/Poor,Low-Income but Not Poor,Lower Middle Income,Middle Income/Independent,High Income/Rich',
+            'house_no' => 'required|string|max:50',
             'street_name' => 'nullable|string|max:100',
             'purok' => 'nullable|string|max:50',
             'municipality' => 'nullable|string|max:100',
             'province' => 'nullable|string|max:100',
             'zip_code' => 'nullable|string|max:10',
-            'contact_number' => 'nullable|string|max:20',
+            'contact_number' => 'required|string|max:20',
             'telephone_no' => 'nullable|string|max:20',
             'email' => 'nullable|email',
             'emergency_contact_name' => 'nullable|string|max:100',
             'emergency_contact_relationship' => 'nullable|string|max:50',
             'emergency_contact_no' => 'nullable|string|max:20',
             'emergency_contact_address' => 'nullable|string|max:255',
-            'profile_image' => 'nullable|image|max:2048',
+            'profile_image' => 'nullable|image|max:10240',
+            'profile_image_base64' => 'nullable|string|max:10485760',
             'signature' => 'nullable|image|max:1024',
+            'signature_base64' => 'nullable|string|max:1048576',
             'is_head_of_family' => 'nullable|boolean',
         ]);
 
@@ -1019,6 +1153,15 @@ class ResidentController extends Controller
             ? strtoupper(trim($validated['middle_name']))
             : null;
         $validated['last_name'] = strtoupper(trim($validated['last_name']));
+
+        if ($this->findDuplicateResident($validated)) {
+            return redirect()->back()
+                ->withErrors([
+                    'first_name' => 'A resident with the same name and birth date already exists.',
+                ])
+                ->with('error', 'Duplicate resident detected. Please review the existing record before creating a new one.')
+                ->withInput();
+        }
 
         // Handle profile image upload
         $profileImagePath = null;
@@ -1040,9 +1183,9 @@ class ResidentController extends Controller
                         ->withInput();
                 }
                 
-                if ($file->getSize() > 2097152) {
+                if ($file->getSize() > 10485760) {
                     return redirect()->back()
-                        ->withErrors(['profile_image' => 'Profile image must be less than 2MB.'])
+                        ->withErrors(['profile_image' => 'Profile image must be less than 10MB.'])
                         ->withInput();
                 }
                 
@@ -1144,7 +1287,24 @@ class ResidentController extends Controller
             'gender' => $validated['gender'],
             'civil_status' => $validated['civil_status'],
             'nationality' => $validated['nationality'] ?? 'Filipino',
+            'special_sector' => $validated['special_sector'] ?? null,
             'blood_type' => $validated['blood_type'] ?? null,
+            'household_composition' => $validated['household_composition'] ?? null,
+            'height_cm' => $validated['height_cm'] ?? null,
+            'weight_kg' => $validated['weight_kg'] ?? null,
+            'religion' => $validated['religion'] ?? null,
+            'spouse_name' => $validated['spouse_name'] ?? null,
+            'children_names' => $validated['children_names'] ?? null,
+            'father_name' => $validated['father_name'] ?? null,
+            'mother_maiden_name' => $validated['mother_maiden_name'] ?? null,
+            'residency_type' => $validated['residency_type'] ?? null,
+            'tenure_status' => $validated['tenure_status'] ?? null,
+            'length_of_stay' => $validated['length_of_stay'] ?? null,
+            'registered_voter' => $validated['registered_voter'] ?? null,
+            'precinct_no' => $validated['precinct_no'] ?? null,
+            'occupation' => $validated['occupation'] ?? null,
+            'employment_type' => $validated['employment_type'] ?? null,
+            'economic_status' => $validated['economic_status'] ?? null,
             'house_no' => $validated['house_no'] ?? null,
             'street_name' => $validated['street_name'] ?? null,
             'purok' => $validated['purok'] ?? null,

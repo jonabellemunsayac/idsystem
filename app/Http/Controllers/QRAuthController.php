@@ -13,19 +13,25 @@ class QRAuthController extends Controller
      */
     public function authenticate($token)
     {
-        // Find the resident account by QR token
         $residentAccount = ResidentAccount::where('qr_token', $token)
             ->with('resident')
             ->firstOrFail();
 
-        // Create session for resident using the 'resident' guard
-        auth('resident')->login($residentAccount);
+        if (auth('resident')->check() && auth('resident')->id() === $residentAccount->id) {
+            $residentAccount->update(['last_login' => now()]);
+            return redirect()->route('resident.dashboard')->with('success', 'QR verified. Welcome back!');
+        }
 
-        // Update last login timestamp
-        $residentAccount->update(['last_login' => now()]);
+        session([
+            'resident_qr_auth' => [
+                'token' => $token,
+                'resident_account_id' => $residentAccount->id,
+                'username' => $residentAccount->username,
+                'resident_name' => $residentAccount->resident?->display_name,
+            ],
+        ]);
 
-        // Redirect to resident dashboard
-        return redirect()->route('resident.dashboard')->with('success', 'Welcome back!');
+        return redirect()->route('login')->with('status', 'QR code verified. Enter your password to continue to the resident portal.');
     }
 
     /**
