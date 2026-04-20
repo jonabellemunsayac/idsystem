@@ -33,7 +33,7 @@
                             <div id="preview-no-photo" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #6c757d; font-size: 12px; font-weight: 600; background: rgba(220,220,220,0.55);">NO PHOTO</div>
                         </div>
 
-                        <div style="position: absolute; left: 7%; top: 84.1%; width: 18.5%; height: 7.3%; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                        <div style="position: absolute; left: 7%; top: 81.8%; width: 18.5%; height: 6.2%; display: flex; align-items: center; justify-content: center; overflow: hidden;">
                             <img id="preview-signature" src="" alt="Signature" style="max-width: 100%; max-height: 100%; object-fit: contain; display: none;">
                         </div>
 
@@ -60,29 +60,29 @@
 
                         <!-- Top Section: Emergency Contact Info -->
                         <div style="padding: 12px 14px; position: relative; z-index: 1;">
-                            <div style="text-align: center; font-weight: bold; color: #fff; font-size: 1.05rem; letter-spacing: 0.5px; margin-bottom: 8px; line-height: 1.2;">IN CASE OF EMERGENCY, KINDLY NOTIFY:</div>
+                            <div style="text-align: center; font-weight: bold; color: #fff; font-size: 1.05rem; letter-spacing: 0.5px; margin-bottom: 12px; line-height: 1.2;">IN CASE OF EMERGENCY, KINDLY NOTIFY:</div>
                             
-                            <table style="width: 100%; font-size: 0.95rem; border-collapse: collapse; margin-bottom: 6px;">
-                                <tr style="line-height: 1.6;">
-                                    <td style="font-weight: bold; color: #000; width: 120px; padding: 0 4px 3px 0; text-align: right; white-space: nowrap;">NAME :</td>
-                                    <td style="color: #000; font-weight: bold; padding: 0 0 3px 4px; text-transform: uppercase;" id="preview-ec-name">_________________</td>
+                            <table style="width: 100%; font-size: 0.88rem; border-collapse: collapse; margin-bottom: 4px;">
+                                <tr style="line-height: 1.38;">
+                                    <td style="font-weight: bold; color: #000; width: 120px; padding: 0 4px 2px 0; text-align: right; white-space: nowrap;">NAME :</td>
+                                    <td style="color: #000; font-weight: bold; padding: 0 0 2px 4px; text-transform: uppercase;" id="preview-ec-name">_________________</td>
                                 </tr>
-                                <tr style="line-height: 1.6;">
-                                    <td style="font-weight: bold; color: #000; width: 120px; padding: 0 4px 3px 0; text-align: right; white-space: nowrap;">RELATION :</td>
-                                    <td style="color: #000; font-weight: bold; padding: 0 0 3px 4px; text-transform: uppercase;" id="preview-ec-relation">_________________</td>
+                                <tr style="line-height: 1.38;">
+                                    <td style="font-weight: bold; color: #000; width: 120px; padding: 0 4px 2px 0; text-align: right; white-space: nowrap;">RELATION :</td>
+                                    <td style="color: #000; font-weight: bold; padding: 0 0 2px 4px; text-transform: uppercase;" id="preview-ec-relation">_________________</td>
                                 </tr>
-                                <tr style="line-height: 1.6;">
-                                    <td style="font-weight: bold; color: #000; width: 120px; padding: 0 4px 3px 0; text-align: right; white-space: nowrap;">ADDRESS :</td>
-                                    <td style="color: #000; font-weight: bold; padding: 0 0 3px 4px; text-transform: uppercase; white-space: normal; overflow-wrap: anywhere; line-height: 1.24; letter-spacing: 0.45px; word-spacing: 0.75px;" id="preview-ec-address">_________________</td>
+                                <tr style="line-height: 1.38;">
+                                    <td style="font-weight: bold; color: #000; width: 120px; padding: 0 4px 2px 0; text-align: right; white-space: nowrap;">ADDRESS :</td>
+                                    <td style="color: #000; font-weight: bold; padding: 0 0 2px 4px; text-transform: uppercase; white-space: normal; overflow-wrap: anywhere; line-height: 1.18; letter-spacing: 0.28px; word-spacing: 0.42px;" id="preview-ec-address">_________________</td>
                                 </tr>
-                                <tr style="line-height: 1.6;">
+                                <tr style="line-height: 1.38;">
                                     <td style="font-weight: bold; color: #000; width: 120px; padding: 0 4px 0 0; text-align: right; white-space: nowrap;">CONTACT NO. :</td>
                                     <td style="color: #000; font-weight: bold; padding: 0 0 0 4px; text-transform: uppercase;" id="preview-ec-no">_________________</td>
                                 </tr>
                             </table>
 
                             <!-- Emergency Hotline Section -->
-                            <div style="text-align: center; font-weight: bold; color: #0038A8; font-size: 0.95rem; letter-spacing: 0.5px; margin-top: 5px; margin-bottom: 3px; line-height: 1.1;">EMERGENCY HOTLINE</div>
+                            <div style="text-align: center; font-weight: bold; color: #0038A8; font-size: 0.88rem; letter-spacing: 0.5px; margin-top: 4px; margin-bottom: 3px; line-height: 1.1;">EMERGENCY HOTLINE</div>
                             
                             <div style="display: flex; justify-content: center;">
                                 <table style="font-size: 0.75rem; border-collapse: collapse; margin-bottom: 2px;">
@@ -111,7 +111,7 @@
                         </div>
 
                         <!-- IF FOUND Text - Bottom Section -->
-                        <div style="position: absolute; bottom: 3px; left: 10px; right: 10px; text-align: center; z-index: 2;">
+                        <div style="position: absolute; bottom: 6px; left: 10px; right: 10px; text-align: center; z-index: 2;">
                             <div style="font-size: 0.5rem; color: #666; line-height: 1.2;">
                                 IF FOUND, PLEASE RETURN TO KALAWAAN BARANGAY HALL INFORMATION CENTER
                             </div>
@@ -776,7 +776,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 sectorFontSettings.maxChars
             );
             const statusFont = fitFontSize(statusPrint, 6, 4.4, 12);
-            const ecAddressFont = fitFontSize(ecAddressPrint, 10, 7.2, 32);
+            const ecAddressFont = fitFontSize(ecAddressPrint, 9, 6.6, 32);
             const validityFont = fitFontSize(validityPrint, 3.3, 2.1, 27);
             const printNameStyle = 'font-family: "Arial Black", "Segoe UI", Arial, sans-serif; color: #0a1f4d; text-shadow: 0 0 1.2px rgba(255,255,255,0.95), 0 0 0.6px rgba(255,255,255,0.9);';
             const printValueStyle = 'font-family: "Segoe UI", Arial, sans-serif; color: #101828; text-shadow: 0 0 1px rgba(255,255,255,0.95), 0 0 0.4px rgba(255,255,255,0.9);';
@@ -801,7 +801,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                                 <div style="position: absolute; left: 7%; top: 73.4%; width: 18.2%; text-align: center; font-size: 4px; font-weight: 900; white-space: nowrap; overflow: hidden; letter-spacing: 0.2px; ${printStrongStyle}">${idNumberPrint}</div>
 
-                                <div style="position: absolute; left: 7%; top: 80%; width: 23%; height: 15%; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                                <div style="position: absolute; left: 7%; top: 77.4%; width: 23%; height: 12.8%; display: flex; align-items: center; justify-content: center; overflow: hidden;">
                                     ${signatureSrc ? `<img src="${signatureSrc}" alt="Signature" style="max-width: 100%; max-height: 100%; object-fit: contain;">` : ''}
                                 </div>
 
@@ -815,29 +815,29 @@ document.addEventListener('DOMContentLoaded', function() {
         const backCardHTML = `
                             <div class="id-card">
                                 <img src="${backTemplateSrc}" alt="Back Template" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
-                <div style="padding: 12px 14px; position: relative; z-index: 1;">
-                  <div style="text-align: center; font-weight: bold; color: #fff; font-size: 11px; letter-spacing: 0.5px; margin-bottom: 8px; line-height: 1.2;">IN CASE OF EMERGENCY, KINDLY NOTIFY:</div>
+                                <div style="padding: 12px 14px; position: relative; z-index: 1;">
+                                    <div style="text-align: center; font-weight: bold; color: #fff; font-size: 11px; letter-spacing: 0.5px; margin-bottom: 12px; line-height: 1.2;">IN CASE OF EMERGENCY, KINDLY NOTIFY:</div>
                   
-                  <table style="width: 100%; font-size: 10px; border-collapse: collapse; margin-bottom: 6px;">
-                    <tr style="line-height: 1.6;">
+                                    <table style="width: 100%; font-size: 9px; border-collapse: collapse; margin-bottom: 4px;">
+                                        <tr style="line-height: 1.38;">
                       <td style="font-weight: bold; color: #000; width: 85px; padding: 0 4px 3px 0; text-align: right; white-space: nowrap;">NAME :</td>
                       <td style="color: #000; font-weight: bold; padding: 0 0 3px 4px; text-transform: uppercase;">${currentResident.emergency_contact_name || '_________________'}</td>
                     </tr>
-                    <tr style="line-height: 1.6;">
+                                        <tr style="line-height: 1.38;">
                       <td style="font-weight: bold; color: #000; width: 85px; padding: 0 4px 3px 0; text-align: right; white-space: nowrap;">RELATION :</td>
                       <td style="color: #000; font-weight: bold; padding: 0 0 3px 4px; text-transform: uppercase;">${currentResident.emergency_contact_relationship || '_________________'}</td>
                     </tr>
-                    <tr style="line-height: 1.6;">
+                                        <tr style="line-height: 1.38;">
                       <td style="font-weight: bold; color: #000; width: 85px; padding: 0 4px 3px 0; text-align: right; white-space: nowrap;">ADDRESS :</td>
-                                            <td style="color: #000; font-weight: bold; padding: 0 0 3px 4px; text-transform: uppercase; font-size: ${ecAddressFont}px; white-space: normal; overflow-wrap: anywhere; line-height: 1.24; letter-spacing: 0.45px; word-spacing: 0.75px;">${ecAddressPrint || '_________________'}</td>
+                                                                                        <td style="color: #000; font-weight: bold; padding: 0 0 3px 4px; text-transform: uppercase; font-size: ${ecAddressFont}px; white-space: normal; overflow-wrap: anywhere; line-height: 1.18; letter-spacing: 0.28px; word-spacing: 0.42px;">${ecAddressPrint || '_________________'}</td>
                     </tr>
-                    <tr style="line-height: 1.6;">
+                                        <tr style="line-height: 1.38;">
                       <td style="font-weight: bold; color: #000; width: 85px; padding: 0 4px 0 0; text-align: right; white-space: nowrap;">CONTACT NO. :</td>
                       <td style="color: #000; font-weight: bold; padding: 0 0 0 4px; text-transform: uppercase;">${currentResident.emergency_contact_no || '_________________'}</td>
                     </tr>
                   </table>
 
-                  <div style="text-align: center; font-weight: bold; color: #0038A8; font-size: 10px; letter-spacing: 0.5px; margin-top: 5px; margin-bottom: 3px; line-height: 1.1;">EMERGENCY HOTLINE</div>
+                                    <div style="text-align: center; font-weight: bold; color: #0038A8; font-size: 9px; letter-spacing: 0.5px; margin-top: 4px; margin-bottom: 3px; line-height: 1.1;">EMERGENCY HOTLINE</div>
                   
                   <div style="display: flex; justify-content: center;">
                     <table style="font-size: 8px; border-collapse: collapse; margin-bottom: 2px;">
@@ -866,7 +866,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
 
                 <!-- IF FOUND Text - Bottom Section -->
-                <div style="position: absolute; bottom: 5px; left: 10px; right: 10px; text-align: center; z-index: 2;">
+                                                                <div style="position: absolute; bottom: 6px; left: 10px; right: 10px; text-align: center; z-index: 2;">
                   <div style="font-size: 5px; color: #666; line-height: 1.2;">
                     IF FOUND, PLEASE RETURN TO KALAWAAN BARANGAY HALL INFORMATION CENTER
                   </div>
