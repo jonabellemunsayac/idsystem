@@ -1043,24 +1043,48 @@ class ResidentController extends Controller
 
     public function destroy(Resident $resident)
     {
-        // Delete profile image if exists
-        if ($resident->profile_image) {
-            $imagePath = storage_path('app/public/' . $resident->profile_image);
-            if (file_exists($imagePath)) {
-                unlink($imagePath);
+        DB::transaction(function () use ($resident) {
+
+            $residentName = "{$resident->first_name} {$resident->last_name}";
+            $residentId   = $resident->id;
+
+            // Get clan before deleting resident
+            $clan = $resident->clan;
+
+            // Delete profile image
+            if ($resident->profile_image) {
+                $imagePath = storage_path('app/public/' . $resident->profile_image);
+                if (file_exists($imagePath)) {
+                    unlink($imagePath);
+                }
             }
-        }
 
-        $residentName = "{$resident->first_name} {$resident->last_name}";
-        $residentId = $resident->id;
+            // Delete signature
+            if ($resident->signature) {
+                $signaturePath = storage_path('app/public/' . $resident->signature);
+                if (file_exists($signaturePath)) {
+                    unlink($signaturePath);
+                }
+            }
 
-        ResidentAccount::where('resident_id', $resident->id)->delete();
-        $resident->delete();
+            // Delete resident account
+            ResidentAccount::where('resident_id', $resident->id)->delete();
 
-        // Log the deletion
-        ActivityLogger::logResidentAccount('deleted', $residentName, $residentId);
+            // Delete resident
+            $resident->delete();
 
-        return redirect()->route('residents.index')->with('success', 'Resident deleted successfully!');
+            // Delete clan also
+            if ($clan && $clan->residents()->count() == 0) {
+                $clan->delete();
+            }
+
+            // Log deletion
+            ActivityLogger::logResidentAccount('deleted', $residentName, $residentId);
+        });
+
+        return redirect()
+            ->route('residents.index')
+            ->with('success', 'Resident and clan deleted successfully!');
     }
 
     /**
