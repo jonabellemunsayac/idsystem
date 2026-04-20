@@ -97,6 +97,11 @@
                     </div>
 
                     <div class="col-md-4">
+                        <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Barangay</label>
+                        <input type="text" class="form-control form-control-sm" name="barangay" value="{{ old('barangay', $resident['barangay'] ?? 'Kalawaan') }}" readonly style="font-size: 0.8rem;">
+                    </div>
+
+                    <div class="col-md-4">
                         <label for="blood_type" class="form-label" style="font-size: 0.65rem;">Blood Type</label>
                         <select class="form-select form-select-sm @error('blood_type') is-invalid @enderror" id="blood_type" name="blood_type" style="font-size: 0.8rem;">
                             <option value="">Select Blood Type</option>
