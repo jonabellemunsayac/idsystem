@@ -847,6 +847,15 @@ class ResidentController extends Controller
             : null;
         $validated['last_name'] = strtoupper(trim($validated['last_name']));
 
+        if ($this->findDuplicateResident($validated)) {
+            return redirect()->back()
+                ->withErrors([
+                    'first_name' => 'A resident with the same name and birth date already exists.',
+                ])
+                ->with('error', 'Duplicate resident detected. Please review the existing record before creating a new one.')
+                ->withInput();
+        }
+
         if ($request->hasFile('profile_image')) {
             try {
                 $file = $request->file('profile_image');
