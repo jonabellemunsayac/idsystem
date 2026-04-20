@@ -146,18 +146,30 @@
         <form action="{{ route('residents.store') }}" method="POST" enctype="multipart/form-data" onsubmit="return confirmResidentSave(this)">
             @csrf
 
+            @if ($errors->has('first_name'))
+                <div class="alert alert-danger mb-2" role="alert" style="font-size: 0.75rem; padding: 0.4rem 0.6rem;">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    {{ $errors->first('first_name') }}
+                </div>
+            @endif
+
+            <div id="duplicate-resident-warning" class="alert alert-warning mb-2 d-none" role="alert" style="font-size: 0.75rem; padding: 0.4rem 0.6rem;">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <span id="duplicate-resident-message"></span>
+            </div>
+
             <div class="row g-2 mb-2">
                 <div class="col-md-4">
                     <label class="form-label text-muted small text-uppercase fw-bold required-field" style="font-size: 0.6rem;">First Name</label>
-                    <input type="text" class="form-control form-control-sm" name="first_name" required style="font-size: 0.8rem;">
+                    <input type="text" class="form-control form-control-sm @error('first_name') is-invalid @enderror" name="first_name" value="{{ old('first_name') }}" required style="font-size: 0.8rem;">
                 </div>
                 <div class="col-md-4">
                     <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Middle Name</label>
-                    <input type="text" class="form-control form-control-sm" name="middle_name" style="font-size: 0.8rem;">
+                    <input type="text" class="form-control form-control-sm" name="middle_name" value="{{ old('middle_name') }}" style="font-size: 0.8rem;">
                 </div>
                 <div class="col-md-4">
                     <label class="form-label text-muted small text-uppercase fw-bold required-field" style="font-size: 0.6rem;">Last Name</label>
-                    <input type="text" class="form-control form-control-sm" name="last_name" required style="font-size: 0.8rem;">
+                    <input type="text" class="form-control form-control-sm" name="last_name" value="{{ old('last_name') }}" required style="font-size: 0.8rem;">
                 </div>
                 <div class="col-md-4">
                     <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Suffix <span class="text-muted">(Optional)</span></label>
@@ -254,12 +266,16 @@
                     <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Blood Type <span class="text-muted">(Optional)</span></label>
                     <select class="form-select form-select-sm" name="blood_type" style="font-size: 0.8rem;">
                         <option value="">Select...</option>
+                        <option value="A">A</option>
                         <option value="A+">A+</option>
                         <option value="A-">A-</option>
+                        <option value="B">B</option>
                         <option value="B+">B+</option>
                         <option value="B-">B-</option>
+                        <option value="AB">AB</option>
                         <option value="AB+">AB+</option>
                         <option value="AB-">AB-</option>
+                        <option value="O">O</option>
                         <option value="O+">O+</option>
                         <option value="O-">O-</option>
                     </select>
@@ -390,6 +406,7 @@
                     <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Street Name</label>
                     <select class="form-select form-select-sm address-field" name="street_name" style="font-size: 0.8rem;">
                         <option value="">Select Street...</option>
+                        <option value="AV. Cruz St">AV. Cruz St</option>
                         <option value="A.V Jimenez St">A.V Jimenez St</option>
                         <option value="AB. Kamagong">AB. Kamagong</option>
                         <option value="Acacia St">Acacia St</option>
@@ -409,6 +426,7 @@
                         <option value="Carnation St">Carnation St</option>
                         <option value="Casoy St">Casoy St</option>
                         <option value="Castillo St">Castillo St</option>
+                        <option value="Champaca St">Champaca St</option>
                         <option value="Chico St">Chico St</option>
                         <option value="Christian-Muslim Sarinas Comp.">Christian-Muslim Sarinas Comp.</option>
                         <option value="D.M Tuazon St">D.M Tuazon St</option>
@@ -454,10 +472,12 @@
                         <option value="Pag Asa St">Pag Asa St</option>
                         <option value="Papaya St">Papaya St</option>
                         <option value="Paulino St">Paulino St</option>
+                        <option value="Paulino-Bornay St">Paulino-Bornay St</option>
                         <option value="Pinya St">Pinya St</option>
                         <option value="R. Castillo St">R. Castillo St</option>
                         <option value="R.Tatco St">R.Tatco St</option>
                         <option value="Rambutan St">Rambutan St</option>
+                        <option value="Red Palm St">Red Palm St</option>
                         <option value="Rose St">Rose St</option>
                         <option value="S. Cuevas St">S. Cuevas St</option>
                         <option value="Sampaloc St">Sampaloc St</option>
@@ -919,6 +939,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const residentForm = document.querySelector('form[action="{{ route('residents.store') }}"]');
     const saveResidentBtn = document.getElementById('save-resident-btn');
+    const duplicateWarning = document.getElementById('duplicate-resident-warning');
+    const duplicateMessage = document.getElementById('duplicate-resident-message');
+    const duplicateCheckUrl = "{{ route('residents.check-duplicate') }}";
+    const firstNameField = residentForm?.querySelector('input[name="first_name"]');
+    const middleNameField = residentForm?.querySelector('input[name="middle_name"]');
+    const lastNameField = residentForm?.querySelector('input[name="last_name"]');
+    const suffixField = residentForm?.querySelector('select[name="suffix"]');
+    let duplicateCheckToken = 0;
 
     if (residentForm && saveResidentBtn) {
         saveResidentBtn.addEventListener('click', function() {
@@ -938,6 +966,95 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         });
+
+        function setDuplicateWarningState(hasDuplicate, message = '') {
+            if (!duplicateWarning || !duplicateMessage) {
+                return;
+            }
+
+            duplicateWarning.classList.toggle('d-none', !hasDuplicate);
+            duplicateMessage.textContent = hasDuplicate ? message : '';
+            saveResidentBtn.disabled = hasDuplicate;
+            saveResidentBtn.title = hasDuplicate ? 'Resolve duplicate resident warning before saving.' : '';
+        }
+
+        function getDuplicatePayload() {
+            return {
+                first_name: firstNameField?.value.trim() ?? '',
+                middle_name: middleNameField?.value.trim() ?? '',
+                last_name: lastNameField?.value.trim() ?? '',
+                suffix: suffixField?.value ?? '',
+                birth_date: birthDateInput?.value ?? '',
+            };
+        }
+
+        function isDuplicateCheckReady(payload) {
+            return payload.first_name !== '' && payload.last_name !== '' && payload.birth_date !== '';
+        }
+
+        async function checkResidentDuplicate() {
+            const payload = getDuplicatePayload();
+
+            if (!isDuplicateCheckReady(payload)) {
+                setDuplicateWarningState(false);
+                return;
+            }
+
+            const requestToken = ++duplicateCheckToken;
+            const query = new URLSearchParams(payload);
+
+            try {
+                const response = await fetch(`${duplicateCheckUrl}?${query.toString()}`, {
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error('Duplicate check request failed.');
+                }
+
+                const data = await response.json();
+
+                if (requestToken !== duplicateCheckToken) {
+                    return;
+                }
+
+                if (data.exists && data.resident) {
+                    const message = `${data.resident.display_name} with birth date ${data.resident.birth_date} already exists. Please review the existing record before saving.`;
+                    setDuplicateWarningState(true, message);
+                    firstNameField?.classList.add('is-invalid');
+                } else {
+                    setDuplicateWarningState(false);
+                    firstNameField?.classList.remove('is-invalid');
+                }
+            } catch (error) {
+                if (requestToken !== duplicateCheckToken) {
+                    return;
+                }
+
+                setDuplicateWarningState(false);
+            }
+        }
+
+        [firstNameField, middleNameField, lastNameField].forEach(field => {
+            field?.addEventListener('blur', checkResidentDuplicate);
+            field?.addEventListener('mouseup', checkResidentDuplicate);
+        });
+
+        [suffixField, birthYearSelect, birthMonthSelect, birthDaySelect].forEach(field => {
+            field?.addEventListener('change', checkResidentDuplicate);
+            field?.addEventListener('blur', checkResidentDuplicate);
+        });
+
+        residentForm.addEventListener('submit', function(event) {
+            if (saveResidentBtn.disabled) {
+                event.preventDefault();
+            }
+        });
+
+        checkResidentDuplicate();
     }
     
     // Auto-fill full address from address components
@@ -1126,6 +1243,8 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Initialize Cropper
             const image = modal.querySelector('#crop-image');
+            const brightnessSlider = modal.querySelector('#crop-brightness');
+            const brightnessValue = modal.querySelector('#crop-brightness-value');
             const cropper = new Cropper(image, {
                 aspectRatio: 5 / 6,
                 viewMode: 1,
@@ -1134,14 +1253,64 @@ document.addEventListener('DOMContentLoaded', function() {
                 background: false,
             });
 
+            function applyBrightnessToCropperPreview(brightness) {
+                modal.querySelectorAll('.cropper-container img').forEach((cropperImage) => {
+                    cropperImage.style.filter = `brightness(${brightness}%)`;
+                });
+            }
+
+            function updateBrightnessPreview() {
+                const brightness = Number(brightnessSlider.value || 100);
+                image.style.filter = `brightness(${brightness}%)`;
+                applyBrightnessToCropperPreview(brightness);
+                brightnessValue.textContent = `${brightness}%`;
+            }
+
+            brightnessSlider.addEventListener('input', updateBrightnessPreview);
+
+            image.addEventListener('ready', updateBrightnessPreview, { once: true });
+
+            function applyBrightnessToCanvas(sourceCanvas, brightness) {
+                if (brightness === 100) {
+                    return sourceCanvas;
+                }
+
+                const adjustedCanvas = document.createElement('canvas');
+                adjustedCanvas.width = sourceCanvas.width;
+                adjustedCanvas.height = sourceCanvas.height;
+
+                const adjustedContext = adjustedCanvas.getContext('2d');
+                adjustedContext.drawImage(sourceCanvas, 0, 0);
+
+                const imageData = adjustedContext.getImageData(0, 0, adjustedCanvas.width, adjustedCanvas.height);
+                const factor = brightness / 100;
+                const data = imageData.data;
+
+                for (let index = 0; index < data.length; index += 4) {
+                    data[index] = Math.min(255, Math.round(data[index] * factor));
+                    data[index + 1] = Math.min(255, Math.round(data[index + 1] * factor));
+                    data[index + 2] = Math.min(255, Math.round(data[index + 2] * factor));
+                }
+
+                adjustedContext.putImageData(imageData, 0, 0);
+
+                return adjustedCanvas;
+            }
+
+            setTimeout(updateBrightnessPreview, 50);
+
             // Handle Apply
             const cropApply = modal.querySelector('#crop-apply');
             cropApply.addEventListener('click', function() {
-                cropper.getCroppedCanvas({
+                const brightness = Number(brightnessSlider.value || 100);
+                const croppedCanvas = cropper.getCroppedCanvas({
                     width: 300,
                     height: 360,
                     imageSmoothingQuality: 'high',
-                }).toBlob((blob) => {
+                });
+                const outputCanvas = applyBrightnessToCanvas(croppedCanvas, brightness);
+
+                outputCanvas.toBlob((blob) => {
                     // Create a new file from the blob
                     const croppedFile = new File([blob], "profile_photo.jpg", { type: "image/jpeg" });
                     
@@ -1191,6 +1360,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="modal-body">
                         <div class="img-container" style="max-height: 60vh; overflow: hidden;">
                             <img id="crop-image" src="${imageSrc}" style="max-width: 100%; display: block;">
+                        </div>
+                        <div class="mt-3">
+                            <label for="crop-brightness" class="form-label fw-semibold mb-1">Brightness</label>
+                            <div class="d-flex align-items-center gap-2">
+                                <input type="range" class="form-range m-0" id="crop-brightness" min="50" max="150" value="100" step="1">
+                                <span id="crop-brightness-value" class="text-muted small" style="min-width: 48px;">100%</span>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
