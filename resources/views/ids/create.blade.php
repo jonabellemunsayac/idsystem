@@ -34,23 +34,33 @@
                         <div id="preview-no-photo" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #6c757d; font-size: 1.2cqw; font-weight: 600; background: rgba(220,220,220,0.55);">NO PHOTO</div>
                       </div>
 
+                      <div style="position: absolute; left: 6.7%; top: 71.6%; width: 18.8%; text-align: center; font-size: 1.42cqw; font-weight: 900; color: #111; letter-spacing: 0.05em; white-space: nowrap; overflow: hidden; text-overflow: clip;">
+                        <span id="preview-id-no">PENDING</span>
+                      </div>
+
+                      <div style="position: absolute; left: 7%; top: 78.8%; width: 18.5%; display: flex; justify-content: center; align-items: center;">
+                        <div style="position: relative; width: 100%; height: 7cqw;">
+                            <div style="position: absolute; left: 0; right: 0; bottom: 0.55cqw; border-top: 0.16cqw solid #111;"></div>
+                            <img id="preview-signature" src="" alt="Signature" style="position: absolute; left: 50%; bottom: 0.95cqw; transform: translateX(-50%); z-index: 1; max-width: 100%; max-height: 5.1cqw; object-fit: contain; display: none; margin: 0 auto; background: transparent;">
+                        </div>
+                      </div>
+
                       <!-- Dynamic text overlays -->
-                      <div id="preview-name" style="position: absolute; left: 29%; top: 31.6%; width: 65%; font-size: 2.7cqw; font-weight: 800; line-height: 1.1; text-transform: uppercase; color: #111;">-</div>
-                      <div id="preview-address" style="position: absolute; left: 29.4%; top: 43.8%; width: 64.5%; font-size: 1.5cqw; font-weight: 700; line-height: 1.2; color: #111;">-</div>
+                      <div id="preview-name" style="position: absolute; left: 29%; top: 32.3%; width: 65%; font-size: 3.08cqw; font-weight: 900; line-height: 1.03; text-transform: uppercase; color: #111; white-space: nowrap; overflow: hidden; text-overflow: clip;">-</div>
+                      <div id="preview-address" style="position: absolute; left: 29.4%; top: 47.7%; width: 64.5%; height: 11.3%; font-size: 1.72cqw; font-weight: 900; line-height: 1.03; color: #111; text-transform: uppercase; white-space: normal; overflow: hidden; overflow-wrap: anywhere; word-break: break-word;">-</div>
 
-                      <div id="preview-dob" style="position: absolute; left: 29%; top: 56.8%; width: 17%; font-size: 1.42cqw; font-weight: 700; color: #111;">-</div>
-                      <div id="preview-pob" style="position: absolute; left: 43.5%; top: 56.8%; width: 20%; font-size: 1.42cqw; font-weight: 700; color: #111;">-</div>
-                      <div id="preview-nationality" style="position: absolute; left: 59.6%; top: 56.8%; width: 13.5%; font-size: 1.42cqw; font-weight: 700; color: #111;">-</div>
-                      <div id="preview-sex" style="position: absolute; left: 74%; top: 56.8%; width: 7%; font-size: 1.42cqw; font-weight: 700; color: #111;">-</div>
-                      <div id="preview-status" style="position: absolute; left: 80.4%; top: 56.8%; width: 14%; font-size: 1.42cqw; font-weight: 700; color: #111;">-</div>
+                      <div id="preview-dob" style="position: absolute; left: 29.6%; top: 60.1%; width: 12.8%; height: 4.4%; display: flex; align-items: flex-end; justify-content: flex-start; font-size: 1.36cqw; font-weight: 800; line-height: 1; color: #111; white-space: nowrap; overflow: hidden; text-overflow: clip;">-</div>
+                      <div id="preview-pob" style="position: absolute; left: 43%; top: 60.1%; width: 15.5%; height: 4.4%; display: flex; align-items: flex-end; justify-content: center; font-size: 1.28cqw; font-weight: 800; line-height: 1; color: #111; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: clip;">-</div>
+                      <div id="preview-status" style="position: absolute; left: 59.4%; top: 60.1%; width: 13.9%; height: 4.4%; display: flex; align-items: flex-end; justify-content: center; font-size: 1.24cqw; font-weight: 800; line-height: 1; color: #111; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: clip;">-</div>
+                      <div id="preview-nationality" style="position: absolute; left: 74%; top: 60.1%; width: 8.8%; height: 4.4%; display: flex; align-items: flex-end; justify-content: center; font-size: 1.2cqw; font-weight: 800; line-height: 1; color: #111; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: clip;">-</div>
+                      <div id="preview-sex" style="position: absolute; left: 84%; top: 60.1%; width: 9.2%; height: 4.4%; display: flex; align-items: flex-end; justify-content: center; font-size: 1.2cqw; font-weight: 800; line-height: 1; color: #111; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: clip;">-</div>
 
-                      <div id="preview-sector" style="position: absolute; left: 29%; top: 67.4%; width: 18%; font-size: 1.42cqw; font-weight: 700; color: #111;">-</div>
-                      <div id="preview-id-no" style="position: absolute; left: 9.9%; top: 72.3%; width: 16.4%; font-size: 2.1cqw; font-weight: 800; text-align: center; color: #111;">-</div>
-                      <div id="preview-validity" style="position: absolute; left: 79.6%; top: 93%; width: 14%; font-size: 1.42cqw; font-weight: 800; text-align: center; color: #111;">-</div>
+                      <div id="preview-sector" style="position: absolute; left: 29%; top: 67.2%; width: 18%; height: 4.4%; display: flex; align-items: flex-end; justify-content: flex-start; font-size: 1.34cqw; font-weight: 800; color: #111; white-space: nowrap; overflow: hidden; text-overflow: clip;">-</div>
                     </div>
 
                     <!-- BACK PREVIEW -->
                     <div class="id-card-preview position-relative overflow-hidden shadow-sm" style="aspect-ratio: 1.586/1; background-color: #f8f9fa; border-radius: 8px; container-type: inline-size;">
+                        <img src="{{ asset('images/back-id.png') }}" alt="ID Back Template" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;">
                         <!-- Top Section: Emergency Contact Info -->
                         <div style="padding: 3.5cqw 4cqw; position: relative; z-index: 1;">
                             <div style="text-align: center; font-weight: bold; color: #CE1126; font-size: 2cqw; letter-spacing: 0.1em; margin-bottom: 2.5cqw; line-height: 1.2;">IN CASE OF EMERGENCY,<br>KINDLY NOTIFY:</div>
@@ -95,7 +105,7 @@
                             <div class="bg-white p-1 rounded" style="width: 20cqw; height: 20cqw; display: flex; align-items: center; justify-content: center; border: 0.3cqw solid #000;">
                                 <img id="preview-qr" alt="QR Code" style="width: 100%; height: 100%; object-fit: contain;">
                             </div>
-                            <div id="preview-id-no-back" class="font-monospace fw-bold text-center" style="font-size: 1.2cqw; letter-spacing: 0.1em; color: #212529; width: 20cqw; margin-top: 0.5cqw;">VALID UNTIL</div>
+                            <div id="preview-validity" class="fw-bold text-center" style="font-size: 1.45cqw; line-height: 1.15; color: #212529; width: 20cqw; margin-top: 0.9cqw; white-space: normal;">VALID UNTIL</div>
                         </div>
                     </div>
                 </div>
@@ -184,12 +194,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const previewSector = document.getElementById('preview-sector');
     const previewAddress = document.getElementById('preview-address');
     const previewIdNo = document.getElementById('preview-id-no');
+    const previewSignature = document.getElementById('preview-signature');
     const previewEcName = document.getElementById('preview-ec-name');
     const previewEcAddress = document.getElementById('preview-ec-address');
     const previewEcNo = document.getElementById('preview-ec-no');
     const previewQr = document.getElementById('preview-qr');
     const previewValidity = document.getElementById('preview-validity');
-    const previewIdNoBack = document.getElementById('preview-id-no-back');
 
     let currentResident = null;
     let currentID = null;
@@ -266,7 +276,7 @@ document.addEventListener('DOMContentLoaded', function() {
       previewName.textContent = `${resident.last_name || ''}, ${resident.first_name || ''} ${resident.middle_name || ''}${suffix}`.trim();
       previewDob.textContent = resident.birth_date || '-';
       previewPob.textContent = resident.birth_place || resident.place_of_birth || '-';
-        previewSex.textContent = resident.gender || '-';
+        previewSex.textContent = resident.gender ? resident.gender.toUpperCase() : '-';
         previewNationality.textContent = resident.nationality || 'FILIPINO';
         previewStatus.textContent = resident.civil_status || '-';
       previewSector.textContent = resident.special_sector || '-';
@@ -291,18 +301,24 @@ document.addEventListener('DOMContentLoaded', function() {
           previewNoPhoto.style.display = 'flex';
         }
 
+        if (resident.signature) {
+            previewSignature.src = `/storage/${resident.signature}`;
+            previewSignature.style.display = 'block';
+        } else {
+            previewSignature.src = '';
+            previewSignature.style.display = 'none';
+        }
+
         if (idData) {
             previewIdNo.textContent = idData.id_number;
             if (idData.qr_code) {
                 previewQr.src = idData.qr_code;
             }
             previewValidity.textContent = `VALID UNTIL ${idData.expiration_date}`;
-            previewIdNoBack.textContent = `VALID UNTIL ${idData.expiration_date}`;
         } else {
             previewIdNo.textContent = 'PENDING';
             previewQr.src = '';
             previewValidity.textContent = 'VALID UNTIL -';
-            previewIdNoBack.textContent = 'VALID UNTIL';
         }
     }
 
@@ -360,7 +376,31 @@ document.addEventListener('DOMContentLoaded', function() {
         const placeOfBirth = currentResident.birth_place || currentResident.place_of_birth || '-';
         const sector = currentResident.special_sector || '-';
         const templateImage = @json(asset('images/id-template-blank.png'));
+        const backTemplateImage = @json(asset('images/back-id.png'));
 
+        async function getImageBase64(url) {
+            if (!url) return '';
+            try {
+                const response = await fetch(url);
+                const blob = await response.blob();
+                return await new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => resolve(reader.result);
+                    reader.readAsDataURL(blob);
+                });
+            } catch (error) {
+                console.error('Error loading image for print:', error);
+                return url;
+            }
+        }
+
+        Promise.all([
+            getImageBase64(templateImage),
+            getImageBase64(backTemplateImage),
+            getImageBase64(currentResident.profile_image ? `/storage/${currentResident.profile_image}` : ''),
+            getImageBase64(currentResident.signature ? `/storage/${currentResident.signature}` : ''),
+            getImageBase64(currentID.qr_code || '')
+        ]).then(([frontTemplateSrc, backTemplateSrc, photoSrc, signatureSrc, qrSrc]) => {
         const idCardHTML = `
           <!DOCTYPE html>
           <html>
@@ -369,6 +409,7 @@ document.addEventListener('DOMContentLoaded', function() {
               <title>Barangay ID Card - ${currentResident.first_name} ${currentResident.last_name}</title>
               <style>
                 * { margin: 0; padding: 0; box-sizing: border-box; }
+                html, body { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
                 body { font-family: Arial, sans-serif; background: #f0f0f0; display: flex; flex-direction: column; align-items: center; padding: 20px; }
                 .page-container { display: flex; flex-direction: column; gap: 30px; margin-bottom: 20px; }
                 .id-card { position: relative; width: 3.375in; height: 2.125in; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.2); display: flex; flex-direction: column; }
@@ -376,17 +417,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 .front-card { background: #f4f4f4; }
                 .front-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
                 .front-photo { position: absolute; left: 6.2%; top: 29.5%; width: 19.5%; height: 40%; object-fit: cover; border-radius: 8px; background: #d8d8d8; }
-                .front-text { position: absolute; color: #111; font-weight: 700; line-height: 1.15; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-                .f-name { left: 29%; top: 31.6%; width: 65%; font-size: 12px; font-weight: 800; text-transform: uppercase; }
-                .f-address { left: 29.4%; top: 43.8%; width: 64.5%; font-size: 8px; }
-                .f-dob { left: 29%; top: 56.8%; width: 17%; font-size: 8px; }
-                .f-pob { left: 43.5%; top: 56.8%; width: 20%; font-size: 8px; }
-                .f-nationality { left: 59.6%; top: 56.8%; width: 13.5%; font-size: 8px; }
-                .f-sex { left: 74%; top: 56.8%; width: 7%; font-size: 8px; }
-                .f-status { left: 80.4%; top: 56.8%; width: 14%; font-size: 8px; }
-                .f-sector { left: 29%; top: 67.4%; width: 18%; font-size: 8px; }
-                .f-id { left: 9.9%; top: 72.3%; width: 16.4%; text-align: center; font-size: 11px; font-weight: 800; }
-                .f-validity { left: 79.6%; top: 93%; width: 14%; text-align: center; font-size: 8px; font-weight: 800; }
+                .front-text { position: absolute; color: #111; font-weight: 800; line-height: 1.05; overflow: hidden; }
+                .f-name { left: 29%; top: 32.3%; width: 65%; font-size: 13.5px; font-weight: 900; text-transform: uppercase; white-space: nowrap; }
+                .f-address { left: 29.4%; top: 47.7%; width: 64.5%; height: 11.3%; font-size: 8.8px; font-weight: 900; text-transform: uppercase; white-space: normal; overflow-wrap: anywhere; word-break: break-word; }
+                .f-dob { left: 29.6%; top: 60.1%; width: 12.8%; height: 4.4%; display: flex; align-items: flex-end; justify-content: flex-start; font-size: 7.8px; white-space: nowrap; }
+                .f-pob { left: 43%; top: 60.1%; width: 15.5%; height: 4.4%; display: flex; align-items: flex-end; justify-content: center; font-size: 7.2px; text-align: center; white-space: nowrap; }
+                .f-status { left: 59.4%; top: 60.1%; width: 13.9%; height: 4.4%; display: flex; align-items: flex-end; justify-content: center; font-size: 7px; text-align: center; white-space: nowrap; }
+                .f-nationality { left: 74%; top: 60.1%; width: 8.8%; height: 4.4%; display: flex; align-items: flex-end; justify-content: center; font-size: 6.8px; text-align: center; white-space: nowrap; }
+                .f-sex { left: 84%; top: 60.1%; width: 9.2%; height: 4.4%; display: flex; align-items: flex-end; justify-content: center; font-size: 6.8px; text-align: center; white-space: nowrap; }
+                .f-sector { left: 29%; top: 67.2%; width: 18%; height: 4.4%; display: flex; align-items: flex-end; justify-content: flex-start; font-size: 7.6px; white-space: nowrap; }
+                .f-id { left: 6.7%; top: 71.6%; width: 18.8%; text-align: center; font-size: 8px; font-weight: 900; letter-spacing: 0.05em; white-space: nowrap; }
+                .f-signature-wrap { position: absolute; left: 7%; top: 78.8%; width: 18.5%; display: flex; justify-content: center; align-items: center; }
+                .f-signature-line { position: relative; width: 100%; height: 18px; }
+                .f-signature-line::after { content: ''; position: absolute; left: 0; right: 0; bottom: 2px; border-top: 1px solid #111; }
+                .f-signature { position: absolute; left: 50%; bottom: 4px; transform: translateX(-50%); z-index: 1; max-width: 100%; max-height: 13px; object-fit: contain; display: block; margin: 0 auto; }
 
                 .back-header { background-color: #0f2741; color: white; padding: 8px; text-align: center; font-size: 11px; font-weight: bold; letter-spacing: 1px; }
                 .back-body { flex: 1; padding: 12px 14px; display: flex; gap: 14px; background-color: #1a3a5c; }
@@ -406,7 +450,7 @@ document.addEventListener('DOMContentLoaded', function() {
                   html, body { margin: 0; padding: 0; width: 100%; height: 100%; }
                   body { display: block; background: white; }
                   .page-container { margin: 0; gap: 0; display: block; width: 100%; height: 100%; }
-                  .id-card { margin: 0; border-radius: 0; box-shadow: none; page-break-after: always; width: 100%; height: 100%; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                  .id-card { margin: 0; border-radius: 0; box-shadow: none; page-break-after: always; width: 100%; height: 100%; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
                   .id-card:last-child { page-break-after: auto; }
                 }
               </style>
@@ -414,22 +458,27 @@ document.addEventListener('DOMContentLoaded', function() {
             <body>
               <div class="page-container">
                 <div class="id-card front-card">
-                  <img class="front-bg" src="${templateImage}" alt="ID Template" />
-                  ${currentResident.profile_image ? `<img class="front-photo" src="/storage/${currentResident.profile_image}" alt="Photo" />` : ''}
+                  <img class="front-bg" src="${frontTemplateSrc}" alt="ID Template" />
+                  ${photoSrc ? `<img class="front-photo" src="${photoSrc}" alt="Photo" />` : ''}
 
                   <div class="front-text f-name">${fullName || '-'}</div>
                   <div class="front-text f-address">${currentResident.address || '-'}</div>
                   <div class="front-text f-dob">${currentResident.birth_date || '-'}</div>
                   <div class="front-text f-pob">${placeOfBirth}</div>
-                  <div class="front-text f-nationality">${currentResident.nationality || 'FILIPINO'}</div>
-                  <div class="front-text f-sex">${currentResident.gender || '-'}</div>
                   <div class="front-text f-status">${currentResident.civil_status || '-'}</div>
+                  <div class="front-text f-nationality">${currentResident.nationality || 'FILIPINO'}</div>
+                  <div class="front-text f-sex">${(currentResident.gender || '-').toUpperCase()}</div>
                   <div class="front-text f-sector">${sector}</div>
                   <div class="front-text f-id">${currentID.id_number || '-'}</div>
-                  <div class="front-text f-validity">VALID UNTIL ${currentID.expiration_date || '-'}</div>
+                  <div class="f-signature-wrap">
+                    <div class="f-signature-line">
+                      ${signatureSrc ? `<img class="f-signature" src="${signatureSrc}" alt="Signature" />` : ''}
+                    </div>
+                  </div>
                 </div>
 
                 <div class="id-card">
+                  <img class="front-bg" src="${backTemplateSrc}" alt="ID Back Template" />
                   <div class="back-header">EMERGENCY CONTACT</div>
                   <div class="back-body">
                     <div class="emergency-col">
@@ -459,12 +508,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     <div class="qr-col">
                       <div class="qr-box">
-                        <img src="${currentID.qr_code}" alt="QR Code" />
+                        ${qrSrc ? `<img src="${qrSrc}" alt="QR Code" />` : ''}
                       </div>
 
-                      <div class="validity-text">
+                      <div class="validity-text" style="font-size: 9px;">
                         VALID UNTIL<br>
-                        <span style="color: white">${currentID.expiration_date || 'N/A'}</span>
+                        <span style="color: white; font-size: 9px;">${currentID.expiration_date || 'N/A'}</span>
                       </div>
 
                       <div class="chairman-sig">
@@ -484,6 +533,7 @@ document.addEventListener('DOMContentLoaded', function() {
             printWindow.focus();
             printWindow.print();
         };
+        });
     });
 });
 </script>

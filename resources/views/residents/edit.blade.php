@@ -100,14 +100,18 @@
                         <label for="blood_type" class="form-label" style="font-size: 0.65rem;">Blood Type</label>
                         <select class="form-select form-select-sm @error('blood_type') is-invalid @enderror" id="blood_type" name="blood_type" style="font-size: 0.8rem;">
                             <option value="">Select Blood Type</option>
-                            <option value="O+" @selected(old('blood_type', $resident['blood_type']) == 'O+')>O+</option>
-                            <option value="O-" @selected(old('blood_type', $resident['blood_type']) == 'O-')>O-</option>
+                            <option value="A" @selected(old('blood_type', $resident['blood_type']) == 'A')>A</option>
                             <option value="A+" @selected(old('blood_type', $resident['blood_type']) == 'A+')>A+</option>
                             <option value="A-" @selected(old('blood_type', $resident['blood_type']) == 'A-')>A-</option>
+                            <option value="B" @selected(old('blood_type', $resident['blood_type']) == 'B')>B</option>
                             <option value="B+" @selected(old('blood_type', $resident['blood_type']) == 'B+')>B+</option>
                             <option value="B-" @selected(old('blood_type', $resident['blood_type']) == 'B-')>B-</option>
+                            <option value="AB" @selected(old('blood_type', $resident['blood_type']) == 'AB')>AB</option>
                             <option value="AB+" @selected(old('blood_type', $resident['blood_type']) == 'AB+')>AB+</option>
                             <option value="AB-" @selected(old('blood_type', $resident['blood_type']) == 'AB-')>AB-</option>
+                            <option value="O" @selected(old('blood_type', $resident['blood_type']) == 'O')>O</option>
+                            <option value="O+" @selected(old('blood_type', $resident['blood_type']) == 'O+')>O+</option>
+                            <option value="O-" @selected(old('blood_type', $resident['blood_type']) == 'O-')>O-</option>
                         </select>
                         @error('blood_type') <div class="invalid-feedback" style="font-size: 0.65rem;">{{ $message }}</div> @enderror
                     </div>
@@ -258,6 +262,7 @@
                         <label class="form-label text-muted small text-uppercase fw-bold" style="font-size: 0.6rem;">Street Name</label>
                         <select class="form-select form-select-sm address-field" name="street_name" style="font-size: 0.8rem;">
                             <option value="" {{ old('street_name', $resident['street_name']) === '' ? 'selected' : '' }}>Select Street...</option>
+                            <option value="AV. Cruz St" {{ old('street_name', $resident['street_name']) === 'AV. Cruz St' ? 'selected' : '' }}>AV. Cruz St</option>
                             <option value="A.V Jimenez St" {{ old('street_name', $resident['street_name']) === 'A.V Jimenez St' ? 'selected' : '' }}>A.V Jimenez St</option>
                             <option value="Acacia St" {{ old('street_name', $resident['street_name']) === 'Acacia St' ? 'selected' : '' }}>Acacia St</option>
                             <option value="Alley 1 St" {{ old('street_name', $resident['street_name']) === 'Alley 1 St' ? 'selected' : '' }}>Alley 1 St</option>
@@ -276,6 +281,7 @@
                             <option value="Carnation St" {{ old('street_name', $resident['street_name']) === 'Carnation St' ? 'selected' : '' }}>Carnation St</option>
                             <option value="Casoy St" {{ old('street_name', $resident['street_name']) === 'Casoy St' ? 'selected' : '' }}>Casoy St</option>
                             <option value="Castillo St" {{ old('street_name', $resident['street_name']) === 'Castillo St' ? 'selected' : '' }}>Castillo St</option>
+                            <option value="Champaca St" {{ old('street_name', $resident['street_name']) === 'Champaca St' ? 'selected' : '' }}>Champaca St</option>
                             <option value="Chico St" {{ old('street_name', $resident['street_name']) === 'Chico St' ? 'selected' : '' }}>Chico St</option>
                             <option value="D.M Tuazon St" {{ old('street_name', $resident['street_name']) === 'D.M Tuazon St' ? 'selected' : '' }}>D.M Tuazon St</option>
                             <option value="Dalandan St" {{ old('street_name', $resident['street_name']) === 'Dalandan St' ? 'selected' : '' }}>Dalandan St</option>
@@ -316,7 +322,9 @@
                             <option value="Pag Asa St" {{ old('street_name', $resident['street_name']) === 'Pag Asa St' ? 'selected' : '' }}>Pag Asa St</option>
                             <option value="Papaya St" {{ old('street_name', $resident['street_name']) === 'Papaya St' ? 'selected' : '' }}>Papaya St</option>
                             <option value="Paulino St" {{ old('street_name', $resident['street_name']) === 'Paulino St' ? 'selected' : '' }}>Paulino St</option>
+                            <option value="Paulino-Bornay St" {{ old('street_name', $resident['street_name']) === 'Paulino-Bornay St' ? 'selected' : '' }}>Paulino-Bornay St</option>
                             <option value="Pinya St" {{ old('street_name', $resident['street_name']) === 'Pinya St' ? 'selected' : '' }}>Pinya St</option>
+                            <option value="Red Palm St" {{ old('street_name', $resident['street_name']) === 'Red Palm St' ? 'selected' : '' }}>Red Palm St</option>
                             <option value="R. Castillo St" {{ old('street_name', $resident['street_name']) === 'R. Castillo St' ? 'selected' : '' }}>R. Castillo St</option>
                             <option value="R.Tatco St" {{ old('street_name', $resident['street_name']) === 'R.Tatco St' ? 'selected' : '' }}>R.Tatco St</option>
                             <option value="Rambutan St" {{ old('street_name', $resident['street_name']) === 'Rambutan St' ? 'selected' : '' }}>Rambutan St</option>
@@ -904,6 +912,8 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Initialize Cropper
             const image = modal.querySelector('#crop-image');
+            const brightnessSlider = modal.querySelector('#crop-brightness');
+            const brightnessValue = modal.querySelector('#crop-brightness-value');
             const cropper = new Cropper(image, {
                 aspectRatio: 5 / 6,
                 viewMode: 1,
@@ -912,14 +922,64 @@ document.addEventListener('DOMContentLoaded', function() {
                 background: false,
             });
 
+            function applyBrightnessToCropperPreview(brightness) {
+                modal.querySelectorAll('.cropper-container img').forEach((cropperImage) => {
+                    cropperImage.style.filter = `brightness(${brightness}%)`;
+                });
+            }
+
+            function updateBrightnessPreview() {
+                const brightness = Number(brightnessSlider.value || 100);
+                image.style.filter = `brightness(${brightness}%)`;
+                applyBrightnessToCropperPreview(brightness);
+                brightnessValue.textContent = `${brightness}%`;
+            }
+
+            brightnessSlider.addEventListener('input', updateBrightnessPreview);
+
+            image.addEventListener('ready', updateBrightnessPreview, { once: true });
+
+            function applyBrightnessToCanvas(sourceCanvas, brightness) {
+                if (brightness === 100) {
+                    return sourceCanvas;
+                }
+
+                const adjustedCanvas = document.createElement('canvas');
+                adjustedCanvas.width = sourceCanvas.width;
+                adjustedCanvas.height = sourceCanvas.height;
+
+                const adjustedContext = adjustedCanvas.getContext('2d');
+                adjustedContext.drawImage(sourceCanvas, 0, 0);
+
+                const imageData = adjustedContext.getImageData(0, 0, adjustedCanvas.width, adjustedCanvas.height);
+                const factor = brightness / 100;
+                const data = imageData.data;
+
+                for (let index = 0; index < data.length; index += 4) {
+                    data[index] = Math.min(255, Math.round(data[index] * factor));
+                    data[index + 1] = Math.min(255, Math.round(data[index + 1] * factor));
+                    data[index + 2] = Math.min(255, Math.round(data[index + 2] * factor));
+                }
+
+                adjustedContext.putImageData(imageData, 0, 0);
+
+                return adjustedCanvas;
+            }
+
+            setTimeout(updateBrightnessPreview, 50);
+
             // Handle Apply
             const cropApply = modal.querySelector('#crop-apply');
             cropApply.addEventListener('click', function() {
-                cropper.getCroppedCanvas({
+                const brightness = Number(brightnessSlider.value || 100);
+                const croppedCanvas = cropper.getCroppedCanvas({
                     width: 300,
                     height: 360,
                     imageSmoothingQuality: 'high',
-                }).toBlob((blob) => {
+                });
+                const outputCanvas = applyBrightnessToCanvas(croppedCanvas, brightness);
+
+                outputCanvas.toBlob((blob) => {
                     // Create a new file from the blob
                     const croppedFile = new File([blob], "profile_photo.jpg", { type: "image/jpeg" });
                     
@@ -969,6 +1029,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="modal-body">
                         <div class="img-container" style="max-height: 60vh; overflow: hidden;">
                             <img id="crop-image" src="${imageSrc}" style="max-width: 100%; display: block;">
+                        </div>
+                        <div class="mt-3">
+                            <label for="crop-brightness" class="form-label fw-semibold mb-1">Brightness</label>
+                            <div class="d-flex align-items-center gap-2">
+                                <input type="range" class="form-range m-0" id="crop-brightness" min="50" max="150" value="100" step="1">
+                                <span id="crop-brightness-value" class="text-muted small" style="min-width: 48px;">100%</span>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
