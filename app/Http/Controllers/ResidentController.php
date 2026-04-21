@@ -85,6 +85,29 @@ class ResidentController extends Controller
         return $query->first();
     }
 
+    private function findDuplicateResidentForUpdate(array $validated, int $excludeId): ?Resident
+    {
+        $query = Resident::query()
+            ->where('id', '!=', $excludeId)
+            ->where('first_name', $validated['first_name'])
+            ->where('last_name', $validated['last_name'])
+            ->whereDate('birth_date', $validated['birth_date']);
+
+        if (!empty($validated['middle_name'])) {
+            $query->where('middle_name', $validated['middle_name']);
+        } else {
+            $query->whereNull('middle_name');
+        }
+
+        if (!empty($validated['suffix'])) {
+            $query->where('suffix', $validated['suffix']);
+        } else {
+            $query->whereNull('suffix');
+        }
+
+        return $query->first();
+    }
+
     private function generateResidentUsername(Resident $resident): string
     {
         $firstName = strtolower(trim(str_replace(' ', '', $resident->first_name)));
@@ -847,12 +870,12 @@ class ResidentController extends Controller
             : null;
         $validated['last_name'] = strtoupper(trim($validated['last_name']));
 
-        if ($this->findDuplicateResident($validated)) {
+        if ($this->findDuplicateResidentForUpdate($validated, $resident->id)) {
             return redirect()->back()
                 ->withErrors([
                     'first_name' => 'A resident with the same name and birth date already exists.',
                 ])
-                ->with('error', 'Duplicate resident detected. Please review the existing record before creating a new one.')
+                ->with('error', 'Duplicate resident detected. Please review the existing record before proceeding.')
                 ->withInput();
         }
 
