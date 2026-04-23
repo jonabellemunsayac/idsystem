@@ -7,6 +7,26 @@
 @endsection
 
 @section('content')
+@php
+    $sort = $sort ?? 'clan_name';
+    $direction = $direction ?? 'asc';
+
+    $sortLink = function ($column) use ($sort, $direction) {
+        return route('clans.index', array_merge(request()->except('page'), [
+            'sort' => $column,
+            'direction' => $sort === $column && $direction === 'asc' ? 'desc' : 'asc',
+        ]));
+    };
+
+    $sortIcon = function ($column) use ($sort, $direction) {
+        if ($sort !== $column) {
+            return 'bi-arrow-down-up';
+        }
+
+        return $direction === 'asc' ? 'bi-sort-alpha-down' : 'bi-sort-alpha-up';
+    };
+@endphp
+
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
         <h1 class="h4 fw-bold text-dark mb-1">Clan Management</h1>
@@ -83,11 +103,31 @@
                 <thead class="bg-light">
                     <tr>
                         <th class="border-0 text-secondary text-uppercase fw-bold ps-2" style="font-size: 0.65rem; width: 40px;"></th>
-                        <th class="border-0 text-secondary text-uppercase fw-bold" style="font-size: 0.65rem;">Clan Name</th>
-                        <th class="border-0 text-secondary text-uppercase fw-bold" style="font-size: 0.65rem;">Head of Family</th>
-                        <th class="border-0 text-secondary text-uppercase fw-bold" style="font-size: 0.65rem;">Address</th>
-                        <th class="border-0 text-secondary text-uppercase fw-bold" style="font-size: 0.65rem;">Contact</th>
-                        <th class="border-0 text-secondary text-uppercase fw-bold text-center" style="font-size: 0.65rem;">Members</th>
+                        <th class="border-0 text-secondary text-uppercase fw-bold" style="font-size: 0.65rem;">
+                            <a href="{{ $sortLink('clan_name') }}" class="sort-link">
+                                Clan Name <i class="bi {{ $sortIcon('clan_name') }}"></i>
+                            </a>
+                        </th>
+                        <th class="border-0 text-secondary text-uppercase fw-bold" style="font-size: 0.65rem;">
+                            <a href="{{ $sortLink('head_of_family') }}" class="sort-link">
+                                Head of Family <i class="bi {{ $sortIcon('head_of_family') }}"></i>
+                            </a>
+                        </th>
+                        <th class="border-0 text-secondary text-uppercase fw-bold" style="font-size: 0.65rem;">
+                            <a href="{{ $sortLink('address') }}" class="sort-link">
+                                Address <i class="bi {{ $sortIcon('address') }}"></i>
+                            </a>
+                        </th>
+                        <th class="border-0 text-secondary text-uppercase fw-bold" style="font-size: 0.65rem;">
+                            <a href="{{ $sortLink('contact') }}" class="sort-link">
+                                Contact <i class="bi {{ $sortIcon('contact') }}"></i>
+                            </a>
+                        </th>
+                        <th class="border-0 text-secondary text-uppercase fw-bold text-center" style="font-size: 0.65rem;">
+                            <a href="{{ $sortLink('members') }}" class="sort-link justify-content-center">
+                                Members <i class="bi {{ $sortIcon('members') }}"></i>
+                            </a>
+                        </th>
                         <!-- <th class="border-0 text-secondary text-uppercase fw-bold text-end pe-2" style="font-size: 0.65rem;">Actions</th> -->
                     </tr>
                 </thead>
@@ -236,6 +276,16 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 .clan-row:hover {
     background-color: rgba(0, 56, 168, 0.02);
+}
+.sort-link {
+    align-items: center;
+    color: inherit;
+    display: inline-flex;
+    gap: 0.25rem;
+    text-decoration: none;
+}
+.sort-link:hover {
+    color: #0038A8;
 }
 </style>
 @endsection

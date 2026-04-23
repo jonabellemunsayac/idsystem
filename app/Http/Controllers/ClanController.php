@@ -17,9 +17,32 @@ class ClanController extends Controller
         $totalMembers = $allClans->sum('residents_count');
         $averageSize = $totalClans > 0 ? round($totalMembers / $totalClans, 2) : 0;
         $largestClan = $allClans->max('residents_count') ?? 0;
+
+        $sortableColumns = [
+            'clan_name' => 'clan_name',
+            'head_of_family' => 'head_of_family',
+            'address' => 'address',
+            'contact' => 'contact_number',
+            'members' => 'residents_count',
+        ];
+
+        $sort = $request->input('sort', 'clan_name');
+        $direction = $request->input('direction', 'asc');
+
+        if (!array_key_exists($sort, $sortableColumns)) {
+            $sort = 'clan_name';
+        }
+
+        if (!in_array($direction, ['asc', 'desc'], true)) {
+            $direction = 'asc';
+        }
         
         // Get paginated clans for display
-        $clans = Clan::withCount('residents')->paginate(10)->through(fn($clan) => [
+        $clans = Clan::withCount('residents')
+            ->orderBy($sortableColumns[$sort], $direction)
+            ->paginate(10)
+            ->withQueryString()
+            ->through(fn($clan) => [
             'id' => $clan->id,
             'clan_name' => $clan->clan_name,
             'head_of_family' => $clan->head_of_family,
@@ -33,6 +56,8 @@ class ClanController extends Controller
 
         return view('clans.index', [
             'clans' => $clans,
+            'sort' => $sort,
+            'direction' => $direction,
             'stats' => [
                 'total_clans' => $totalClans,
                 'total_members' => $totalMembers,
