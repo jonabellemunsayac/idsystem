@@ -824,7 +824,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const printStrongStyle = 'font-family: "Arial Black", "Segoe UI", Arial, sans-serif; color: #07193d; text-shadow: 0 0 1.2px rgba(255,255,255,0.95), 0 0 0.6px rgba(255,255,255,0.9);';
 
                 const frontCardHTML = `
-                            <div class="id-card" style="position: relative; width: 3.375in; height: 2.125in; overflow: hidden;">
+                            <div class="id-card id-card-front">
+                              <div class="card-art">
                                 <img src="${templateSrc}" alt="Template" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
 
                                 <div style="position: absolute; left: 6.2%; top: 29.5%; width: 19.5%; height: 40%; overflow: hidden; border-radius: 8px; background: #d8d8d8; display: flex; align-items: center; justify-content: center;">
@@ -850,11 +851,13 @@ document.addEventListener('DOMContentLoaded', function() {
                                     ${currentID.qr_code ? `<img src="${currentID.qr_code}" alt="QR" style="width: 100%; height: 100%; object-fit: contain;">` : ''}
                                 </div>
                                 <div style="position: absolute; left: 78.6%; top: 90.9%; width: 16%; text-align: center; font-size: ${validityFont}px; font-weight: 900; white-space: nowrap; overflow: hidden; letter-spacing: -0.22px; font-family: \"Arial Narrow\", \"Segoe UI\", Arial, sans-serif; color: #111;">${validityPrint}</div>
+                              </div>
                             </div>
                 `;
 
         const backCardHTML = `
-                            <div class="id-card">
+                            <div class="id-card id-card-back">
+                              <div class="card-art">
                                 <img src="${backTemplateSrc}" alt="Back Template" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
                                 <div style="padding: 12px 14px; position: relative; z-index: 1;">
                                     <div style="text-align: center; font-weight: bold; color: #fff; font-size: 11px; letter-spacing: 0.5px; margin-bottom: 12px; line-height: 1.2;">IN CASE OF EMERGENCY, KINDLY NOTIFY:</div>
@@ -914,6 +917,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
 
               </div>
+                              </div>
         `;
 
             let finalHTML = `
@@ -923,32 +927,58 @@ document.addEventListener('DOMContentLoaded', function() {
               <meta charset="UTF-8">
               <title>Barangay ID Card - ${currentResident.first_name} ${currentResident.last_name}</title>
               <style>
-                                * { margin: 0; padding: 0; box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-                                html, body { margin: 0; padding: 0; }
+                                :root {
+                                    --card-width: 85.6mm;
+                                    --card-height: 54mm;
+                                    --front-scale-x: 1;
+                                    --front-scale-y: 1;
+                                    --front-offset-x: 0mm;
+                                    --front-offset-y: 0mm;
+                                    --back-scale-x: 1;
+                                    --back-scale-y: 1;
+                                    --back-offset-x: 0mm;
+                                    --back-offset-y: 0mm;
+                                }
+                                * { margin: 0; padding: 0; box-sizing: border-box; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+                                html, body { margin: 0; padding: 0; width: var(--card-width); min-height: var(--card-height); }
                                 body { font-family: Arial, Helvetica, sans-serif; background: #f3f4f6; padding: 14px; }
                                 .print-wrap { display: flex; flex-direction: column; align-items: center; gap: 16px; }
                                 .id-card {
                                     position: relative;
-                                    width: 3.375in;
-                                    height: 2.125in;
+                                    width: var(--card-width);
+                                    height: var(--card-height);
                                     overflow: hidden;
                                     background: #fff;
                                     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
                                     border-radius: 4px;
                                 }
+                                .card-art {
+                                    position: absolute;
+                                    inset: 0;
+                                    width: var(--card-width);
+                                    height: var(--card-height);
+                                    overflow: hidden;
+                                    transform-origin: top left;
+                                }
+                                .id-card-front .card-art {
+                                    transform: translate(var(--front-offset-x), var(--front-offset-y)) scale(var(--front-scale-x), var(--front-scale-y));
+                                }
+                                .id-card-back .card-art {
+                                    transform: translate(var(--back-offset-x), var(--back-offset-y)) scale(var(--back-scale-x), var(--back-scale-y));
+                                }
                                 @media screen and (max-width: 900px) {
                                     .id-card {
-                                        width: min(95vw, 3.375in);
+                                        width: min(95vw, var(--card-width));
                                         height: auto;
                                         aspect-ratio: 1.588;
                                     }
                                 }
                 @media print {
-                  @page { size: 3.375in 2.125in; margin: 0; }
-                                    html, body { margin: 0; padding: 0; background: #fff; }
-                                    body { padding: 0; }
+                  @page { size: 85.6mm 54mm; margin: 0; }
+                                    html, body { margin: 0 !important; padding: 0 !important; width: var(--card-width); height: var(--card-height); background: #fff; overflow: hidden; }
+                                    body { padding: 0 !important; }
                                     .print-wrap { gap: 0; }
-                                    .id-card { margin: 0; border-radius: 0; box-shadow: none; page-break-after: always; }
+                                    .id-card { margin: 0; border-radius: 0; box-shadow: none; page-break-after: always; break-after: page; }
                                     .id-card:last-child { page-break-after: auto; }
                 }
               </style>
