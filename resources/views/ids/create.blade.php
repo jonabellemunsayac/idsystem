@@ -205,6 +205,28 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentID = null;
     let debounceTimer;
 
+    function normalizeStreetAbbreviation(value) {
+        if (!value) return '';
+        return String(value)
+            .replace(/\bST\b\.?/gi, 'ST.')
+            .replace(/\bST\.\s*,\s*/gi, 'ST. ');
+    }
+
+    function formatAddressForCard(address) {
+        if (!address) return '';
+
+        let clean = String(address).trim();
+        clean = clean.replace(/\bBRGY\.?\s*/gi, '');
+        clean = clean.replace(/\bBARANGAY\s*/gi, '');
+        clean = normalizeStreetAbbreviation(clean);
+        clean = clean.replace(/^(\s*#?\s*\d+[A-Z0-9\-\/]*)\s*,\s*/i, '$1 ');
+        clean = clean.replace(/\s*,\s*/g, ', ');
+        clean = clean.replace(/\s+/g, ' ');
+        clean = clean.replace(/,\s*,+/g, ', ');
+
+        return clean.trim().replace(/^,|,$/g, '').trim();
+    }
+
     // Search Handler
     searchInput.addEventListener('input', function(e) {
         const query = e.target.value;
@@ -283,7 +305,7 @@ document.addEventListener('DOMContentLoaded', function() {
         previewAddress.textContent = resident.address || '-';
         
         previewEcName.textContent = resident.emergency_contact_name || '_____________________';
-        previewEcAddress.textContent = resident.address || resident.emergency_contact_address || '_____________________';
+        previewEcAddress.textContent = formatAddressForCard(resident.emergency_contact_address) || '_____________________';
         previewEcNo.textContent = resident.emergency_contact_no || '_____________________';
         
         // Handle emergency contact relation
@@ -401,6 +423,9 @@ document.addEventListener('DOMContentLoaded', function() {
             getImageBase64(currentResident.signature ? `/storage/${currentResident.signature}` : ''),
             getImageBase64(currentID.qr_code || '')
         ]).then(([frontTemplateSrc, backTemplateSrc, photoSrc, signatureSrc, qrSrc]) => {
+        const frontAddress = formatAddressForCard(currentResident.address) || '-';
+        const emergencyAddress = formatAddressForCard(currentResident.emergency_contact_address) || '_____________________';
+
         const idCardHTML = `
           <!DOCTYPE html>
           <html>
@@ -462,7 +487,7 @@ document.addEventListener('DOMContentLoaded', function() {
                   ${photoSrc ? `<img class="front-photo" src="${photoSrc}" alt="Photo" />` : ''}
 
                   <div class="front-text f-name">${fullName || '-'}</div>
-                  <div class="front-text f-address">${currentResident.address || '-'}</div>
+                  <div class="front-text f-address">${frontAddress}</div>
                   <div class="front-text f-dob">${currentResident.birth_date || '-'}</div>
                   <div class="front-text f-pob">${placeOfBirth}</div>
                   <div class="front-text f-status">${currentResident.civil_status || '-'}</div>
@@ -493,7 +518,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         </tr>
                         <tr>
                           <td class="emergency-title" style="text-align: right; padding-right: 6px; white-space: nowrap; vertical-align: top;">ADDRESS:</td>
-                          <td class="emergency-value" style="min-height: 24px; line-height: 1.2;">${currentResident.address || currentResident.emergency_contact_address || '_____________________'}</td>
+                          <td class="emergency-value" style="min-height: 24px; line-height: 1.2;">${emergencyAddress}</td>
                         </tr>
                         <tr>
                           <td class="emergency-title" style="text-align: right; padding-right: 6px; white-space: nowrap; vertical-align: top;">CONTACT NO.:</td>

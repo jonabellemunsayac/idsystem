@@ -390,6 +390,11 @@ document.addEventListener('DOMContentLoaded', function() {
         return clean || '-';
     }
 
+    function formatEmergencyAddressForCard(address) {
+        const formatted = formatAddressForCard(address);
+        return formatted === '-' ? '' : formatted;
+    }
+
     function resolveMediaUrl(path) {
         if (!path || !String(path).trim()) return '';
         const cleanPath = String(path).trim();
@@ -557,7 +562,7 @@ document.addEventListener('DOMContentLoaded', function() {
         );
         
         previewEcName.textContent = resident.emergency_contact_name || '_____________________';
-        const emergencyAddress = normalizeStreetAbbreviation(resident.emergency_contact_address) || '_____________________';
+        const emergencyAddress = formatEmergencyAddressForCard(resident.emergency_contact_address) || '_____________________';
         previewEcAddress.textContent = emergencyAddress;
         previewEcAddress.style.fontSize = `${fitFontSize(emergencyAddress, 15.2, 9.2, 34)}px`;
         previewEcAddress.style.whiteSpace = 'normal';
@@ -791,7 +796,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const sectorPrint = (currentResident.special_sector || '-').replace(/\s+/g, ' ').trim();
             const sectorLeftPrint = getSectorLeftPosition(currentResident.special_sector);
             const statusPrint = (currentResident.civil_status || '-').replace(/\s+/g, ' ').trim();
-            const ecAddressPrint = (normalizeStreetAbbreviation(currentResident.emergency_contact_address) || '_________________').replace(/\s+/g, ' ').trim();
+            const ecAddressPrint = (formatEmergencyAddressForCard(currentResident.emergency_contact_address) || '_________________').replace(/\s+/g, ' ').trim();
             const idNumberPrint = (currentID.id_number || '-').replace(/\s+/g, ' ').trim();
             const validityPrint = formatValidityLabel(currentID.expiration_date);
 
