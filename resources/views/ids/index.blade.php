@@ -534,7 +534,7 @@ document.addEventListener('DOMContentLoaded', function() {
         applyFittedFieldFont(previewSex, previewSex.textContent, 11, 8, 2);
         applyFittedFieldFont(previewNationality, previewNationality.textContent, 11, 7.2, 9);
         if (previewSector) {
-            previewSector.textContent = resident.special_sector || '-';
+            previewSector.textContent = resident.special_sector || 'None';
             previewSector.style.left = getSectorLeftPosition(resident.special_sector);
             const sectorFontSettings = getSectorFontSettings(false);
             applyFittedFieldFont(
@@ -793,7 +793,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const backTemplateSrc = backTemplateBase64 || backTemplateUrl;
             const fullNamePrint = formatDisplayName(currentResident).replace(/\s+/g, ' ').trim();
             const addressPrint = formatAddressForCard(currentResident.address).replace(/\s+/g, ' ').trim();
-            const sectorPrint = (currentResident.special_sector || '-').replace(/\s+/g, ' ').trim();
+            const sectorPrint = (currentResident.special_sector || 'None').replace(/\s+/g, ' ').trim();
             const sectorLeftPrint = getSectorLeftPosition(currentResident.special_sector);
             const statusPrint = (currentResident.civil_status || '-').replace(/\s+/g, ' ').trim();
             const ecAddressPrint = (formatEmergencyAddressForCard(currentResident.emergency_contact_address) || '_________________').replace(/\s+/g, ' ').trim();
