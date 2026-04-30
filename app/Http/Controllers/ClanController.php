@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Clan;
+use App\Models\Resident;
 use Illuminate\Http\Request;
 
 class ClanController extends Controller
@@ -14,8 +15,9 @@ class ClanController extends Controller
         
         // Calculate statistics
         $totalClans = $allClans->count();
-        $totalMembers = $allClans->sum('residents_count');
-        $averageSize = $totalClans > 0 ? round($totalMembers / $totalClans, 2) : 0;
+        $totalMembers = Resident::count();
+        $totalClanMembers = $allClans->sum('residents_count');
+        $averageSize = $totalClans > 0 ? round($totalClanMembers / $totalClans, 2) : 0;
         $largestClan = $allClans->max('residents_count') ?? 0;
 
         $sortableColumns = [
